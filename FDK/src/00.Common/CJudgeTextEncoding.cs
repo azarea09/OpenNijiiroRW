@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics;
 using System.Text;
 
-namespace OpenTaiko;
+namespace OpenNijiiroRW;
 
 public class CJudgeTextEncoding {
 	/// <summary>

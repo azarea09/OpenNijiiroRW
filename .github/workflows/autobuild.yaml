@@ -1,6 +1,7 @@
 # Original script from totoa553/OpenTaiko and DragonRatTiger/OpenTaiko
+# Forked and modified by Azarea09
 
-name: Build OpenTaiko
+name: Build OpenNijiiroRW
 
 on:
   push:
@@ -52,7 +53,7 @@ jobs:
         uses: kzrnm/get-net-sdk-project-versions-action@v2
         id: get-version
         with:
-          proj-path: OpenTaiko/OpenTaiko.csproj
+          proj-path: OpenNijiiroRW/OpenNijiiroRW.csproj
 
       - name: Store projectVersion in environment
         run: |
@@ -166,11 +167,11 @@ jobs:
               break commit
           }
 
-      - name: Commit CHANGELOG.md and OpenTaiko.csproj changes
+      - name: Commit CHANGELOG.md and OpenNijiiroRW.csproj changes
         run: |
           git config --global user.name "github-actions"
           git config --global user.email "actions@github.com"
-          git add OpenTaiko/OpenTaiko.csproj
+          git add OpenNijiiroRW/OpenNijiiroRW.csproj
           git add CHANGELOG.md
           if ($env:versionLast -eq $env:versionFirst) {
               git commit -m "Update changelog for version $env:versionLast"
@@ -187,9 +188,9 @@ jobs:
       - name: Create Archive (Win x64)
         shell: cmd
         run: |
-          cd OpenTaiko\bin\Release\net8.0\win-x64\
-          7z a ../../../../../OpenTaiko.Win.x64.zip publish/ -xr!publish/Songs/ -xr!publish/FFmpeg/ -xr!publish/System/ -xr!publish/Libs/
-          7z u ../../../../../OpenTaiko.Win.x64.zip "publish/Libs/win-x64/*" "publish/FFmpeg/win-x64/*" "publish/Songs/L2 Custom Charts/*" "publish/Songs/L3 Downloaded Songs/*" "publish/Songs/S1 Dan-i Dojo/box.def" "publish/Songs/S2 Taiko Towers/box.def" "publish/Songs/X1 Favorite/*" "publish/Songs/X2 Recent/*" "publish/Songs/X3 Search By Difficulty/*" "publish/Songs/X4 Search By Text/*"
+          cd OpenNijiiroRW\bin\Release\net8.0\win-x64\
+          7z a ../../../../../OpenNijiiroRW.Win.x64.zip publish/ -xr!publish/Songs/ -xr!publish/FFmpeg/ -xr!publish/System/ -xr!publish/Libs/
+          7z u ../../../../../OpenNijiiroRW.Win.x64.zip "publish/Libs/win-x64/*" "publish/FFmpeg/win-x64/*" "publish/Songs/L2 Custom Charts/*" "publish/Songs/L3 Downloaded Songs/*" "publish/Songs/S1 Dan-i Dojo/box.def" "publish/Songs/S2 Taiko Towers/box.def" "publish/Songs/X1 Favorite/*" "publish/Songs/X2 Recent/*" "publish/Songs/X3 Search By Difficulty/*" "publish/Songs/X4 Search By Text/*"
           cd ..\..\..\..\..\
 
       - name: Build for Linux x64
@@ -200,9 +201,9 @@ jobs:
       - name: Create Archive (Linux x64)
         shell: cmd
         run: |
-          cd OpenTaiko\bin\Release\net8.0\linux-x64\
-          7z a ../../../../../OpenTaiko.Linux.x64.zip publish/ -xr!publish/Songs/ -xr!publish/FFmpeg/ -xr!publish/System/ -xr!publish/Libs/
-          7z u ../../../../../OpenTaiko.Linux.x64.zip "publish/Libs/linux-x64/*" "publish/FFmpeg/linux-x64/*" "publish/Songs/L2 Custom Charts/*" "publish/Songs/L3 Downloaded Songs/*" "publish/Songs/S1 Dan-i Dojo/box.def" "publish/Songs/S2 Taiko Towers/box.def" "publish/Songs/X1 Favorite/*" "publish/Songs/X2 Recent/*" "publish/Songs/X3 Search By Difficulty/*" "publish/Songs/X4 Search By Text/*"
+          cd OpenNijiiroRW\bin\Release\net8.0\linux-x64\
+          7z a ../../../../../OpenNijiiroRW.Linux.x64.zip publish/ -xr!publish/Songs/ -xr!publish/FFmpeg/ -xr!publish/System/ -xr!publish/Libs/
+          7z u ../../../../../OpenNijiiroRW.Linux.x64.zip "publish/Libs/linux-x64/*" "publish/FFmpeg/linux-x64/*" "publish/Songs/L2 Custom Charts/*" "publish/Songs/L3 Downloaded Songs/*" "publish/Songs/S1 Dan-i Dojo/box.def" "publish/Songs/S2 Taiko Towers/box.def" "publish/Songs/X1 Favorite/*" "publish/Songs/X2 Recent/*" "publish/Songs/X3 Search By Difficulty/*" "publish/Songs/X4 Search By Text/*"
           cd ..\..\..\..\..\
 
       - name: Check if tag exists
@@ -218,17 +219,14 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag_name: ${{ env.version }}
-          release_name: OpenTaiko v${{ env.version }}
-          body: |
-            Note: The releases do not contain skins nor songs.
-            Please download/update through the OpenTaiko Hub: https://github.com/OpenTaiko/OpenTaiko-Hub/releases
+          release_name: OpenNijiiroRW v${{ env.version }}
           draft: false
           prerelease: false
 
       - name: Upload All Builds for the Latest Release
         uses: xresloader/upload-to-github-release@v1.6.0
         with:
-          file: "OpenTaiko.Win.x64.zip;OpenTaiko.Linux.x64.zip"
+          file: "OpenNijiiroRW.Win.x64.zip;OpenNijiiroRW.Linux.x64.zip"
           overwrite: true
           tag_name: ${{ env.versionLast }}
           draft: false

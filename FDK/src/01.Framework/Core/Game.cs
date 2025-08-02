@@ -19,6 +19,7 @@
 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 * THE SOFTWARE.
 */
+using System.Drawing;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using FDK;
@@ -178,6 +179,12 @@ public abstract class Game : IDisposable {
 	private Vector2D<int> ViewPortSize = new Vector2D<int>();
 	private Vector2D<int> ViewPortOffset = new Vector2D<int>();
 
+	private RenderTexture renderTexture;
+	private Vector2D<int> originalViewportSize;
+	private Vector2D<int> originalViewportOffset;
+	public static readonly Size GameWindowSize = new Size(1920, 1080);
+
+
 	public unsafe SKBitmap GetScreenShot() {
 		int ViewportWidth = ViewPortSize.X;
 		int ViewportHeight = ViewPortSize.Y;
@@ -288,12 +295,7 @@ public abstract class Game : IDisposable {
 		options.Title = Text;
 
 
-		// Use SDL on Linux with Wayland, otherwise use GLFW for everything else
-		if (OperatingSystem.IsLinux() && Environment.GetEnvironmentVariable("XDG_SESSION_TYPE") == "wayland") {
-		    Silk.NET.Windowing.Sdl.SdlWindowing.Use();
-		} else {
-		    Silk.NET.Windowing.Glfw.GlfwWindowing.Use();
-		}
+		Silk.NET.Windowing.Glfw.GlfwWindowing.Use();
 
 		Window_ = Window.Create(options);
 
@@ -413,11 +415,9 @@ public abstract class Game : IDisposable {
 			if (Window_.GLContext == null) {
 				throw new Exception("No native OpenGL context available");
 			}
-
 			Context = Window_.GLContext;
 		} else {
 			Context = new AngleContext(GraphicsDeviceType_, Window_);
-
 			Context.MakeCurrent();
 		}
 
@@ -427,11 +427,17 @@ public abstract class Game : IDisposable {
 		BlendHelper.SetBlend(BlendType.Normal);
 		CTexture.Init();
 
+		// ScreenRendererを初期化
+		ScreenRenderer.Init();
+
+		// レンダーテクスチャを作成（1920x1080固定）
+		renderTexture = new RenderTexture(GameWindowSize.Width, GameWindowSize.Height);
+
 		Gl.ClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
-		if (!OperatingSystem.IsMacOS())
-			Gl.Viewport(0, 0, (uint)Window_.Size.X, (uint)Window_.Size.Y);
-		
+		// 初期ビューポートサイズを設定
+		Window_Resize(Window_.Size);
+
 		Context.SwapInterval(VSync ? 1 : 0);
 
 		Initialize();
@@ -439,11 +445,13 @@ public abstract class Game : IDisposable {
 	}
 
 	public void Window_Closing() {
-		CTexture.Terminate();
+		// リソースを解放
+		renderTexture?.Dispose();
+		ScreenRenderer.Terminate();
 
+		CTexture.Terminate();
 		UnloadContent();
 		OnExiting();
-
 		Context.Dispose();
 	}
 
@@ -463,11 +471,24 @@ public abstract class Game : IDisposable {
 			AsyncActions[0]?.Invoke();
 			AsyncActions.Remove(AsyncActions[0]);
 		}
-		Gl.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
+		// レンダーテクスチャに描画開始
+		renderTexture.BeginDraw();
+
+		// ゲームの描画処理を実行
 		Draw();
 
-		double fps = 1.0f / deltaTime;
+		// レンダーテクスチャへの描画終了
+		renderTexture.EndDraw();
+
+		// メインフレームバッファに戻す
+		// ウィンドウ全体のビューポートを設定してクリア
+		Gl.Viewport(0, 0, (uint)Window_.Size.X, (uint)Window_.Size.Y);
+		Gl.ClearColor(0.0f, 0.0f, 0.0f, 1.0f); // 黒で塗りつぶし
+		Gl.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
+
+		// レンダーテクスチャを適切なサイズとポジションで描画（バイリニアフィルタリング付き）
+		ScreenRenderer.DrawToScreen(renderTexture, ViewPortSize.X, ViewPortSize.Y, ViewPortOffset.X, ViewPortOffset.Y);
 
 #if DEBUG
 		ImGuiController?.Render();
@@ -477,23 +498,27 @@ public abstract class Game : IDisposable {
 	}
 
 	public void Window_Resize(Vector2D<int> size) {
-		if (size.X > 0 && size.Y > 0) {
-			float resolutionAspect = (float)GameWindowSize.Width / GameWindowSize.Height;
-			float windowAspect = (float)size.X / size.Y;
-			if (windowAspect > resolutionAspect) {
-				ViewPortSize.X = (int)(size.Y * resolutionAspect);
-				ViewPortSize.Y = size.Y;
-			} else {
-				ViewPortSize.X = size.X;
-				ViewPortSize.Y = (int)(size.X / resolutionAspect);
-			}
+		if (size.X <= 0 || size.Y <= 0) return;
+
+		float gameAspect = (float)GameWindowSize.Width / GameWindowSize.Height; // 16:9 = 1.777...
+		float windowAspect = (float)size.X / size.Y;
+
+		if (windowAspect > gameAspect) {
+			// ウィンドウが横長の場合：高さに合わせてスケール
+			ViewPortSize.Y = size.Y;
+			ViewPortSize.X = (int)(size.Y * gameAspect);
+			ViewPortOffset.X = (size.X - ViewPortSize.X) / 2;
+			ViewPortOffset.Y = 0;
+		} else {
+			// ウィンドウが縦長の場合：幅に合わせてスケール
+			ViewPortSize.X = size.X;
+			ViewPortSize.Y = (int)(size.X / gameAspect);
+			ViewPortOffset.X = 0;
+			ViewPortOffset.Y = (size.Y - ViewPortSize.Y) / 2;
 		}
 
-		ViewPortOffset.X = (size.X - ViewPortSize.X) / 2;
-		ViewPortOffset.Y = (size.Y - ViewPortSize.Y) / 2;
-
-
-		Gl.Viewport(ViewPortOffset.X, ViewPortOffset.Y, (uint)ViewPortSize.X, (uint)ViewPortSize.Y);
+		// デバッグ出力（必要に応じて）
+		Console.WriteLine($"Window: {size.X}x{size.Y}, Viewport: {ViewPortSize.X}x{ViewPortSize.Y}, Offset: ({ViewPortOffset.X}, {ViewPortOffset.Y})");
 	}
 
 	public void Window_Move(Vector2D<int> size) { }
