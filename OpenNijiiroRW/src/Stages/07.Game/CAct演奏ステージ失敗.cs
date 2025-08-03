@@ -139,9 +139,9 @@ internal class CAct演奏ステージ失敗 : CActivity {
         {
             if (TJAPlayer3.Tx.Tile_Black != null)
             {
-                for (int i = 0; i <= (SampleFramework.GameWindowSize.Width / 64); i++)
+                for (int i = 0; i <= (SampleFramework.RenderSurfaceSize.Width / 64); i++)
                 {
-                    for (int j = 0; j <= (SampleFramework.GameWindowSize.Height / 64); j++)
+                    for (int j = 0; j <= (SampleFramework.RenderSurfaceSize.Height / 64); j++)
                     {
                         TJAPlayer3.Tx.Tile_Black.t2D描画(i * 64, j * 64);
                     }

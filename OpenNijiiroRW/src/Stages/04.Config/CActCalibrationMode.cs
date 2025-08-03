@@ -94,8 +94,8 @@ internal class CActCalibrationMode : CActivity {
 
 		if (OpenNijiiroRW.Tx.Tile_Black != null) {
 			OpenNijiiroRW.Tx.Tile_Black.Opacity = 128;
-			for (int i = 0; i <= GameWindowSize.Width; i += OpenNijiiroRW.Tx.Tile_Black.szTextureSize.Width) {
-				for (int j = 0; j <= GameWindowSize.Height; j += OpenNijiiroRW.Tx.Tile_Black.szTextureSize.Height) {
+			for (int i = 0; i <= RenderSurfaceSize.Width; i += OpenNijiiroRW.Tx.Tile_Black.szTextureSize.Width) {
+				for (int j = 0; j <= RenderSurfaceSize.Height; j += OpenNijiiroRW.Tx.Tile_Black.szTextureSize.Height) {
 					OpenNijiiroRW.Tx.Tile_Black.t2D描画(i, j);
 				}
 			}
@@ -113,7 +113,7 @@ internal class CActCalibrationMode : CActivity {
 
 		OpenNijiiroRW.Tx.Notes[0]?.t2D描画(OpenNijiiroRW.Skin.nScrollFieldX[0], OpenNijiiroRW.Skin.nScrollFieldY[0], new RectangleF(0, 0, OpenNijiiroRW.Skin.Game_Notes_Size[0], OpenNijiiroRW.Skin.Game_Notes_Size[1]));
 
-		for (int x = OpenNijiiroRW.Skin.nScrollFieldX[0]; x < GameWindowSize.Width + 500; x += 500) {
+		for (int x = OpenNijiiroRW.Skin.nScrollFieldX[0]; x < RenderSurfaceSize.Width + 500; x += 500) {
 			OpenNijiiroRW.Tx.Bar?.t2D描画(
 				(x - CalibrateTick.CurrentValue) + ((OpenNijiiroRW.Skin.Game_Notes_Size[0] - OpenNijiiroRW.Tx.Bar.szTextureSize.Width) / 2),
 				OpenNijiiroRW.Skin.nScrollFieldY[0],

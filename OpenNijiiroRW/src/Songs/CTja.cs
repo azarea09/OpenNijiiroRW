@@ -2856,10 +2856,10 @@ internal class CTja : CActivity {
 			ParseBalloon(strCommandName, strCommandParam, ref this.listBalloon_Branch[(int)ECourse.eNormal]);
 		} else if (strCommandName.Equals("BALLOONEXP")) {
 			ParseBalloon(strCommandName, strCommandParam, ref this.listBalloon_Branch[(int)ECourse.eExpert]);
-			//tbBALLOON.Text = strCommandParam;
+			//tbBALLOON.WindowTitle = strCommandParam;
 		} else if (strCommandName.Equals("BALLOONMAS")) {
 			ParseBalloon(strCommandName, strCommandParam, ref this.listBalloon_Branch[(int)ECourse.eMaster]);
-			//tbBALLOON.Text = strCommandParam;
+			//tbBALLOON.WindowTitle = strCommandParam;
 		} else if (strCommandName.Equals("SCOREMODE")) {
 			ParseOptionalInt16(value => this.nScoreMode = value);
 		} else if (strCommandName.Equals("SCOREINIT")) {
@@ -3082,7 +3082,7 @@ internal class CTja : CActivity {
 				this.AddWarn($"ignoring an extra WAVE header, argument: {strCommandParam}");
 			} else {
 				this.strBGM_PATH = CDTXCompanionFileFinder.FindFileName(this.strFolderPath, strFileName, strCommandParam);
-				//tbWave.Text = strCommandParam;
+				//tbWave.WindowTitle = strCommandParam;
 				if (this.listWAV != null) {
 					// 2018-08-27 twopointzero - DO attempt to load (or queue scanning) loudness metadata here.
 					//                           TJAP3 is either launching, enumerating songs, or is about to
@@ -3112,24 +3112,24 @@ internal class CTja : CActivity {
 
 			if (this.isOFFSET_Negative == true)
 				this.msOFFSET_Abs = this.msOFFSET_Abs * -1; //OFFSETは秒を加算するので、必ず正の数にすること。
-															//tbOFFSET.Text = strCommandParam;
+															//tbOFFSET.WindowTitle = strCommandParam;
 		} else if (strCommandName.Equals("MOVIEOFFSET")) {
 			this.msMOVIEOFFSET_Abs = (int)(Convert.ToDouble(strCommandParam) * 1000);
 			this.isMOVIEOFFSET_Negative = this.msMOVIEOFFSET_Abs < 0 ? true : false;
 
 			if (this.isMOVIEOFFSET_Negative == true)
 				this.msMOVIEOFFSET_Abs = this.msMOVIEOFFSET_Abs * -1; //OFFSETは秒を加算するので、必ず正の数にすること。
-																	  //tbOFFSET.Text = strCommandParam;
+																	  //tbOFFSET.WindowTitle = strCommandParam;
 		}
 		#region[移動→不具合が起こるのでここも一応復活させておく]
 		else if (strCommandName.Equals("BALLOON") || strCommandName.Equals("BALLOONNOR")) {
 			ParseBalloon(strCommandName, strCommandParam, ref this.listBalloon_Branch[(int)ECourse.eNormal]);
 		} else if (strCommandName.Equals("BALLOONEXP")) {
 			ParseBalloon(strCommandName, strCommandParam, ref this.listBalloon_Branch[(int)ECourse.eExpert]);
-			//tbBALLOON.Text = strCommandParam;
+			//tbBALLOON.WindowTitle = strCommandParam;
 		} else if (strCommandName.Equals("BALLOONMAS")) {
 			ParseBalloon(strCommandName, strCommandParam, ref this.listBalloon_Branch[(int)ECourse.eMaster]);
-			//tbBALLOON.Text = strCommandParam;
+			//tbBALLOON.WindowTitle = strCommandParam;
 		} else if (strCommandName.Equals("SCOREMODE")) {
 			ParseOptionalInt16(value => this.nScoreMode = value);
 		} else if (strCommandName.Equals("SCOREINIT")) {
@@ -3167,7 +3167,7 @@ internal class CTja : CActivity {
 				kvp.Value.SongVol = this.SongVol;
 			}
 		} else if (strCommandName.Equals("SEVOL")) {
-			//tbSeVol.Text = strCommandParam;
+			//tbSeVol.WindowTitle = strCommandParam;
 		} else if (strCommandName.Equals("COURSE")) {
 			if (!string.IsNullOrEmpty(strCommandParam)) {
 				//this.n参照中の難易度 = Convert.ToInt16( strCommandParam );

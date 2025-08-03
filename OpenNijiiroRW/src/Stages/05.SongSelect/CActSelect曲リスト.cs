@@ -2749,7 +2749,7 @@ internal class CActSelect曲リスト : CActivity {
 		CSongUniqueID csu = null,
 		CSongListNode reference = null
 	) {
-		if (x >= GameWindowSize.Width || y >= GameWindowSize.Height)
+		if (x >= RenderSurfaceSize.Width || y >= RenderSurfaceSize.Height)
 			return;
 
 		var IsSongLocked = OpenNijiiroRW.Databases.DBSongUnlockables.tIsSongLocked(reference);

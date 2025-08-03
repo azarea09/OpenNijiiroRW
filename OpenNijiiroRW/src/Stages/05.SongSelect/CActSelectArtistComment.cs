@@ -22,15 +22,15 @@ internal class CActSelectArtistComment : CActivity {
 				graphics.PageUnit = GraphicsUnit.Pixel;
 				SizeF ef = graphics.MeasureString( this.strArtist, this.ft描画用フォント );
 				graphics.Dispose();
-				if (ef.Width > SampleFramework.GameWindowSize.Width)
+				if (ef.Width > SampleFramework.RenderSurfaceSize.Width)
 				{
-					ef.Width = SampleFramework.GameWindowSize.Width;
+					ef.Width = SampleFramework.RenderSurfaceSize.Width;
 				}
 				try
 				{
 					Bitmap bitmap2 = new Bitmap( (int) Math.Ceiling( (double) ef.Width ), (int) Math.Ceiling( (double) this.ft描画用フォント.Size ) );
 					graphics = Graphics.FromImage( bitmap2 );
-					graphics.TextRenderingHint = System.Drawing.Text.TextRenderingHint.AntiAlias;
+					graphics.TextRenderingHint = System.Drawing.WindowTitle.TextRenderingHint.AntiAlias;
 					graphics.DrawString( this.strArtist, this.ft描画用フォント, Brushes.White, ( float ) 0f, ( float ) 0f );
 					graphics.Dispose();
 					this.txArtist = new CTexture( bitmap2 );
@@ -58,7 +58,7 @@ internal class CActSelectArtistComment : CActivity {
 				int maxTextureHeight = 99999;
 				Bitmap bitmap3 = new Bitmap( size.Width, (int) Math.Ceiling( (double) this.ft描画用フォント.Size ) );
 				graphics2 = Graphics.FromImage( bitmap3 );
-				graphics2.TextRenderingHint = System.Drawing.Text.TextRenderingHint.AntiAlias;
+				graphics2.TextRenderingHint = System.Drawing.WindowTitle.TextRenderingHint.AntiAlias;
 				graphics2.DrawString( this.strComment, this.ft描画用フォント, Brushes.White, ( float ) 0f, ( float ) 0f );
 				graphics2.Dispose();
 				this.nComment行数 = 1;

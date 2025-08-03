@@ -45,7 +45,7 @@ internal class Program {
 	static void Main() {
 		Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
 
-		mutex二重起動防止用 = new Mutex(false, "DTXManiaMutex");
+		mutex二重起動防止用 = new Mutex(false, "OpenNijiiroRW");
 
 		if (mutex二重起動防止用.WaitOne(0, false)) {
 			string newLine = Environment.NewLine;

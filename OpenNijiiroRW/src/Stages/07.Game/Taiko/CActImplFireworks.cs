@@ -232,7 +232,7 @@ internal class CActImplFireworks : CActivity {
 									/*
                                     Matrix mat = Matrix.Identity;
                                     mat *= Matrix.Scaling( f倍率, f倍率, f倍率 );
-                                    mat *= Matrix.Translation( TJAPlayer3.Skin.nScrollFieldX[0] - SampleFramework.GameWindowSize.Width / 2.0f, -(TJAPlayer3.Skin.nJudgePointY[ this.st状態[ i ].nPlayer ] - SampleFramework.GameWindowSize.Height / 2.0f), 0f );
+                                    mat *= Matrix.Translation( TJAPlayer3.Skin.nScrollFieldX[0] - SampleFramework.RenderSurfaceSize.Width / 2.0f, -(TJAPlayer3.Skin.nJudgePointY[ this.st状態[ i ].nPlayer ] - SampleFramework.RenderSurfaceSize.Height / 2.0f), 0f );
                                     //mat *= Matrix.Billboard( new Vector3( 15, 15, 15 ), new Vector3(0, 0, 0), new Vector3( 0, 0, 0 ), new Vector3( 0, 0, 0 ) );
                                     //mat *= Matrix.Translation( 0f, 0f, 0f );
 
@@ -291,7 +291,7 @@ internal class CActImplFireworks : CActivity {
 					/*
                     Matrix mat = Matrix.Identity;
 
-                    mat *= Matrix.Translation(this.st大音符花火[i].fX - SampleFramework.GameWindowSize.Width / 2, -(this.st大音符花火[i].fY - SampleFramework.GameWindowSize.Height / 2), 0f);
+                    mat *= Matrix.Translation(this.st大音符花火[i].fX - SampleFramework.RenderSurfaceSize.Width / 2, -(this.st大音符花火[i].fY - SampleFramework.RenderSurfaceSize.Height / 2), 0f);
                     */
 					float fX = this.st大音符花火[i].fX - (192 / 2);
 					float fY = this.st大音符花火[i].fY - (192 / 2);
@@ -340,7 +340,7 @@ internal class CActImplFireworks : CActivity {
 
                     float x = (float)(this.st紙吹雪[i].f半径 * Math.Cos((Math.PI / 2 * this.st紙吹雪[i].ct進行.n現在の値) / 100.0)) * 2.3f;
                     mat *= Matrix.Scaling(x, x, 1f);
-                    mat *= Matrix.Translation(this.st紙吹雪[i].fX - SampleFramework.GameWindowSize.Width / 2, -(this.st紙吹雪[i].fY - SampleFramework.GameWindowSize.Height / 2), 0f);
+                    mat *= Matrix.Translation(this.st紙吹雪[i].fX - SampleFramework.RenderSurfaceSize.Width / 2, -(this.st紙吹雪[i].fY - SampleFramework.RenderSurfaceSize.Height / 2), 0f);
                     */
 
 					/*if (this.tx紙吹雪 != null)

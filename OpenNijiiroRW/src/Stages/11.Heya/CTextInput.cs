@@ -12,7 +12,7 @@ namespace OpenNijiiroRW {
 		/// <summary>
 		/// 
 		/// </summary>
-		/// <param name="text">Text to start with. Changes as user inputs text.</param>
+		/// <param name="text">WindowTitle to start with. Changes as user inputs text.</param>
 		/// <param name="max_length">Max length in bytes that the string can be.</param>
 		public CTextInput(string text, uint max_length) : base() {
 			Text = text;
@@ -25,7 +25,7 @@ namespace OpenNijiiroRW {
 		public bool Update() {
 			ImGui.SetNextWindowSize(new(300,150));
 
-			ImGui.Begin("Text Input", ImGuiWindowFlags.NoResize);
+			ImGui.Begin("WindowTitle Input", ImGuiWindowFlags.NoResize);
 			ImGui.SetKeyboardFocusHere();
 			if (ImGui.InputText("text :)", ref Text, MaxLength, ImGuiInputTextFlags.EnterReturnsTrue)) return true;
 			ImGui.Text("This window is only visible in Debug mode.\nThis will never show on a Release build.\nDon't run multiple CInputText at once!");

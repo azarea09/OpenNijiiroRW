@@ -1218,7 +1218,7 @@ internal class OpenNijiiroRW : Game {
 							this.bInternetConnectionSuccess = reply.Status == IPStatus.Success;
 						});
 					}
-					OpenNijiiroRW.Tx.Network_Connection.t2D描画(GameWindowSize.Width - (OpenNijiiroRW.Tx.Network_Connection.szTextureSize.Width / 2), GameWindowSize.Height - OpenNijiiroRW.Tx.Network_Connection.szTextureSize.Height, new Rectangle((OpenNijiiroRW.Tx.Network_Connection.szTextureSize.Width / 2) * (this.bInternetConnectionSuccess ? 0 : 1), 0, OpenNijiiroRW.Tx.Network_Connection.szTextureSize.Width / 2, OpenNijiiroRW.Tx.Network_Connection.szTextureSize.Height));
+					OpenNijiiroRW.Tx.Network_Connection.t2D描画(RenderSurfaceSize.Width - (OpenNijiiroRW.Tx.Network_Connection.szTextureSize.Width / 2), RenderSurfaceSize.Height - OpenNijiiroRW.Tx.Network_Connection.szTextureSize.Height, new Rectangle((OpenNijiiroRW.Tx.Network_Connection.szTextureSize.Width / 2) * (this.bInternetConnectionSuccess ? 0 : 1), 0, OpenNijiiroRW.Tx.Network_Connection.szTextureSize.Width / 2, OpenNijiiroRW.Tx.Network_Connection.szTextureSize.Height));
 				}
 				// オーバレイを描画する(テクスチャの生成されていない起動ステージは例外
 
@@ -1887,7 +1887,7 @@ internal class OpenNijiiroRW : Game {
 			delay = "(" + SoundManager.GetSoundDelay() + "ms)";
 		}
 		AssemblyName asmApp = Assembly.GetExecutingAssembly().GetName();
-		base.Text = asmApp.Name + " Ver." + VERSION + " - (" + GraphicsDeviceType_ + ") - (" + SoundManager.GetCurrentSoundDeviceType() + delay + ")";
+		base.WindowTitle = asmApp.Name + " Ver." + VERSION + " - (" + GraphicsDeviceType_ + ") - (" + SoundManager.GetCurrentSoundDeviceType() + delay + ")";
 	}
 
 	private void tExitProcess() {
@@ -2144,8 +2144,8 @@ internal class OpenNijiiroRW : Game {
 	}
 
 	private void ChangeResolution(int nWidth, int nHeight) {
-		//GameWindowSize.Width = nWidth;
-		//GameWindowSize.Height = nHeight;
+		//RenderSurfaceSize.Width = nWidth;
+		//RenderSurfaceSize.Height = nHeight;
 
 		//WindowSize = new Silk.NET.Maths.Vector2D<int>(nWidth, nHeight);
 	}

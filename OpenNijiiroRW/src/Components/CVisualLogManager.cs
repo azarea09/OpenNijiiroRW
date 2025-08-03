@@ -21,7 +21,7 @@ class CVisualLogManager {
 			}
 			timeSinceCreation.Tick();
 
-			if (y >= GameWindowSize.Height)
+			if (y >= RenderSurfaceSize.Height)
 				return y; // exceeded screen; skip drawing
 
 			// Display stuff here

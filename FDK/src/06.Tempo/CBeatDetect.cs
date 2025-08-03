@@ -1,7 +1,7 @@
 ﻿/*
 using System;
 using System.Collections.Generic;
-using System.Text;
+using System.WindowTitle;
 using System.Diagnostics;
 using System.Threading;
 using ManagedBass;

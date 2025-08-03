@@ -715,11 +715,11 @@ public class CTexture : IDisposable {
 		unsafe {
 			Matrix4X4<float> mvp = Matrix4X4<float>.Identity;
 
-			float gameAspect = (float)GameWindowSize.Width / GameWindowSize.Height;
+			float gameAspect = (float)RenderSurfaceSize.Width / RenderSurfaceSize.Height;
 
 
 			//スケーリング-----
-			mvp *= Matrix4X4.CreateScale(rc画像内の描画領域.Width / GameWindowSize.Width, rc画像内の描画領域.Height / GameWindowSize.Height, 1) *
+			mvp *= Matrix4X4.CreateScale(rc画像内の描画領域.Width / RenderSurfaceSize.Width, rc画像内の描画領域.Height / RenderSurfaceSize.Height, 1) *
 				   Matrix4X4.CreateScale(flipX ? -vcScaleRatio.X : vcScaleRatio.X, flipY ? -vcScaleRatio.Y : vcScaleRatio.Y, 1.0f);
 			//-----
 
@@ -730,11 +730,11 @@ public class CTexture : IDisposable {
 																		//-----
 
 			//移動----
-			float offsetX = rc画像内の描画領域.Width * vcScaleRatio.X / GameWindowSize.Width;
-			float offsetY = rc画像内の描画領域.Height * vcScaleRatio.Y / GameWindowSize.Height;
+			float offsetX = rc画像内の描画領域.Width * vcScaleRatio.X / RenderSurfaceSize.Width;
+			float offsetY = rc画像内の描画領域.Height * vcScaleRatio.Y / RenderSurfaceSize.Height;
 			mvp *= Matrix4X4.CreateTranslation(offsetX, -offsetY, 0.0f);
 			mvp *= Matrix4X4.CreateTranslation(-1.0f, 1.0f, 0);
-			mvp *= Matrix4X4.CreateTranslation(x / GameWindowSize.Width * 2, -y / GameWindowSize.Height * 2, 0.0f);
+			mvp *= Matrix4X4.CreateTranslation(x / RenderSurfaceSize.Width * 2, -y / RenderSurfaceSize.Height * 2, 0.0f);
 			//-----
 
 			Game.Gl.UniformMatrix4(MVPID, 1, false, (float*)&mvp); //MVPに値を設定
@@ -851,11 +851,11 @@ public class CTexture : IDisposable {
 		unsafe {
 			Matrix4X4<float> mvp = Matrix4X4<float>.Identity;
 
-			float gameAspect = (float)GameWindowSize.Width / GameWindowSize.Height;
+			float gameAspect = (float)RenderSurfaceSize.Width / RenderSurfaceSize.Height;
 
 
 			//スケーリング-----
-			mvp *= Matrix4X4.CreateScale((float)rc画像内の描画領域.Width / GameWindowSize.Width, (float)rc画像内の描画領域.Height / GameWindowSize.Height, 1) *
+			mvp *= Matrix4X4.CreateScale((float)rc画像内の描画領域.Width / RenderSurfaceSize.Width, (float)rc画像内の描画領域.Height / RenderSurfaceSize.Height, 1) *
 				   Matrix4X4.CreateScale(xScale, yScale, 1.0f);
 			//-----
 
@@ -866,11 +866,11 @@ public class CTexture : IDisposable {
 																		//-----
 
 			//移動----
-			float offsetX = rc画像内の描画領域.Width * xScale / GameWindowSize.Width;
-			float offsetY = rc画像内の描画領域.Height * yScale / GameWindowSize.Height;
+			float offsetX = rc画像内の描画領域.Width * xScale / RenderSurfaceSize.Width;
+			float offsetY = rc画像内の描画領域.Height * yScale / RenderSurfaceSize.Height;
 			mvp *= Matrix4X4.CreateTranslation(offsetX, -offsetY, 0.0f);
 			mvp *= Matrix4X4.CreateTranslation(-1.0f, 1.0f, 0);
-			mvp *= Matrix4X4.CreateTranslation(x / GameWindowSize.Width * 2, -y / GameWindowSize.Height * 2, 0.0f);
+			mvp *= Matrix4X4.CreateTranslation(x / RenderSurfaceSize.Width * 2, -y / RenderSurfaceSize.Height * 2, 0.0f);
 			//-----
 
 			Game.Gl.UniformMatrix4(MVPID, 1, false, (float*)&mvp); //MVPに値を設定

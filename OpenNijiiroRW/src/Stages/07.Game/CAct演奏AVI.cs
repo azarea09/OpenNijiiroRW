@@ -21,7 +21,7 @@ internal class CAct演奏AVI : CActivity {
 		if (this.isCutScene || OpenNijiiroRW.ConfigIni.bEnableAVI) {
 			this.rVD = rVD;
 			if (this.rVD != null) {
-				this.ratio1 = Math.Min((float)GameWindowSize.Height / ((float)this.rVD.FrameSize.Height), (float)GameWindowSize.Width / ((float)this.rVD.FrameSize.Height));
+				this.ratio1 = Math.Min((float)RenderSurfaceSize.Height / ((float)this.rVD.FrameSize.Height), (float)RenderSurfaceSize.Width / ((float)this.rVD.FrameSize.Height));
 
 				if (!rVD.bPlaying) this.rVD.Start();
 			}
@@ -46,7 +46,7 @@ internal class CAct演奏AVI : CActivity {
 			this.tx描画用.vcScaleRatio.Y = this.ratio1;
 
 			if (this.isCutScene || OpenNijiiroRW.ConfigIni.eClipDispType.HasFlag(EClipDispType.BackgroundOnly)) {
-				this.tx描画用.t2D拡大率考慮描画(CTexture.RefPnt.Center, GameWindowSize.Width / 2, GameWindowSize.Height / 2);
+				this.tx描画用.t2D拡大率考慮描画(CTexture.RefPnt.Center, RenderSurfaceSize.Width / 2, RenderSurfaceSize.Height / 2);
 			}
 		}
 		return 0;
@@ -56,13 +56,13 @@ internal class CAct演奏AVI : CActivity {
 		if (this.rVD == null || this.tx描画用 == null || !OpenNijiiroRW.ConfigIni.eClipDispType.HasFlag(EClipDispType.WindowOnly))
 			return;
 
-		float[] fRatio = new float[] { (GameWindowSize.Width / 2) - 4.0f, (GameWindowSize.Height / 2) - 4.0f }; //中央下表示
+		float[] fRatio = new float[] { (RenderSurfaceSize.Width / 2) - 4.0f, (RenderSurfaceSize.Height / 2) - 4.0f }; //中央下表示
 
 		float ratio = Math.Min((float)(fRatio[0] / this.rVD.FrameSize.Width), (float)(fRatio[1] / this.rVD.FrameSize.Height));
 		this.tx描画用.vcScaleRatio.X = ratio;
 		this.tx描画用.vcScaleRatio.Y = ratio;
 
-		this.tx描画用.t2D拡大率考慮描画(CTexture.RefPnt.Down, GameWindowSize.Width / 2, GameWindowSize.Height);
+		this.tx描画用.t2D拡大率考慮描画(CTexture.RefPnt.Down, RenderSurfaceSize.Width / 2, RenderSurfaceSize.Height);
 	}
 
 	// CActivity 実装

@@ -1928,7 +1928,7 @@ internal class CStage演奏ドラム画面 : CStage演奏画面共通 {
 		int y = NoteOriginY[nPlayer] + pChip.nVerticalChipDistance;
 
 		if ((pChip.bVisible && !pChip.bHideBarLine) && (OpenNijiiroRW.Tx.Bar != null)) {
-			if (x >= 0 && x <= GameWindowSize.Width) {
+			if (x >= 0 && x <= RenderSurfaceSize.Width) {
 				if (pChip.bBranch) {
 					//this.tx小節線_branch.t2D描画( CDTXMania.app.Device, x - 3, y, new Rectangle( 0, 0, 3, 130 ) );
 					OpenNijiiroRW.Tx.Bar_Branch?.t2D描画(x + ((OpenNijiiroRW.Skin.Game_Notes_Size[0] - OpenNijiiroRW.Tx.Bar_Branch.szTextureSize.Width) / 2), y, new Rectangle(0, 0, OpenNijiiroRW.Tx.Bar_Branch.szTextureSize.Width, OpenNijiiroRW.Skin.Game_Notes_Size[1]));

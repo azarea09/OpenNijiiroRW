@@ -387,7 +387,7 @@ internal class CStageコンフィグ : CStage {
 						   null,
 						   30,
 						   true))) {
-					status_text.t2D_DisplayImage_AnchorCenter(GameWindowSize.Width / 2, GameWindowSize.Height / 2);
+					status_text.t2D_DisplayImage_AnchorCenter(RenderSurfaceSize.Width / 2, RenderSurfaceSize.Height / 2);
 				}
 			}
 		}

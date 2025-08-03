@@ -467,7 +467,7 @@ class HGaugeMethods {
 			gauge_y = OpenNijiiroRW.Skin.Game_Gauge_Y[player];
 		}
 
-		// Text pos
+		// WindowTitle pos
 		int text_x = 0;
 		int text_y = 0;
 		if (OpenNijiiroRW.ConfigIni.nPlayerCount <= 2) {

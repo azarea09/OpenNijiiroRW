@@ -1518,8 +1518,8 @@ internal class CConfigIni : INotifyPropertyChanged {
 		this.bEnableVSync = true;
 		this.nWindowBaseXPosition = 100; // #30675 2013.02.04 ikanick add
 		this.nWindowBaseYPosition = 100;
-		this.nWindowWidth = GameWindowSize.Width; // #23510 2010.10.31 yyagi add
-		this.nWindowHeight = GameWindowSize.Height; //
+		this.nWindowWidth = RenderSurfaceSize.Width; // #23510 2010.10.31 yyagi add
+		this.nWindowHeight = RenderSurfaceSize.Height; //
 		this.nMsSleepPerFrame = -1; // #xxxxx 2011.11.27 yyagi add
 		this.nMsSleepUnfocused = 1; // #23568 2010.11.04 ikanick add
 		this._bGuitarEnabled = true;
@@ -2765,7 +2765,7 @@ internal class CConfigIni : INotifyPropertyChanged {
 			case "WindowWidth": {
 					this.nWindowWidth = CConversion.ParseIntInRange(value, 1, 65535, this.nWindowWidth);
 					if (this.nWindowWidth <= 0) {
-						this.nWindowWidth = GameWindowSize.Width;
+						this.nWindowWidth = RenderSurfaceSize.Width;
 					}
 
 					break;
@@ -2773,7 +2773,7 @@ internal class CConfigIni : INotifyPropertyChanged {
 			case "WindowHeight": {
 					this.nWindowHeight = CConversion.ParseIntInRange(value, 1, 65535, this.nWindowHeight);
 					if (this.nWindowHeight <= 0) {
-						this.nWindowHeight = GameWindowSize.Height;
+						this.nWindowHeight = RenderSurfaceSize.Height;
 					}
 
 					break;

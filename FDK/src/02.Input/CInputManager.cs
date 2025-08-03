@@ -87,8 +87,6 @@ public class CInputManager : IDisposable {
 				Trace.TraceInformation("Input Device #" + i + " (" + InputDevices[i].CurrentType.ToString() + " - " + InputDevices[i].Name + ")");
 			} catch { }
 		}
-
-		Game.InitImGuiController(window, Context);
 	}
 
 	private void ConnectionChanged(Silk.NET.Input.IInputDevice device, bool connected) {

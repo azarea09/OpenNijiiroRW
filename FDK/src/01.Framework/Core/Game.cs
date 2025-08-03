@@ -1,25 +1,4 @@
-﻿/*
-* Copyright (c) 2007-2009 SlimDX Group
-*
-* Permission is hereby granted, free of charge, to any person obtaining a copy
-* of this software and associated documentation files (the "Software"), to deal
-* in the Software without restriction, including without limitation the rights
-* to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-* copies of the Software, and to permit persons to whom the Software is
-* furnished to do so, subject to the following conditions:
-*
-* The above copyright notice and this permission notice shall be included in
-* all copies or substantial portions of the Software.
-*
-* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-* IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-* FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-* AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-* LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-* OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-* THE SOFTWARE.
-*/
-using System.Drawing;
+﻿using System.Drawing;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using FDK;
@@ -35,138 +14,91 @@ using SkiaSharp;
 
 namespace FDK;
 
-/// <summary>
-/// Presents an easy to use wrapper for making games and samples.
-/// </summary>
 public abstract class Game : IDisposable {
 	public static GL Gl { get; private set; }
 	public static Silk.NET.Core.Contexts.IGLContext Context { get; private set; }
-
-	public static ImGuiController ImGuiController { get; private set; }
-	public static ImGuiIOPtr ImGuiIO { get; private set; }
-	private static CTexture ImGuiFontAtlas;
-
-	static string _test = "";
-	public static void InitImGuiController(IView window, IInputContext context) {
-		if (ImGuiController != null) return;
-
-		ImGuiController = new ImGuiController(Gl, window, context);
-		ImGuiIO = ImGui.GetIO();
-		ImGui.StyleColorsDark();
-#if DEBUG
-		try {
-			ImGuiIO.Fonts.Clear();
-			unsafe {
-				Stream data = Assembly.GetExecutingAssembly().GetManifestResourceStream(@"FDK.mplus-1p-medium.ttf");
-				byte[] stream_data = new byte[data.Length];
-				data.Read(stream_data);
-				fixed (byte* stream = stream_data) {
-					ImFontConfigPtr config = new ImFontConfigPtr(ImGuiNative.ImFontConfig_ImFontConfig());
-					ImGuiIO.Fonts.AddFontFromMemoryTTF((IntPtr)stream, 64, 16.0f, config, ImGuiIO.Fonts.GetGlyphRangesDefault());
-					config.MergeMode = true;
-					ImGuiIO.Fonts.AddFontFromMemoryTTF((IntPtr)stream, 64, 16.0f, config, ImGuiIO.Fonts.GetGlyphRangesJapanese());
-
-					ImGuiIO.Fonts.GetTexDataAsRGBA32(out byte* out_pixels, out int width, out int height);
-
-					using (SKImage image = SKImage.FromPixels(new SKImageInfo(width, height, SKColorType.Rgba8888, SKAlphaType.Opaque), (IntPtr)out_pixels)) {
-						using (SKBitmap bitmap = SKBitmap.FromImage(image)) {
-							ImGuiFontAtlas?.Dispose();
-							ImGuiFontAtlas = new CTexture(bitmap);
-						}
-					}
-					Marshal.FreeHGlobal((IntPtr)out_pixels);
-
-					ImGuiIO.Fonts.SetTexID((nint)ImGuiFontAtlas.Pointer);
-				}
-			}
-		} catch (Exception ex) {
-			ImGuiIO.Fonts.Clear();
-			ImGuiIO.Fonts.AddFontDefault();
-		}
-#endif
-	}
-
+	public static AnglePlatformType GraphicsDeviceType_ = AnglePlatformType.OpenGL;
+	public static string strIconFileName;
 	public static List<Action> AsyncActions { get; private set; } = new();
+	public static int MainThreadID { get; private set; }
+	public static long TimeMs;
+	public static Matrix4X4<float> Camera;
+	public static float ScreenAspect = RenderSurfaceSize.Width / RenderSurfaceSize.Height;
 
-	private string strIconFileName;
+	public IWindow Window_;
 
-	protected string _Text = "";
-	protected string Text {
+	private string _windowTitle = "FDK Game";
+	public string WindowTitle {
 		get {
-			return _Text;
+			return _windowTitle;
 		}
 		set {
-			_Text = value;
+			_windowTitle = value;
 			if (Window_ != null) {
 				Window_.Title = value;
 			}
 		}
 	}
 
-	public static AnglePlatformType GraphicsDeviceType_ = AnglePlatformType.OpenGL;
-
-	public IWindow Window_;
-
-	private Vector2D<int> _WindowSize;
+	private Vector2D<int> _windowSize = new(1280, 720);
 	public Vector2D<int> WindowSize {
 		get {
-			return _WindowSize;
+			return _windowSize;
 		}
 		set {
-			_WindowSize = value;
+			_windowSize = value;
 			if (Window_ != null) {
 				Window_.Size = value;
 			}
 		}
 	}
 
-	private Vector2D<int> _WindowPosition;
+	private Vector2D<int> _windowPosition = new(0, 0);
 	public Vector2D<int> WindowPosition {
 		get {
-			return _WindowPosition;
+			return _windowPosition;
 		}
 		set {
-			_WindowPosition = value;
+			_windowPosition = value;
 			if (Window_ != null) {
 				Window_.Position = value;
 			}
 		}
 	}
 
-	private int _Framerate;
-
+	private int _framerate;
 	public int Framerate {
 		get {
-			return _Framerate;
+			return _framerate;
 		}
 		set {
-			_Framerate = value;
+			_framerate = value;
 			if (Window_ != null) {
 				UpdateWindowFramerate(VSync, value);
 			}
 		}
 	}
 
-	private bool _FullScreen;
+	private bool _fullScreen;
 	public bool FullScreen {
 		get {
-			return _FullScreen;
+			return _fullScreen;
 		}
 		set {
-			_FullScreen = value;
+			_fullScreen = value;
 			if (Window_ != null) {
 				Window_.WindowState = value ? WindowState.Fullscreen : WindowState.Normal;
 			}
 		}
 	}
 
-	private bool _VSync;
+	private bool _vSync = true;
 	public bool VSync {
 		get {
-			return _VSync;
+			return _vSync;
 		}
 		set {
-			_VSync = value;
+			_vSync = value;
 			if (Window_ != null) {
 				UpdateWindowFramerate(value, Framerate);
 				Window_.VSync = value;
@@ -174,16 +106,227 @@ public abstract class Game : IDisposable {
 		}
 	}
 
-	public static int MainThreadID { get; private set; }
-
 	private Vector2D<int> ViewPortSize = new Vector2D<int>();
 	private Vector2D<int> ViewPortOffset = new Vector2D<int>();
-
 	private RenderTexture renderTexture;
-	private Vector2D<int> originalViewportSize;
-	private Vector2D<int> originalViewportOffset;
-	public static readonly Size GameWindowSize = new Size(1920, 1080);
 
+	protected virtual void Configuration() {
+
+	}
+
+	protected virtual void Initialize() {
+
+	}
+
+
+	protected virtual void LoadContent() {
+
+	}
+
+	protected virtual void UnloadContent() {
+
+	}
+
+	protected virtual void OnExiting() {
+
+	}
+
+	protected virtual void Update() {
+
+	}
+
+	protected virtual void Draw() {
+
+	}
+
+	/// <summary>
+	/// Initializes a new instance of the <see cref="Game"/> class.
+	/// </summary>
+	protected Game(string iconFileName) {
+		strIconFileName = iconFileName;
+
+		MainThreadID = Thread.CurrentThread.ManagedThreadId;
+		Configuration();
+
+		WindowOptions options = WindowOptions.Default;
+
+		options.Size = WindowSize;
+		options.Position = WindowPosition;
+		options.UpdatesPerSecond = VSync ? 0 : Framerate;
+		options.FramesPerSecond = VSync ? 0 : Framerate;
+		options.WindowState = FullScreen ? WindowState.Fullscreen : WindowState.Normal;
+		options.VSync = VSync;
+
+		if (!OperatingSystem.IsMacOS()) options.API = GraphicsAPI.None;
+
+		options.WindowBorder = WindowBorder.Resizable;
+		options.Title = WindowTitle;
+
+		Silk.NET.Windowing.Glfw.GlfwWindowing.Use();
+
+		Window_ = Window.Create(options);
+
+		ViewPortSize.X = Window_.Size.X;
+		ViewPortSize.Y = Window_.Size.Y;
+		ViewPortOffset.X = 0;
+		ViewPortOffset.Y = 0;
+
+		Window_.Load += Window_Load;
+		Window_.Closing += Window_Closing;
+		Window_.Update += Window_Update;
+		Window_.Render += Window_Render;
+		Window_.Resize += Window_Resize;
+		Window_.Move += Window_Move;
+		Window_.FramebufferResize += Window_FramebufferResize;
+	}
+
+	private void UpdateWindowFramerate(bool vsync, int value) {
+		if (vsync) {
+			Window_.UpdatesPerSecond = 0;
+			Window_.FramesPerSecond = 0;
+			Context.SwapInterval(1);
+		} else {
+			Window_.UpdatesPerSecond = value;
+			Window_.FramesPerSecond = value;
+			Context.SwapInterval(0);
+		}
+	}
+
+	/// <summary>
+	/// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+	/// </summary>
+	public void Dispose() {
+		Window_.Dispose();
+	}
+
+	public void Exit() {
+		Window_.Close();
+	}
+
+	protected void ToggleWindowMode() {
+		FullScreen = !FullScreen;
+	}
+
+	/// <summary>
+	/// Runs the game.
+	/// </summary>
+	public void Run() {
+		Window_.Run();
+	}
+
+	public void Window_Load() {
+		Window_.SetWindowIcon(new ReadOnlySpan<RawImage>(GetIconData(strIconFileName)));
+
+		if (OperatingSystem.IsMacOS()) {
+			if (Window_.GLContext == null) {
+				throw new Exception("No native OpenGL context available");
+			}
+			Context = Window_.GLContext;
+		} else {
+			Context = new AngleContext(GraphicsDeviceType_, Window_);
+			Context.MakeCurrent();
+		}
+
+		Gl = GL.GetApi(Context);
+
+		Gl.Enable(GLEnum.Blend);
+		BlendHelper.SetBlend(BlendType.Normal);
+		CTexture.Init();
+
+		// ScreenRendererを初期化
+		ScreenRenderer.Init();
+
+		// レンダーテクスチャを作成（1920x1080固定）
+		renderTexture = new RenderTexture(RenderSurfaceSize.Width, RenderSurfaceSize.Height);
+
+		Gl.ClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+
+		// 初期ビューポートサイズを設定
+		Window_Resize(Window_.Size);
+
+		Context.SwapInterval(VSync ? 1 : 0);
+
+		Initialize();
+		LoadContent();
+	}
+
+	public void Window_Closing() {
+		// リソースを解放
+		renderTexture?.Dispose();
+		ScreenRenderer.Terminate();
+
+		CTexture.Terminate();
+		UnloadContent();
+		OnExiting();
+		Context.Dispose();
+	}
+
+	public void Window_Update(double deltaTime) {
+		double fps = 1.0f / deltaTime;
+		TimeMs = (long)(Window_.Time * 1000);
+
+		Update();
+	}
+
+	public void Window_Render(double deltaTime) {
+		Camera = Matrix4X4<float>.Identity;
+
+		if (AsyncActions.Count > 0) {
+			AsyncActions[0]?.Invoke();
+			AsyncActions.Remove(AsyncActions[0]);
+		}
+
+		// レンダーテクスチャに描画開始
+		renderTexture.BeginDraw();
+
+		// ゲームの描画処理を実行
+		Draw();
+
+		// レンダーテクスチャへの描画終了
+		renderTexture.EndDraw();
+
+		// メインフレームバッファに戻す
+		// ウィンドウ全体のビューポートを設定してクリア
+		Gl.Viewport(0, 0, (uint)Window_.Size.X, (uint)Window_.Size.Y);
+		Gl.ClearColor(0.0f, 0.0f, 0.0f, 1.0f); // 黒で塗りつぶし
+		Gl.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
+
+		// レンダーテクスチャを適切なサイズとポジションで描画（バイリニアフィルタリング付き）
+		ScreenRenderer.DrawToScreen(renderTexture, ViewPortSize.X, ViewPortSize.Y, ViewPortOffset.X, ViewPortOffset.Y);
+
+		if (!OperatingSystem.IsMacOS()) Context.SwapBuffers();
+	}
+
+	public void Window_Resize(Vector2D<int> size) {
+		if (size.X <= 0 || size.Y <= 0) return;
+
+		float gameAspect = (float)RenderSurfaceSize.Width / RenderSurfaceSize.Height; // 16:9 = 1.777...
+		float windowAspect = (float)size.X / size.Y;
+
+		if (windowAspect > gameAspect) {
+			// ウィンドウが横長の場合：高さに合わせてスケール
+			ViewPortSize.Y = size.Y;
+			ViewPortSize.X = (int)(size.Y * gameAspect);
+			ViewPortOffset.X = (size.X - ViewPortSize.X) / 2;
+			ViewPortOffset.Y = 0;
+		} else {
+			// ウィンドウが縦長の場合：幅に合わせてスケール
+			ViewPortSize.X = size.X;
+			ViewPortSize.Y = (int)(size.X / gameAspect);
+			ViewPortOffset.X = 0;
+			ViewPortOffset.Y = (size.Y - ViewPortSize.Y) / 2;
+		}
+
+		// デバッグ出力（必要に応じて）
+		Console.WriteLine($"Window: {size.X}x{size.Y}, Viewport: {ViewPortSize.X}x{ViewPortSize.Y}, Offset: ({ViewPortOffset.X}, {ViewPortOffset.Y})");
+	}
+
+	public void Window_Move(Vector2D<int> size) { }
+
+	public void Window_FramebufferResize(Vector2D<int> size) { }
+
+
+	#region [Helper Function]
 
 	public unsafe SKBitmap GetScreenShot() {
 		int ViewportWidth = ViewPortSize.X;
@@ -234,33 +377,11 @@ public abstract class Game : IDisposable {
 				using SKBitmap sKBitmap = new(ViewportWidth, ViewportHeight - 1);
 				sKBitmap.SetPixels((IntPtr)pixels2);
 
-				using SKBitmap scaledBitmap = new(GameWindowSize.Width, GameWindowSize.Height);
+				using SKBitmap scaledBitmap = new(RenderSurfaceSize.Width, RenderSurfaceSize.Height);
 				if (sKBitmap.ScalePixels(scaledBitmap, SKFilterQuality.High)) action(scaledBitmap);
 				else action(sKBitmap);
 			}
 		});
-	}
-
-	public static long TimeMs;
-
-	public static Matrix4X4<float> Camera;
-
-	public static float ScreenAspect {
-		get {
-			return (float)GameWindowSize.Width / GameWindowSize.Height;
-		}
-	}
-
-	//[DllImportAttribute("libEGL", EntryPoint = "eglGetError")]
-	//public static extern Silk.NET.OpenGLES.ErrorCode GetError();
-
-	/// <summary>
-	/// Initializes the <see cref="Game"/> class.
-	/// </summary>
-	static Game() {
-		//GlfwProvider.UninitializedGLFW.Value.InitHint(InitHint.AnglePlatformType, (int)AnglePlatformType.OpenGL);
-		//GlfwProvider.UninitializedGLFW.Value.Init();
-		//GetError();
 	}
 
 	private RawImage GetIconData(string fileName) {
@@ -269,259 +390,5 @@ public abstract class Game : IDisposable {
 		return new RawImage(bitmap.Width, bitmap.Height, bitmap.GetPixelSpan().ToArray());
 	}
 
-	/// <summary>
-	/// Initializes a new instance of the <see cref="Game"/> class.
-	/// </summary>
-	protected Game(string iconFileName) {
-		strIconFileName = iconFileName;
-
-		MainThreadID = Thread.CurrentThread.ManagedThreadId;
-		Configuration();
-
-		//GlfwProvider.GLFW.Value.WindowHint(WindowHintContextApi.ContextCreationApi, ContextApi.EglContextApi);
-
-		WindowOptions options = WindowOptions.Default;
-
-		options.Size = WindowSize;
-		options.Position = WindowPosition;
-		options.UpdatesPerSecond = VSync ? 0 : Framerate;
-		options.FramesPerSecond = VSync ? 0 : Framerate;
-		options.WindowState = FullScreen ? WindowState.Fullscreen : WindowState.Normal;
-		options.VSync = VSync;
-
-		if (!OperatingSystem.IsMacOS()) options.API = GraphicsAPI.None;
-
-		options.WindowBorder = WindowBorder.Resizable;
-		options.Title = Text;
-
-
-		Silk.NET.Windowing.Glfw.GlfwWindowing.Use();
-
-		Window_ = Window.Create(options);
-
-		ViewPortSize.X = Window_.Size.X;
-		ViewPortSize.Y = Window_.Size.Y;
-		ViewPortOffset.X = 0;
-		ViewPortOffset.Y = 0;
-
-		Window_.Load += Window_Load;
-		Window_.Closing += Window_Closing;
-		Window_.Update += Window_Update;
-		Window_.Render += Window_Render;
-		Window_.Resize += Window_Resize;
-		Window_.Move += Window_Move;
-		Window_.FramebufferResize += Window_FramebufferResize;
-	}
-
-	private void UpdateWindowFramerate(bool vsync, int value) {
-		if (vsync) {
-			Window_.UpdatesPerSecond = 0;
-			Window_.FramesPerSecond = 0;
-			Context.SwapInterval(1);
-		} else {
-			Window_.UpdatesPerSecond = value;
-			Window_.FramesPerSecond = value;
-			Context.SwapInterval(0);
-		}
-	}
-
-	/// <summary>
-	/// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
-	/// </summary>
-	public void Dispose() {
-		Window_.Dispose();
-	}
-
-	public void Exit() {
-		Window_.Close();
-	}
-
-	protected void ToggleWindowMode() {
-		/*
-		DeviceSettings settings = base.GraphicsDeviceManager.CurrentSettings.Clone();
-		if ( ( ConfigIni != null ) && ( ConfigIni.bウィンドウモード != settings.Windowed ) )
-		{
-			settings.Windowed = ConfigIni.bウィンドウモード;
-			if ( ConfigIni.bウィンドウモード == false )	// #23510 2010.10.27 yyagi: backup current window size before going fullscreen mode
-			{
-				currentClientSize = this.Window.ClientSize;
-				ConfigIni.nウインドウwidth = this.Window.ClientSize.Width;
-				ConfigIni.nウインドウheight = this.Window.ClientSize.Height;
-//					FDK.CTaskBar.ShowTaskBar( false );
-			}
-			base.GraphicsDeviceManager.ChangeDevice( settings );
-			if ( ConfigIni.bウィンドウモード == true )	// #23510 2010.10.27 yyagi: to resume window size from backuped value
-			{
-				base.Window.ClientSize =
-					new Size( currentClientSize.Width, currentClientSize.Height );
-                base.Window.Icon = Properties.Resources.tjap3;
-//					FDK.CTaskBar.ShowTaskBar( true );
-			}
-		}
-		*/
-
-		FullScreen = !FullScreen;
-	}
-
-	/// <summary>
-	/// Runs the game.
-	/// </summary>
-	public void Run() {
-		Window_.Run();
-	}
-
-	protected virtual void Configuration() {
-
-	}
-
-	protected virtual void Initialize() {
-
-	}
-
-
-	protected virtual void LoadContent() {
-
-	}
-
-	protected virtual void UnloadContent() {
-
-	}
-
-	protected virtual void OnExiting() {
-
-	}
-
-	protected virtual void Update() {
-
-	}
-
-	protected virtual void Draw() {
-
-	}
-
-	/// <summary>
-	/// Releases unmanaged and - optionally - managed resources
-	/// </summary>
-	/// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
-	protected internal virtual void Dispose(bool disposing) {
-
-	}
-
-
-	public void Window_Load() {
-		Window_.SetWindowIcon(new ReadOnlySpan<RawImage>(GetIconData(strIconFileName)));
-
-		if (OperatingSystem.IsMacOS()) {
-			if (Window_.GLContext == null) {
-				throw new Exception("No native OpenGL context available");
-			}
-			Context = Window_.GLContext;
-		} else {
-			Context = new AngleContext(GraphicsDeviceType_, Window_);
-			Context.MakeCurrent();
-		}
-
-		Gl = GL.GetApi(Context);
-
-		Gl.Enable(GLEnum.Blend);
-		BlendHelper.SetBlend(BlendType.Normal);
-		CTexture.Init();
-
-		// ScreenRendererを初期化
-		ScreenRenderer.Init();
-
-		// レンダーテクスチャを作成（1920x1080固定）
-		renderTexture = new RenderTexture(GameWindowSize.Width, GameWindowSize.Height);
-
-		Gl.ClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-
-		// 初期ビューポートサイズを設定
-		Window_Resize(Window_.Size);
-
-		Context.SwapInterval(VSync ? 1 : 0);
-
-		Initialize();
-		LoadContent();
-	}
-
-	public void Window_Closing() {
-		// リソースを解放
-		renderTexture?.Dispose();
-		ScreenRenderer.Terminate();
-
-		CTexture.Terminate();
-		UnloadContent();
-		OnExiting();
-		Context.Dispose();
-	}
-
-	public void Window_Update(double deltaTime) {
-		double fps = 1.0f / deltaTime;
-		TimeMs = (long)(Window_.Time * 1000);
-
-		Update();
-
-		ImGuiController?.Update((float)deltaTime);
-	}
-
-	public void Window_Render(double deltaTime) {
-		Camera = Matrix4X4<float>.Identity;
-
-		if (AsyncActions.Count > 0) {
-			AsyncActions[0]?.Invoke();
-			AsyncActions.Remove(AsyncActions[0]);
-		}
-
-		// レンダーテクスチャに描画開始
-		renderTexture.BeginDraw();
-
-		// ゲームの描画処理を実行
-		Draw();
-
-		// レンダーテクスチャへの描画終了
-		renderTexture.EndDraw();
-
-		// メインフレームバッファに戻す
-		// ウィンドウ全体のビューポートを設定してクリア
-		Gl.Viewport(0, 0, (uint)Window_.Size.X, (uint)Window_.Size.Y);
-		Gl.ClearColor(0.0f, 0.0f, 0.0f, 1.0f); // 黒で塗りつぶし
-		Gl.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
-
-		// レンダーテクスチャを適切なサイズとポジションで描画（バイリニアフィルタリング付き）
-		ScreenRenderer.DrawToScreen(renderTexture, ViewPortSize.X, ViewPortSize.Y, ViewPortOffset.X, ViewPortOffset.Y);
-
-#if DEBUG
-		ImGuiController?.Render();
-#endif
-
-		if (!OperatingSystem.IsMacOS()) Context.SwapBuffers();
-	}
-
-	public void Window_Resize(Vector2D<int> size) {
-		if (size.X <= 0 || size.Y <= 0) return;
-
-		float gameAspect = (float)GameWindowSize.Width / GameWindowSize.Height; // 16:9 = 1.777...
-		float windowAspect = (float)size.X / size.Y;
-
-		if (windowAspect > gameAspect) {
-			// ウィンドウが横長の場合：高さに合わせてスケール
-			ViewPortSize.Y = size.Y;
-			ViewPortSize.X = (int)(size.Y * gameAspect);
-			ViewPortOffset.X = (size.X - ViewPortSize.X) / 2;
-			ViewPortOffset.Y = 0;
-		} else {
-			// ウィンドウが縦長の場合：幅に合わせてスケール
-			ViewPortSize.X = size.X;
-			ViewPortSize.Y = (int)(size.X / gameAspect);
-			ViewPortOffset.X = 0;
-			ViewPortOffset.Y = (size.Y - ViewPortSize.Y) / 2;
-		}
-
-		// デバッグ出力（必要に応じて）
-		Console.WriteLine($"Window: {size.X}x{size.Y}, Viewport: {ViewPortSize.X}x{ViewPortSize.Y}, Offset: ({ViewPortOffset.X}, {ViewPortOffset.Y})");
-	}
-
-	public void Window_Move(Vector2D<int> size) { }
-
-	public void Window_FramebufferResize(Vector2D<int> size) { }
+	#endregion
 }

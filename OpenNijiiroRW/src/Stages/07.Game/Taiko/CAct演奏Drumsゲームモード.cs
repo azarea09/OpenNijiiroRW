@@ -421,8 +421,8 @@ internal class CAct演奏Drumsゲームモード : CActivity {
 				else
 					OpenNijiiroRW.Tx.Tile_Black.Opacity = 0;
 
-				for (int i = 0; i <= (GameWindowSize.Width / 64); i++) {
-					for (int j = 0; j <= (GameWindowSize.Height / 64); j++) {
+				for (int i = 0; i <= (RenderSurfaceSize.Width / 64); i++) {
+					for (int j = 0; j <= (RenderSurfaceSize.Height / 64); j++) {
 						OpenNijiiroRW.Tx.Tile_Black.t2D描画(i * 64, j * 64);
 					}
 				}
