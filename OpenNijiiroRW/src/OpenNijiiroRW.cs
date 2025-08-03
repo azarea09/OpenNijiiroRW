@@ -454,7 +454,10 @@ internal class OpenNijiiroRW : Game {
 		}
 
 
-		WindowPosition = new Silk.NET.Maths.Vector2D<int>(ConfigIni.nWindowBaseXPosition, ConfigIni.nWindowBaseYPosition);
+		int monitorHalfWidth  = Silk.NET.Windowing.Monitor.GetMainMonitor(WindowContext).Bounds.Size.X / 2;
+		int monitorHalfHeight = Silk.NET.Windowing.Monitor.GetMainMonitor(WindowContext).Bounds.Size.Y / 2;
+
+		WindowPosition = new Silk.NET.Maths.Vector2D<int>(monitorHalfWidth - ConfigIni.nWindowWidth / 2, monitorHalfHeight - ConfigIni.nWindowHeight / 2);
 		WindowSize = new Silk.NET.Maths.Vector2D<int>(ConfigIni.nWindowWidth, ConfigIni.nWindowHeight);
 		FullScreen = ConfigIni.bFullScreen;
 		VSync = ConfigIni.bEnableVSync;
@@ -1467,14 +1470,6 @@ internal class OpenNijiiroRW : Game {
 
 	public List<CActivity> listTopLevelActivities;
 	private int nDrawLoopReturnValue;
-	private string strWindowTitle
-	// ayo komi isn't this useless code? - tfd500
-	{
-		get {
-			return "OpenNijiiroRW";
-		}
-	}
-	private CSound previewSound;
 	public static DateTime StartupTime {
 		get;
 		private set;
@@ -1643,7 +1638,7 @@ internal class OpenNijiiroRW : Game {
 		Trace.TraceInformation("Initializing DirectInput and MIDI input...");
 		Trace.Indent();
 		try {
-			InputManager = new CInputManager(Window_, OpenNijiiroRW.ConfigIni.bBufferedInputs, true, OpenNijiiroRW.ConfigIni.nControllerDeadzone / 100.0f);
+			InputManager = new CInputManager(WindowContext, OpenNijiiroRW.ConfigIni.bBufferedInputs, true, OpenNijiiroRW.ConfigIni.nControllerDeadzone / 100.0f);
 			foreach (IInputDevice device in InputManager.InputDevices) {
 				if ((device.CurrentType == InputDeviceType.Joystick) && !ConfigIni.dicJoystick.ContainsValue(device.GUID)) {
 					int key = 0;
@@ -1731,7 +1726,7 @@ internal class OpenNijiiroRW : Game {
 					soundDeviceType = ESoundDeviceType.Unknown;
 					break;
 			}
-			SoundManager = new SoundManager(Window_,
+			SoundManager = new SoundManager(WindowContext,
 				soundDeviceType,
 				OpenNijiiroRW.ConfigIni.nBassBufferSizeMs,
 				OpenNijiiroRW.ConfigIni.nWASAPIBufferSizeMs,
@@ -1895,8 +1890,6 @@ internal class OpenNijiiroRW : Game {
 			Trace.TraceInformation("----------------------");
 			Trace.TraceInformation("■ Shutdown");
 
-			ConfigIni.nWindowBaseXPosition = WindowPosition.X;
-			ConfigIni.nWindowBaseYPosition = WindowPosition.Y;
 			ConfigIni.nWindowWidth = WindowSize.X;
 			ConfigIni.nWindowHeight = WindowSize.Y;
 			ConfigIni.bFullScreen = FullScreen;

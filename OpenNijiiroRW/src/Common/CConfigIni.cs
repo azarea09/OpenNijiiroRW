@@ -1005,8 +1005,6 @@ internal class CConfigIni : INotifyPropertyChanged {
 	public bool bEnableVSync;
 	public bool bFullScreen;
 	public bool bIgnoreSongUnlockables;
-	public int nWindowBaseXPosition; // #30675 2013.02.04 ikanick add
-	public int nWindowBaseYPosition;
 	public int nWindowWidth; // #23510 2010.10.31 yyagi add
 	public int nWindowHeight; // #23510 2010.10.31 yyagi add
 	public Dictionary<int, string> dicJoystick;
@@ -1516,8 +1514,6 @@ internal class CConfigIni : INotifyPropertyChanged {
 		this.bFullScreen = false;
 		this.bIgnoreSongUnlockables = false;
 		this.bEnableVSync = true;
-		this.nWindowBaseXPosition = 100; // #30675 2013.02.04 ikanick add
-		this.nWindowBaseYPosition = 100;
 		this.nWindowWidth = RenderSurfaceSize.Width; // #23510 2010.10.31 yyagi add
 		this.nWindowHeight = RenderSurfaceSize.Height; //
 		this.nMsSleepPerFrame = -1; // #xxxxx 2011.11.27 yyagi add
@@ -1912,14 +1908,6 @@ internal class CConfigIni : INotifyPropertyChanged {
 		sw.WriteLine("; ウインドウモード時の画面高さ"); //
 		sw.WriteLine("; A height size in the window mode."); //
 		sw.WriteLine("WindowHeight={0}", this.nWindowHeight); //
-		sw.WriteLine(); //
-		sw.WriteLine("; ウィンドウモード時の位置X"); // #30675 2013.02.04 ikanick add
-		sw.WriteLine("; X position in the window mode."); //
-		sw.WriteLine("WindowX={0}", this.nWindowBaseXPosition); //
-		sw.WriteLine(); //
-		sw.WriteLine("; ウィンドウモード時の位置Y"); //
-		sw.WriteLine("; Y position in the window mode."); //
-		sw.WriteLine("WindowY={0}", this.nWindowBaseYPosition); //
 		sw.WriteLine(); //
 
 		sw.WriteLine("; ウインドウをダブルクリックした時にフルスクリーンに移行するか(0:移行しない,1:移行する)"); // #26752 2011.11.27 yyagi
@@ -2753,14 +2741,6 @@ internal class CConfigIni : INotifyPropertyChanged {
 				break;
 			case "FullScreen":
 				this.bFullScreen = CConversion.bONorOFF(value[0]);
-				break;
-			case "WindowX":
-				this.nWindowBaseXPosition = CConversion.ParseIntInRange(
-					value, 0, 9999, this.nWindowBaseXPosition);
-				break;
-			case "WindowY":
-				this.nWindowBaseYPosition = CConversion.ParseIntInRange(
-					value, 0, 9999, this.nWindowBaseYPosition);
 				break;
 			case "WindowWidth": {
 					this.nWindowWidth = CConversion.ParseIntInRange(value, 1, 65535, this.nWindowWidth);

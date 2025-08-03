@@ -61,11 +61,6 @@ public class CTexture : IDisposable {
 
 	private static int CameraID;
 
-	private static int NoteModeID;
-
-	private static int NoiseEffectID;
-	private static int TimeID;
-
 	/// <summary>
 	/// 描画に使用する共通のバッファを作成
 	/// </summary>
@@ -100,38 +95,16 @@ public class CTexture : IDisposable {
                 uniform sampler2D texture1;
                 uniform vec4 textureRect;
                 uniform vec2 scale;
-                uniform int noteMode;
-				uniform int useNoiseEffect;
-				uniform float time;
 
                 varying vec2 texcoord;
-
-				float randomGrayscale(vec2 uv) {
-					return fract(sin(dot(uv.xy * 10.0, vec2(12.9898, 78.233))) * (43758.5453 * (time + 1.0) * 0.02));
-				}
-
 
                 void main()
                 {
                     vec2 rect;
-                    if (noteMode == 1)
-                    {
-                        rect = textureRect.xy + (texcoord * textureRect.zw * scale);
 
-                        rect = rect - (floor((rect - textureRect.xy) / textureRect.zw) * textureRect.zw);
-                    }
-                    else
-                    {
-                        rect = vec2(textureRect.xy + (texcoord * textureRect.zw));
-                    }
+                    rect = vec2(textureRect.xy + (texcoord * textureRect.zw));
 
 					vec4 texColor = texture2D(texture1, rect) * color;
-
-					if (useNoiseEffect == 1) {
-						float n = randomGrayscale(rect);
-						texColor.rgb = vec3(n);
-						// texColor.a = 1.0;
-					}
 
                     gl_FragColor = texColor;
                 }"
@@ -144,9 +117,6 @@ public class CTexture : IDisposable {
 		ScaleID = Game.Gl.GetUniformLocation(ShaderProgram, "scale"); //スケール
 		TextureRectID = Game.Gl.GetUniformLocation(ShaderProgram, "textureRect"); //テクスチャの切り抜きの座標と大きさ
 		CameraID = Game.Gl.GetUniformLocation(ShaderProgram, "camera"); //テクスチャの切り抜きの座標と大きさ
-		NoteModeID = Game.Gl.GetUniformLocation(ShaderProgram, "noteMode"); //テクスチャの切り抜きの座標と大きさ
-		NoiseEffectID = Game.Gl.GetUniformLocation(ShaderProgram, "useNoiseEffect");
-		TimeID = Game.Gl.GetUniformLocation(ShaderProgram, "time");
 
 		//------
 
@@ -751,20 +721,11 @@ public class CTexture : IDisposable {
 			rc画像内の描画領域.X / rc全画像.Width, rc画像内の描画領域.Y / rc全画像.Height, //始まり
 			rc画像内の描画領域.Width / rc全画像.Width, rc画像内の描画領域.Height / rc全画像.Height)); //大きさ、終わりではない
 
-		Game.Gl.Uniform1(NoteModeID, rollMode ? 1 : 0);
-
-		float _time = (DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond) % 100;
-		Game.Gl.Uniform1(TimeID, _time);
-		Game.Gl.Uniform1(NoiseEffectID, bUseNoiseEffect ? 1 : 0);
-
-
 		//描画-----
 		Game.Gl.BindVertexArray(VAO);
 		unsafe {
 			Game.Gl.DrawElements(PrimitiveType.Triangles, IndicesCount, DrawElementsType.UnsignedInt, (void*)0);//描画!
 		}
-
-		BlendHelper.SetBlend(BlendType.Normal);
 	}
 	public void t2D描画(int x, int y, float depth, Rectangle rc画像内の描画領域) {
 		t2D描画((float)x, (float)y, depth, rc画像内の描画領域);
@@ -886,12 +847,6 @@ public class CTexture : IDisposable {
 		Game.Gl.Uniform4(TextureRectID, new System.Numerics.Vector4(
 			rc画像内の描画領域.X / rc全画像.Width, rc画像内の描画領域.Y / rc全画像.Height, //始まり
 			rc画像内の描画領域.Width / rc全画像.Width, rc画像内の描画領域.Height / rc全画像.Height)); //大きさ、終わりではない
-
-		Game.Gl.Uniform1(NoteModeID, 0);
-
-		float _time = (DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond) % 100;
-		Game.Gl.Uniform1(TimeID, _time);
-		Game.Gl.Uniform1(NoiseEffectID, bUseNoiseEffect ? 1 : 0);
 
 		//描画-----
 		Game.Gl.BindVertexArray(VAO);

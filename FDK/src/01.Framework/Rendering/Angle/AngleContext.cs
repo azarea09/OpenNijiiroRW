@@ -20,6 +20,11 @@ public class AngleContext : IGLContext {
 			selectedflag = NativeWindowFlags.Win32;
 			windowHandle = window.Native.Win32.Value.Hwnd;
 			display = window.Native.Win32.Value.HDC;
+			// ダークモード適応
+			if (Win32Api.IsDarkModeEnabled()) {
+				Win32Api.SetDarkModeTitleBar(windowHandle, true);
+				Win32Api.RefreshWindowLayout(windowHandle);
+			}
 		} else if (window.Native.Kind.HasFlag(NativeWindowFlags.X11)) {
 			selectedflag = NativeWindowFlags.X11;
 			windowHandle = (nint)window.Native.X11.Value.Window;

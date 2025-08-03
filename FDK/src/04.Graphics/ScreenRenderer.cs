@@ -1,6 +1,4 @@
 ﻿using Silk.NET.OpenGLES;
-using Silk.NET.Maths;
-using System;
 
 namespace FDK;
 
@@ -48,7 +46,7 @@ public class ScreenRenderer : IDisposable {
 
 		TextureLocation = gl.GetUniformLocation(ShaderProgram, "uTexture");
 
-		// フルスクリーンクワッドの頂点データ（テクスチャ座標を反転して上下反転を修正）
+		// フルスクリーンクワッドの頂点データ（テクスチャ座標を反転して上下反転）
 		float[] vertices = {
             // Position     // TexCoord
             -1.0f,  1.0f, 0.0f, 0.0f, 1.0f,  // 左上
@@ -130,13 +128,8 @@ public class ScreenRenderer : IDisposable {
 		gl.UseProgram(ShaderProgram);
 
 		// テクスチャをバインドしてバイリニアフィルタリングを設定
-		gl.ActiveTexture(TextureUnit.Texture0);
 		gl.BindTexture(TextureTarget.Texture2D, renderTexture.TextureId);
-		
-		// バイリニアフィルタリングを有効にする
-		gl.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)GLEnum.Linear);
-		gl.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)GLEnum.Linear);
-		
+
 		gl.Uniform1(TextureLocation, 0);
 
 		// VAOをバインドして描画

@@ -48,8 +48,6 @@ public class RenderTexture : IDisposable {
 		// バイリニアフィルタリングを設定
 		gl.TexParameterI(GLEnum.Texture2D, GLEnum.TextureMinFilter, (int)TextureMinFilter.Linear);
 		gl.TexParameterI(GLEnum.Texture2D, GLEnum.TextureMagFilter, (int)TextureMagFilter.Linear);
-		gl.TexParameterI(GLEnum.Texture2D, GLEnum.TextureWrapS, (int)TextureWrapMode.ClampToEdge);
-		gl.TexParameterI(GLEnum.Texture2D, GLEnum.TextureWrapT, (int)TextureWrapMode.ClampToEdge);
 
 		// カラーテクスチャをフレームバッファにアタッチ
 		gl.FramebufferTexture2D(FramebufferTarget.Framebuffer, FramebufferAttachment.ColorAttachment0,
@@ -83,10 +81,6 @@ public class RenderTexture : IDisposable {
 		gl.BindFramebuffer(FramebufferTarget.Framebuffer, framebuffer);
 		gl.Viewport(0, 0, (uint)Width, (uint)Height);
 
-		// 透明な黒でクリア（重要：アルファを0にする）
-		gl.ClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-		gl.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
-
 		// プリマルチプライドアルファブレンディングを設定
 		gl.Enable(GLEnum.Blend);
 		gl.BlendFuncSeparate(GLEnum.One, GLEnum.OneMinusSrcAlpha, GLEnum.One, GLEnum.OneMinusSrcAlpha);
@@ -97,10 +91,6 @@ public class RenderTexture : IDisposable {
 	/// </summary>
 	public void EndDraw() {
 		var gl = Game.Gl;
-
-		// 通常のブレンドモードに戻す
-		gl.BlendFunc(GLEnum.SrcAlpha, GLEnum.OneMinusSrcAlpha);
-
 		gl.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
 	}
 
