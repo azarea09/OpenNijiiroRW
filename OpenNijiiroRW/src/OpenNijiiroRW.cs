@@ -1264,7 +1264,7 @@ internal class OpenNijiiroRW : Game {
 				}
 #else
 				string strFullPath =
-					Path.Combine(OpenTaiko.strEXEのあるフォルダ, "Capture_img");
+					Path.Combine(OpenNijiiroRW.strEXEのあるフォルダ, "Capture_img");
 				strFullPath = Path.Combine(strFullPath, DateTime.Now.ToString("yyyyMMddHHmmss") + ".png");
 				SaveResultScreen(strFullPath);
 #endif

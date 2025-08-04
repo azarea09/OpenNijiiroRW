@@ -1,1 +1,1 @@
-dotnet publish OpenTaiko/OpenTaiko.csproj --configuration Release --self-contained -p:PublishSingleFile=true --runtime win-x86
+dotnet publish OpenNijiiroRW/OpenNijiiroRW.csproj --configuration Release --self-contained -p:PublishSingleFile=true --runtime win-x86
