@@ -10,13 +10,17 @@ namespace OpenNijiiroRW;
 //_ゴーゴータイムモーション
 //_クリア時モーション
 //
-internal class CActImplCharacter : CActivity {
-	public CActImplCharacter() {
+internal class CActImplCharacter : CActivity
+{
+	public CActImplCharacter()
+	{
 
 	}
 
-	public override void Activate() {
-		for (int i = 0; i < 5; i++) {
+	public override void Activate()
+	{
+		for (int i = 0; i < 5; i++)
+		{
 
 			/*
             ctChara_Normal[i] = new CCounter();
@@ -73,8 +77,10 @@ internal class CActImplCharacter : CActivity {
 		base.Activate();
 	}
 
-	public override void DeActivate() {
-		for (int i = 0; i < 5; i++) {
+	public override void DeActivate()
+	{
+		for (int i = 0; i < 5; i++)
+		{
 			/*
             ctChara_Normal[i] = null;
             ctChara_Miss[i] = null;
@@ -101,8 +107,10 @@ internal class CActImplCharacter : CActivity {
 		base.DeActivate();
 	}
 
-	public override void CreateManagedResource() {
-		for (int i = 0; i < 5; i++) {
+	public override void CreateManagedResource()
+	{
+		for (int i = 0; i < 5; i++)
+		{
 			//this.arモーション番号[i] = C変換.ar配列形式のstringをint配列に変換して返す(TJAPlayer3.Skin.Characters_Motion_Normal[this.iCurrentCharacter[i]]);
 			//this.arMissモーション番号[i] = C変換.ar配列形式のstringをint配列に変換して返す(TJAPlayer3.Skin.Characters_Motion_Miss[this.iCurrentCharacter[i]]);
 			//this.arMissDownモーション番号[i] = C変換.ar配列形式のstringをint配列に変換して返す(TJAPlayer3.Skin.Characters_Motion_MissDown[this.iCurrentCharacter[i]]);
@@ -118,32 +126,40 @@ internal class CActImplCharacter : CActivity {
 		base.CreateManagedResource();
 	}
 
-	public override void ReleaseManagedResource() {
+	public override void ReleaseManagedResource()
+	{
 		base.ReleaseManagedResource();
 	}
 
-	public override int Draw() {
-		for (int i = 0; i < OpenNijiiroRW.ConfigIni.nPlayerCount; i++) {
+	public override int Draw()
+	{
+		for (int i = 0; i < OpenNijiiroRW.ConfigIni.nPlayerCount; i++)
+		{
 			int Character = this.iCurrentCharacter[i];
 
 			if (OpenNijiiroRW.Skin.Characters_Ptn == 0)
 				break;
 
 			// Blinking animation during invincibility frames
-			if (OpenNijiiroRW.stageSongSelect.nChoosenSongDifficulty[0] == (int)Difficulty.Tower) {
+			if (OpenNijiiroRW.stageSongSelect.nChoosenSongDifficulty[0] == (int)Difficulty.Tower)
+			{
 				if (CFloorManagement.isBlinking() == true)
 					break;
 			}
 
 			CTexture nowChara = null;
 
-			void updateNormal() {
-				if (!OpenNijiiroRW.stageGameScreen.bPAUSE) {
+			void updateNormal()
+			{
+				if (!OpenNijiiroRW.stageGameScreen.bPAUSE)
+				{
 					nNowCharaCounter[i] += ((Math.Abs((float)OpenNijiiroRW.stageGameScreen.actPlayInfo.dbBPM[i]) / 60.0f) * (float)OpenNijiiroRW.FPS.DeltaTime) / nCharaBeat[i];
 				}
 			}
-			void updateBalloon() {
-				if (!OpenNijiiroRW.stageGameScreen.bPAUSE) {
+			void updateBalloon()
+			{
+				if (!OpenNijiiroRW.stageGameScreen.bPAUSE)
+				{
 					nNowCharaCounter[i] += (float)OpenNijiiroRW.FPS.DeltaTime / nCharaBeat[i];
 				}
 			}
@@ -153,7 +169,8 @@ internal class CActImplCharacter : CActivity {
 			bool endAnime = nNowCharaCounter[i] >= 1;
 
 			// Notice that nCharaFrameCount is -1 when no frames are defined
-			void getNowCharaFrame(double speed = 1.0) {
+			void getNowCharaFrame(double speed = 1.0)
+			{
 				if (endAnime)
 					nNowCharaFrame[i] = Math.Max(0, nCharaFrameCount[i]); // to prevent a huge-value counter from overflowing the int
 				else
@@ -161,7 +178,8 @@ internal class CActImplCharacter : CActivity {
 				nNowCharaFrame[i] = Math.Max(0, Math.Min(nNowCharaFrame[i], nCharaFrameCount[i]));
 			}
 
-			void getNowCharaFrameLooped() {
+			void getNowCharaFrameLooped()
+			{
 				if (double.IsFinite(nNowCharaCounter[i]))
 					nNowCharaCounter[i] %= 1;
 				else
@@ -170,200 +188,249 @@ internal class CActImplCharacter : CActivity {
 				nNowCharaFrame[i] = Math.Max(0, Math.Min(nNowCharaFrame[i], nCharaFrameCount[i]));
 			}
 
-			if (eNowAnime[i] != Anime.None) {
-				switch (eNowAnime[i]) {
-					case Anime.None: {
+			if (eNowAnime[i] != Anime.None)
+			{
+				switch (eNowAnime[i])
+				{
+					case Anime.None:
+						{
 							ReturnDefaultAnime(i, false);
 						}
 						break;
-					case Anime.Normal: {
+					case Anime.Normal:
+						{
 							getNowCharaFrameLooped();
 							updateNormal();
 							ReturnDefaultAnime(i, false);
 							nowChara = OpenNijiiroRW.Tx.Characters_Normal[Character][OpenNijiiroRW.Skin.Characters_Motion_Normal[Character][nNowCharaFrame[i]]];
 						}
 						break;
-					case Anime.Miss: {
+					case Anime.Miss:
+						{
 							getNowCharaFrameLooped();
 							updateNormal();
 							ReturnDefaultAnime(i, false);
 							nowChara = OpenNijiiroRW.Tx.Characters_Normal_Missed[Character][OpenNijiiroRW.Skin.Characters_Motion_Miss[Character][nNowCharaFrame[i]]];
 						}
 						break;
-					case Anime.MissDown: {
+					case Anime.MissDown:
+						{
 							getNowCharaFrameLooped();
 							updateNormal();
 							ReturnDefaultAnime(i, false);
 							nowChara = OpenNijiiroRW.Tx.Characters_Normal_MissedDown[Character][OpenNijiiroRW.Skin.Characters_Motion_MissDown[Character][nNowCharaFrame[i]]];
 						}
 						break;
-					case Anime.Cleared: {
+					case Anime.Cleared:
+						{
 							getNowCharaFrameLooped();
 							updateNormal();
 							ReturnDefaultAnime(i, false);
 							nowChara = OpenNijiiroRW.Tx.Characters_Normal_Cleared[Character][OpenNijiiroRW.Skin.Characters_Motion_Clear[Character][nNowCharaFrame[i]]];
 						}
 						break;
-					case Anime.Maxed: {
+					case Anime.Maxed:
+						{
 							getNowCharaFrameLooped();
 							updateNormal();
 							ReturnDefaultAnime(i, false);
 							nowChara = OpenNijiiroRW.Tx.Characters_Normal_Maxed[Character][OpenNijiiroRW.Skin.Characters_Motion_ClearMax[Character][nNowCharaFrame[i]]];
 						}
 						break;
-					case Anime.MissIn: {
+					case Anime.MissIn:
+						{
 							getNowCharaFrame();
 							updateNormal();
-							if (OpenNijiiroRW.Tx.Characters_MissIn[Character] != null && OpenNijiiroRW.Skin.Characters_MissIn_Ptn[Character] != 0) {
+							if (OpenNijiiroRW.Tx.Characters_MissIn[Character] != null && OpenNijiiroRW.Skin.Characters_MissIn_Ptn[Character] != 0)
+							{
 								nowChara = OpenNijiiroRW.Tx.Characters_MissIn[Character][OpenNijiiroRW.Skin.Characters_Motion_MissIn[Character][nNowCharaFrame[i]]];
 							}
-							if (endAnime) {
+							if (endAnime)
+							{
 								ReturnDefaultAnime(i, true);
 							}
 						}
 						break;
-					case Anime.MissDownIn: {
+					case Anime.MissDownIn:
+						{
 							getNowCharaFrame();
 							updateNormal();
-							if (OpenNijiiroRW.Tx.Characters_MissDownIn[Character] != null && OpenNijiiroRW.Skin.Characters_MissDownIn_Ptn[Character] != 0) {
+							if (OpenNijiiroRW.Tx.Characters_MissDownIn[Character] != null && OpenNijiiroRW.Skin.Characters_MissDownIn_Ptn[Character] != 0)
+							{
 								nowChara = OpenNijiiroRW.Tx.Characters_MissDownIn[Character][OpenNijiiroRW.Skin.Characters_Motion_MissDownIn[Character][nNowCharaFrame[i]]];
 							}
-							if (endAnime) {
+							if (endAnime)
+							{
 								ReturnDefaultAnime(i, true);
 							}
 						}
 						break;
-					case Anime.GoGoTime: {
+					case Anime.GoGoTime:
+						{
 							getNowCharaFrameLooped();
 							updateNormal();
 							ReturnDefaultAnime(i, false);
 							nowChara = OpenNijiiroRW.Tx.Characters_GoGoTime[Character][OpenNijiiroRW.Skin.Characters_Motion_GoGo[Character][nNowCharaFrame[i]]];
 						}
 						break;
-					case Anime.GoGoTime_Maxed: {
+					case Anime.GoGoTime_Maxed:
+						{
 							getNowCharaFrameLooped();
 							updateNormal();
 							ReturnDefaultAnime(i, false);
 							nowChara = OpenNijiiroRW.Tx.Characters_GoGoTime_Maxed[Character][OpenNijiiroRW.Skin.Characters_Motion_GoGoMax[Character][nNowCharaFrame[i]]];
 						}
 						break;
-					case Anime.Combo10: {
+					case Anime.Combo10:
+						{
 							getNowCharaFrame();
 							updateNormal();
-							if (OpenNijiiroRW.Tx.Characters_10Combo[Character] != null && OpenNijiiroRW.Skin.Characters_10Combo_Ptn[Character] != 0) {
+							if (OpenNijiiroRW.Tx.Characters_10Combo[Character] != null && OpenNijiiroRW.Skin.Characters_10Combo_Ptn[Character] != 0)
+							{
 								nowChara = OpenNijiiroRW.Tx.Characters_10Combo[Character][OpenNijiiroRW.Skin.Characters_Motion_10Combo[Character][nNowCharaFrame[i]]];
 							}
-							if (endAnime) {
+							if (endAnime)
+							{
 								ReturnDefaultAnime(i, true);
 							}
 						}
 						break;
-					case Anime.Combo10_Clear: {
+					case Anime.Combo10_Clear:
+						{
 							getNowCharaFrame();
 							updateNormal();
-							if (OpenNijiiroRW.Tx.Characters_10Combo_Clear[Character] != null && OpenNijiiroRW.Skin.Characters_10Combo_Clear_Ptn[Character] != 0) {
+							if (OpenNijiiroRW.Tx.Characters_10Combo_Clear[Character] != null && OpenNijiiroRW.Skin.Characters_10Combo_Clear_Ptn[Character] != 0)
+							{
 								nowChara = OpenNijiiroRW.Tx.Characters_10Combo_Clear[Character][OpenNijiiroRW.Skin.Characters_Motion_10Combo_Clear[Character][nNowCharaFrame[i]]];
 							}
-							if (endAnime) {
+							if (endAnime)
+							{
 								ReturnDefaultAnime(i, true);
 							}
 						}
 						break;
-					case Anime.Combo10_Max: {
+					case Anime.Combo10_Max:
+						{
 							getNowCharaFrame();
 							updateNormal();
-							if (OpenNijiiroRW.Tx.Characters_10Combo_Maxed[Character] != null && OpenNijiiroRW.Skin.Characters_10Combo_Maxed_Ptn[Character] != 0) {
+							if (OpenNijiiroRW.Tx.Characters_10Combo_Maxed[Character] != null && OpenNijiiroRW.Skin.Characters_10Combo_Maxed_Ptn[Character] != 0)
+							{
 								nowChara = OpenNijiiroRW.Tx.Characters_10Combo_Maxed[Character][OpenNijiiroRW.Skin.Characters_Motion_10ComboMax[Character][nNowCharaFrame[i]]];
 							}
-							if (endAnime) {
+							if (endAnime)
+							{
 								ReturnDefaultAnime(i, true);
 							}
 						}
 						break;
-					case Anime.GoGoStart: {
+					case Anime.GoGoStart:
+						{
 							getNowCharaFrame();
 							updateNormal();
-							if (OpenNijiiroRW.Tx.Characters_GoGoStart[Character] != null && OpenNijiiroRW.Skin.Characters_GoGoStart_Ptn[Character] != 0) {
+							if (OpenNijiiroRW.Tx.Characters_GoGoStart[Character] != null && OpenNijiiroRW.Skin.Characters_GoGoStart_Ptn[Character] != 0)
+							{
 								nowChara = OpenNijiiroRW.Tx.Characters_GoGoStart[Character][OpenNijiiroRW.Skin.Characters_Motion_GoGoStart[Character][nNowCharaFrame[i]]];
 							}
-							if (endAnime) {
+							if (endAnime)
+							{
 								ReturnDefaultAnime(i, true);
 							}
 						}
 						break;
-					case Anime.GoGoStart_Clear: {
+					case Anime.GoGoStart_Clear:
+						{
 							getNowCharaFrame();
 							updateNormal();
-							if (OpenNijiiroRW.Tx.Characters_GoGoStart_Clear[Character] != null && OpenNijiiroRW.Skin.Characters_GoGoStart_Clear_Ptn[Character] != 0) {
+							if (OpenNijiiroRW.Tx.Characters_GoGoStart_Clear[Character] != null && OpenNijiiroRW.Skin.Characters_GoGoStart_Clear_Ptn[Character] != 0)
+							{
 								nowChara = OpenNijiiroRW.Tx.Characters_GoGoStart_Clear[Character][OpenNijiiroRW.Skin.Characters_Motion_GoGoStart_Clear[Character][nNowCharaFrame[i]]];
 							}
-							if (endAnime) {
+							if (endAnime)
+							{
 								ReturnDefaultAnime(i, true);
 							}
 						}
 						break;
-					case Anime.GoGoStart_Max: {
+					case Anime.GoGoStart_Max:
+						{
 							getNowCharaFrame();
 							updateNormal();
-							if (OpenNijiiroRW.Tx.Characters_GoGoStart_Maxed[Character] != null && OpenNijiiroRW.Skin.Characters_GoGoStart_Maxed_Ptn[Character] != 0) {
+							if (OpenNijiiroRW.Tx.Characters_GoGoStart_Maxed[Character] != null && OpenNijiiroRW.Skin.Characters_GoGoStart_Maxed_Ptn[Character] != 0)
+							{
 								nowChara = OpenNijiiroRW.Tx.Characters_GoGoStart_Maxed[Character][OpenNijiiroRW.Skin.Characters_Motion_GoGoStartMax[Character][nNowCharaFrame[i]]];
 							}
-							if (endAnime) {
+							if (endAnime)
+							{
 								ReturnDefaultAnime(i, true);
 							}
 						}
 						break;
-					case Anime.Become_Cleared: {
+					case Anime.Become_Cleared:
+						{
 							getNowCharaFrame();
 							updateNormal();
-							if (OpenNijiiroRW.Tx.Characters_Become_Cleared[Character] != null && OpenNijiiroRW.Skin.Characters_Become_Cleared_Ptn[Character] != 0) {
+							if (OpenNijiiroRW.Tx.Characters_Become_Cleared[Character] != null && OpenNijiiroRW.Skin.Characters_Become_Cleared_Ptn[Character] != 0)
+							{
 								nowChara = OpenNijiiroRW.Tx.Characters_Become_Cleared[Character][OpenNijiiroRW.Skin.Characters_Motion_ClearIn[Character][nNowCharaFrame[i]]];
 							}
-							if (endAnime) {
+							if (endAnime)
+							{
 								ReturnDefaultAnime(i, true);
 							}
 						}
 						break;
-					case Anime.Become_Maxed: {
+					case Anime.Become_Maxed:
+						{
 							getNowCharaFrame();
 							updateNormal();
-							if (OpenNijiiroRW.Tx.Characters_Become_Maxed[Character] != null && OpenNijiiroRW.Skin.Characters_Become_Maxed_Ptn[Character] != 0) {
+							if (OpenNijiiroRW.Tx.Characters_Become_Maxed[Character] != null && OpenNijiiroRW.Skin.Characters_Become_Maxed_Ptn[Character] != 0)
+							{
 								nowChara = OpenNijiiroRW.Tx.Characters_Become_Maxed[Character][OpenNijiiroRW.Skin.Characters_Motion_SoulIn[Character][nNowCharaFrame[i]]];
 							}
-							if (endAnime) {
+							if (endAnime)
+							{
 								ReturnDefaultAnime(i, true);
 							}
 						}
 						break;
-					case Anime.SoulOut: {
+					case Anime.SoulOut:
+						{
 							getNowCharaFrame();
 							updateNormal();
-							if (OpenNijiiroRW.Tx.Characters_SoulOut[Character] != null && OpenNijiiroRW.Skin.Characters_SoulOut_Ptn[Character] != 0) {
+							if (OpenNijiiroRW.Tx.Characters_SoulOut[Character] != null && OpenNijiiroRW.Skin.Characters_SoulOut_Ptn[Character] != 0)
+							{
 								nowChara = OpenNijiiroRW.Tx.Characters_SoulOut[Character][OpenNijiiroRW.Skin.Characters_Motion_SoulOut[Character][nNowCharaFrame[i]]];
 							}
-							if (endAnime) {
+							if (endAnime)
+							{
 								ReturnDefaultAnime(i, true);
 							}
 						}
 						break;
-					case Anime.ClearOut: {
+					case Anime.ClearOut:
+						{
 							getNowCharaFrame();
 							updateNormal();
-							if (OpenNijiiroRW.Tx.Characters_ClearOut[Character] != null && OpenNijiiroRW.Skin.Characters_ClearOut_Ptn[Character] != 0) {
+							if (OpenNijiiroRW.Tx.Characters_ClearOut[Character] != null && OpenNijiiroRW.Skin.Characters_ClearOut_Ptn[Character] != 0)
+							{
 								nowChara = OpenNijiiroRW.Tx.Characters_ClearOut[Character][OpenNijiiroRW.Skin.Characters_Motion_ClearOut[Character][nNowCharaFrame[i]]];
 							}
-							if (endAnime) {
+							if (endAnime)
+							{
 								ReturnDefaultAnime(i, true);
 							}
 						}
 						break;
-					case Anime.Return: {
+					case Anime.Return:
+						{
 							getNowCharaFrame();
 							updateNormal();
-							if (OpenNijiiroRW.Tx.Characters_Return[Character] != null && OpenNijiiroRW.Skin.Characters_Return_Ptn[Character] != 0) {
+							if (OpenNijiiroRW.Tx.Characters_Return[Character] != null && OpenNijiiroRW.Skin.Characters_Return_Ptn[Character] != 0)
+							{
 								nowChara = OpenNijiiroRW.Tx.Characters_Return[Character][OpenNijiiroRW.Skin.Characters_Motion_Return[Character][nNowCharaFrame[i]]];
 							}
-							if (endAnime) {
+							if (endAnime)
+							{
 								ReturnDefaultAnime(i, true);
 							}
 						}
@@ -373,12 +440,14 @@ internal class CActImplCharacter : CActivity {
 					case Anime.Balloon_Miss:
 					case Anime.Kusudama_Idle:
 					case Anime.Kusudama_Breaking:
-					case Anime.Kusudama_Broke: {
+					case Anime.Kusudama_Broke:
+						{
 							getNowCharaFrame();
 							updateBalloon();
 						}
 						break;
-					case Anime.Kusudama_Miss: {
+					case Anime.Kusudama_Miss:
+						{
 							getNowCharaFrame(2); // ?
 							updateBalloon();
 						}
@@ -391,38 +460,50 @@ internal class CActImplCharacter : CActivity {
 
 			float charaScale = 1.0f;
 
-			if (nowChara != null) {
+			if (nowChara != null)
+			{
 				bool flipX = OpenNijiiroRW.ConfigIni.bAIBattleMode ? (i == 1) : false;
 
 				float resolutionScaleX = OpenNijiiroRW.Skin.Resolution[0] / (float)OpenNijiiroRW.Skin.Characters_Resolution[Character][0];
 				float resolutionScaleY = OpenNijiiroRW.Skin.Resolution[1] / (float)OpenNijiiroRW.Skin.Characters_Resolution[Character][1];
 
-				if (OpenNijiiroRW.ConfigIni.bAIBattleMode) {
+				if (OpenNijiiroRW.ConfigIni.bAIBattleMode)
+				{
 					chara_x = (OpenNijiiroRW.Skin.Characters_X_AI[Character][i] * resolutionScaleX);
 					chara_y = (OpenNijiiroRW.Skin.Characters_Y_AI[Character][i] * resolutionScaleY);
 
-					if (nowChara != null) {
+					if (nowChara != null)
+					{
 						charaScale = 0.58f;
 					}
-				} else if (OpenNijiiroRW.ConfigIni.nPlayerCount <= 2) {
+				}
+				else if (OpenNijiiroRW.ConfigIni.nPlayerCount <= 2)
+				{
 					chara_x = (OpenNijiiroRW.Skin.Characters_X[Character][i] * resolutionScaleX);
 					chara_y = (OpenNijiiroRW.Skin.Characters_Y[Character][i] * resolutionScaleY);
 
-					if (nowChara != null) {
+					if (nowChara != null)
+					{
 						charaScale = 1.0f;
 					}
-				} else if (OpenNijiiroRW.ConfigIni.nPlayerCount == 5) {
+				}
+				else if (OpenNijiiroRW.ConfigIni.nPlayerCount == 5)
+				{
 					chara_x = (OpenNijiiroRW.Skin.Characters_5P[Character][0] * resolutionScaleX) + (OpenNijiiroRW.Skin.Game_UIMove_5P[0] * i);
 					chara_y = (OpenNijiiroRW.Skin.Characters_5P[Character][1] * resolutionScaleY) + (OpenNijiiroRW.Skin.Game_UIMove_5P[1] * i);
 
-					if (nowChara != null) {
+					if (nowChara != null)
+					{
 						charaScale = 0.58f;
 					}
-				} else {
+				}
+				else
+				{
 					chara_x = (OpenNijiiroRW.Skin.Characters_4P[Character][0] * resolutionScaleX) + (OpenNijiiroRW.Skin.Game_UIMove_4P[0] * i);
 					chara_y = (OpenNijiiroRW.Skin.Characters_4P[Character][1] * resolutionScaleY) + (OpenNijiiroRW.Skin.Game_UIMove_4P[1] * i);
 
-					if (nowChara != null) {
+					if (nowChara != null)
+					{
 						charaScale = 0.58f;
 					}
 				}
@@ -431,7 +512,8 @@ internal class CActImplCharacter : CActivity {
 				//chara_x *= resolutionScaleX;
 				//chara_y *= resolutionScaleY;
 
-				if (OpenNijiiroRW.ConfigIni.bAIBattleMode) {
+				if (OpenNijiiroRW.ConfigIni.bAIBattleMode)
+				{
 					chara_x += OpenNijiiroRW.Skin.Game_AIBattle_CharaMove * OpenNijiiroRW.stageGameScreen.AIBattleState;
 					chara_y -= nowChara.szTextureSize.Height * charaScale; // Center down
 				}
@@ -439,9 +521,12 @@ internal class CActImplCharacter : CActivity {
 				nowChara.Scale.X = charaScale;
 				nowChara.Scale.Y = charaScale;
 
-				if (flipX) {
+				if (flipX)
+				{
 					nowChara.t2D左右反転描画(chara_x, chara_y);
-				} else {
+				}
+				else
+				{
 					nowChara.t2D描画(chara_x, chara_y);
 				}
 
@@ -449,12 +534,18 @@ internal class CActImplCharacter : CActivity {
 				nowChara.Scale.Y = 1.0f;
 			}
 
-			if ((this.b風船連打中[i] != true && CharaAction_Balloon_Delay[i].IsEnded) || OpenNijiiroRW.ConfigIni.nPlayerCount > 2) {
-				if (OpenNijiiroRW.ConfigIni.nPlayerCount <= 2) {
+			if ((this.b風船連打中[i] != true && CharaAction_Balloon_Delay[i].IsEnded) || OpenNijiiroRW.ConfigIni.nPlayerCount > 2)
+			{
+				if (OpenNijiiroRW.ConfigIni.nPlayerCount <= 2)
+				{
 					OpenNijiiroRW.stageGameScreen.PuchiChara.On進行描画(OpenNijiiroRW.Skin.Game_PuchiChara_X[i], OpenNijiiroRW.Skin.Game_PuchiChara_Y[i], OpenNijiiroRW.stageGameScreen.bIsAlreadyMaxed[i], player: i);
-				} else if (OpenNijiiroRW.ConfigIni.nPlayerCount == 5) {
+				}
+				else if (OpenNijiiroRW.ConfigIni.nPlayerCount == 5)
+				{
 					OpenNijiiroRW.stageGameScreen.PuchiChara.On進行描画(OpenNijiiroRW.Skin.Game_PuchiChara_5P[0] + (OpenNijiiroRW.Skin.Game_UIMove_5P[0] * i), OpenNijiiroRW.Skin.Game_PuchiChara_5P[1] + (OpenNijiiroRW.Skin.Game_UIMove_5P[1] * i), OpenNijiiroRW.stageGameScreen.bIsAlreadyMaxed[i], player: i, scale: 0.5f);
-				} else {
+				}
+				else
+				{
 					OpenNijiiroRW.stageGameScreen.PuchiChara.On進行描画(OpenNijiiroRW.Skin.Game_PuchiChara_4P[0] + (OpenNijiiroRW.Skin.Game_UIMove_4P[0] * i), OpenNijiiroRW.Skin.Game_PuchiChara_4P[1] + (OpenNijiiroRW.Skin.Game_UIMove_4P[1] * i), OpenNijiiroRW.stageGameScreen.bIsAlreadyMaxed[i], player: i, scale: 0.5f);
 				}
 			}
@@ -462,8 +553,10 @@ internal class CActImplCharacter : CActivity {
 		return base.Draw();
 	}
 
-	public void OnDraw_Balloon() {
-		for (int i = 0; i < OpenNijiiroRW.ConfigIni.nPlayerCount; i++) {
+	public void OnDraw_Balloon()
+	{
+		for (int i = 0; i < OpenNijiiroRW.ConfigIni.nPlayerCount; i++)
+		{
 			//if (TJAPlayer3.Skin.Characters_Balloon_Breaking_Ptn[iCurrentCharacter[i]] != 0) CharaAction_Balloon_Breaking[i]?.t進行();
 			//if (TJAPlayer3.Skin.Characters_Balloon_Broke_Ptn[iCurrentCharacter[i]] != 0) CharaAction_Balloon_Broke[i]?.t進行();
 			CharaAction_Balloon_Delay[i]?.Tick();
@@ -482,14 +575,20 @@ internal class CActImplCharacter : CActivity {
 				float kusu_chara_x = OpenNijiiroRW.Skin.Characters_Kusudama_X[this.iCurrentCharacter[i]][i] * resolutionScaleX;
 				float kusu_chara_y = OpenNijiiroRW.Skin.Characters_Kusudama_Y[this.iCurrentCharacter[i]][i] * resolutionScaleY;
 
-				if (OpenNijiiroRW.ConfigIni.nPlayerCount <= 2) {
+				if (OpenNijiiroRW.ConfigIni.nPlayerCount <= 2)
+				{
 					chara_x = OpenNijiiroRW.Skin.Characters_Balloon_X[this.iCurrentCharacter[i]][i];
 					chara_y = OpenNijiiroRW.Skin.Characters_Balloon_Y[this.iCurrentCharacter[i]][i];
-				} else {
-					if (OpenNijiiroRW.ConfigIni.nPlayerCount == 5) {
+				}
+				else
+				{
+					if (OpenNijiiroRW.ConfigIni.nPlayerCount == 5)
+					{
 						chara_x = OpenNijiiroRW.Skin.Characters_Balloon_5P[this.iCurrentCharacter[i]][0] + (OpenNijiiroRW.Skin.Game_UIMove_5P[0] * i);
 						chara_y = OpenNijiiroRW.Skin.Characters_Balloon_5P[this.iCurrentCharacter[i]][1] + (OpenNijiiroRW.Skin.Game_UIMove_5P[1] * i);
-					} else {
+					}
+					else
+					{
 						chara_x = OpenNijiiroRW.Skin.Characters_Balloon_4P[this.iCurrentCharacter[i]][0] + (OpenNijiiroRW.Skin.Game_UIMove_4P[0] * i);
 						chara_y = OpenNijiiroRW.Skin.Characters_Balloon_4P[this.iCurrentCharacter[i]][1] + (OpenNijiiroRW.Skin.Game_UIMove_4P[1] * i);
 					}
@@ -501,12 +600,15 @@ internal class CActImplCharacter : CActivity {
 				float charaScale = resolutionScaleY;
 
 
-				if (eNowAnime[i] == Anime.Balloon_Broke) {
-					if (CharaAction_Balloon_FadeOut[i].Counter.IsStoped && nNowCharaFrame[i] > CharaAction_Balloon_FadeOut_StartMs[i][0]) {
+				if (eNowAnime[i] == Anime.Balloon_Broke)
+				{
+					if (CharaAction_Balloon_FadeOut[i].Counter.IsStoped && nNowCharaFrame[i] > CharaAction_Balloon_FadeOut_StartMs[i][0])
+					{
 						CharaAction_Balloon_FadeOut[i].Start();
 					}
 
-					if (OpenNijiiroRW.Skin.Characters_Balloon_Broke_Ptn[this.iCurrentCharacter[i]] != 0 && OpenNijiiroRW.Tx.Characters_Balloon_Broke[this.iCurrentCharacter[i]][nNowCharaFrame[i]] != null) {
+					if (OpenNijiiroRW.Skin.Characters_Balloon_Broke_Ptn[this.iCurrentCharacter[i]] != 0 && OpenNijiiroRW.Tx.Characters_Balloon_Broke[this.iCurrentCharacter[i]][nNowCharaFrame[i]] != null)
+					{
 						OpenNijiiroRW.Tx.Characters_Balloon_Broke[this.iCurrentCharacter[i]][nNowCharaFrame[i]].Opacity = nowOpacity;
 						OpenNijiiroRW.Tx.Characters_Balloon_Broke[this.iCurrentCharacter[i]][nNowCharaFrame[i]].Scale.X = charaScale;
 						OpenNijiiroRW.Tx.Characters_Balloon_Broke[this.iCurrentCharacter[i]][nNowCharaFrame[i]].Scale.Y = charaScale;
@@ -520,16 +622,21 @@ internal class CActImplCharacter : CActivity {
 							OpenNijiiroRW.stageGameScreen.GetJPOSCROLLX(i) + OpenNijiiroRW.Skin.Game_PuchiChara_BalloonX[i],
 							OpenNijiiroRW.stageGameScreen.GetJPOSCROLLY(i) + OpenNijiiroRW.Skin.Game_PuchiChara_BalloonY[i], false, nowOpacity, true, player: i);
 
-					if (endAnime) {
+					if (endAnime)
+					{
 						this.b風船連打中[i] = false;
 						ReturnDefaultAnime(i, true);
 					}
-				} else if (eNowAnime[i] == Anime.Balloon_Miss) {
-					if (CharaAction_Balloon_FadeOut[i].Counter.IsStoped && nNowCharaFrame[i] > CharaAction_Balloon_FadeOut_StartMs[i][1]) {
+				}
+				else if (eNowAnime[i] == Anime.Balloon_Miss)
+				{
+					if (CharaAction_Balloon_FadeOut[i].Counter.IsStoped && nNowCharaFrame[i] > CharaAction_Balloon_FadeOut_StartMs[i][1])
+					{
 						CharaAction_Balloon_FadeOut[i].Start();
 					}
 
-					if (OpenNijiiroRW.Skin.Characters_Balloon_Miss_Ptn[this.iCurrentCharacter[i]] != 0 && OpenNijiiroRW.Tx.Characters_Balloon_Miss[this.iCurrentCharacter[i]][nNowCharaFrame[i]] != null) {
+					if (OpenNijiiroRW.Skin.Characters_Balloon_Miss_Ptn[this.iCurrentCharacter[i]] != 0 && OpenNijiiroRW.Tx.Characters_Balloon_Miss[this.iCurrentCharacter[i]][nNowCharaFrame[i]] != null)
+					{
 						OpenNijiiroRW.Tx.Characters_Balloon_Miss[this.iCurrentCharacter[i]][nNowCharaFrame[i]].Opacity = nowOpacity;
 						OpenNijiiroRW.Tx.Characters_Balloon_Miss[this.iCurrentCharacter[i]][nNowCharaFrame[i]].Scale.X = charaScale;
 						OpenNijiiroRW.Tx.Characters_Balloon_Miss[this.iCurrentCharacter[i]][nNowCharaFrame[i]].Scale.Y = charaScale;
@@ -543,12 +650,16 @@ internal class CActImplCharacter : CActivity {
 							OpenNijiiroRW.stageGameScreen.GetJPOSCROLLX(i) + OpenNijiiroRW.Skin.Game_PuchiChara_BalloonX[i],
 							OpenNijiiroRW.stageGameScreen.GetJPOSCROLLY(i) + OpenNijiiroRW.Skin.Game_PuchiChara_BalloonY[i], false, nowOpacity, true, player: i);
 
-					if (endAnime) {
+					if (endAnime)
+					{
 						this.b風船連打中[i] = false;
 						ReturnDefaultAnime(i, true);
 					}
-				} else if (eNowAnime[i] == Anime.Balloon_Breaking) {
-					if (OpenNijiiroRW.Skin.Characters_Balloon_Breaking_Ptn[this.iCurrentCharacter[i]] != 0 && OpenNijiiroRW.Tx.Characters_Balloon_Breaking[this.iCurrentCharacter[i]][nNowCharaFrame[i]] != null) {
+				}
+				else if (eNowAnime[i] == Anime.Balloon_Breaking)
+				{
+					if (OpenNijiiroRW.Skin.Characters_Balloon_Breaking_Ptn[this.iCurrentCharacter[i]] != 0 && OpenNijiiroRW.Tx.Characters_Balloon_Breaking[this.iCurrentCharacter[i]][nNowCharaFrame[i]] != null)
+					{
 						OpenNijiiroRW.Tx.Characters_Balloon_Breaking[this.iCurrentCharacter[i]][nNowCharaFrame[i]].Scale.X = charaScale;
 						OpenNijiiroRW.Tx.Characters_Balloon_Breaking[this.iCurrentCharacter[i]][nNowCharaFrame[i]].Scale.Y = charaScale;
 						OpenNijiiroRW.Tx.Characters_Balloon_Breaking[this.iCurrentCharacter[i]][nNowCharaFrame[i]].t2D描画(
@@ -560,53 +671,71 @@ internal class CActImplCharacter : CActivity {
 						OpenNijiiroRW.stageGameScreen.PuchiChara.On進行描画(
 							OpenNijiiroRW.stageGameScreen.GetJPOSCROLLX(i) + OpenNijiiroRW.Skin.Game_PuchiChara_BalloonX[i],
 							OpenNijiiroRW.stageGameScreen.GetJPOSCROLLY(i) + OpenNijiiroRW.Skin.Game_PuchiChara_BalloonY[i], false, 255, true, player: i);
-				} else if (eNowAnime[i] == Anime.Kusudama_Broke) {
-					if (CharaAction_Balloon_FadeOut[i].Counter.IsStoped && nNowCharaFrame[i] > CharaAction_Balloon_FadeOut_StartMs[i][0]) {
+				}
+				else if (eNowAnime[i] == Anime.Kusudama_Broke)
+				{
+					if (CharaAction_Balloon_FadeOut[i].Counter.IsStoped && nNowCharaFrame[i] > CharaAction_Balloon_FadeOut_StartMs[i][0])
+					{
 						CharaAction_Balloon_FadeOut[i].Start();
 					}
 					float kusuOutX = ((1.0f - MathF.Cos(Math.Min(1, nNowCharaCounter[i]) * MathF.PI)) * OpenNijiiroRW.Skin.Resolution[0] / 2.0f) * resolutionScaleX;
 					float kusuOutY = (MathF.Sin(Math.Min(1, nNowCharaCounter[i]) * MathF.PI / 2) * OpenNijiiroRW.Skin.Resolution[1] / 2.0f) * resolutionScaleY;
 
-					if (OpenNijiiroRW.Skin.Characters_Kusudama_Broke_Ptn[this.iCurrentCharacter[i]] != 0 && OpenNijiiroRW.Tx.Characters_Kusudama_Broke[this.iCurrentCharacter[i]][nNowCharaFrame[i]] != null) {
+					if (OpenNijiiroRW.Skin.Characters_Kusudama_Broke_Ptn[this.iCurrentCharacter[i]] != 0 && OpenNijiiroRW.Tx.Characters_Kusudama_Broke[this.iCurrentCharacter[i]][nNowCharaFrame[i]] != null)
+					{
 						OpenNijiiroRW.Tx.Characters_Kusudama_Broke[this.iCurrentCharacter[i]][nNowCharaFrame[i]].Opacity = nowOpacity;
 						OpenNijiiroRW.Tx.Characters_Kusudama_Broke[this.iCurrentCharacter[i]][nNowCharaFrame[i]].Scale.X = charaScale;
 						OpenNijiiroRW.Tx.Characters_Kusudama_Broke[this.iCurrentCharacter[i]][nNowCharaFrame[i]].Scale.Y = charaScale;
-						if (i % 2 == 0) {
+						if (i % 2 == 0)
+						{
 							OpenNijiiroRW.Tx.Characters_Kusudama_Broke[this.iCurrentCharacter[i]][nNowCharaFrame[i]].t2D描画(kusu_chara_x - kusuOutX, kusu_chara_y - kusuOutY);
-						} else {
+						}
+						else
+						{
 							OpenNijiiroRW.Tx.Characters_Kusudama_Broke[this.iCurrentCharacter[i]][nNowCharaFrame[i]].t2D左右反転描画(kusu_chara_x + kusuOutX, kusu_chara_y - kusuOutY);
 						}
 					}
-					if (i % 2 == 0) {
+					if (i % 2 == 0)
+					{
 						OpenNijiiroRW.stageGameScreen.PuchiChara.On進行描画(
 							OpenNijiiroRW.Skin.Game_PuchiChara_KusudamaX[i] - (int)kusuOutX,
 							OpenNijiiroRW.Skin.Game_PuchiChara_KusudamaY[i] - (int)kusuOutY, false, nowOpacity, true, player: i);
-					} else {
+					}
+					else
+					{
 						OpenNijiiroRW.stageGameScreen.PuchiChara.On進行描画(
 							OpenNijiiroRW.Skin.Game_PuchiChara_KusudamaX[i] + (int)kusuOutX,
 							OpenNijiiroRW.Skin.Game_PuchiChara_KusudamaY[i] - (int)kusuOutY, false, nowOpacity, true, player: i);
 					}
 
-					if (endAnime) {
+					if (endAnime)
+					{
 						this.b風船連打中[i] = false;
 						ReturnDefaultAnime(i, true);
 					}
-				} else if (eNowAnime[i] == Anime.Kusudama_Miss) {
-					if (CharaAction_Balloon_FadeOut[i].Counter.IsStoped && nNowCharaFrame[i] > CharaAction_Balloon_FadeOut_StartMs[i][1]) {
+				}
+				else if (eNowAnime[i] == Anime.Kusudama_Miss)
+				{
+					if (CharaAction_Balloon_FadeOut[i].Counter.IsStoped && nNowCharaFrame[i] > CharaAction_Balloon_FadeOut_StartMs[i][1])
+					{
 						CharaAction_Balloon_FadeOut[i].Start();
 					}
 
 					float kusuOutY = (Math.Max(Math.Min(1, nNowCharaCounter[i]) - 0.5f, 0) * OpenNijiiroRW.Skin.Resolution[1] * 2) * resolutionScaleY;
 
-					if (OpenNijiiroRW.Skin.Characters_Kusudama_Miss_Ptn[this.iCurrentCharacter[i]] != 0 && OpenNijiiroRW.Tx.Characters_Kusudama_Miss[this.iCurrentCharacter[i]][nNowCharaFrame[i]] != null) {
+					if (OpenNijiiroRW.Skin.Characters_Kusudama_Miss_Ptn[this.iCurrentCharacter[i]] != 0 && OpenNijiiroRW.Tx.Characters_Kusudama_Miss[this.iCurrentCharacter[i]][nNowCharaFrame[i]] != null)
+					{
 						OpenNijiiroRW.Tx.Characters_Kusudama_Miss[this.iCurrentCharacter[i]][nNowCharaFrame[i]].Opacity = nowOpacity;
 						OpenNijiiroRW.Tx.Characters_Kusudama_Miss[this.iCurrentCharacter[i]][nNowCharaFrame[i]].Scale.X = charaScale;
 						OpenNijiiroRW.Tx.Characters_Kusudama_Miss[this.iCurrentCharacter[i]][nNowCharaFrame[i]].Scale.Y = charaScale;
 
 
-						if (i % 2 == 0) {
+						if (i % 2 == 0)
+						{
 							OpenNijiiroRW.Tx.Characters_Kusudama_Miss[this.iCurrentCharacter[i]][nNowCharaFrame[i]].t2D描画(kusu_chara_x, kusu_chara_y + kusuOutY);
-						} else {
+						}
+						else
+						{
 							OpenNijiiroRW.Tx.Characters_Kusudama_Miss[this.iCurrentCharacter[i]][nNowCharaFrame[i]].t2D左右反転描画(kusu_chara_x, kusu_chara_y + kusuOutY);
 						}
 					}
@@ -615,63 +744,84 @@ internal class CActImplCharacter : CActivity {
 						OpenNijiiroRW.Skin.Game_PuchiChara_KusudamaX[i],
 						OpenNijiiroRW.Skin.Game_PuchiChara_KusudamaY[i] + (int)kusuOutY, false, nowOpacity, true, player: i);
 
-					if (endAnime) {
+					if (endAnime)
+					{
 						this.b風船連打中[i] = false;
 						ReturnDefaultAnime(i, true);
 					}
-				} else if (eNowAnime[i] == Anime.Kusudama_Breaking) {
+				}
+				else if (eNowAnime[i] == Anime.Kusudama_Breaking)
+				{
 					float kusuInX = ((1.0f - MathF.Sin(ctKusuIn[i].CurrentValue / 2000.0f * MathF.PI)) * OpenNijiiroRW.Skin.Resolution[0] / 2.0f) * resolutionScaleX;
 					float kusuInY = -((MathF.Cos(ctKusuIn[i].CurrentValue / 1000.0f * MathF.PI / 2)) * OpenNijiiroRW.Skin.Resolution[1] / 2.0f) * resolutionScaleY;
 
 
-					if (OpenNijiiroRW.Skin.Characters_Kusudama_Breaking_Ptn[this.iCurrentCharacter[i]] != 0 && OpenNijiiroRW.Tx.Characters_Kusudama_Breaking[this.iCurrentCharacter[i]][nNowCharaFrame[i]] != null) {
+					if (OpenNijiiroRW.Skin.Characters_Kusudama_Breaking_Ptn[this.iCurrentCharacter[i]] != 0 && OpenNijiiroRW.Tx.Characters_Kusudama_Breaking[this.iCurrentCharacter[i]][nNowCharaFrame[i]] != null)
+					{
 						OpenNijiiroRW.Tx.Characters_Kusudama_Breaking[this.iCurrentCharacter[i]][nNowCharaFrame[i]].Scale.X = charaScale;
 						OpenNijiiroRW.Tx.Characters_Kusudama_Breaking[this.iCurrentCharacter[i]][nNowCharaFrame[i]].Scale.Y = charaScale;
-						if (i % 2 == 0) {
+						if (i % 2 == 0)
+						{
 							OpenNijiiroRW.Tx.Characters_Kusudama_Breaking[this.iCurrentCharacter[i]][nNowCharaFrame[i]].t2D描画(kusu_chara_x - kusuInX, kusu_chara_y + kusuInY);
-						} else {
+						}
+						else
+						{
 							OpenNijiiroRW.Tx.Characters_Kusudama_Breaking[this.iCurrentCharacter[i]][nNowCharaFrame[i]].t2D左右反転描画(kusu_chara_x + kusuInX, kusu_chara_y + kusuInY);
 						}
 					}
 
-					if (i % 2 == 0) {
+					if (i % 2 == 0)
+					{
 						OpenNijiiroRW.stageGameScreen.PuchiChara.On進行描画(
 							OpenNijiiroRW.Skin.Game_PuchiChara_KusudamaX[i] - (int)kusuInX,
 							OpenNijiiroRW.Skin.Game_PuchiChara_KusudamaY[i] + (int)kusuInY, false, 255, true, player: i);
-					} else {
+					}
+					else
+					{
 						OpenNijiiroRW.stageGameScreen.PuchiChara.On進行描画(
 							OpenNijiiroRW.Skin.Game_PuchiChara_KusudamaX[i] + (int)kusuInX,
 							OpenNijiiroRW.Skin.Game_PuchiChara_KusudamaY[i] + (int)kusuInY, false, 255, true, player: i);
 					}
 
-					if (endAnime) {
+					if (endAnime)
+					{
 						ChangeAnime(i, Anime.Kusudama_Idle, true);
 					}
-				} else if (eNowAnime[i] == Anime.Kusudama_Idle) {
+				}
+				else if (eNowAnime[i] == Anime.Kusudama_Idle)
+				{
 					float kusuInX = ((1.0f - MathF.Sin(ctKusuIn[i].CurrentValue / 2000.0f * MathF.PI)) * OpenNijiiroRW.Skin.Resolution[0] / 2.0f) * resolutionScaleX;
 					float kusuInY = -((MathF.Cos(ctKusuIn[i].CurrentValue / 1000.0f * MathF.PI / 2)) * OpenNijiiroRW.Skin.Resolution[1] / 2.0f) * resolutionScaleY;
 
-					if (OpenNijiiroRW.Skin.Characters_Kusudama_Idle_Ptn[this.iCurrentCharacter[i]] != 0 && OpenNijiiroRW.Tx.Characters_Kusudama_Idle[this.iCurrentCharacter[i]][nNowCharaFrame[i]] != null) {
+					if (OpenNijiiroRW.Skin.Characters_Kusudama_Idle_Ptn[this.iCurrentCharacter[i]] != 0 && OpenNijiiroRW.Tx.Characters_Kusudama_Idle[this.iCurrentCharacter[i]][nNowCharaFrame[i]] != null)
+					{
 						OpenNijiiroRW.Tx.Characters_Kusudama_Idle[this.iCurrentCharacter[i]][nNowCharaFrame[i]].Scale.X = charaScale;
 						OpenNijiiroRW.Tx.Characters_Kusudama_Idle[this.iCurrentCharacter[i]][nNowCharaFrame[i]].Scale.Y = charaScale;
-						if (i % 2 == 0) {
+						if (i % 2 == 0)
+						{
 							OpenNijiiroRW.Tx.Characters_Kusudama_Idle[this.iCurrentCharacter[i]][nNowCharaFrame[i]].t2D描画(kusu_chara_x - kusuInX, kusu_chara_y + kusuInY);
-						} else {
+						}
+						else
+						{
 							OpenNijiiroRW.Tx.Characters_Kusudama_Idle[this.iCurrentCharacter[i]][nNowCharaFrame[i]].t2D左右反転描画(kusu_chara_x + kusuInX, kusu_chara_y + kusuInY);
 						}
 					}
 
-					if (i % 2 == 0) {
+					if (i % 2 == 0)
+					{
 						OpenNijiiroRW.stageGameScreen.PuchiChara.On進行描画(
 							OpenNijiiroRW.Skin.Game_PuchiChara_KusudamaX[i] - (int)kusuInX,
 							OpenNijiiroRW.Skin.Game_PuchiChara_KusudamaY[i] + (int)kusuInY, false, 255, true, player: i);
-					} else {
+					}
+					else
+					{
 						OpenNijiiroRW.stageGameScreen.PuchiChara.On進行描画(
 							OpenNijiiroRW.Skin.Game_PuchiChara_KusudamaX[i] + (int)kusuInX,
 							OpenNijiiroRW.Skin.Game_PuchiChara_KusudamaY[i] + (int)kusuInY, false, 255, true, player: i);
 					}
 
-					if (endAnime) {
+					if (endAnime)
+					{
 						ChangeAnime(i, Anime.Kusudama_Idle, true);
 					}
 				}
@@ -680,28 +830,48 @@ internal class CActImplCharacter : CActivity {
 	}
 
 
-	public void ReturnDefaultAnime(int player, bool resetCounter) {
-		if (OpenNijiiroRW.stageGameScreen.bIsGOGOTIME[player] && OpenNijiiroRW.Skin.Characters_GoGoTime_Ptn[this.iCurrentCharacter[player]] != 0) {
-			if (OpenNijiiroRW.stageGameScreen.bIsAlreadyMaxed[player] && OpenNijiiroRW.Skin.Characters_GoGoTime_Maxed_Ptn[this.iCurrentCharacter[player]] != 0) {
+	public void ReturnDefaultAnime(int player, bool resetCounter)
+	{
+		if (OpenNijiiroRW.stageGameScreen.bIsGOGOTIME[player] && OpenNijiiroRW.Skin.Characters_GoGoTime_Ptn[this.iCurrentCharacter[player]] != 0)
+		{
+			if (OpenNijiiroRW.stageGameScreen.bIsAlreadyMaxed[player] && OpenNijiiroRW.Skin.Characters_GoGoTime_Maxed_Ptn[this.iCurrentCharacter[player]] != 0)
+			{
 				ChangeAnime(player, Anime.GoGoTime_Maxed, resetCounter);
-			} else {
+			}
+			else
+			{
 				ChangeAnime(player, Anime.GoGoTime, resetCounter);
 			}
-		} else {
-			if (OpenNijiiroRW.stageGameScreen.bIsMiss[player] && OpenNijiiroRW.Skin.Characters_Normal_Missed_Ptn[this.iCurrentCharacter[player]] != 0) {
-				if (OpenNijiiroRW.stageGameScreen.Chara_MissCount[player] >= 6 && OpenNijiiroRW.Skin.Characters_Normal_MissedDown_Ptn[this.iCurrentCharacter[player]] != 0) {
+		}
+		else
+		{
+			if (OpenNijiiroRW.stageGameScreen.bIsMiss[player] && OpenNijiiroRW.Skin.Characters_Normal_Missed_Ptn[this.iCurrentCharacter[player]] != 0)
+			{
+				if (OpenNijiiroRW.stageGameScreen.Chara_MissCount[player] >= 6 && OpenNijiiroRW.Skin.Characters_Normal_MissedDown_Ptn[this.iCurrentCharacter[player]] != 0)
+				{
 					ChangeAnime(player, Anime.MissDown, resetCounter);
-				} else {
+				}
+				else
+				{
 					ChangeAnime(player, Anime.Miss, resetCounter);
 				}
-			} else {
-				if (OpenNijiiroRW.stageGameScreen.bIsAlreadyMaxed[player] && OpenNijiiroRW.Skin.Characters_Normal_Maxed_Ptn[this.iCurrentCharacter[player]] != 0) {
+			}
+			else
+			{
+				if (OpenNijiiroRW.stageGameScreen.bIsAlreadyMaxed[player] && OpenNijiiroRW.Skin.Characters_Normal_Maxed_Ptn[this.iCurrentCharacter[player]] != 0)
+				{
 					ChangeAnime(player, Anime.Maxed, resetCounter);
-				} else if (OpenNijiiroRW.stageGameScreen.bIsAlreadyCleared[player] && OpenNijiiroRW.Skin.Characters_Normal_Cleared_Ptn[this.iCurrentCharacter[player]] != 0) {
+				}
+				else if (OpenNijiiroRW.stageGameScreen.bIsAlreadyCleared[player] && OpenNijiiroRW.Skin.Characters_Normal_Cleared_Ptn[this.iCurrentCharacter[player]] != 0)
+				{
 					ChangeAnime(player, Anime.Cleared, resetCounter);
-				} else if (OpenNijiiroRW.Skin.Characters_Normal_Ptn[this.iCurrentCharacter[player]] != 0) {
+				}
+				else if (OpenNijiiroRW.Skin.Characters_Normal_Ptn[this.iCurrentCharacter[player]] != 0)
+				{
 					ChangeAnime(player, Anime.Normal, resetCounter);
-				} else {
+				}
+				else
+				{
 					ChangeAnime(player, Anime.None, resetCounter);
 				}
 			}
@@ -719,7 +889,8 @@ internal class CActImplCharacter : CActivity {
 	private int[] nCharaFrameCount = new int[5];
 	private float[] nCharaBeat = new float[5];
 
-	public enum Anime {
+	public enum Anime
+	{
 		None,
 		Normal,
 		Miss,
@@ -755,22 +926,27 @@ internal class CActImplCharacter : CActivity {
 
 	public CCounter[] ctKusuIn = new CCounter[5];
 
-	public void KusuIn() {
-		for (int i = 0; i < OpenNijiiroRW.ConfigIni.nPlayerCount; i++) {
+	public void KusuIn()
+	{
+		for (int i = 0; i < OpenNijiiroRW.ConfigIni.nPlayerCount; i++)
+		{
 			ChangeAnime(i, Anime.Kusudama_Idle, true);
 			ctKusuIn[i] = new CCounter(0, 1000, 0.4f, OpenNijiiroRW.Timer);
 		}
 	}
 
-	public void ChangeAnime(int player, Anime anime, bool resetCounter) {
+	public void ChangeAnime(int player, Anime anime, bool resetCounter)
+	{
 		eNowAnime[player] = anime;
 
-		if (resetCounter) {
+		if (resetCounter)
+		{
 			nNowCharaCounter[player] = 0;
 			nNowCharaFrame[player] = 0;
 		}
 
-		switch (anime) {
+		switch (anime)
+		{
 			case Anime.None:
 				break;
 			case Anime.Normal:

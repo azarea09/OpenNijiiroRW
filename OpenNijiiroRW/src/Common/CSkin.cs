@@ -6,7 +6,8 @@ using FDK;
 namespace OpenNijiiroRW;
 // グローバル定数
 
-public enum Eシステムサウンド {
+public enum Eシステムサウンド
+{
 	BGMオプション画面 = 0,
 	BGMコンフィグ画面,
 	BGM起動画面,
@@ -36,10 +37,12 @@ public enum Eシステムサウンド {
 	Count               // システムサウンド総数の計算用
 }
 
-internal class CSkin : IDisposable {
+internal class CSkin : IDisposable
+{
 	// Class
 
-	public class CSystemSound : IDisposable {
+	public class CSystemSound : IDisposable
+	{
 		// static フィールド
 
 		public static CSkin.CSystemSound r最後に再生した排他システムサウンド;
@@ -55,58 +58,76 @@ internal class CSkin : IDisposable {
 		public bool bLoadedSuccessfuly;
 		public bool bExclusive;
 		public string strFileName = "";
-		public bool bIsPlaying {
-			get {
+		public bool bIsPlaying
+		{
+			get
+			{
 				if (this.rSound[1 - this.nNextPlayingSoundNumber] == null)
 					return false;
 
 				return this.rSound[1 - this.nNextPlayingSoundNumber].IsPlaying;
 			}
 		}
-		public int nPosition_CurrentlyPlayingSound {
-			get {
+		public int nPosition_CurrentlyPlayingSound
+		{
+			get
+			{
 				return this.rSound[1 - this.nNextPlayingSoundNumber]?.SoundPosition ?? 0;
 			}
-			set {
+			set
+			{
 				this.rSound[1 - this.nNextPlayingSoundNumber]?.SetPanning(value);
 			}
 		}
-		public int nPosition_NextPlayingSound {
-			get {
+		public int nPosition_NextPlayingSound
+		{
+			get
+			{
 				return this.rSound[this.nNextPlayingSoundNumber]?.SoundPosition ?? 0;
 			}
-			set {
+			set
+			{
 				this.rSound[this.nNextPlayingSoundNumber]?.SetPanning(value);
 			}
 		}
-		public int nAutomationLevel_現在のサウンド {
-			get {
+		public int nAutomationLevel_現在のサウンド
+		{
+			get
+			{
 				CSound sound = this.rSound[1 - this.nNextPlayingSoundNumber];
 				if (sound == null)
 					return 0;
 
 				return sound.AutomationLevel;
 			}
-			set {
+			set
+			{
 				CSound sound = this.rSound[1 - this.nNextPlayingSoundNumber];
-				if (sound != null) {
+				if (sound != null)
+				{
 					sound.AutomationLevel = value;
 				}
 			}
 		}
-		public int n長さ_現在のサウンド {
-			get {
+		public int n長さ_現在のサウンド
+		{
+			get
+			{
 				CSound sound = this.rSound[1 - this.nNextPlayingSoundNumber];
-				if (sound == null) {
+				if (sound == null)
+				{
 					return 0;
 				}
 				return sound.TotalPlayTime;
 			}
 		}
-		public int n長さ_次に鳴るサウンド {
-			get {
+		public int n長さ_次に鳴るサウンド
+		{
+			get
+			{
 				CSound sound = this.rSound[this.nNextPlayingSoundNumber];
-				if (sound == null) {
+				if (sound == null)
+				{
 					return 0;
 				}
 				return sound.TotalPlayTime;
@@ -121,7 +142,8 @@ internal class CSkin : IDisposable {
 		/// <param name="bLoop"></param>
 		/// <param name="bExclusive"></param>
 		/// <param name="bCompact対象"></param>
-		public CSystemSound(string strFileName, bool bLoop, bool bExclusive, bool bCompact対象, ESoundGroup soundGroup) {
+		public CSystemSound(string strFileName, bool bLoop, bool bExclusive, bool bCompact対象, ESoundGroup soundGroup)
+		{
 			this.strFileName = strFileName;
 			this.bLoop = bLoop;
 			this.bExclusive = bExclusive;
@@ -134,39 +156,50 @@ internal class CSkin : IDisposable {
 
 		// メソッド
 
-		public void tLoading() {
+		public void tLoading()
+		{
 			this.bNotLoadedYet = false;
 			this.bLoadedSuccessfuly = false;
 			if (string.IsNullOrEmpty(this.strFileName))
 				throw new InvalidOperationException("ファイル名が無効です。");
 
-			if (!File.Exists(CSkin.Path(this.strFileName))) {
+			if (!File.Exists(CSkin.Path(this.strFileName)))
+			{
 				Trace.TraceWarning($"ファイルが存在しません。: {this.strFileName}");
 				return;
 			}
 
 			for (int i = 0; i < 2; i++)     // 一旦Cloneを止めてASIO対応に専念
 			{
-				try {
+				try
+				{
 					this.rSound[i] = OpenNijiiroRW.SoundManager?.tCreateSound(CSkin.Path(this.strFileName), _soundGroup);
-				} catch {
+				}
+				catch
+				{
 					this.rSound[i] = null;
 					throw;
 				}
 			}
 			this.bLoadedSuccessfuly = true;
 		}
-		public void tPlay() {
-			if (this.bNotLoadedYet) {
-				try {
+		public void tPlay()
+		{
+			if (this.bNotLoadedYet)
+			{
+				try
+				{
 					tLoading();
-				} catch (Exception e) {
+				}
+				catch (Exception e)
+				{
 					Trace.TraceError(e.ToString());
 					Trace.TraceError("例外が発生しましたが処理を継続します。 (17668977-4686-4aa7-b3f0-e0b9a44975b8)");
 					this.bNotLoadedYet = false;
 				}
 			}
-			if (this.bExclusive) {
+			if (this.bExclusive)
+			{
 				if (r最後に再生した排他システムサウンド != null)
 					r最後に再生した排他システムサウンド.tStop();
 
@@ -179,7 +212,8 @@ internal class CSkin : IDisposable {
 			this.bPlayed = true;
 			this.nNextPlayingSoundNumber = 1 - this.nNextPlayingSoundNumber;
 		}
-		public void tStop() {
+		public void tStop()
+		{
 			this.bPlayed = false;
 
 			this.rSound[0]?.Stop();
@@ -189,15 +223,20 @@ internal class CSkin : IDisposable {
 				r最後に再生した排他システムサウンド = null;
 		}
 
-		public void SetPanning(int pan) {
+		public void SetPanning(int pan)
+		{
 			nPosition_CurrentlyPlayingSound = pan;
 			nPosition_NextPlayingSound = pan;
 		}
 
-		public void tRemoveMixer() {
-			if (OpenNijiiroRW.SoundManager.GetCurrentSoundDeviceType() != "DirectShow") {
-				for (int i = 0; i < 2; i++) {
-					if (this.rSound[i] != null) {
+		public void tRemoveMixer()
+		{
+			if (OpenNijiiroRW.SoundManager.GetCurrentSoundDeviceType() != "DirectShow")
+			{
+				for (int i = 0; i < 2; i++)
+				{
+					if (this.rSound[i] != null)
+					{
 						OpenNijiiroRW.SoundManager.RemoveMixer(this.rSound[i]);
 					}
 				}
@@ -206,10 +245,14 @@ internal class CSkin : IDisposable {
 
 		#region [ IDisposable 実装 ]
 		//-----------------
-		public void Dispose() {
-			if (!this.bDisposed) {
-				for (int i = 0; i < 2; i++) {
-					if (this.rSound[i] != null) {
+		public void Dispose()
+		{
+			if (!this.bDisposed)
+			{
+				for (int i = 0; i < 2; i++)
+				{
+					if (this.rSound[i] != null)
+					{
 						OpenNijiiroRW.SoundManager.tDisposeSound(this.rSound[i]);
 						this.rSound[i] = null;
 					}
@@ -364,9 +407,12 @@ internal class CSkin : IDisposable {
 
 
 	public readonly int nシステムサウンド数 = (int)Eシステムサウンド.Count;
-	public CSystemSound this[Eシステムサウンド sound] {
-		get {
-			switch (sound) {
+	public CSystemSound this[Eシステムサウンド sound]
+	{
+		get
+		{
+			switch (sound)
+			{
 				case Eシステムサウンド.SOUNDカーソル移動音:
 					return this.soundカーソル移動音;
 
@@ -449,9 +495,12 @@ internal class CSkin : IDisposable {
 			throw new IndexOutOfRangeException();
 		}
 	}
-	public CSystemSound this[int index] {
-		get {
-			switch (index) {
+	public CSystemSound this[int index]
+	{
+		get
+		{
+			switch (index)
+			{
 				case 0:
 					return this.soundカーソル移動音;
 
@@ -553,14 +602,19 @@ internal class CSkin : IDisposable {
 	public string strSystemSkinRoot = null;
 	public string[] strSystemSkinSubfolders = null;     // List<string>だとignoreCaseな検索が面倒なので、配列に逃げる :-)
 	private string[] _strBoxDefSkinSubfolders = null;
-	public string[] strBoxDefSkinSubfolders {
-		get {
-			lock (lockBoxDefSkin) {
+	public string[] strBoxDefSkinSubfolders
+	{
+		get
+		{
+			lock (lockBoxDefSkin)
+			{
 				return _strBoxDefSkinSubfolders;
 			}
 		}
-		set {
-			lock (lockBoxDefSkin) {
+		set
+		{
+			lock (lockBoxDefSkin)
+			{
 				_strBoxDefSkinSubfolders = value;
 			}
 		}
@@ -574,10 +628,14 @@ internal class CSkin : IDisposable {
 	/// </summary>
 	/// <param name="bFromUserConfig">ユーザー設定用ならtrue, box.defからの設定ならfalse</param>
 	/// <returns></returns>
-	public string GetCurrentSkinSubfolderFullName(bool bFromUserConfig) {
-		if (!bUseBoxDefSkin || bFromUserConfig == true || strBoxDefSkinSubfolderFullName == "") {
+	public string GetCurrentSkinSubfolderFullName(bool bFromUserConfig)
+	{
+		if (!bUseBoxDefSkin || bFromUserConfig == true || strBoxDefSkinSubfolderFullName == "")
+		{
 			return strSystemSkinSubfolderFullName;
-		} else {
+		}
+		else
+		{
 			return strBoxDefSkinSubfolderFullName;
 		}
 	}
@@ -586,17 +644,22 @@ internal class CSkin : IDisposable {
 	/// </summary>
 	/// <param name="value">スキンパス名</param>
 	/// <param name="bFromUserConfig">ユーザー設定用ならtrue, box.defからの設定ならfalse</param>
-	public void SetCurrentSkinSubfolderFullName(string value, bool bFromUserConfig) {
-		if (bFromUserConfig) {
+	public void SetCurrentSkinSubfolderFullName(string value, bool bFromUserConfig)
+	{
+		if (bFromUserConfig)
+		{
 			strSystemSkinSubfolderFullName = value;
-		} else {
+		}
+		else
+		{
 			strBoxDefSkinSubfolderFullName = value;
 		}
 	}
 
 
 	// Constructor
-	public CSkin(string _strSkinSubfolderFullName, bool _bUseBoxDefSkin) {
+	public CSkin(string _strSkinSubfolderFullName, bool _bUseBoxDefSkin)
+	{
 		lockBoxDefSkin = new object();
 		strSystemSkinSubfolderFullName = _strSkinSubfolderFullName;
 		bUseBoxDefSkin = _bUseBoxDefSkin;
@@ -604,14 +667,16 @@ internal class CSkin : IDisposable {
 		ReloadSkinPaths();
 		PrepareReloadSkin();
 	}
-	public CSkin() {
+	public CSkin()
+	{
 		lockBoxDefSkin = new object();
 		InitializeSkinPathRoot();
 		bUseBoxDefSkin = true;
 		ReloadSkinPaths();
 		PrepareReloadSkin();
 	}
-	private string InitializeSkinPathRoot() {
+	private string InitializeSkinPathRoot()
+	{
 		strSystemSkinRoot = System.IO.Path.Combine(OpenNijiiroRW.strEXEのあるフォルダ, "System" + System.IO.Path.DirectorySeparatorChar);
 		return strSystemSkinRoot;
 	}
@@ -623,15 +688,18 @@ internal class CSkin : IDisposable {
 	/// 本メソッド呼び出し後に、ReloadSkin()を実行することで、システムサウンドを読み込み直す。
 	/// ReloadSkin()の内容は本メソッド内に含めないこと。起動時はReloadSkin()相当の処理をCEnumSongsで行っているため。
 	/// </summary>
-	public void PrepareReloadSkin() {
+	public void PrepareReloadSkin()
+	{
 		Trace.TraceInformation("SkinPath設定: {0}",
 			(strBoxDefSkinSubfolderFullName == "") ?
 				strSystemSkinSubfolderFullName :
 				strBoxDefSkinSubfolderFullName
 		);
 
-		for (int i = 0; i < nシステムサウンド数; i++) {
-			if (this[i] != null && this[i].bLoadedSuccessfuly) {
+		for (int i = 0; i < nシステムサウンド数; i++)
+		{
+			if (this[i] != null && this[i].bLoadedSuccessfuly)
+			{
 				this[i].tStop();
 				this[i].Dispose();
 			}
@@ -711,7 +779,8 @@ internal class CSkin : IDisposable {
 		calibrationTick = new CSystemSound(@$"Sounds{System.IO.Path.DirectorySeparatorChar}Calibrate.ogg", false, false, false, ESoundGroup.SoundEffect);
 
 		soundModal = new CSystemSound[6];
-		for (int i = 0; i < soundModal.Length - 1; i++) {
+		for (int i = 0; i < soundModal.Length - 1; i++)
+		{
 			soundModal[i] = new CSystemSound(@$"Sounds{System.IO.Path.DirectorySeparatorChar}Modals{System.IO.Path.DirectorySeparatorChar}" + i.ToString() + ".ogg", false, false, false, ESoundGroup.SoundEffect);
 		}
 		soundModal[soundModal.Length - 1] = new CSystemSound(@$"Sounds{System.IO.Path.DirectorySeparatorChar}Modals{System.IO.Path.DirectorySeparatorChar}Coin.ogg", false, false, false, ESoundGroup.SoundEffect);
@@ -723,19 +792,27 @@ internal class CSkin : IDisposable {
 		hsHitSoundsInformations = new CHitSounds(@$"Global{System.IO.Path.DirectorySeparatorChar}HitSounds");
 	}
 
-	public void ReloadSkin() {
-		for (int i = 0; i < nシステムサウンド数; i++) {
+	public void ReloadSkin()
+	{
+		for (int i = 0; i < nシステムサウンド数; i++)
+		{
 			if (!this[i].bExclusive)   // BGM系以外のみ読み込む。(BGM系は必要になったときに読み込む)
 			{
 				CSystemSound cシステムサウンド = this[i];
-				if (cシステムサウンド.bCompact対象) {
-					try {
+				if (cシステムサウンド.bCompact対象)
+				{
+					try
+					{
 						cシステムサウンド.tLoading();
 						Trace.TraceInformation("システムサウンドを読み込みました。({0})", cシステムサウンド.strFileName);
-					} catch (FileNotFoundException e) {
+					}
+					catch (FileNotFoundException e)
+					{
 						Trace.TraceWarning(e.ToString());
 						Trace.TraceWarning("システムサウンドが存在しません。({0})", cシステムサウンド.strFileName);
-					} catch (Exception e) {
+					}
+					catch (Exception e)
+					{
 						Trace.TraceWarning(e.ToString());
 						Trace.TraceWarning("システムサウンドの読み込みに失敗しました。({0})", cシステムサウンド.strFileName);
 					}
@@ -754,7 +831,8 @@ internal class CSkin : IDisposable {
 	/// 2. System/*****/ で最初にenumerateされたもの
 	/// 3. System/ (従来互換)
 	/// </summary>
-	public void ReloadSkinPaths() {
+	public void ReloadSkinPaths()
+	{
 		#region [ Enumerate System ]
 		if (!Directory.Exists(strSystemSkinRoot))
 			throw new DirectoryNotFoundException("OpenNijiiroRW could not find the System folder, which contains the skin(s) needed to load the game.");
@@ -766,14 +844,16 @@ internal class CSkin : IDisposable {
 
 		strSystemSkinSubfolders = new string[tempSkinSubfolders.Length];
 		int size = 0;
-		for (int i = 0; i < tempSkinSubfolders.Length; i++) {
+		for (int i = 0; i < tempSkinSubfolders.Length; i++)
+		{
 			#region [ 検出したフォルダがスキンフォルダかどうか確認する]
 			if (!bIsValid(tempSkinSubfolders[i]))
 				continue;
 			#endregion
 			#region [ スキンフォルダと確認できたものを、strSkinSubfoldersに入れる ]
 			// フォルダ名末尾に必ず{System.IO.Path.DirectorySeparatorChar}をつけておくこと。さもないとConfig読み出し側(必ず{System.IO.Path.DirectorySeparatorChar}をつける)とマッチできない
-			if (tempSkinSubfolders[i][tempSkinSubfolders[i].Length - 1] != System.IO.Path.DirectorySeparatorChar) {
+			if (tempSkinSubfolders[i][tempSkinSubfolders[i].Length - 1] != System.IO.Path.DirectorySeparatorChar)
+			{
 				tempSkinSubfolders[i] += System.IO.Path.DirectorySeparatorChar;
 			}
 			strSystemSkinSubfolders[size] = tempSkinSubfolders[i];
@@ -789,7 +869,8 @@ internal class CSkin : IDisposable {
 		#region [ 現在のSkinパスがbox.defスキンをCONFIG指定していた場合のために、最初にこれが有効かチェックする。有効ならこれを使う。 ]
 		if (bIsValid(strSystemSkinSubfolderFullName) &&
 			Array.BinarySearch(strSystemSkinSubfolders, strSystemSkinSubfolderFullName,
-				StringComparer.InvariantCultureIgnoreCase) < 0) {
+				StringComparer.InvariantCultureIgnoreCase) < 0)
+		{
 			strBoxDefSkinSubfolders = new string[1] { strSystemSkinSubfolderFullName };
 			return;
 		}
@@ -808,13 +889,15 @@ internal class CSkin : IDisposable {
 		#region [ System/Default/ があるなら、そこにカレントSkinパスを設定する]
 		string tempSkinPath_default = System.IO.Path.Combine(strSystemSkinRoot, "Default" + System.IO.Path.DirectorySeparatorChar);
 		if (Array.BinarySearch(strSystemSkinSubfolders, tempSkinPath_default,
-				StringComparer.InvariantCultureIgnoreCase) >= 0) {
+				StringComparer.InvariantCultureIgnoreCase) >= 0)
+		{
 			strSystemSkinSubfolderFullName = tempSkinPath_default;
 			return;
 		}
 		#endregion
 		#region [ System/SkinFiles.*****/ で最初にenumerateされたものを、カレントSkinパスに再設定する ]
-		if (strSystemSkinSubfolders.Length > 0) {
+		if (strSystemSkinSubfolders.Length > 0)
+		{
 			strSystemSkinSubfolderFullName = strSystemSkinSubfolders[0];
 			return;
 		}
@@ -828,10 +911,14 @@ internal class CSkin : IDisposable {
 
 	// メソッド
 
-	public static string Path(string strファイルの相対パス) {
-		if (strBoxDefSkinSubfolderFullName == "" || !bUseBoxDefSkin) {
+	public static string Path(string strファイルの相対パス)
+	{
+		if (strBoxDefSkinSubfolderFullName == "" || !bUseBoxDefSkin)
+		{
 			return System.IO.Path.Combine(strSystemSkinSubfolderFullName, strファイルの相対パス);
-		} else {
+		}
+		else
+		{
 			return System.IO.Path.Combine(strBoxDefSkinSubfolderFullName, strファイルの相対パス);
 		}
 	}
@@ -842,8 +929,10 @@ internal class CSkin : IDisposable {
 	/// </summary>
 	/// <param name="skinPathFullName">スキンが格納されたパス名(フルパス)</param>
 	/// <returns>スキン名</returns>
-	public static string GetSkinName(string skinPathFullName) {
-		if (skinPathFullName != null) {
+	public static string GetSkinName(string skinPathFullName)
+	{
+		if (skinPathFullName != null)
+		{
 			if (skinPathFullName == "")     // 「box.defで未定義」用
 				skinPathFullName = strSystemSkinSubfolderFullName;
 			string[] tmp = skinPathFullName.Split(System.IO.Path.DirectorySeparatorChar);
@@ -851,21 +940,26 @@ internal class CSkin : IDisposable {
 		}
 		return null;
 	}
-	public static string[] GetSkinName(string[] skinPathFullNames) {
+	public static string[] GetSkinName(string[] skinPathFullNames)
+	{
 		string[] ret = new string[skinPathFullNames.Length];
-		for (int i = 0; i < skinPathFullNames.Length; i++) {
+		for (int i = 0; i < skinPathFullNames.Length; i++)
+		{
 			ret[i] = GetSkinName(skinPathFullNames[i]);
 		}
 		return ret;
 	}
 
 
-	public string GetSkinSubfolderFullNameFromSkinName(string skinName) {
-		foreach (string s in strSystemSkinSubfolders) {
+	public string GetSkinSubfolderFullNameFromSkinName(string skinName)
+	{
+		foreach (string s in strSystemSkinSubfolders)
+		{
 			if (GetSkinName(s) == skinName)
 				return s;
 		}
-		foreach (string b in strBoxDefSkinSubfolders) {
+		foreach (string b in strBoxDefSkinSubfolders)
+		{
 			if (GetSkinName(b) == skinName)
 				return b;
 		}
@@ -878,16 +972,20 @@ internal class CSkin : IDisposable {
 	/// </summary>
 	/// <param name="skinPathFullName">妥当性を確認するスキンパス(フルパス)</param>
 	/// <returns>妥当ならtrue</returns>
-	public bool bIsValid(string skinPathFullName) {
+	public bool bIsValid(string skinPathFullName)
+	{
 		string filePathTitle;
 		filePathTitle = System.IO.Path.Combine(skinPathFullName, @$"Graphics{System.IO.Path.DirectorySeparatorChar}1_Title{System.IO.Path.DirectorySeparatorChar}Background.png");
 		return (File.Exists(filePathTitle));
 	}
 
 
-	public void tRemoveMixerAll() {
-		for (int i = 0; i < nシステムサウンド数; i++) {
-			if (this[i] != null && this[i].bLoadedSuccessfuly) {
+	public void tRemoveMixerAll()
+	{
+		for (int i = 0; i < nシステムサウンド数; i++)
+		{
+			if (this[i] != null && this[i].bLoadedSuccessfuly)
+			{
 				this[i].tStop();
 				this[i].tRemoveMixer();
 			}
@@ -898,29 +996,36 @@ internal class CSkin : IDisposable {
 	/// <summary>
 	/// 変数の初期化
 	/// </summary>
-	public void tSkinConfigInit() {
+	public void tSkinConfigInit()
+	{
 		this.eDiffDispMode = EDifficultyDisplayType.ImageOnMTaiko;
 		this.b現在のステージ数を表示しない = false;
 	}
 
-	public void LoadSkinConfigFromFile(string path, ref string work) {
+	public void LoadSkinConfigFromFile(string path, ref string work)
+	{
 		if (!File.Exists(Path(path))) return;
-		using (var streamReader = new StreamReader(Path(path), Encoding.GetEncoding(OpenNijiiroRW.sEncType))) {
+		using (var streamReader = new StreamReader(Path(path), Encoding.GetEncoding(OpenNijiiroRW.sEncType)))
+		{
 			while (streamReader.Peek() > -1) // 一行ずつ読み込む。
 			{
 				var nowLine = streamReader.ReadLine();
-				if (nowLine.StartsWith("#include")) {
+				if (nowLine.StartsWith("#include"))
+				{
 					// #include hogehoge.iniにぶち当たった
 					var includePath = nowLine.Substring("#include ".Length).Trim();
 					LoadSkinConfigFromFile(includePath, ref work); // 再帰的に読み込む
-				} else {
+				}
+				else
+				{
 					work += nowLine + Environment.NewLine;
 				}
 			}
 		}
 	}
 
-	public void tReadSkinConfig() {
+	public void tReadSkinConfig()
+	{
 		var str = "";
 		LoadSkinConfigFromFile(Path(@$"SkinConfig.ini"), ref str);
 		this.t文字列から読み込み(str);
@@ -931,42 +1036,56 @@ internal class CSkin : IDisposable {
 	{
 		string[] delimiter = { "\n" };
 		string[] strSingleLine = strAllSettings.Split(delimiter, StringSplitOptions.RemoveEmptyEntries);
-		foreach (string s in strSingleLine) {
+		foreach (string s in strSingleLine)
+		{
 			string str = s.Replace('\t', ' ').TrimStart(new char[] { '\t', ' ' });
-			if ((str.Length != 0) && (str[0] != ';')) {
-				try {
+			if ((str.Length != 0) && (str[0] != ';'))
+			{
+				try
+				{
 					string strCommand;
 					string strParam;
 					string[] strArray = str.Split(new char[] { '=' });
-					if (strArray.Length == 2) {
+					if (strArray.Length == 2)
+					{
 						strCommand = strArray[0].Trim();
 						strParam = strArray[1].Trim();
 
 						#region [Skin Settings]
 
-						void ParseInt32(Action<int> setValue) {
-							if (int.TryParse(strParam, out var unparsedValue)) {
+						void ParseInt32(Action<int> setValue)
+						{
+							if (int.TryParse(strParam, out var unparsedValue))
+							{
 								setValue(unparsedValue);
-							} else {
+							}
+							else
+							{
 								Trace.TraceWarning($"SkinConfigの値 {strCommand} は整数値である必要があります。現在の値: {strParam}");
 							}
 						}
-						switch (strCommand) {
-							case "Name": {
+						switch (strCommand)
+						{
+							case "Name":
+								{
 									this.Skin_Name = strParam;
 									break;
 								}
-							case "Version": {
+							case "Version":
+								{
 									this.Skin_Version = strParam;
 									break;
 								}
-							case "Creator": {
+							case "Creator":
+								{
 									this.Skin_Creator = strParam;
 									break;
 								}
-							case "Resolution": {
+							case "Resolution":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Resolution[i] = int.Parse(strSplit[i]);
 									}
 									break;
@@ -975,9 +1094,11 @@ internal class CSkin : IDisposable {
 
 							#region [Background Scroll]
 
-							case "Background_Scroll_Y": {
+							case "Background_Scroll_Y":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										this.Background_Scroll_Y[i] = int.Parse(strSplit[i]);
 									}
 									break;
@@ -987,36 +1108,44 @@ internal class CSkin : IDisposable {
 
 							#region [Taiko Mode]
 							//-----------------------------
-							case "ScrollFieldP1Y": {
+							case "ScrollFieldP1Y":
+								{
 									this.nScrollFieldY[0] = CConversion.StringToInt(strParam, 192);
 									break;
 								}
-							case "ScrollFieldP2Y": {
+							case "ScrollFieldP2Y":
+								{
 									this.nScrollFieldY[1] = CConversion.StringToInt(strParam, 192);
 									break;
 								}
-							case "SENotesP1Y": {
+							case "SENotesP1Y":
+								{
 									this.nSENotesY[0] = CConversion.StringToInt(strParam, this.nSENotesY[0]);
 									break;
 								}
-							case "SENotesP2Y": {
+							case "SENotesP2Y":
+								{
 									this.nSENotesY[1] = CConversion.StringToInt(strParam, this.nSENotesY[1]);
 									break;
 								}
-							case "JudgePointP1Y": {
+							case "JudgePointP1Y":
+								{
 									this.nJudgePointY[0] = CConversion.StringToInt(strParam, this.nJudgePointY[0]);
 									break;
 								}
-							case "JudgePointP2Y": {
+							case "JudgePointP2Y":
+								{
 									this.nJudgePointY[1] = CConversion.StringToInt(strParam, this.nJudgePointY[1]);
 									break;
 								}
 
-							case "DiffDispMode": {
+							case "DiffDispMode":
+								{
 									this.eDiffDispMode = (EDifficultyDisplayType)CConversion.ParseIntInRange(strParam, 0, 2, (int)this.eDiffDispMode);
 									break;
 								}
-							case "NowStageDisp": {
+							case "NowStageDisp":
+								{
 									this.b現在のステージ数を表示しない = CConversion.bONorOFF(strParam[0]);
 									break;
 								}
@@ -1026,27 +1155,33 @@ internal class CSkin : IDisposable {
 
 							#region [Result screen]
 							//-----------------------------
-							case "ResultPanelP1X": {
+							case "ResultPanelP1X":
+								{
 									this.nResultPanelP1X = CConversion.StringToInt(strParam, 515);
 									break;
 								}
-							case "ResultPanelP1Y": {
+							case "ResultPanelP1Y":
+								{
 									this.nResultPanelP1Y = CConversion.StringToInt(strParam, 75);
 									break;
 								}
-							case "ResultPanelP2X": {
+							case "ResultPanelP2X":
+								{
 									this.nResultPanelP2X = CConversion.StringToInt(strParam, 515);
 									break;
 								}
-							case "ResultPanelP2Y": {
+							case "ResultPanelP2Y":
+								{
 									this.nResultPanelP2Y = CConversion.StringToInt(strParam, 75);
 									break;
 								}
-							case "ResultScoreP1X": {
+							case "ResultScoreP1X":
+								{
 									this.nResultScoreP1X = CConversion.StringToInt(strParam, 582);
 									break;
 								}
-							case "ResultScoreP1Y": {
+							case "ResultScoreP1Y":
+								{
 									this.nResultScoreP1Y = CConversion.StringToInt(strParam, 252);
 									break;
 								}
@@ -1057,189 +1192,241 @@ internal class CSkin : IDisposable {
 							#region 新・SkinConfig
 
 							#region Startup
-							case nameof(StartUp_LangSelect_FontSize): {
+							case nameof(StartUp_LangSelect_FontSize):
+								{
 									StartUp_LangSelect_FontSize = int.Parse(strParam);
 									break;
 								}
 							#endregion
 
 							#region Title
-							case nameof(Title_LoadingPinInstances): {
+							case nameof(Title_LoadingPinInstances):
+								{
 									Title_LoadingPinInstances = int.Parse(strParam);
 									break;
 								}
-							case nameof(Title_LoadingPinFrameCount): {
+							case nameof(Title_LoadingPinFrameCount):
+								{
 									Title_LoadingPinFrameCount = int.Parse(strParam);
 									break;
 								}
-							case nameof(Title_LoadingPinCycle): {
+							case nameof(Title_LoadingPinCycle):
+								{
 									Title_LoadingPinCycle = int.Parse(strParam);
 									break;
 								}
-							case "Title_LoadingPinBase": {
+							case "Title_LoadingPinBase":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Title_LoadingPinBase[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Title_LoadingPinDiff": {
+							case "Title_LoadingPinDiff":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Title_LoadingPinDiff[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Title_Entry_Bar_Text_X": {
+							case "Title_Entry_Bar_Text_X":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Title_Entry_Bar_Text_X[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Title_Entry_Bar_Text_Y": {
+							case "Title_Entry_Bar_Text_Y":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Title_Entry_Bar_Text_Y[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Title_Banapas_Load_Clear_Anime": {
+							case "Title_Banapas_Load_Clear_Anime":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Title_Banapas_Load_Clear_Anime[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Title_Entry_Player_Select_X": {
+							case "Title_Entry_Player_Select_X":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 3; i++) {
+									for (int i = 0; i < 3; i++)
+									{
 										Title_Entry_Player_Select_X[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Title_Entry_Player_Select_Y": {
+							case "Title_Entry_Player_Select_Y":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 3; i++) {
+									for (int i = 0; i < 3; i++)
+									{
 										Title_Entry_Player_Select_Y[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Title_Entry_Player_Select_Rect_0_Side": {
+							case "Title_Entry_Player_Select_Rect_0_Side":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 4; i++) {
+									for (int i = 0; i < 4; i++)
+									{
 										Title_Entry_Player_Select_Rect[0][0][i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Title_Entry_Player_Select_Rect_0_Center": {
+							case "Title_Entry_Player_Select_Rect_0_Center":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 4; i++) {
+									for (int i = 0; i < 4; i++)
+									{
 										Title_Entry_Player_Select_Rect[0][1][i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Title_Entry_Player_Select_Rect_1_Side": {
+							case "Title_Entry_Player_Select_Rect_1_Side":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 4; i++) {
+									for (int i = 0; i < 4; i++)
+									{
 										Title_Entry_Player_Select_Rect[1][0][i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Title_Entry_Player_Select_Rect_1_Center": {
+							case "Title_Entry_Player_Select_Rect_1_Center":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 4; i++) {
+									for (int i = 0; i < 4; i++)
+									{
 										Title_Entry_Player_Select_Rect[1][1][i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Title_Entry_Player_Select_Rect_2_Side": {
+							case "Title_Entry_Player_Select_Rect_2_Side":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 4; i++) {
+									for (int i = 0; i < 4; i++)
+									{
 										Title_Entry_Player_Select_Rect[2][0][i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Title_Entry_Player_Select_Rect_2_Center": {
+							case "Title_Entry_Player_Select_Rect_2_Center":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 4; i++) {
+									for (int i = 0; i < 4; i++)
+									{
 										Title_Entry_Player_Select_Rect[2][1][i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Title_Entry_NamePlate": {
+							case "Title_Entry_NamePlate":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Title_Entry_NamePlate[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Title_ModeSelect_Bar_X": {
+							case "Title_ModeSelect_Bar_X":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 3; i++) {
+									for (int i = 0; i < 3; i++)
+									{
 										Title_ModeSelect_Bar_X[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Title_ModeSelect_Bar_Y": {
+							case "Title_ModeSelect_Bar_Y":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 3; i++) {
+									for (int i = 0; i < 3; i++)
+									{
 										Title_ModeSelect_Bar_Y[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Title_ModeSelect_Bar_Offset": {
+							case "Title_ModeSelect_Bar_Offset":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Title_ModeSelect_Bar_Offset[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Title_ModeSelect_Title_Offset": {
+							case "Title_ModeSelect_Title_Offset":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Title_ModeSelect_Title_Offset[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Title_ModeSelect_Title_Scale": {
+							case "Title_ModeSelect_Title_Scale":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Title_ModeSelect_Title_Scale[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Title_ModeSelect_Bar_Center_X": {
+							case "Title_ModeSelect_Bar_Center_X":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 3; i++) {
+									for (int i = 0; i < 3; i++)
+									{
 										Title_ModeSelect_Bar_Center_X[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Title_ModeSelect_Bar_Center_Y": {
+							case "Title_ModeSelect_Bar_Center_Y":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 3; i++) {
+									for (int i = 0; i < 3; i++)
+									{
 										Title_ModeSelect_Bar_Center_Y[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Title_ModeSelect_Bar_Center_Rect_Up": {
+							case "Title_ModeSelect_Bar_Center_Rect_Up":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 4; i++) {
+									for (int i = 0; i < 4; i++)
+									{
 										Title_ModeSelect_Bar_Center_Rect[0][i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Title_ModeSelect_Bar_Center_Rect_Down": {
+							case "Title_ModeSelect_Bar_Center_Rect_Down":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 4; i++) {
+									for (int i = 0; i < 4; i++)
+									{
 										Title_ModeSelect_Bar_Center_Rect[1][i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Title_ModeSelect_Bar_Center_Rect_Center": {
+							case "Title_ModeSelect_Bar_Center_Rect_Center":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 4; i++) {
+									for (int i = 0; i < 4; i++)
+									{
 										Title_ModeSelect_Bar_Center_Rect[2][i] = int.Parse(strSplit[i]);
 									}
 									break;
@@ -1248,286 +1435,363 @@ internal class CSkin : IDisposable {
 
 
 
-							case "Title_ModeSelect_Bar_Overlay_X": {
+							case "Title_ModeSelect_Bar_Overlay_X":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 3; i++) {
+									for (int i = 0; i < 3; i++)
+									{
 										Title_ModeSelect_Bar_Overlay_X[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Title_ModeSelect_Bar_Overlay_Y": {
+							case "Title_ModeSelect_Bar_Overlay_Y":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 3; i++) {
+									for (int i = 0; i < 3; i++)
+									{
 										Title_ModeSelect_Bar_Overlay_Y[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Title_ModeSelect_Bar_Overlay_Rect_Up": {
+							case "Title_ModeSelect_Bar_Overlay_Rect_Up":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 4; i++) {
+									for (int i = 0; i < 4; i++)
+									{
 										Title_ModeSelect_Bar_Overlay_Rect[0][i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Title_ModeSelect_Bar_Overlay_Rect_Down": {
+							case "Title_ModeSelect_Bar_Overlay_Rect_Down":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 4; i++) {
+									for (int i = 0; i < 4; i++)
+									{
 										Title_ModeSelect_Bar_Overlay_Rect[1][i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Title_ModeSelect_Bar_Overlay_Rect_Center": {
+							case "Title_ModeSelect_Bar_Overlay_Rect_Center":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 4; i++) {
+									for (int i = 0; i < 4; i++)
+									{
 										Title_ModeSelect_Bar_Overlay_Rect[2][i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Title_ModeSelect_Bar_Move": {
+							case "Title_ModeSelect_Bar_Move":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Title_ModeSelect_Bar_Move[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Title_ModeSelect_Bar_Move_X": {
+							case "Title_ModeSelect_Bar_Move_X":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Title_ModeSelect_Bar_Move_X[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Title_ModeSelect_Overlay_Move": {
+							case "Title_ModeSelect_Overlay_Move":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Title_ModeSelect_Overlay_Move[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Title_ModeSelect_Overlay_Move_X": {
+							case "Title_ModeSelect_Overlay_Move_X":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Title_ModeSelect_Overlay_Move_X[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Title_ModeSelect_Bar_Chara_X": {
+							case "Title_ModeSelect_Bar_Chara_X":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Title_ModeSelect_Bar_Chara_X[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Title_ModeSelect_Bar_Chara_Y": {
+							case "Title_ModeSelect_Bar_Chara_Y":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Title_ModeSelect_Bar_Chara_Y[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Title_ModeSelect_Bar_Chara_Move": {
+							case "Title_ModeSelect_Bar_Chara_Move":
+								{
 									Title_ModeSelect_Bar_Chara_Move = int.Parse(strParam);
 									break;
 								}
-							case "Title_ModeSelect_Bar_Center_Title": {
+							case "Title_ModeSelect_Bar_Center_Title":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Title_ModeSelect_Bar_Center_Title[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Title_ModeSelect_Bar_Center_Title_Move": {
+							case "Title_ModeSelect_Bar_Center_Title_Move":
+								{
 									Title_ModeSelect_Bar_Center_Title_Move = int.Parse(strParam);
 									break;
 								}
-							case "Title_ModeSelect_Bar_Center_Title_Move_X": {
+							case "Title_ModeSelect_Bar_Center_Title_Move_X":
+								{
 									Title_ModeSelect_Bar_Center_Title_Move_X = int.Parse(strParam);
 									break;
 								}
-							case "Title_ModeSelect_Bar_Center_BoxText": {
+							case "Title_ModeSelect_Bar_Center_BoxText":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Title_ModeSelect_Bar_Center_BoxText[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Title_VerticalText": {
+							case "Title_VerticalText":
+								{
 									Title_VerticalText = CConversion.bONorOFF(strParam[0]);
 									break;
 								}
-							case "Title_VerticalBar": {
+							case "Title_VerticalBar":
+								{
 									Title_VerticalBar = CConversion.bONorOFF(strParam[0]);
 									break;
 								}
 							#endregion
 
 							#region Config
-							case "Config_Arrow_X": {
+							case "Config_Arrow_X":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Config_Arrow_X[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Config_Arrow_Y": {
+							case "Config_Arrow_Y":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Config_Arrow_Y[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Config_Arrow_Focus_X": {
+							case "Config_Arrow_Focus_X":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Config_Arrow_Focus_X[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Config_Arrow_Focus_Y": {
+							case "Config_Arrow_Focus_Y":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Config_Arrow_Focus_Y[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Config_Item_X": {
+							case "Config_Item_X":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 3; i++) {
+									for (int i = 0; i < 3; i++)
+									{
 										Config_Item_X[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Config_Item_Y": {
+							case "Config_Item_Y":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 3; i++) {
+									for (int i = 0; i < 3; i++)
+									{
 										Config_Item_Y[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Config_Item_Width": {
+							case "Config_Item_Width":
+								{
 									Config_Item_Width = int.Parse(strParam);
 									break;
 								}
-							case "Config_Item_Font_Offset": {
+							case "Config_Item_Font_Offset":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Config_Item_Font_Offset[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Config_Font_Scale": {
+							case "Config_Font_Scale":
+								{
 									Config_Font_Scale = int.Parse(strParam);
 									break;
 								}
-							case "Config_Selected_Menu_Text_Grad_Color_1": {
+							case "Config_Selected_Menu_Text_Grad_Color_1":
+								{
 									Config_Selected_Menu_Text_Grad_Color_1 = ColorTranslator.FromHtml(strParam);
 									break;
 								}
-							case "Config_Selected_Menu_Text_Grad_Color_2": {
+							case "Config_Selected_Menu_Text_Grad_Color_2":
+								{
 									Config_Selected_Menu_Text_Grad_Color_2 = ColorTranslator.FromHtml(strParam);
 									break;
 								}
-							case "Config_Font_Scale_Description": {
+							case "Config_Font_Scale_Description":
+								{
 									Config_Font_Scale_Description = float.Parse(strParam);
 									break;
 								}
-							case "Config_ItemBox_Count": {
+							case "Config_ItemBox_Count":
+								{
 									Config_ItemBox_Count = int.Parse(strParam);
 									break;
 								}
-							case "Config_ItemBox_X": {
+							case "Config_ItemBox_X":
+								{
 									Config_ItemBox_X = new int[Config_ItemBox_Count];
 
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < Config_ItemBox_Count; i++) {
+									for (int i = 0; i < Config_ItemBox_Count; i++)
+									{
 										Config_ItemBox_X[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Config_ItemBox_Y": {
+							case "Config_ItemBox_Y":
+								{
 									Config_ItemBox_Y = new int[Config_ItemBox_Count];
 
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < Config_ItemBox_Count; i++) {
+									for (int i = 0; i < Config_ItemBox_Count; i++)
+									{
 										Config_ItemBox_Y[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Config_ItemBox_Font_Offset": {
+							case "Config_ItemBox_Font_Offset":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Config_ItemBox_Font_Offset[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Config_ItemBox_ItemValue_Font_Offset": {
+							case "Config_ItemBox_ItemValue_Font_Offset":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Config_ItemBox_ItemValue_Font_Offset[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Config_ExplanationPanel": {
+							case "Config_ExplanationPanel":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Config_ExplanationPanel[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Config_SkinSample1": {
+							case "Config_SkinSample1":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Config_SkinSample1[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Config_KeyAssign": {
+							case "Config_KeyAssign":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Config_KeyAssign[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Config_KeyAssign_Menu_Highlight": {
+							case "Config_KeyAssign_Menu_Highlight":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Config_KeyAssign_Menu_Highlight[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Config_KeyAssign_Font": {
+							case "Config_KeyAssign_Font":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Config_KeyAssign_Font[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Config_KeyAssign_Move": {
+							case "Config_KeyAssign_Move":
+								{
 									Config_KeyAssign_Move = int.Parse(strParam);
 									break;
 								}
-							case nameof(Config_Calibration_Font_Scale): {
+							case nameof(Config_Calibration_Font_Scale):
+								{
 									Config_Calibration_Font_Scale = int.Parse(strParam);
 									break;
 								}
-							case nameof(Config_Calibration_OffsetText): {
+							case nameof(Config_Calibration_OffsetText):
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Config_Calibration_OffsetText[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case nameof(Config_Calibration_InfoText): {
+							case nameof(Config_Calibration_InfoText):
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Config_Calibration_InfoText[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case nameof(Config_Calibration_Highlights): {
+							case nameof(Config_Calibration_Highlights):
+								{
 									string[] strSplit = strParam.Split(',');
 									int recs = Math.Min(strSplit.Length, 12);
-									for (int i = 0; i + 3 < recs; i += 4) {
+									for (int i = 0; i + 3 < recs; i += 4)
+									{
 										Config_Calibration_Highlights[i / 4] = new Rectangle(int.Parse(strSplit[i]), int.Parse(strSplit[i + 1]), int.Parse(strSplit[i + 2]), int.Parse(strSplit[i + 3]));
 									}
 									break;
@@ -1544,30 +1808,38 @@ internal class CSkin : IDisposable {
                                 public int[] ModIcons_OffsetY_Menu = { 0, 0, 0, 0, 0, 0, 0, 0 };
                             */
 
-							case "ModIcons_OffsetX": {
+							case "ModIcons_OffsetX":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 8; i++) {
+									for (int i = 0; i < 8; i++)
+									{
 										ModIcons_OffsetX[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "ModIcons_OffsetY": {
+							case "ModIcons_OffsetY":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 8; i++) {
+									for (int i = 0; i < 8; i++)
+									{
 										ModIcons_OffsetY[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "ModIcons_OffsetX_Menu": {
+							case "ModIcons_OffsetX_Menu":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 8; i++) {
+									for (int i = 0; i < 8; i++)
+									{
 										ModIcons_OffsetX_Menu[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "ModIcons_OffsetY_Menu": {
+							case "ModIcons_OffsetY_Menu":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 8; i++) {
+									for (int i = 0; i < 8; i++)
+									{
 										ModIcons_OffsetY_Menu[i] = int.Parse(strSplit[i]);
 									}
 									break;
@@ -1576,1317 +1848,1678 @@ internal class CSkin : IDisposable {
 							#endregion
 
 							#region SongSelect
-							case "SongSelect_BoxExplanation_X": {
+							case "SongSelect_BoxExplanation_X":
+								{
 									SongSelect_BoxExplanation_X = int.Parse(strParam);
 									break;
 								}
-							case "SongSelect_BoxExplanation_Y": {
+							case "SongSelect_BoxExplanation_Y":
+								{
 									SongSelect_BoxExplanation_Y = int.Parse(strParam);
 									break;
 								}
-							case "SongSelect_BoxExplanation_Interval": {
+							case "SongSelect_BoxExplanation_Interval":
+								{
 									SongSelect_BoxExplanation_Interval = int.Parse(strParam);
 									break;
 								}
-							case "SongSelect_GenreName": {
+							case "SongSelect_GenreName":
+								{
 									SongSelect_GenreName = this.strStringを配列に直す(strParam);
 									break;
 								}
-							case "SongSelect_Bar_Count": {
+							case "SongSelect_Bar_Count":
+								{
 									SongSelect_Bar_Count = int.Parse(strParam);
 									break;
 								}
-							case "SongSelect_Bar_X": {
+							case "SongSelect_Bar_X":
+								{
 									SongSelect_Bar_X = new int[SongSelect_Bar_Count];
 
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < SongSelect_Bar_Count; i++) {
+									for (int i = 0; i < SongSelect_Bar_Count; i++)
+									{
 										SongSelect_Bar_X[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "SongSelect_Bar_Y": {
+							case "SongSelect_Bar_Y":
+								{
 									SongSelect_Bar_Y = new int[SongSelect_Bar_Count];
 
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < SongSelect_Bar_Count; i++) {
+									for (int i = 0; i < SongSelect_Bar_Count; i++)
+									{
 										SongSelect_Bar_Y[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "SongSelect_Bar_Anim_X": {
+							case "SongSelect_Bar_Anim_X":
+								{
 									SongSelect_Bar_Anim_X = new int[SongSelect_Bar_Count];
 
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < SongSelect_Bar_Count; i++) {
+									for (int i = 0; i < SongSelect_Bar_Count; i++)
+									{
 										SongSelect_Bar_Anim_X[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "SongSelect_Bar_Anim_Y": {
+							case "SongSelect_Bar_Anim_Y":
+								{
 									SongSelect_Bar_Anim_Y = new int[SongSelect_Bar_Count];
 
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < SongSelect_Bar_Count; i++) {
+									for (int i = 0; i < SongSelect_Bar_Count; i++)
+									{
 										SongSelect_Bar_Anim_Y[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "SongSelect_Scroll_Interval": {
+							case "SongSelect_Scroll_Interval":
+								{
 									SongSelect_Scroll_Interval = float.Parse(strParam);
 									break;
 								}
-							case "SongSelect_DanStatus_Offset_X": {
+							case "SongSelect_DanStatus_Offset_X":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										SongSelect_DanStatus_Offset_X[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "SongSelect_DanStatus_Offset_Y": {
+							case "SongSelect_DanStatus_Offset_Y":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										SongSelect_DanStatus_Offset_Y[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "SongSelect_TowerStatus_Offset_X": {
+							case "SongSelect_TowerStatus_Offset_X":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										SongSelect_TowerStatus_Offset_X[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "SongSelect_TowerStatus_Offset_Y": {
+							case "SongSelect_TowerStatus_Offset_Y":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										SongSelect_TowerStatus_Offset_Y[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "SongSelect_RegularCrowns_Offset_X": {
+							case "SongSelect_RegularCrowns_Offset_X":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										SongSelect_RegularCrowns_Offset_X[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "SongSelect_RegularCrowns_Offset_Y": {
+							case "SongSelect_RegularCrowns_Offset_Y":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										SongSelect_RegularCrowns_Offset_Y[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "SongSelect_RegularCrowns_ScoreRank_Offset_X": {
+							case "SongSelect_RegularCrowns_ScoreRank_Offset_X":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										SongSelect_RegularCrowns_ScoreRank_Offset_X[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "SongSelect_RegularCrowns_ScoreRank_Offset_Y": {
+							case "SongSelect_RegularCrowns_ScoreRank_Offset_Y":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										SongSelect_RegularCrowns_ScoreRank_Offset_Y[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "SongSelect_RegularCrowns_Difficulty_Cymbol_Offset_X": {
+							case "SongSelect_RegularCrowns_Difficulty_Cymbol_Offset_X":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										SongSelect_RegularCrowns_Difficulty_Cymbol_Offset_X[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "SongSelect_RegularCrowns_Difficulty_Cymbol_Offset_Y": {
+							case "SongSelect_RegularCrowns_Difficulty_Cymbol_Offset_Y":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										SongSelect_RegularCrowns_Difficulty_Cymbol_Offset_Y[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "SongSelect_FavoriteStatus_Offset": {
+							case "SongSelect_FavoriteStatus_Offset":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										SongSelect_FavoriteStatus_Offset[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "SongSelect_Bar_Title_Offset": {
+							case "SongSelect_Bar_Title_Offset":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										SongSelect_Bar_Title_Offset[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "SongSelect_Bar_Box_Offset": {
+							case "SongSelect_Bar_Box_Offset":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										SongSelect_Bar_Box_Offset[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "SongSelect_Bar_BackBox_Offset": {
+							case "SongSelect_Bar_BackBox_Offset":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										SongSelect_Bar_BackBox_Offset[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "SongSelect_Bar_Random_Offset": {
+							case "SongSelect_Bar_Random_Offset":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										SongSelect_Bar_Random_Offset[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "SongSelect_Bar_SubTitle_Offset": {
+							case "SongSelect_Bar_SubTitle_Offset":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										SongSelect_Bar_SubTitle_Offset[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
 
 
-							case "SongSelect_BoxName_Scale": {
+							case "SongSelect_BoxName_Scale":
+								{
 									SongSelect_BoxName_Scale = int.Parse(strParam);
 									break;
 								}
-							case "SongSelect_MusicName_Scale": {
+							case "SongSelect_MusicName_Scale":
+								{
 									SongSelect_MusicName_Scale = int.Parse(strParam);
 									break;
 								}
-							case "SongSelect_Subtitle_Scale": {
+							case "SongSelect_Subtitle_Scale":
+								{
 									SongSelect_Subtitle_Scale = int.Parse(strParam);
 									break;
 								}
-							case "SongSelect_BoxText_Scale": {
+							case "SongSelect_BoxText_Scale":
+								{
 									SongSelect_BoxText_Scale = int.Parse(strParam);
 									break;
 								}
 
-							case "SongSelect_VerticalText": {
+							case "SongSelect_VerticalText":
+								{
 									SongSelect_VerticalText = CConversion.bONorOFF(strParam[0]);
 									break;
 								}
 
-							case "SongSelect_Bar_Center_Move_X": {
+							case "SongSelect_Bar_Center_Move_X":
+								{
 									SongSelect_Bar_Center_Move_X = int.Parse(strParam);
 									break;
 								}
 
-							case "SongSelect_Title_MaxSize": {
+							case "SongSelect_Title_MaxSize":
+								{
 									SongSelect_Title_MaxSize = int.Parse(strParam);
 									break;
 								}
-							case "SongSelect_SubTitle_MaxSize": {
+							case "SongSelect_SubTitle_MaxSize":
+								{
 									SongSelect_SubTitle_MaxSize = int.Parse(strParam);
 									break;
 								}
-							case "SongSelect_Maker_Show": {
+							case "SongSelect_Maker_Show":
+								{
 									SongSelect_Maker_Show = CConversion.bONorOFF(strParam[0]);
 									break;
 								}
-							case "SongSelect_Shorten_Frame_Fade": {
+							case "SongSelect_Shorten_Frame_Fade":
+								{
 									SongSelect_Shorten_Frame_Fade = CConversion.bONorOFF(strParam[0]);
 									break;
 								}
-							case "SongSelect_Bar_Select_Skip_Fade": {
+							case "SongSelect_Bar_Select_Skip_Fade":
+								{
 									SongSelect_Bar_Select_Skip_Fade = CConversion.bONorOFF(strParam[0]);
 									break;
 								}
-							case "SongSelect_Maker": {
+							case "SongSelect_Maker":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										SongSelect_Maker[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "SongSelect_Maker_Size": {
+							case "SongSelect_Maker_Size":
+								{
 									SongSelect_Maker_Size = int.Parse(strParam);
 									break;
 								}
-							case "SongSelect_Maker_MaxSize": {
+							case "SongSelect_Maker_MaxSize":
+								{
 									SongSelect_Maker_MaxSize = int.Parse(strParam);
 									break;
 								}
 
-							case "SongSelect_Bar_Center_Move": {
+							case "SongSelect_Bar_Center_Move":
+								{
 									SongSelect_Bar_Center_Move = int.Parse(strParam);
 									break;
 								}
-							case "SongSelect_Bar_Select": {
+							case "SongSelect_Bar_Select":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										SongSelect_Bar_Select[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "SongSelect_Frame_Score_X": {
+							case "SongSelect_Frame_Score_X":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 4; i++) {
+									for (int i = 0; i < 4; i++)
+									{
 										SongSelect_Frame_Score_X[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "SongSelect_Frame_Score_Y": {
+							case "SongSelect_Frame_Score_Y":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 4; i++) {
+									for (int i = 0; i < 4; i++)
+									{
 										SongSelect_Frame_Score_Y[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "SongSelect_Level_Number_X": {
+							case "SongSelect_Level_Number_X":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 4; i++) {
+									for (int i = 0; i < 4; i++)
+									{
 										SongSelect_Level_Number_X[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "SongSelect_Level_Number_Y": {
+							case "SongSelect_Level_Number_Y":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 4; i++) {
+									for (int i = 0; i < 4; i++)
+									{
 										SongSelect_Level_Number_Y[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "SongSelect_Level_Number_Tower": {
+							case "SongSelect_Level_Number_Tower":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										SongSelect_Level_Number_Tower[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "SongSelect_Tower_Side": {
+							case "SongSelect_Tower_Side":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										SongSelect_Tower_Side[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "SongSelect_Level_Number_Interval": {
+							case "SongSelect_Level_Number_Interval":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										SongSelect_Level_Number_Interval[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "SongSelect_Level_X": {
+							case "SongSelect_Level_X":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 4; i++) {
+									for (int i = 0; i < 4; i++)
+									{
 										SongSelect_Level_X[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "SongSelect_Level_Y": {
+							case "SongSelect_Level_Y":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 4; i++) {
+									for (int i = 0; i < 4; i++)
+									{
 										SongSelect_Level_Y[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "SongSelect_Level_Move": {
+							case "SongSelect_Level_Move":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										SongSelect_Level_Move[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "SongSelect_Box_Opening_Interval": {
+							case "SongSelect_Box_Opening_Interval":
+								{
 									SongSelect_Box_Opening_Interval = float.Parse(strParam);
 									break;
 								}
-							case "SongSelect_Unlock_Conditions_Text": {
+							case "SongSelect_Unlock_Conditions_Text":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										SongSelect_Unlock_Conditions_Text[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "SongSelect_Difficulty_Select_Title": {
+							case "SongSelect_Difficulty_Select_Title":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										SongSelect_Difficulty_Select_Title[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "SongSelect_Difficulty_Select_SubTitle": {
+							case "SongSelect_Difficulty_Select_SubTitle":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										SongSelect_Difficulty_Select_SubTitle[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "SongSelect_Box_Chara_Move": {
+							case "SongSelect_Box_Chara_Move":
+								{
 									SongSelect_Box_Chara_Move = int.Parse(strParam);
 									break;
 								}
-							case "SongSelect_Box_Chara_X": {
+							case "SongSelect_Box_Chara_X":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										SongSelect_Box_Chara_X[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "SongSelect_Box_Chara_Y": {
+							case "SongSelect_Box_Chara_Y":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										SongSelect_Box_Chara_Y[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "SongSelect_NamePlate_X": {
+							case "SongSelect_NamePlate_X":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 5; i++) {
+									for (int i = 0; i < 5; i++)
+									{
 										SongSelect_NamePlate_X[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "SongSelect_NamePlate_Y": {
+							case "SongSelect_NamePlate_Y":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 5; i++) {
+									for (int i = 0; i < 5; i++)
+									{
 										SongSelect_NamePlate_Y[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "SongSelect_Auto_X": {
+							case "SongSelect_Auto_X":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										SongSelect_Auto_X[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "SongSelect_Auto_Y": {
+							case "SongSelect_Auto_Y":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										SongSelect_Auto_Y[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "SongSelect_ModIcons_X": {
+							case "SongSelect_ModIcons_X":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 5; i++) {
+									for (int i = 0; i < 5; i++)
+									{
 										SongSelect_ModIcons_X[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "SongSelect_ModIcons_Y": {
+							case "SongSelect_ModIcons_Y":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 5; i++) {
+									for (int i = 0; i < 5; i++)
+									{
 										SongSelect_ModIcons_Y[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "SongSelect_Timer": {
+							case "SongSelect_Timer":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										SongSelect_Timer[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "SongSelect_Timer_Interval": {
+							case "SongSelect_Timer_Interval":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										SongSelect_Timer_Interval[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "SongSelect_Bpm_Show": {
+							case "SongSelect_Bpm_Show":
+								{
 									SongSelect_Bpm_Show = CConversion.bONorOFF(strParam[0]);
 									break;
 								}
-							case "SongSelect_Bpm_X": {
+							case "SongSelect_Bpm_X":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 3; i++) {
+									for (int i = 0; i < 3; i++)
+									{
 										SongSelect_Bpm_X[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "SongSelect_Bpm_Y": {
+							case "SongSelect_Bpm_Y":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 3; i++) {
+									for (int i = 0; i < 3; i++)
+									{
 										SongSelect_Bpm_Y[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "SongSelect_Bpm_Interval": {
+							case "SongSelect_Bpm_Interval":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										SongSelect_Bpm_Interval[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "SongSelect_BPM_Text_Show": {
+							case "SongSelect_BPM_Text_Show":
+								{
 									SongSelect_BPM_Text_Show = CConversion.bONorOFF(strParam[0]);
 									break;
 								}
-							case "SongSelect_BPM_Text": {
+							case "SongSelect_BPM_Text":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										SongSelect_BPM_Text[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "SongSelect_BPM_Text_Size": {
+							case "SongSelect_BPM_Text_Size":
+								{
 									SongSelect_BPM_Text_Size = int.Parse(strParam);
 									break;
 								}
-							case "SongSelect_BPM_Text_MaxSize": {
+							case "SongSelect_BPM_Text_MaxSize":
+								{
 									SongSelect_BPM_Text_MaxSize = int.Parse(strParam);
 									break;
 								}
-							case "SongSelect_Explicit": {
+							case "SongSelect_Explicit":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										SongSelect_Explicit[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "SongSelect_Movie": {
+							case "SongSelect_Movie":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										SongSelect_Movie[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "SongSelect_FloorNum_Show": {
+							case "SongSelect_FloorNum_Show":
+								{
 									SongSelect_FloorNum_Show = CConversion.bONorOFF(strParam[0]);
 									break;
 								}
-							case "SongSelect_FloorNum_X": {
+							case "SongSelect_FloorNum_X":
+								{
 									SongSelect_FloorNum_X = int.Parse(strParam);
 									break;
 								}
-							case "SongSelect_FloorNum_Y": {
+							case "SongSelect_FloorNum_Y":
+								{
 									SongSelect_FloorNum_Y = int.Parse(strParam);
 									break;
 								}
-							case "SongSelect_FloorNum_Interval": {
+							case "SongSelect_FloorNum_Interval":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										SongSelect_FloorNum_Interval[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "SongSelect_DanInfo_Show": {
+							case "SongSelect_DanInfo_Show":
+								{
 									SongSelect_DanInfo_Show = CConversion.bONorOFF(strParam[0]);
 									break;
 								}
-							case "SongSelect_DanInfo_Icon_X": {
+							case "SongSelect_DanInfo_Icon_X":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 3; i++) {
+									for (int i = 0; i < 3; i++)
+									{
 										SongSelect_DanInfo_Icon_X[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "SongSelect_DanInfo_Icon_Y": {
+							case "SongSelect_DanInfo_Icon_Y":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 3; i++) {
+									for (int i = 0; i < 3; i++)
+									{
 										SongSelect_DanInfo_Icon_Y[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "SongSelect_DanInfo_Icon_Scale": {
+							case "SongSelect_DanInfo_Icon_Scale":
+								{
 									SongSelect_DanInfo_Icon_Scale = float.Parse(strParam);
 									break;
 								}
-							case "SongSelect_DanInfo_Difficulty_Cymbol_X": {
+							case "SongSelect_DanInfo_Difficulty_Cymbol_X":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 3; i++) {
+									for (int i = 0; i < 3; i++)
+									{
 										SongSelect_DanInfo_Difficulty_Cymbol_X[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "SongSelect_DanInfo_Difficulty_Cymbol_Y": {
+							case "SongSelect_DanInfo_Difficulty_Cymbol_Y":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 3; i++) {
+									for (int i = 0; i < 3; i++)
+									{
 										SongSelect_DanInfo_Difficulty_Cymbol_Y[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "SongSelect_DanInfo_Difficulty_Cymbol_Scale": {
+							case "SongSelect_DanInfo_Difficulty_Cymbol_Scale":
+								{
 									SongSelect_DanInfo_Difficulty_Cymbol_Scale = float.Parse(strParam);
 									break;
 								}
-							case "SongSelect_DanInfo_Level_Number_X": {
+							case "SongSelect_DanInfo_Level_Number_X":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 3; i++) {
+									for (int i = 0; i < 3; i++)
+									{
 										SongSelect_DanInfo_Level_Number_X[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "SongSelect_DanInfo_Level_Number_Y": {
+							case "SongSelect_DanInfo_Level_Number_Y":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 3; i++) {
+									for (int i = 0; i < 3; i++)
+									{
 										SongSelect_DanInfo_Level_Number_Y[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "SongSelect_DanInfo_Level_Number_Scale": {
+							case "SongSelect_DanInfo_Level_Number_Scale":
+								{
 									SongSelect_DanInfo_Level_Number_Scale = float.Parse(strParam);
 									break;
 								}
-							case "SongSelect_DanInfo_Title_X": {
+							case "SongSelect_DanInfo_Title_X":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 3; i++) {
+									for (int i = 0; i < 3; i++)
+									{
 										SongSelect_DanInfo_Title_X[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "SongSelect_DanInfo_Title_Y": {
+							case "SongSelect_DanInfo_Title_Y":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 3; i++) {
+									for (int i = 0; i < 3; i++)
+									{
 										SongSelect_DanInfo_Title_Y[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "SongSelect_DanInfo_Title_Size": {
+							case "SongSelect_DanInfo_Title_Size":
+								{
 									SongSelect_DanInfo_Title_Size = int.Parse(strParam);
 									break;
 								}
-							case "SongSelect_DanInfo_Exam_X": {
+							case "SongSelect_DanInfo_Exam_X":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 6; i++) {
+									for (int i = 0; i < 6; i++)
+									{
 										SongSelect_DanInfo_Exam_X[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "SongSelect_DanInfo_Exam_Y": {
+							case "SongSelect_DanInfo_Exam_Y":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 6; i++) {
+									for (int i = 0; i < 6; i++)
+									{
 										SongSelect_DanInfo_Exam_Y[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "SongSelect_DanInfo_Exam_Size": {
+							case "SongSelect_DanInfo_Exam_Size":
+								{
 									SongSelect_DanInfo_Exam_Size = int.Parse(strParam);
 									break;
 								}
-							case "SongSelect_DanInfo_Exam_Value_X": {
+							case "SongSelect_DanInfo_Exam_Value_X":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 3; i++) {
+									for (int i = 0; i < 3; i++)
+									{
 										SongSelect_DanInfo_Exam_Value_X[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "SongSelect_DanInfo_Exam_Value_Y": {
+							case "SongSelect_DanInfo_Exam_Value_Y":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 6; i++) {
+									for (int i = 0; i < 6; i++)
+									{
 										SongSelect_DanInfo_Exam_Value_Y[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "SongSelect_DanInfo_Exam_Value_Scale": {
+							case "SongSelect_DanInfo_Exam_Value_Scale":
+								{
 									SongSelect_DanInfo_Exam_Value_Scale = float.Parse(strParam);
 									break;
 								}
-							case "SongSelect_Table_X": {
+							case "SongSelect_Table_X":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 5; i++) {
+									for (int i = 0; i < 5; i++)
+									{
 										SongSelect_Table_X[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "SongSelect_Table_Y": {
+							case "SongSelect_Table_Y":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 5; i++) {
+									for (int i = 0; i < 5; i++)
+									{
 										SongSelect_Table_Y[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "SongSelect_High_Score_X": {
+							case "SongSelect_High_Score_X":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 5; i++) {
+									for (int i = 0; i < 5; i++)
+									{
 										SongSelect_High_Score_X[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "SongSelect_High_Score_Y": {
+							case "SongSelect_High_Score_Y":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 5; i++) {
+									for (int i = 0; i < 5; i++)
+									{
 										SongSelect_High_Score_Y[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "SongSelect_High_Score_Difficulty_Cymbol_X": {
+							case "SongSelect_High_Score_Difficulty_Cymbol_X":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 5; i++) {
+									for (int i = 0; i < 5; i++)
+									{
 										SongSelect_High_Score_Difficulty_Cymbol_X[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "SongSelect_High_Score_Difficulty_Cymbol_Y": {
+							case "SongSelect_High_Score_Difficulty_Cymbol_Y":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 5; i++) {
+									for (int i = 0; i < 5; i++)
+									{
 										SongSelect_High_Score_Difficulty_Cymbol_Y[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "SongSelect_BoardNumber_1P_X": {
+							case "SongSelect_BoardNumber_1P_X":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 13; i++) {
+									for (int i = 0; i < 13; i++)
+									{
 										SongSelect_BoardNumber_X[0][i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "SongSelect_BoardNumber_1P_Y": {
+							case "SongSelect_BoardNumber_1P_Y":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 13; i++) {
+									for (int i = 0; i < 13; i++)
+									{
 										SongSelect_BoardNumber_Y[0][i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "SongSelect_BoardNumber_2P_X": {
+							case "SongSelect_BoardNumber_2P_X":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 13; i++) {
+									for (int i = 0; i < 13; i++)
+									{
 										SongSelect_BoardNumber_X[1][i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "SongSelect_BoardNumber_2P_Y": {
+							case "SongSelect_BoardNumber_2P_Y":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 13; i++) {
+									for (int i = 0; i < 13; i++)
+									{
 										SongSelect_BoardNumber_Y[1][i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "SongSelect_BoardNumber_3P_X": {
+							case "SongSelect_BoardNumber_3P_X":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 13; i++) {
+									for (int i = 0; i < 13; i++)
+									{
 										SongSelect_BoardNumber_X[2][i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "SongSelect_BoardNumber_3P_Y": {
+							case "SongSelect_BoardNumber_3P_Y":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 13; i++) {
+									for (int i = 0; i < 13; i++)
+									{
 										SongSelect_BoardNumber_Y[2][i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "SongSelect_BoardNumber_4P_X": {
+							case "SongSelect_BoardNumber_4P_X":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 13; i++) {
+									for (int i = 0; i < 13; i++)
+									{
 										SongSelect_BoardNumber_X[3][i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "SongSelect_BoardNumber_4P_Y": {
+							case "SongSelect_BoardNumber_4P_Y":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 13; i++) {
+									for (int i = 0; i < 13; i++)
+									{
 										SongSelect_BoardNumber_Y[3][i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "SongSelect_BoardNumber_5P_X": {
+							case "SongSelect_BoardNumber_5P_X":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 13; i++) {
+									for (int i = 0; i < 13; i++)
+									{
 										SongSelect_BoardNumber_X[4][i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "SongSelect_BoardNumber_5P_Y": {
+							case "SongSelect_BoardNumber_5P_Y":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 13; i++) {
+									for (int i = 0; i < 13; i++)
+									{
 										SongSelect_BoardNumber_Y[4][i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "SongSelect_BoardNumber_Interval": {
+							case "SongSelect_BoardNumber_Interval":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										SongSelect_BoardNumber_Interval[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "SongSelect_SongNumber_X": {
+							case "SongSelect_SongNumber_X":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										SongSelect_SongNumber_X[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "SongSelect_SongNumber_Y": {
+							case "SongSelect_SongNumber_Y":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										SongSelect_SongNumber_Y[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "SongSelect_SongNumber_Interval": {
+							case "SongSelect_SongNumber_Interval":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										SongSelect_SongNumber_Interval[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "SongSelect_Search_Bar_X": {
+							case "SongSelect_Search_Bar_X":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 5; i++) {
+									for (int i = 0; i < 5; i++)
+									{
 										SongSelect_Search_Bar_X[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "SongSelect_Search_Bar_Y": {
+							case "SongSelect_Search_Bar_Y":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 5; i++) {
+									for (int i = 0; i < 5; i++)
+									{
 										SongSelect_Search_Bar_Y[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "SongSelect_Level_Offset": {
+							case "SongSelect_Level_Offset":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										SongSelect_Level_Offset[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "SongSelect_Difficulty_Colors": {
+							case "SongSelect_Difficulty_Colors":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 7; i++) {
+									for (int i = 0; i < 7; i++)
+									{
 										SongSelect_Difficulty_Colors[i] = ColorTranslator.FromHtml(strSplit[i]);
 									}
 									break;
 								}
-							case "SongSelect_Difficulty_Back": {
+							case "SongSelect_Difficulty_Back":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										SongSelect_Difficulty_Back[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "SongSelect_Difficulty_Bar_X": {
+							case "SongSelect_Difficulty_Bar_X":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 7; i++) {
+									for (int i = 0; i < 7; i++)
+									{
 										SongSelect_Difficulty_Bar_X[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "SongSelect_Branch_Text_Offset": {
+							case "SongSelect_Branch_Text_Offset":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										SongSelect_Branch_Text_Offset[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "SongSelect_Branch_Offset": {
+							case "SongSelect_Branch_Offset":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										SongSelect_Branch_Offset[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "SongSelect_Difficulty_Bar_Y": {
+							case "SongSelect_Difficulty_Bar_Y":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 7; i++) {
+									for (int i = 0; i < 7; i++)
+									{
 										SongSelect_Difficulty_Bar_Y[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "SongSelect_Difficulty_Bar_Back_Rect": {
+							case "SongSelect_Difficulty_Bar_Back_Rect":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 4; i++) {
+									for (int i = 0; i < 4; i++)
+									{
 										SongSelect_Difficulty_Bar_Rect[0][i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "SongSelect_Difficulty_Bar_Option_Rect": {
+							case "SongSelect_Difficulty_Bar_Option_Rect":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 4; i++) {
+									for (int i = 0; i < 4; i++)
+									{
 										SongSelect_Difficulty_Bar_Rect[1][i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "SongSelect_Difficulty_Bar_Easy_Rect": {
+							case "SongSelect_Difficulty_Bar_Easy_Rect":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 4; i++) {
+									for (int i = 0; i < 4; i++)
+									{
 										SongSelect_Difficulty_Bar_Rect[2][i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "SongSelect_Difficulty_Bar_Normal_Rect": {
+							case "SongSelect_Difficulty_Bar_Normal_Rect":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 4; i++) {
+									for (int i = 0; i < 4; i++)
+									{
 										SongSelect_Difficulty_Bar_Rect[3][i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "SongSelect_Difficulty_Bar_Hard_Rect": {
+							case "SongSelect_Difficulty_Bar_Hard_Rect":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 4; i++) {
+									for (int i = 0; i < 4; i++)
+									{
 										SongSelect_Difficulty_Bar_Rect[4][i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "SongSelect_Difficulty_Bar_Oni_Rect": {
+							case "SongSelect_Difficulty_Bar_Oni_Rect":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 4; i++) {
+									for (int i = 0; i < 4; i++)
+									{
 										SongSelect_Difficulty_Bar_Rect[5][i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "SongSelect_Difficulty_Bar_Edit_Rect": {
+							case "SongSelect_Difficulty_Bar_Edit_Rect":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 4; i++) {
+									for (int i = 0; i < 4; i++)
+									{
 										SongSelect_Difficulty_Bar_Rect[6][i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "SongSelect_Difficulty_Star_X": {
+							case "SongSelect_Difficulty_Star_X":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 5; i++) {
+									for (int i = 0; i < 5; i++)
+									{
 										SongSelect_Difficulty_Star_X[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "SongSelect_Difficulty_Star_Y": {
+							case "SongSelect_Difficulty_Star_Y":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 5; i++) {
+									for (int i = 0; i < 5; i++)
+									{
 										SongSelect_Difficulty_Star_Y[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "SongSelect_Difficulty_Star_Interval": {
+							case "SongSelect_Difficulty_Star_Interval":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										SongSelect_Difficulty_Star_Interval[i] = double.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "SongSelect_Difficulty_Number_X": {
+							case "SongSelect_Difficulty_Number_X":
+								{
 									string[] strSplit = strParam.Split(',');
 									int max = Math.Min(strSplit.Length, 7);
-									for (int i = 0; i < max; i++) {
+									for (int i = 0; i < max; i++)
+									{
 										SongSelect_Difficulty_Number_X[i] = int.Parse(strSplit[i]);
-										if (i == 4) {
+										if (i == 4)
+										{
 											SongSelect_Difficulty_Number_X[5] = SongSelect_Difficulty_Number_X[i];
 											SongSelect_Difficulty_Number_X[6] = SongSelect_Difficulty_Number_X[i];
 										}
 									}
 									break;
 								}
-							case "SongSelect_Difficulty_Number_Y": {
+							case "SongSelect_Difficulty_Number_Y":
+								{
 									string[] strSplit = strParam.Split(',');
 									int max = Math.Min(strSplit.Length, 7);
-									for (int i = 0; i < max; i++) {
+									for (int i = 0; i < max; i++)
+									{
 										SongSelect_Difficulty_Number_Y[i] = int.Parse(strSplit[i]);
-										if (i == 4) {
+										if (i == 4)
+										{
 											SongSelect_Difficulty_Number_Y[5] = SongSelect_Difficulty_Number_Y[i];
 											SongSelect_Difficulty_Number_Y[6] = SongSelect_Difficulty_Number_Y[i];
 										}
 									}
 									break;
 								}
-							case "SongSelect_Difficulty_Number_Interval": {
+							case "SongSelect_Difficulty_Number_Interval":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										SongSelect_Difficulty_Number_Interval[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "SongSelect_Difficulty_Crown_1P_X": {
+							case "SongSelect_Difficulty_Crown_1P_X":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 5; i++) {
+									for (int i = 0; i < 5; i++)
+									{
 										SongSelect_Difficulty_Crown_X[0][i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "SongSelect_Difficulty_Crown_2P_X": {
+							case "SongSelect_Difficulty_Crown_2P_X":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 5; i++) {
+									for (int i = 0; i < 5; i++)
+									{
 										SongSelect_Difficulty_Crown_X[1][i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "SongSelect_Difficulty_Crown_1P_Y": {
+							case "SongSelect_Difficulty_Crown_1P_Y":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 5; i++) {
+									for (int i = 0; i < 5; i++)
+									{
 										SongSelect_Difficulty_Crown_Y[0][i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "SongSelect_Difficulty_Crown_2P_Y": {
+							case "SongSelect_Difficulty_Crown_2P_Y":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 5; i++) {
+									for (int i = 0; i < 5; i++)
+									{
 										SongSelect_Difficulty_Crown_Y[1][i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "SongSelect_Difficulty_ScoreRank_1P_X": {
+							case "SongSelect_Difficulty_ScoreRank_1P_X":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 5; i++) {
+									for (int i = 0; i < 5; i++)
+									{
 										SongSelect_Difficulty_ScoreRank_X[0][i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "SongSelect_Difficulty_ScoreRank_2P_X": {
+							case "SongSelect_Difficulty_ScoreRank_2P_X":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 5; i++) {
+									for (int i = 0; i < 5; i++)
+									{
 										SongSelect_Difficulty_ScoreRank_X[1][i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "SongSelect_Difficulty_ScoreRank_1P_Y": {
+							case "SongSelect_Difficulty_ScoreRank_1P_Y":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 5; i++) {
+									for (int i = 0; i < 5; i++)
+									{
 										SongSelect_Difficulty_ScoreRank_Y[0][i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "SongSelect_Difficulty_ScoreRank_2P_Y": {
+							case "SongSelect_Difficulty_ScoreRank_2P_Y":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 5; i++) {
+									for (int i = 0; i < 5; i++)
+									{
 										SongSelect_Difficulty_ScoreRank_Y[1][i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "SongSelect_Difficulty_Select_Bar_X": {
+							case "SongSelect_Difficulty_Select_Bar_X":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 7; i++) {
+									for (int i = 0; i < 7; i++)
+									{
 										SongSelect_Difficulty_Select_Bar_X[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "SongSelect_Difficulty_Select_Bar_Y": {
+							case "SongSelect_Difficulty_Select_Bar_Y":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 7; i++) {
+									for (int i = 0; i < 7; i++)
+									{
 										SongSelect_Difficulty_Select_Bar_Y[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "SongSelect_Difficulty_Select_Bar_Back_X": {
+							case "SongSelect_Difficulty_Select_Bar_Back_X":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 7; i++) {
+									for (int i = 0; i < 7; i++)
+									{
 										SongSelect_Difficulty_Select_Bar_Back_X[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "SongSelect_Difficulty_Select_Bar_Back_Y": {
+							case "SongSelect_Difficulty_Select_Bar_Back_Y":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 7; i++) {
+									for (int i = 0; i < 7; i++)
+									{
 										SongSelect_Difficulty_Select_Bar_Back_Y[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "SongSelect_Difficulty_Select_Bar_Cursor_Rect": {
+							case "SongSelect_Difficulty_Select_Bar_Cursor_Rect":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 4; i++) {
+									for (int i = 0; i < 4; i++)
+									{
 										SongSelect_Difficulty_Select_Bar_Rect[0][i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "SongSelect_Difficulty_Select_Bar_Back1_Rect": {
+							case "SongSelect_Difficulty_Select_Bar_Back1_Rect":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 4; i++) {
+									for (int i = 0; i < 4; i++)
+									{
 										SongSelect_Difficulty_Select_Bar_Rect[1][i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "SongSelect_Difficulty_Select_Bar_Back2_Rect": {
+							case "SongSelect_Difficulty_Select_Bar_Back2_Rect":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 4; i++) {
+									for (int i = 0; i < 4; i++)
+									{
 										SongSelect_Difficulty_Select_Bar_Rect[2][i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "SongSelect_Difficulty_Select_Bar_Anime": {
+							case "SongSelect_Difficulty_Select_Bar_Anime":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										SongSelect_Difficulty_Select_Bar_Anime[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "SongSelect_Difficulty_Select_Bar_AnimeIn": {
+							case "SongSelect_Difficulty_Select_Bar_AnimeIn":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										SongSelect_Difficulty_Select_Bar_AnimeIn[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "SongSelect_Difficulty_Select_Bar_Move": {
+							case "SongSelect_Difficulty_Select_Bar_Move":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										SongSelect_Difficulty_Select_Bar_Move[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "SongSelect_Difficulty_Bar_ExExtra_AnimeDuration": {
+							case "SongSelect_Difficulty_Bar_ExExtra_AnimeDuration":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										SongSelect_Difficulty_Bar_ExExtra_AnimeDuration[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "SongSelect_Preimage": {
+							case "SongSelect_Preimage":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										SongSelect_Preimage[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "SongSelect_Preimage_Size": {
+							case "SongSelect_Preimage_Size":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										SongSelect_Preimage_Size[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "SongSelect_Option_Select_Offset": {
+							case "SongSelect_Option_Select_Offset":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										SongSelect_Option_Select_Offset[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "SongSelect_Option_Font_Scale": {
+							case "SongSelect_Option_Font_Scale":
+								{
 									SongSelect_Option_Font_Scale = int.Parse(strParam);
 									break;
 								}
-							case "SongSelect_Option_OptionType_X": {
+							case "SongSelect_Option_OptionType_X":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										SongSelect_Option_OptionType_X[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "SongSelect_Option_OptionType_Y": {
+							case "SongSelect_Option_OptionType_Y":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										SongSelect_Option_OptionType_Y[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "SongSelect_Option_Value_X": {
+							case "SongSelect_Option_Value_X":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										SongSelect_Option_Value_X[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "SongSelect_Option_Value_Y": {
+							case "SongSelect_Option_Value_Y":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										SongSelect_Option_Value_Y[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "SongSelect_Option_Interval": {
+							case "SongSelect_Option_Interval":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										SongSelect_Option_Interval[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "SongSelect_Option_ModMults1_X": {
+							case "SongSelect_Option_ModMults1_X":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										SongSelect_Option_ModMults1_X[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "SongSelect_Option_ModMults2_X": {
+							case "SongSelect_Option_ModMults2_X":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										SongSelect_Option_ModMults2_X[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "SongSelect_Option_ModMults1_Y": {
+							case "SongSelect_Option_ModMults1_Y":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										SongSelect_Option_ModMults1_Y[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "SongSelect_Option_ModMults2_Y": {
+							case "SongSelect_Option_ModMults2_Y":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										SongSelect_Option_ModMults2_Y[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "SongSelect_NewHeya_Close_Select": {
+							case "SongSelect_NewHeya_Close_Select":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										SongSelect_NewHeya_Close_Select[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "SongSelect_NewHeya_PlayerPlate_X": {
+							case "SongSelect_NewHeya_PlayerPlate_X":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 5; i++) {
+									for (int i = 0; i < 5; i++)
+									{
 										SongSelect_NewHeya_PlayerPlate_X[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "SongSelect_NewHeya_PlayerPlate_Y": {
+							case "SongSelect_NewHeya_PlayerPlate_Y":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 5; i++) {
+									for (int i = 0; i < 5; i++)
+									{
 										SongSelect_NewHeya_PlayerPlate_Y[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "SongSelect_NewHeya_ModeBar_X": {
+							case "SongSelect_NewHeya_ModeBar_X":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 5; i++) {
+									for (int i = 0; i < 5; i++)
+									{
 										SongSelect_NewHeya_ModeBar_X[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "SongSelect_NewHeya_ModeBar_Y": {
+							case "SongSelect_NewHeya_ModeBar_Y":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 5; i++) {
+									for (int i = 0; i < 5; i++)
+									{
 										SongSelect_NewHeya_ModeBar_Y[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "SongSelect_NewHeya_ModeBar_Font_Offset": {
+							case "SongSelect_NewHeya_ModeBar_Font_Offset":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										SongSelect_NewHeya_ModeBar_Font_Offset[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "SongSelect_NewHeya_Box_Count": {
+							case "SongSelect_NewHeya_Box_Count":
+								{
 									SongSelect_NewHeya_Box_Count = int.Parse(strParam);
 									break;
 								}
-							case "SongSelect_NewHeya_Box_X": {
+							case "SongSelect_NewHeya_Box_X":
+								{
 									string[] strSplit = strParam.Split(',');
 									SongSelect_NewHeya_Box_X = new int[SongSelect_NewHeya_Box_Count];
-									for (int i = 0; i < SongSelect_NewHeya_Box_Count; i++) {
+									for (int i = 0; i < SongSelect_NewHeya_Box_Count; i++)
+									{
 										SongSelect_NewHeya_Box_X[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "SongSelect_NewHeya_Box_Y": {
+							case "SongSelect_NewHeya_Box_Y":
+								{
 									string[] strSplit = strParam.Split(',');
 									SongSelect_NewHeya_Box_Y = new int[SongSelect_NewHeya_Box_Count];
-									for (int i = 0; i < SongSelect_NewHeya_Box_Count; i++) {
+									for (int i = 0; i < SongSelect_NewHeya_Box_Count; i++)
+									{
 										SongSelect_NewHeya_Box_Y[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "SongSelect_NewHeya_Box_Chara_Offset": {
+							case "SongSelect_NewHeya_Box_Chara_Offset":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										SongSelect_NewHeya_Box_Chara_Offset[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "SongSelect_NewHeya_Box_Name_Offset": {
+							case "SongSelect_NewHeya_Box_Name_Offset":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										SongSelect_NewHeya_Box_Name_Offset[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "SongSelect_NewHeya_Box_Author_Offset": {
+							case "SongSelect_NewHeya_Box_Author_Offset":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										SongSelect_NewHeya_Box_Author_Offset[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "SongSelect_NewHeya_Lock_Offset": {
+							case "SongSelect_NewHeya_Lock_Offset":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										SongSelect_NewHeya_Lock_Offset[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "SongSelect_NewHeya_InfoSection_Offset": {
+							case "SongSelect_NewHeya_InfoSection_Offset":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										SongSelect_NewHeya_InfoSection_Offset[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
 
 
-							case "SongSelect_ForeColor_JPOP": {
+							case "SongSelect_ForeColor_JPOP":
+								{
 									SongSelect_ForeColor_JPOP = ColorTranslator.FromHtml(strParam);
 									break;
 								}
-							case "SongSelect_ForeColor_Anime": {
+							case "SongSelect_ForeColor_Anime":
+								{
 									SongSelect_ForeColor_Anime = ColorTranslator.FromHtml(strParam);
 									break;
 								}
-							case "SongSelect_ForeColor_VOCALOID": {
+							case "SongSelect_ForeColor_VOCALOID":
+								{
 									SongSelect_ForeColor_VOCALOID = ColorTranslator.FromHtml(strParam);
 									break;
 								}
-							case "SongSelect_ForeColor_Children": {
+							case "SongSelect_ForeColor_Children":
+								{
 									SongSelect_ForeColor_Children = ColorTranslator.FromHtml(strParam);
 									break;
 								}
-							case "SongSelect_ForeColor_Variety": {
+							case "SongSelect_ForeColor_Variety":
+								{
 									SongSelect_ForeColor_Variety = ColorTranslator.FromHtml(strParam);
 									break;
 								}
-							case "SongSelect_ForeColor_Classic": {
+							case "SongSelect_ForeColor_Classic":
+								{
 									SongSelect_ForeColor_Classic = ColorTranslator.FromHtml(strParam);
 									break;
 								}
-							case "SongSelect_ForeColor_GameMusic": {
+							case "SongSelect_ForeColor_GameMusic":
+								{
 									SongSelect_ForeColor_GameMusic = ColorTranslator.FromHtml(strParam);
 									break;
 								}
-							case nameof(SongSelect_ForeColor_Namco): {
+							case nameof(SongSelect_ForeColor_Namco):
+								{
 									SongSelect_ForeColor_GameMusic = ColorTranslator.FromHtml(strParam);
 									break;
 								}
-							case "SongSelect_BackColor_JPOP": {
+							case "SongSelect_BackColor_JPOP":
+								{
 									SongSelect_BackColor_JPOP = ColorTranslator.FromHtml(strParam);
 									break;
 								}
-							case "SongSelect_BackColor_Anime": {
+							case "SongSelect_BackColor_Anime":
+								{
 									SongSelect_BackColor_Anime = ColorTranslator.FromHtml(strParam);
 									break;
 								}
-							case "SongSelect_BackColor_VOCALOID": {
+							case "SongSelect_BackColor_VOCALOID":
+								{
 									SongSelect_BackColor_VOCALOID = ColorTranslator.FromHtml(strParam);
 									break;
 								}
-							case "SongSelect_BackColor_Children": {
+							case "SongSelect_BackColor_Children":
+								{
 									SongSelect_BackColor_Children = ColorTranslator.FromHtml(strParam);
 									break;
 								}
-							case "SongSelect_BackColor_Variety": {
+							case "SongSelect_BackColor_Variety":
+								{
 									SongSelect_BackColor_Variety = ColorTranslator.FromHtml(strParam);
 									break;
 								}
-							case "SongSelect_BackColor_Classic": {
+							case "SongSelect_BackColor_Classic":
+								{
 									SongSelect_BackColor_Classic = ColorTranslator.FromHtml(strParam);
 									break;
 								}
-							case "SongSelect_BackColor_GameMusic": {
+							case "SongSelect_BackColor_GameMusic":
+								{
 									SongSelect_BackColor_GameMusic = ColorTranslator.FromHtml(strParam);
 									break;
 								}
-							case nameof(SongSelect_BackColor_Namco): {
+							case nameof(SongSelect_BackColor_Namco):
+								{
 									SongSelect_BackColor_Namco = ColorTranslator.FromHtml(strParam);
 									break;
 								}
-							case nameof(SongSelect_CorrectionX_Chara): {
+							case nameof(SongSelect_CorrectionX_Chara):
+								{
 									SongSelect_CorrectionX_Chara = strParam.Split(',').ToArray();
 									break;
 								}
-							case nameof(SongSelect_CorrectionY_Chara): {
+							case nameof(SongSelect_CorrectionY_Chara):
+								{
 									SongSelect_CorrectionY_Chara = strParam.Split(',').ToArray();
 									break;
 								}
-							case nameof(SongSelect_CorrectionX_Chara_Value): {
+							case nameof(SongSelect_CorrectionX_Chara_Value):
+								{
 									SongSelect_CorrectionX_Chara_Value = int.Parse(strParam);
 									break;
 								}
-							case nameof(SongSelect_CorrectionY_Chara_Value): {
+							case nameof(SongSelect_CorrectionY_Chara_Value):
+								{
 									SongSelect_CorrectionY_Chara_Value = int.Parse(strParam);
 									break;
 								}
-							case nameof(SongSelect_Rotate_Chara): {
+							case nameof(SongSelect_Rotate_Chara):
+								{
 									SongSelect_Rotate_Chara = strParam.Split(',').ToArray();
 									break;
 								}
@@ -2911,310 +3544,397 @@ internal class CSkin : IDisposable {
                                 }
                             }
                             */
-							case "DaniSelect_DanSides_X": {
+							case "DaniSelect_DanSides_X":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										DaniSelect_DanSides_X[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "DaniSelect_DanSides_Y": {
+							case "DaniSelect_DanSides_Y":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										DaniSelect_DanSides_Y[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "DaniSelect_DanPlate": {
+							case "DaniSelect_DanPlate":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										DaniSelect_DanPlate[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "DaniSelect_Rank": {
+							case "DaniSelect_Rank":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										DaniSelect_Rank[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "DaniSelect_Bloc2": {
+							case "DaniSelect_Bloc2":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										DaniSelect_Bloc2[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "DaniSelect_Text_Gauge": {
+							case "DaniSelect_Text_Gauge":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										DaniSelect_Text_Gauge[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "DaniSelect_Value_Gauge": {
+							case "DaniSelect_Value_Gauge":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										DaniSelect_Value_Gauge[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "DaniSelect_DanIcon_X": {
+							case "DaniSelect_DanIcon_X":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 3; i++) {
+									for (int i = 0; i < 3; i++)
+									{
 										DaniSelect_DanIcon_X[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "DaniSelect_DanIcon_Y": {
+							case "DaniSelect_DanIcon_Y":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 3; i++) {
+									for (int i = 0; i < 3; i++)
+									{
 										DaniSelect_DanIcon_Y[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "DaniSelect_Title_X": {
+							case "DaniSelect_Title_X":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 3; i++) {
+									for (int i = 0; i < 3; i++)
+									{
 										DaniSelect_Title_X[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "DaniSelect_Title_Y": {
+							case "DaniSelect_Title_Y":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 3; i++) {
+									for (int i = 0; i < 3; i++)
+									{
 										DaniSelect_Title_Y[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "DaniSelect_Difficulty_Cymbol_X": {
+							case "DaniSelect_Difficulty_Cymbol_X":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 3; i++) {
+									for (int i = 0; i < 3; i++)
+									{
 										DaniSelect_Difficulty_Cymbol_X[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "DaniSelect_Difficulty_Cymbol_Y": {
+							case "DaniSelect_Difficulty_Cymbol_Y":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 3; i++) {
+									for (int i = 0; i < 3; i++)
+									{
 										DaniSelect_Difficulty_Cymbol_Y[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "DaniSelect_Level_Number_X": {
+							case "DaniSelect_Level_Number_X":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 3; i++) {
+									for (int i = 0; i < 3; i++)
+									{
 										DaniSelect_Level_Number_X[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "DaniSelect_Level_Number_Y": {
+							case "DaniSelect_Level_Number_Y":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 3; i++) {
+									for (int i = 0; i < 3; i++)
+									{
 										DaniSelect_Level_Number_Y[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "DaniSelect_Level_Number_Interval": {
+							case "DaniSelect_Level_Number_Interval":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										DaniSelect_Level_Number_Interval[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "DaniSelect_Soul_Number_Interval": {
+							case "DaniSelect_Soul_Number_Interval":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										DaniSelect_Soul_Number_Interval[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "DaniSelect_Soul_Number_Text_Width": {
+							case "DaniSelect_Soul_Number_Text_Width":
+								{
 									DaniSelect_Soul_Number_Text_Width = int.Parse(strParam);
 									break;
 								}
-							case "DaniSelect_Exam_Number_Interval": {
+							case "DaniSelect_Exam_Number_Interval":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										DaniSelect_Exam_Number_Interval[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "DaniSelect_Exam_Number_Text_Width": {
+							case "DaniSelect_Exam_Number_Text_Width":
+								{
 									DaniSelect_Exam_Number_Text_Width = int.Parse(strParam);
 									break;
 								}
-							case "DaniSelect_Font_DanFolder_Size": {
+							case "DaniSelect_Font_DanFolder_Size":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										DaniSelect_Font_DanFolder_Size[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "DaniSelect_FolderText_X": {
+							case "DaniSelect_FolderText_X":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 4; i++) {
+									for (int i = 0; i < 4; i++)
+									{
 										DaniSelect_FolderText_X[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "DaniSelect_FolderText_Y": {
+							case "DaniSelect_FolderText_Y":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 4; i++) {
+									for (int i = 0; i < 4; i++)
+									{
 										DaniSelect_FolderText_Y[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "DaniSelect_Font_DanSong_Size": {
+							case "DaniSelect_Font_DanSong_Size":
+								{
 									DaniSelect_Font_DanSong_Size = int.Parse(strParam);
 									break;
 								}
-							case "DaniSelect_Font_Exam_Size": {
+							case "DaniSelect_Font_Exam_Size":
+								{
 									DaniSelect_Font_Exam_Size = int.Parse(strParam);
 									break;
 								}
-							case "DaniSelect_Exam_Bloc_X": {
+							case "DaniSelect_Exam_Bloc_X":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 3; i++) {
+									for (int i = 0; i < 3; i++)
+									{
 										DaniSelect_Exam_Bloc_X[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "DaniSelect_Exam_Bloc_Y": {
+							case "DaniSelect_Exam_Bloc_Y":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 3; i++) {
+									for (int i = 0; i < 3; i++)
+									{
 										DaniSelect_Exam_Bloc_Y[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "DaniSelect_Exam_X": {
+							case "DaniSelect_Exam_X":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 3; i++) {
+									for (int i = 0; i < 3; i++)
+									{
 										DaniSelect_Exam_X[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "DaniSelect_Exam_Y": {
+							case "DaniSelect_Exam_Y":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 3; i++) {
+									for (int i = 0; i < 3; i++)
+									{
 										DaniSelect_Exam_Y[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "DaniSelect_Exam_X_Ex": {
+							case "DaniSelect_Exam_X_Ex":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 3; i++) {
+									for (int i = 0; i < 3; i++)
+									{
 										DaniSelect_Exam_X_Ex[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "DaniSelect_Exam_Y_Ex": {
+							case "DaniSelect_Exam_Y_Ex":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 3; i++) {
+									for (int i = 0; i < 3; i++)
+									{
 										DaniSelect_Exam_Y_Ex[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "DaniSelect_Exam_Interval": {
+							case "DaniSelect_Exam_Interval":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 3; i++) {
+									for (int i = 0; i < 3; i++)
+									{
 										DaniSelect_Exam_Interval[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "DaniSelect_Exam_Title_X": {
+							case "DaniSelect_Exam_Title_X":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 3; i++) {
+									for (int i = 0; i < 3; i++)
+									{
 										DaniSelect_Exam_Title_X[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "DaniSelect_Exam_Title_Y": {
+							case "DaniSelect_Exam_Title_Y":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 3; i++) {
+									for (int i = 0; i < 3; i++)
+									{
 										DaniSelect_Exam_Title_Y[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "DaniSelect_Challenge_Select_X": {
+							case "DaniSelect_Challenge_Select_X":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 3; i++) {
+									for (int i = 0; i < 3; i++)
+									{
 										DaniSelect_Challenge_Select_X[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "DaniSelect_Challenge_Select_Y": {
+							case "DaniSelect_Challenge_Select_Y":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 3; i++) {
+									for (int i = 0; i < 3; i++)
+									{
 										DaniSelect_Challenge_Select_Y[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "DaniSelect_Challenge_Select_Rect_Option": {
+							case "DaniSelect_Challenge_Select_Rect_Option":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 4; i++) {
+									for (int i = 0; i < 4; i++)
+									{
 										DaniSelect_Challenge_Select_Rect[0][i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "DaniSelect_Challenge_Select_Rect_Start": {
+							case "DaniSelect_Challenge_Select_Rect_Start":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 4; i++) {
+									for (int i = 0; i < 4; i++)
+									{
 										DaniSelect_Challenge_Select_Rect[1][i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "DaniSelect_Challenge_Select_Rect_Back": {
+							case "DaniSelect_Challenge_Select_Rect_Back":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 4; i++) {
+									for (int i = 0; i < 4; i++)
+									{
 										DaniSelect_Challenge_Select_Rect[2][i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "DaniSelect_Plate": {
+							case "DaniSelect_Plate":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										DaniSelect_Plate[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "DaniSelect_Plate_Move": {
+							case "DaniSelect_Plate_Move":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										DaniSelect_Plate_Move[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "DaniSelect_Plate_Center_Move": {
+							case "DaniSelect_Plate_Center_Move":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										DaniSelect_Plate_Center_Move[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "DaniSelect_Plate_Title_Offset": {
+							case "DaniSelect_Plate_Title_Offset":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										DaniSelect_Plate_Title_Offset[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "DaniSelect_DanIconTitle_Size": {
+							case "DaniSelect_DanIconTitle_Size":
+								{
 									DaniSelect_DanIconTitle_Size = int.Parse(strParam);
 									break;
 								}
-							case "DaniSelect_DanIconTitle_Offset": {
+							case "DaniSelect_DanIconTitle_Offset":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										DaniSelect_DanIconTitle_Offset[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "DaniSelect_DanIcon_Color": {
+							case "DaniSelect_DanIcon_Color":
+								{
 									string[] strSplit = strParam.Split(',');
 									DaniSelect_DanIcon_Color = new Color[strSplit.Length];
-									for (int i = 0; i < strSplit.Length; i++) {
+									for (int i = 0; i < strSplit.Length; i++)
+									{
 										DaniSelect_DanIcon_Color[i] = ColorTranslator.FromHtml(strSplit[i]);
 									}
 									break;
@@ -3222,140 +3942,175 @@ internal class CSkin : IDisposable {
 							#endregion
 
 							#region SongLoading
-							case nameof(SongLoading_Plate_X): {
+							case nameof(SongLoading_Plate_X):
+								{
 									SongLoading_Plate_X = int.Parse(strParam);
 									break;
 								}
-							case nameof(SongLoading_Plate_Y): {
+							case nameof(SongLoading_Plate_Y):
+								{
 									SongLoading_Plate_Y = int.Parse(strParam);
 									break;
 								}
-							case nameof(SongLoading_Title_X): {
+							case nameof(SongLoading_Title_X):
+								{
 									SongLoading_Title_X = int.Parse(strParam);
 									break;
 								}
-							case nameof(SongLoading_Title_Y): {
+							case nameof(SongLoading_Title_Y):
+								{
 									SongLoading_Title_Y = int.Parse(strParam);
 									break;
 								}
-							case nameof(SongLoading_Title_MaxSize): {
+							case nameof(SongLoading_Title_MaxSize):
+								{
 									SongLoading_Title_MaxSize = int.Parse(strParam);
 									break;
 								}
-							case nameof(SongLoading_SubTitle_X): {
+							case nameof(SongLoading_SubTitle_X):
+								{
 									SongLoading_SubTitle_X = int.Parse(strParam);
 									break;
 								}
-							case nameof(SongLoading_SubTitle_Y): {
+							case nameof(SongLoading_SubTitle_Y):
+								{
 									SongLoading_SubTitle_Y = int.Parse(strParam);
 									break;
 								}
-							case nameof(SongLoading_SubTitle_MaxSize): {
+							case nameof(SongLoading_SubTitle_MaxSize):
+								{
 									SongLoading_SubTitle_MaxSize = int.Parse(strParam);
 									break;
 								}
-							case nameof(SongLoading_Plate_X_AI): {
+							case nameof(SongLoading_Plate_X_AI):
+								{
 									SongLoading_Plate_X_AI = int.Parse(strParam);
 									break;
 								}
-							case nameof(SongLoading_Plate_Y_AI): {
+							case nameof(SongLoading_Plate_Y_AI):
+								{
 									SongLoading_Plate_Y_AI = int.Parse(strParam);
 									break;
 								}
-							case nameof(SongLoading_Title_X_AI): {
+							case nameof(SongLoading_Title_X_AI):
+								{
 									SongLoading_Title_X_AI = int.Parse(strParam);
 									break;
 								}
-							case nameof(SongLoading_Title_Y_AI): {
+							case nameof(SongLoading_Title_Y_AI):
+								{
 									SongLoading_Title_Y_AI = int.Parse(strParam);
 									break;
 								}
-							case nameof(SongLoading_SubTitle_X_AI): {
+							case nameof(SongLoading_SubTitle_X_AI):
+								{
 									SongLoading_SubTitle_X_AI = int.Parse(strParam);
 									break;
 								}
-							case nameof(SongLoading_SubTitle_Y_AI): {
+							case nameof(SongLoading_SubTitle_Y_AI):
+								{
 									SongLoading_SubTitle_Y_AI = int.Parse(strParam);
 									break;
 								}
-							case "SongLoading_Fade_AI_Anime_Ring": {
+							case "SongLoading_Fade_AI_Anime_Ring":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										SongLoading_Fade_AI_Anime_Ring[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "SongLoading_Fade_AI_Anime_LoadBar": {
+							case "SongLoading_Fade_AI_Anime_LoadBar":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										SongLoading_Fade_AI_Anime_LoadBar[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "SongLoading_DanPlate": {
+							case "SongLoading_DanPlate":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										SongLoading_DanPlate[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case nameof(SongLoading_Title_FontSize): {
+							case nameof(SongLoading_Title_FontSize):
+								{
 									if (int.Parse(strParam) > 0)
 										SongLoading_Title_FontSize = int.Parse(strParam);
 									break;
 								}
-							case nameof(SongLoading_SubTitle_FontSize): {
+							case nameof(SongLoading_SubTitle_FontSize):
+								{
 									if (int.Parse(strParam) > 0)
 										SongLoading_SubTitle_FontSize = int.Parse(strParam);
 									break;
 								}
-							case "SongLoading_Chara_Move": {
+							case "SongLoading_Chara_Move":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										SongLoading_Chara_Move[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case nameof(SongLoading_Plate_ReferencePoint): {
+							case nameof(SongLoading_Plate_ReferencePoint):
+								{
 									SongLoading_Plate_ReferencePoint = (ReferencePoint)int.Parse(strParam);
 									break;
 								}
-							case nameof(SongLoading_Title_ReferencePoint): {
+							case nameof(SongLoading_Title_ReferencePoint):
+								{
 									SongLoading_Title_ReferencePoint = (ReferencePoint)int.Parse(strParam);
 									break;
 								}
-							case nameof(SongLoading_SubTitle_ReferencePoint): {
+							case nameof(SongLoading_SubTitle_ReferencePoint):
+								{
 									SongLoading_SubTitle_ReferencePoint = (ReferencePoint)int.Parse(strParam);
 									break;
 								}
 
-							case nameof(SongLoading_Title_ForeColor): {
+							case nameof(SongLoading_Title_ForeColor):
+								{
 									SongLoading_Title_ForeColor = ColorTranslator.FromHtml(strParam);
 									break;
 								}
-							case nameof(SongLoading_Title_BackColor): {
+							case nameof(SongLoading_Title_BackColor):
+								{
 									SongLoading_Title_BackColor = ColorTranslator.FromHtml(strParam);
 									break;
 								}
-							case nameof(SongLoading_SubTitle_ForeColor): {
+							case nameof(SongLoading_SubTitle_ForeColor):
+								{
 									SongLoading_SubTitle_ForeColor = ColorTranslator.FromHtml(strParam);
 									break;
 								}
-							case nameof(SongLoading_SubTitle_BackColor): {
+							case nameof(SongLoading_SubTitle_BackColor):
+								{
 									SongLoading_SubTitle_BackColor = ColorTranslator.FromHtml(strParam);
 									break;
 								}
-							case nameof(SongLoading_Plate_ScreenBlend): {
+							case nameof(SongLoading_Plate_ScreenBlend):
+								{
 									SongLoading_Plate_ScreenBlend = CConversion.bONorOFF(strParam[0]);
 									break;
 								}
-							case nameof(DaniSelect_DanPlateTitle_Size): {
+							case nameof(DaniSelect_DanPlateTitle_Size):
+								{
 									DaniSelect_DanPlateTitle_Size = int.Parse(strParam);
 									break;
 								}
-							case "DaniSelect_DanPlateTitle_Offset": {
+							case "DaniSelect_DanPlateTitle_Offset":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										DaniSelect_DanPlateTitle_Offset[i] = int.Parse(strSplit[i]);
 									}
 									break;
@@ -3363,285 +4118,364 @@ internal class CSkin : IDisposable {
 							#endregion
 
 							#region Game
-							case "Game_Notes_Anime": {
+							case "Game_Notes_Anime":
+								{
 									Game_Notes_Anime = CConversion.bONorOFF(strParam[0]);
 									break;
 								}
-							case "Game_ScrollField_X": {
+							case "Game_ScrollField_X":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										nScrollFieldX[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_ScrollField_Y": {
+							case "Game_ScrollField_Y":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										nScrollFieldY[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_ScrollField_4P": {
+							case "Game_ScrollField_4P":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										nScrollField_4P[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_ScrollField_5P": {
+							case "Game_ScrollField_5P":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										nScrollField_5P[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_SENotes_Offset_X": {
+							case "Game_SENotes_Offset_X":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										nSENotesX[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_SENotes_Offset_Y": {
+							case "Game_SENotes_Offset_Y":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										nSENotesY[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_SENotes_Offset_4P": {
+							case "Game_SENotes_Offset_4P":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										nSENotes_4P[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_SENotes_Offset_5P": {
+							case "Game_SENotes_Offset_5P":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										nSENotes_5P[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_Notes_Size": {
+							case "Game_Notes_Size":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_Notes_Size[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_SENote_Size": {
+							case "Game_SENote_Size":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_SENote_Size[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case nameof(Game_Notes_Interval): {
+							case nameof(Game_Notes_Interval):
+								{
 									Game_Notes_Interval = int.Parse(strParam);
 									break;
 								}
-							case "Game_Notes_Arm_Offset_Left_X": {
+							case "Game_Notes_Arm_Offset_Left_X":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_Notes_Arm_Offset_Left_X[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_Notes_Arm_Offset_Right_X": {
+							case "Game_Notes_Arm_Offset_Right_X":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_Notes_Arm_Offset_Right_X[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_Notes_Arm_Offset_Left_Y": {
+							case "Game_Notes_Arm_Offset_Left_Y":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_Notes_Arm_Offset_Left_Y[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_Notes_Arm_Offset_Right_Y": {
+							case "Game_Notes_Arm_Offset_Right_Y":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_Notes_Arm_Offset_Right_Y[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_Notes_Arm_Move": {
+							case "Game_Notes_Arm_Move":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_Notes_Arm_Move[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_Judge_X": {
+							case "Game_Judge_X":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_Judge_X[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_Judge_Y": {
+							case "Game_Judge_Y":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_Judge_Y[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_Judge_Move": {
+							case "Game_Judge_Move":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_Judge_Move[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_ScoreRank_X": {
+							case "Game_ScoreRank_X":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_ScoreRank_X[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_ScoreRank_Y": {
+							case "Game_ScoreRank_Y":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_ScoreRank_Y[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_ScoreRank_Move": {
+							case "Game_ScoreRank_Move":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_ScoreRank_Move[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_StageText": {
+							case "Game_StageText":
+								{
 									Game_StageText = strParam;
 									break;
 								}
-							case nameof(Game_RollColorMode): {
+							case nameof(Game_RollColorMode):
+								{
 									Game_RollColorMode = (RollColorMode)int.Parse(strParam);
 									break;
 								}
-							case nameof(Game_JudgeFrame_AddBlend): {
+							case nameof(Game_JudgeFrame_AddBlend):
+								{
 									Game_JudgeFrame_AddBlend = CConversion.bONorOFF(strParam[0]);
 									break;
 								}
 
 
-							case "Game_Judge_4P": {
+							case "Game_Judge_4P":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_Judge_4P[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_Judge_5P": {
+							case "Game_Judge_5P":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_Judge_5P[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_UIMove_4P": {
+							case "Game_UIMove_4P":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_UIMove_4P[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_UIMove_5P": {
+							case "Game_UIMove_5P":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_UIMove_5P[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_ScoreRank_4P": {
+							case "Game_ScoreRank_4P":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_ScoreRank_4P[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_ScoreRank_5P": {
+							case "Game_ScoreRank_5P":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_ScoreRank_4P[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
 
 							#region CourseSymbol
-							case "Game_CourseSymbol_X": {
+							case "Game_CourseSymbol_X":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_CourseSymbol_X[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_CourseSymbol_Y": {
+							case "Game_CourseSymbol_Y":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_CourseSymbol_Y[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_CourseSymbol_Back_X": {
+							case "Game_CourseSymbol_Back_X":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_CourseSymbol_Back_X[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_CourseSymbol_Back_Y": {
+							case "Game_CourseSymbol_Back_Y":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_CourseSymbol_Back_Y[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_CourseSymbol_4P": {
+							case "Game_CourseSymbol_4P":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_CourseSymbol_4P[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_CourseSymbol_5P": {
+							case "Game_CourseSymbol_5P":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_CourseSymbol_5P[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_CourseSymbol_Back_4P": {
+							case "Game_CourseSymbol_Back_4P":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_CourseSymbol_Back_4P[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_CourseSymbol_Back_5P": {
+							case "Game_CourseSymbol_Back_5P":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_CourseSymbol_Back_5P[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_CourseSymbol_Back_Rect_4P": {
+							case "Game_CourseSymbol_Back_Rect_4P":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 4; i++) {
+									for (int i = 0; i < 4; i++)
+									{
 										Game_CourseSymbol_Back_Rect_4P[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_CourseSymbol_Back_Rect_5P": {
+							case "Game_CourseSymbol_Back_Rect_5P":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 4; i++) {
+									for (int i = 0; i < 4; i++)
+									{
 										Game_CourseSymbol_Back_Rect_5P[i] = int.Parse(strSplit[i]);
 									}
 									break;
@@ -3649,55 +4483,68 @@ internal class CSkin : IDisposable {
 							#endregion
 
 							#region PanelFont
-							case nameof(Game_MusicName_X): {
+							case nameof(Game_MusicName_X):
+								{
 									Game_MusicName_X = int.Parse(strParam);
 									break;
 								}
-							case nameof(Game_MusicName_Y): {
+							case nameof(Game_MusicName_Y):
+								{
 									Game_MusicName_Y = int.Parse(strParam);
 									break;
 								}
-							case nameof(Game_MusicName_FontSize): {
+							case nameof(Game_MusicName_FontSize):
+								{
 									if (int.Parse(strParam) > 0)
 										Game_MusicName_FontSize = int.Parse(strParam);
 									break;
 								}
-							case nameof(Game_MusicName_MaxWidth): {
+							case nameof(Game_MusicName_MaxWidth):
+								{
 									Game_MusicName_MaxWidth = int.Parse(strParam);
 									break;
 								}
-							case nameof(Game_MusicName_ReferencePoint): {
+							case nameof(Game_MusicName_ReferencePoint):
+								{
 									Game_MusicName_ReferencePoint = (ReferencePoint)int.Parse(strParam);
 									break;
 								}
-							case nameof(Game_Genre_X): {
+							case nameof(Game_Genre_X):
+								{
 									Game_Genre_X = int.Parse(strParam);
 									break;
 								}
-							case nameof(Game_Genre_Y): {
+							case nameof(Game_Genre_Y):
+								{
 									Game_Genre_Y = int.Parse(strParam);
 									break;
 								}
-							case "Game_GenreText_Offset": {
+							case "Game_GenreText_Offset":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_GenreText_Offset[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case nameof(Game_GenreText_FontSize): {
+							case nameof(Game_GenreText_FontSize):
+								{
 									Game_GenreText_FontSize = int.Parse(strParam);
 									break;
 								}
-							case nameof(Game_Lyric_X): {
+							case nameof(Game_Lyric_X):
+								{
 									Game_Lyric_X = int.Parse(strParam);
 									break;
 								}
-							case nameof(Game_Lyric_Y): {
+							case nameof(Game_Lyric_Y):
+								{
 									Game_Lyric_Y = int.Parse(strParam);
 									break;
 								}
-							case nameof(Game_Lyric_FontName): {
+							case nameof(Game_Lyric_FontName):
+								{
 									strParam = strParam.Replace('/', System.IO.Path.DirectorySeparatorChar);
 									strParam = strParam.Replace('\\', System.IO.Path.DirectorySeparatorChar);
 									if (HPrivateFastFont.FontExists(strParam)) Game_Lyric_FontName = strParam;
@@ -3705,117 +4552,148 @@ internal class CSkin : IDisposable {
 									if (HPrivateFastFont.FontExists(strParam)) Game_Lyric_FontName = strParam;
 									break;
 								}
-							case nameof(Game_Lyric_FontSize): {
+							case nameof(Game_Lyric_FontSize):
+								{
 									if (int.Parse(strParam) > 0)
 										Game_Lyric_FontSize = int.Parse(strParam);
 									break;
 								}
-							case nameof(Game_Lyric_VTTRubyOffset): {
+							case nameof(Game_Lyric_VTTRubyOffset):
+								{
 									Game_Lyric_VTTRubyOffset = int.Parse(strParam);
 									break;
 								}
-							case nameof(Game_Lyric_VTTForeColor): {
+							case nameof(Game_Lyric_VTTForeColor):
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 8; i++) {
+									for (int i = 0; i < 8; i++)
+									{
 										Game_Lyric_VTTForeColor[i] = ColorTranslator.FromHtml(strSplit[i]);
 									}
 									break;
 								}
-							case nameof(Game_Lyric_VTTBackColor): {
+							case nameof(Game_Lyric_VTTBackColor):
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 8; i++) {
+									for (int i = 0; i < 8; i++)
+									{
 										Game_Lyric_VTTBackColor[i] = ColorTranslator.FromHtml(strSplit[i]);
 									}
 									break;
 								}
-							case nameof(Game_Lyric_ReferencePoint): {
+							case nameof(Game_Lyric_ReferencePoint):
+								{
 									Game_Lyric_ReferencePoint = (ReferencePoint)int.Parse(strParam);
 									break;
 								}
 
-							case nameof(Game_MusicName_ForeColor): {
+							case nameof(Game_MusicName_ForeColor):
+								{
 									Game_MusicName_ForeColor = ColorTranslator.FromHtml(strParam);
 									break;
 								}
-							case nameof(Game_StageText_ForeColor): {
+							case nameof(Game_StageText_ForeColor):
+								{
 									Game_StageText_ForeColor = ColorTranslator.FromHtml(strParam);
 									break;
 								}
-							case nameof(Game_Lyric_ForeColor): {
+							case nameof(Game_Lyric_ForeColor):
+								{
 									Game_Lyric_ForeColor = ColorTranslator.FromHtml(strParam);
 									break;
 								}
-							case nameof(Game_MusicName_BackColor): {
+							case nameof(Game_MusicName_BackColor):
+								{
 									Game_MusicName_BackColor = ColorTranslator.FromHtml(strParam);
 									break;
 								}
-							case nameof(Game_StageText_BackColor): {
+							case nameof(Game_StageText_BackColor):
+								{
 									Game_StageText_BackColor = ColorTranslator.FromHtml(strParam);
 									break;
 								}
-							case nameof(Game_Lyric_BackColor): {
+							case nameof(Game_Lyric_BackColor):
+								{
 									Game_Lyric_BackColor = ColorTranslator.FromHtml(strParam);
 									break;
 								}
-							case "Game_Judge_Meter": {
+							case "Game_Judge_Meter":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_Judge_Meter[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_Judge_Meter_Perfect": {
+							case "Game_Judge_Meter_Perfect":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_Judge_Meter_Perfect[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_Judge_Meter_Good": {
+							case "Game_Judge_Meter_Good":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_Judge_Meter_Good[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_Judge_Meter_Miss": {
+							case "Game_Judge_Meter_Miss":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_Judge_Meter_Miss[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_Judge_Meter_Roll": {
+							case "Game_Judge_Meter_Roll":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_Judge_Meter_Roll[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_Judge_Meter_HitRate": {
+							case "Game_Judge_Meter_HitRate":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_Judge_Meter_HitRate[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_Judge_Meter_PerfectRate": {
+							case "Game_Judge_Meter_PerfectRate":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_Judge_Meter_PerfectRate[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_Judge_Meter_GoodRate": {
+							case "Game_Judge_Meter_GoodRate":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_Judge_Meter_GoodRate[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_Judge_Meter_MissRate": {
+							case "Game_Judge_Meter_MissRate":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_Judge_Meter_MissRate[i] = int.Parse(strSplit[i]);
 									}
 									break;
@@ -3824,182 +4702,228 @@ internal class CSkin : IDisposable {
 
 							// Chara read
 							#region Chara
-							case "Game_Chara_X": {
+							case "Game_Chara_X":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_Chara_X[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_Chara_Y": {
+							case "Game_Chara_Y":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_Chara_Y[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_Chara_Balloon_X": {
+							case "Game_Chara_Balloon_X":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_Chara_Balloon_X[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_Chara_Balloon_Y": {
+							case "Game_Chara_Balloon_Y":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_Chara_Balloon_Y[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case nameof(Game_Chara_Balloon_Timer): {
+							case nameof(Game_Chara_Balloon_Timer):
+								{
 									if (int.Parse(strParam) > 0)
 										Game_Chara_Balloon_Timer = int.Parse(strParam);
 									break;
 								}
-							case nameof(Game_Chara_Balloon_Delay): {
+							case nameof(Game_Chara_Balloon_Delay):
+								{
 									if (int.Parse(strParam) > 0)
 										Game_Chara_Balloon_Delay = int.Parse(strParam);
 									break;
 								}
-							case nameof(Game_Chara_Balloon_FadeOut): {
+							case nameof(Game_Chara_Balloon_FadeOut):
+								{
 									if (int.Parse(strParam) > 0)
 										Game_Chara_Balloon_FadeOut = int.Parse(strParam);
 									break;
 								}
 							// パターン数の設定はTextureLoader.csで反映されます。
-							case "Game_Chara_Motion_Normal": {
+							case "Game_Chara_Motion_Normal":
+								{
 									Game_Chara_Motion_Normal = strParam;
 									break;
 								}
-							case "Game_Chara_Motion_Clear": {
+							case "Game_Chara_Motion_Clear":
+								{
 									Game_Chara_Motion_Clear = strParam;
 									break;
 								}
-							case "Game_Chara_Motion_GoGo": {
+							case "Game_Chara_Motion_GoGo":
+								{
 									Game_Chara_Motion_GoGo = strParam;
 									break;
 								}
-							case "Game_Chara_Beat_Normal": {
+							case "Game_Chara_Beat_Normal":
+								{
 									ParseInt32(value => Game_Chara_Beat_Normal = value);
 									break;
 								}
-							case "Game_Chara_Beat_Clear": {
+							case "Game_Chara_Beat_Clear":
+								{
 									ParseInt32(value => Game_Chara_Beat_Clear = value);
 									break;
 								}
-							case "Game_Chara_Beat_GoGo": {
+							case "Game_Chara_Beat_GoGo":
+								{
 									ParseInt32(value => Game_Chara_Beat_GoGo = value);
 									break;
 								}
 							#endregion
 
 							#region Mob
-							case "Game_Mob_Beat": {
+							case "Game_Mob_Beat":
+								{
 									ParseInt32(value => Game_Mob_Beat = value);
 									break;
 								}
-							case "Game_Mob_Ptn_Beat": {
+							case "Game_Mob_Ptn_Beat":
+								{
 									ParseInt32(value => Game_Mob_Ptn_Beat = value);
 									break;
 								}
 							#endregion
 
 							#region Score
-							case "Game_Score_X": {
+							case "Game_Score_X":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										this.Game_Score_X[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_Score_Y": {
+							case "Game_Score_Y":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										this.Game_Score_Y[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_Score_Add_X": {
+							case "Game_Score_Add_X":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										this.Game_Score_Add_X[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_Score_Add_Y": {
+							case "Game_Score_Add_Y":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										this.Game_Score_Add_Y[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_Score_AddBonus_X": {
+							case "Game_Score_AddBonus_X":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										this.Game_Score_AddBonus_X[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_Score_AddBonus_Y": {
+							case "Game_Score_AddBonus_Y":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										this.Game_Score_AddBonus_Y[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
 
-							case "Game_Score_Padding": {
+							case "Game_Score_Padding":
+								{
 									ParseInt32(value => Game_Score_Padding = value);
 									break;
 								}
-							case "Game_Score_Size": {
+							case "Game_Score_Size":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_Score_Size[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
 
 
-							case "Game_Score_4P": {
+							case "Game_Score_4P":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_Score_4P[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_Score_5P": {
+							case "Game_Score_5P":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_Score_5P[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_Score_Add_4P": {
+							case "Game_Score_Add_4P":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_Score_Add_4P[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_Score_Add_5P": {
+							case "Game_Score_Add_5P":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_Score_Add_5P[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_Score_AddBonus_4P": {
+							case "Game_Score_AddBonus_4P":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_Score_AddBonus_4P[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_Score_AddBonus_5P": {
+							case "Game_Score_AddBonus_5P":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_Score_AddBonus_5P[i] = int.Parse(strSplit[i]);
 									}
 									break;
@@ -4008,340 +4932,435 @@ internal class CSkin : IDisposable {
 							#endregion
 
 							#region Taiko
-							case "Game_Taiko_Background_X": {
+							case "Game_Taiko_Background_X":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_Taiko_Background_X[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_Taiko_Background_Y": {
+							case "Game_Taiko_Background_Y":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_Taiko_Background_Y[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_Taiko_ModIcons_X": {
+							case "Game_Taiko_ModIcons_X":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_Taiko_ModIcons_X[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_Taiko_ModIcons_Y": {
+							case "Game_Taiko_ModIcons_Y":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_Taiko_ModIcons_Y[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_Taiko_NamePlate_X": {
+							case "Game_Taiko_NamePlate_X":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_Taiko_NamePlate_X[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_Taiko_NamePlate_Y": {
+							case "Game_Taiko_NamePlate_Y":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_Taiko_NamePlate_Y[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
 
-							case "Game_Taiko_PlayerNumber_X": {
+							case "Game_Taiko_PlayerNumber_X":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_Taiko_PlayerNumber_X[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
 
-							case "Game_Taiko_PlayerNumber_Y": {
+							case "Game_Taiko_PlayerNumber_Y":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_Taiko_PlayerNumber_Y[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
 
-							case "Game_Taiko_X": {
+							case "Game_Taiko_X":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_Taiko_X[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_Taiko_Y": {
+							case "Game_Taiko_Y":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_Taiko_Y[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_Taiko_Combo_X": {
+							case "Game_Taiko_Combo_X":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_Taiko_Combo_X[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_Taiko_Combo_Y": {
+							case "Game_Taiko_Combo_Y":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_Taiko_Combo_Y[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_Taiko_Combo_Ex_X": {
+							case "Game_Taiko_Combo_Ex_X":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_Taiko_Combo_Ex_X[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_Taiko_Combo_Ex_Y": {
+							case "Game_Taiko_Combo_Ex_Y":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_Taiko_Combo_Ex_Y[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_Taiko_Combo_Ex4_X": {
+							case "Game_Taiko_Combo_Ex4_X":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_Taiko_Combo_Ex4_X[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_Taiko_Combo_Ex4_Y": {
+							case "Game_Taiko_Combo_Ex4_Y":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_Taiko_Combo_Ex4_Y[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_Taiko_Combo_Padding": {
+							case "Game_Taiko_Combo_Padding":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 3; i++) {
+									for (int i = 0; i < 3; i++)
+									{
 										Game_Taiko_Combo_Padding[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_Taiko_Combo_Size": {
+							case "Game_Taiko_Combo_Size":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_Taiko_Combo_Size[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_Taiko_Combo_Size_Ex": {
+							case "Game_Taiko_Combo_Size_Ex":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_Taiko_Combo_Size_Ex[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_Taiko_Combo_Scale": {
+							case "Game_Taiko_Combo_Scale":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 3; i++) {
+									for (int i = 0; i < 3; i++)
+									{
 										Game_Taiko_Combo_Scale[i] = float.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_Taiko_Combo_Text_X": {
+							case "Game_Taiko_Combo_Text_X":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_Taiko_Combo_Text_X[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_Taiko_Combo_Text_Y": {
+							case "Game_Taiko_Combo_Text_Y":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_Taiko_Combo_Text_Y[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_Taiko_Combo_Text_Size": {
+							case "Game_Taiko_Combo_Text_Size":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_Taiko_Combo_Text_Size[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case nameof(Game_Taiko_Combo_Ex_IsJumping): {
+							case nameof(Game_Taiko_Combo_Ex_IsJumping):
+								{
 									Game_Taiko_Combo_Ex_IsJumping = CConversion.bONorOFF(strParam[0]);
 									break;
 								}
-							case "Game_Taiko_LevelChange_X": {
+							case "Game_Taiko_LevelChange_X":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_Taiko_LevelChange_X[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_Taiko_LevelChange_Y": {
+							case "Game_Taiko_LevelChange_Y":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_Taiko_LevelChange_Y[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_Taiko_Frame_X": {
+							case "Game_Taiko_Frame_X":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_Taiko_Frame_X[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_Taiko_Frame_Y": {
+							case "Game_Taiko_Frame_Y":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_Taiko_Frame_Y[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
 
 
-							case "Game_Taiko_Background_4P": {
+							case "Game_Taiko_Background_4P":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_Taiko_Background_4P[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_Taiko_Background_5P": {
+							case "Game_Taiko_Background_5P":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_Taiko_Background_5P[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_Taiko_ModIcons_4P": {
+							case "Game_Taiko_ModIcons_4P":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_Taiko_ModIcons_4P[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_Taiko_ModIcons_5P": {
+							case "Game_Taiko_ModIcons_5P":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_Taiko_ModIcons_5P[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_Taiko_NamePlate_4P": {
+							case "Game_Taiko_NamePlate_4P":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_Taiko_NamePlate_4P[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_Taiko_NamePlate_5P": {
+							case "Game_Taiko_NamePlate_5P":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_Taiko_NamePlate_5P[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_Taiko_PlayerNumber_4P": {
+							case "Game_Taiko_PlayerNumber_4P":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_Taiko_PlayerNumber_4P[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_Taiko_PlayerNumber_5P": {
+							case "Game_Taiko_PlayerNumber_5P":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_Taiko_PlayerNumber_5P[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_Taiko_4P": {
+							case "Game_Taiko_4P":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_Taiko_4P[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_Taiko_5P": {
+							case "Game_Taiko_5P":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_Taiko_5P[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_Taiko_Combo_4P": {
+							case "Game_Taiko_Combo_4P":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_Taiko_Combo_4P[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_Taiko_Combo_5P": {
+							case "Game_Taiko_Combo_5P":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_Taiko_Combo_5P[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_Taiko_Combo_Ex_4P": {
+							case "Game_Taiko_Combo_Ex_4P":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_Taiko_Combo_Ex_4P[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_Taiko_Combo_Ex_5P": {
+							case "Game_Taiko_Combo_Ex_5P":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_Taiko_Combo_Ex_5P[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_Taiko_Combo_Ex4_4P": {
+							case "Game_Taiko_Combo_Ex4_4P":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_Taiko_Combo_Ex4_4P[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_Taiko_Combo_Ex4_5P": {
+							case "Game_Taiko_Combo_Ex4_5P":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_Taiko_Combo_Ex4_5P[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_Taiko_Combo_Text_4P": {
+							case "Game_Taiko_Combo_Text_4P":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_Taiko_Combo_Text_4P[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_Taiko_Combo_Text_5P": {
+							case "Game_Taiko_Combo_Text_5P":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_Taiko_Combo_Text_5P[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_Taiko_Frame_4P": {
+							case "Game_Taiko_Frame_4P":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_Taiko_Frame_4P[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_Taiko_Frame_5P": {
+							case "Game_Taiko_Frame_5P":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_Taiko_Frame_5P[i] = int.Parse(strSplit[i]);
 									}
 									break;
@@ -4349,209 +5368,266 @@ internal class CSkin : IDisposable {
 							#endregion
 
 							#region Gauge
-							case "Game_Gauge_X": {
+							case "Game_Gauge_X":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_Gauge_X[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_Gauge_Y": {
+							case "Game_Gauge_Y":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_Gauge_Y[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_Gauge_X_AI": {
+							case "Game_Gauge_X_AI":
+								{
 									Game_Gauge_X_AI = int.Parse(strParam);
 									break;
 								}
-							case "Game_Gauge_Y_AI": {
+							case "Game_Gauge_Y_AI":
+								{
 									Game_Gauge_Y_AI = int.Parse(strParam);
 									break;
 								}
-							case "Game_Gauge_Rect": {
+							case "Game_Gauge_Rect":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 4; i++) {
+									for (int i = 0; i < 4; i++)
+									{
 										Game_Gauge_Rect[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_Gauge_ClearText_X": {
+							case "Game_Gauge_ClearText_X":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_Gauge_ClearText_X[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_Gauge_ClearText_Y": {
+							case "Game_Gauge_ClearText_Y":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_Gauge_ClearText_Y[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_Gauge_ClearText_X_AI": {
+							case "Game_Gauge_ClearText_X_AI":
+								{
 									Game_Gauge_ClearText_X_AI = int.Parse(strParam);
 									break;
 								}
-							case "Game_Gauge_ClearText_Y_AI": {
+							case "Game_Gauge_ClearText_Y_AI":
+								{
 									Game_Gauge_ClearText_Y_AI = int.Parse(strParam);
 									break;
 								}
-							case "Game_Gauge_ClearText_Rect": {
+							case "Game_Gauge_ClearText_Rect":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 4; i++) {
+									for (int i = 0; i < 4; i++)
+									{
 										Game_Gauge_ClearText_Rect[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_Gauge_ClearText_Clear_Rect": {
+							case "Game_Gauge_ClearText_Clear_Rect":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 4; i++) {
+									for (int i = 0; i < 4; i++)
+									{
 										Game_Gauge_ClearText_Clear_Rect[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Gauge_Soul_X": {
+							case "Gauge_Soul_X":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Gauge_Soul_X[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Gauge_Soul_Y": {
+							case "Gauge_Soul_Y":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Gauge_Soul_Y[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Gauge_Soul_X_AI": {
+							case "Gauge_Soul_X_AI":
+								{
 									Gauge_Soul_X_AI = int.Parse(strParam);
 									break;
 								}
-							case "Gauge_Soul_Y_AI": {
+							case "Gauge_Soul_Y_AI":
+								{
 									Gauge_Soul_Y_AI = int.Parse(strParam);
 									break;
 								}
-							case "Gauge_Soul_X_Tower": {
+							case "Gauge_Soul_X_Tower":
+								{
 									Gauge_Soul_X_Tower = int.Parse(strParam);
 									break;
 								}
-							case "Gauge_Soul_Y_Tower": {
+							case "Gauge_Soul_Y_Tower":
+								{
 									Gauge_Soul_Y_Tower = int.Parse(strParam);
 									break;
 								}
-							case "Gauge_Soul_Fire_X": {
+							case "Gauge_Soul_Fire_X":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Gauge_Soul_Fire_X[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Gauge_Soul_Fire_Y": {
+							case "Gauge_Soul_Fire_Y":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Gauge_Soul_Fire_Y[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Gauge_Soul_Fire_X_AI": {
+							case "Gauge_Soul_Fire_X_AI":
+								{
 									Gauge_Soul_Fire_X_AI = int.Parse(strParam);
 									break;
 								}
-							case "Gauge_Soul_Fire_Y_AI": {
+							case "Gauge_Soul_Fire_Y_AI":
+								{
 									Gauge_Soul_Fire_Y_AI = int.Parse(strParam);
 									break;
 								}
-							case "Gauge_Soul_Fire_X_Tower": {
+							case "Gauge_Soul_Fire_X_Tower":
+								{
 									Gauge_Soul_Fire_X_Tower = int.Parse(strParam);
 									break;
 								}
-							case "Gauge_Soul_Fire_Y_Tower": {
+							case "Gauge_Soul_Fire_Y_Tower":
+								{
 									Gauge_Soul_Fire_Y_Tower = int.Parse(strParam);
 									break;
 								}
-							case "Game_Gauge_Rainbow_Timer": {
-									if (int.Parse(strParam) != 0) {
+							case "Game_Gauge_Rainbow_Timer":
+								{
+									if (int.Parse(strParam) != 0)
+									{
 										Game_Gauge_Rainbow_Timer = int.Parse(strParam);
 									}
 									break;
 								}
-							case "Game_Tower_Floor_Number": {
+							case "Game_Tower_Floor_Number":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_Tower_Floor_Number[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_Tower_Life_Number": {
+							case "Game_Tower_Life_Number":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_Tower_Life_Number[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_Tower_Font_TouTatsuKaiSuu": {
+							case "Game_Tower_Font_TouTatsuKaiSuu":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_Tower_Font_TouTatsuKaiSuu[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_Tower_Font_Kai": {
+							case "Game_Tower_Font_Kai":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_Tower_Font_Kai[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_Tower_Font_TowerText": {
+							case "Game_Tower_Font_TowerText":
+								{
 									Game_Tower_Font_TowerText = int.Parse(strParam);
 									break;
 								}
 
 
-							case "Game_Gauge_4P": {
+							case "Game_Gauge_4P":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_Gauge_4P[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_Gauge_5P": {
+							case "Game_Gauge_5P":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_Gauge_5P[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Gauge_Soul_4P": {
+							case "Gauge_Soul_4P":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Gauge_Soul_4P[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Gauge_Soul_5P": {
+							case "Gauge_Soul_5P":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Gauge_Soul_5P[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Gauge_Soul_Fire_4P": {
+							case "Gauge_Soul_Fire_4P":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Gauge_Soul_Fire_4P[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Gauge_Soul_Fire_5P": {
+							case "Gauge_Soul_Fire_5P":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Gauge_Soul_Fire_5P[i] = int.Parse(strSplit[i]);
 									}
 									break;
@@ -4559,240 +5635,306 @@ internal class CSkin : IDisposable {
 							#endregion
 
 							#region Balloon
-							case "Game_Balloon_Combo_X": {
+							case "Game_Balloon_Combo_X":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_Balloon_Combo_X[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_Balloon_Combo_Y": {
+							case "Game_Balloon_Combo_Y":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_Balloon_Combo_Y[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_Balloon_Combo_Number_X": {
+							case "Game_Balloon_Combo_Number_X":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_Balloon_Combo_Number_X[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_Balloon_Combo_Number_Y": {
+							case "Game_Balloon_Combo_Number_Y":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_Balloon_Combo_Number_Y[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_Balloon_Combo_Number_Ex_X": {
+							case "Game_Balloon_Combo_Number_Ex_X":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_Balloon_Combo_Number_Ex_X[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_Balloon_Combo_Number_Ex_Y": {
+							case "Game_Balloon_Combo_Number_Ex_Y":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_Balloon_Combo_Number_Ex_Y[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_Balloon_Combo_Number_Size": {
+							case "Game_Balloon_Combo_Number_Size":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_Balloon_Combo_Number_Size[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_Balloon_Combo_Number_Interval": {
+							case "Game_Balloon_Combo_Number_Interval":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_Balloon_Combo_Number_Interval[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_Balloon_Combo_Text_X": {
+							case "Game_Balloon_Combo_Text_X":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_Balloon_Combo_Text_X[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_Balloon_Combo_Text_Y": {
+							case "Game_Balloon_Combo_Text_Y":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_Balloon_Combo_Text_Y[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_Balloon_Combo_Text_Ex_X": {
+							case "Game_Balloon_Combo_Text_Ex_X":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_Balloon_Combo_Text_Ex_X[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_Balloon_Combo_Text_Ex_Y": {
+							case "Game_Balloon_Combo_Text_Ex_Y":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_Balloon_Combo_Text_Ex_Y[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_Balloon_Combo_Text_Rect": {
+							case "Game_Balloon_Combo_Text_Rect":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 4; i++) {
+									for (int i = 0; i < 4; i++)
+									{
 										Game_Balloon_Combo_Text_Rect[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
 
 
-							case "Game_Balloon_Balloon_X": {
+							case "Game_Balloon_Balloon_X":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										this.Game_Balloon_Balloon_X[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_Balloon_Balloon_Y": {
+							case "Game_Balloon_Balloon_Y":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										this.Game_Balloon_Balloon_Y[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_Balloon_Balloon_Frame_X": {
+							case "Game_Balloon_Balloon_Frame_X":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										this.Game_Balloon_Balloon_Frame_X[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_Balloon_Balloon_Frame_Y": {
+							case "Game_Balloon_Balloon_Frame_Y":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										this.Game_Balloon_Balloon_Frame_Y[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_Balloon_Balloon_Number_X": {
+							case "Game_Balloon_Balloon_Number_X":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										this.Game_Balloon_Balloon_Number_X[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_Balloon_Balloon_Number_Y": {
+							case "Game_Balloon_Balloon_Number_Y":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										this.Game_Balloon_Balloon_Number_Y[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
 
-							case "Game_Balloon_Roll_Frame_X": {
+							case "Game_Balloon_Roll_Frame_X":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_Balloon_Roll_Frame_X[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_Balloon_Roll_Frame_Y": {
+							case "Game_Balloon_Roll_Frame_Y":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_Balloon_Roll_Frame_Y[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_Balloon_Roll_Number_X": {
+							case "Game_Balloon_Roll_Number_X":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_Balloon_Roll_Number_X[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_Balloon_Roll_Number_Y": {
+							case "Game_Balloon_Roll_Number_Y":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_Balloon_Roll_Number_Y[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_Balloon_Number_Size": {
+							case "Game_Balloon_Number_Size":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_Balloon_Number_Size[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_Balloon_Number_Interval": {
+							case "Game_Balloon_Number_Interval":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_Balloon_Number_Interval[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_Balloon_Roll_Number_Scale": {
+							case "Game_Balloon_Roll_Number_Scale":
+								{
 									ParseInt32(value => Game_Balloon_Roll_Number_Scale = value);
 									break;
 								}
-							case "Game_Balloon_Balloon_Number_Scale": {
+							case "Game_Balloon_Balloon_Number_Scale":
+								{
 									ParseInt32(value => Game_Balloon_Balloon_Number_Scale = value);
 									break;
 								}
-							case "Game_Kusudama_Number_X": {
+							case "Game_Kusudama_Number_X":
+								{
 									ParseInt32(value => Game_Kusudama_Number_X = value);
 									break;
 								}
-							case "Game_Kusudama_Number_Y": {
+							case "Game_Kusudama_Number_Y":
+								{
 									ParseInt32(value => Game_Kusudama_Number_Y = value);
 									break;
 								}
 
 
-							case "Game_Balloon_Balloon_4P": {
+							case "Game_Balloon_Balloon_4P":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_Balloon_Balloon_4P[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_Balloon_Balloon_5P": {
+							case "Game_Balloon_Balloon_5P":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_Balloon_Balloon_5P[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_Balloon_Balloon_Frame_4P": {
+							case "Game_Balloon_Balloon_Frame_4P":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_Balloon_Balloon_Frame_4P[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_Balloon_Balloon_Frame_5P": {
+							case "Game_Balloon_Balloon_Frame_5P":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_Balloon_Balloon_Frame_5P[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_Balloon_Balloon_Number_4P": {
+							case "Game_Balloon_Balloon_Number_4P":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_Balloon_Balloon_Number_4P[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_Balloon_Balloon_Number_5P": {
+							case "Game_Balloon_Balloon_Number_5P":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_Balloon_Balloon_Number_5P[i] = int.Parse(strSplit[i]);
 									}
 									break;
@@ -4801,222 +5943,279 @@ internal class CSkin : IDisposable {
 							#endregion
 
 							#region Effects
-							case nameof(Game_Effect_Roll_StartPoint_X): {
+							case nameof(Game_Effect_Roll_StartPoint_X):
+								{
 									Game_Effect_Roll_StartPoint_X = strParam.Split(',').Select(int.Parse).ToArray();
 									break;
 								}
-							case nameof(Game_Effect_Roll_StartPoint_Y): {
+							case nameof(Game_Effect_Roll_StartPoint_Y):
+								{
 									Game_Effect_Roll_StartPoint_Y = strParam.Split(',').Select(int.Parse).ToArray();
 									break;
 								}
-							case nameof(Game_Effect_Roll_StartPoint_1P_X): {
+							case nameof(Game_Effect_Roll_StartPoint_1P_X):
+								{
 									Game_Effect_Roll_StartPoint_1P_X = strParam.Split(',').Select(int.Parse).ToArray();
 									break;
 								}
-							case nameof(Game_Effect_Roll_StartPoint_1P_Y): {
+							case nameof(Game_Effect_Roll_StartPoint_1P_Y):
+								{
 									Game_Effect_Roll_StartPoint_1P_Y = strParam.Split(',').Select(int.Parse).ToArray();
 									break;
 								}
-							case nameof(Game_Effect_Roll_StartPoint_2P_X): {
+							case nameof(Game_Effect_Roll_StartPoint_2P_X):
+								{
 									Game_Effect_Roll_StartPoint_2P_X = strParam.Split(',').Select(int.Parse).ToArray();
 									break;
 								}
-							case nameof(Game_Effect_Roll_StartPoint_2P_Y): {
+							case nameof(Game_Effect_Roll_StartPoint_2P_Y):
+								{
 									Game_Effect_Roll_StartPoint_2P_Y = strParam.Split(',').Select(int.Parse).ToArray();
 									break;
 								}
-							case nameof(Game_Effect_Roll_Speed_X): {
+							case nameof(Game_Effect_Roll_Speed_X):
+								{
 									Game_Effect_Roll_Speed_X = strParam.Split(',').Select(float.Parse).ToArray();
 									break;
 								}
-							case nameof(Game_Effect_Roll_Speed_Y): {
+							case nameof(Game_Effect_Roll_Speed_Y):
+								{
 									Game_Effect_Roll_Speed_Y = strParam.Split(',').Select(float.Parse).ToArray();
 									break;
 								}
-							case nameof(Game_Effect_Roll_Speed_1P_X): {
+							case nameof(Game_Effect_Roll_Speed_1P_X):
+								{
 									Game_Effect_Roll_Speed_1P_X = strParam.Split(',').Select(float.Parse).ToArray();
 									break;
 								}
-							case nameof(Game_Effect_Roll_Speed_1P_Y): {
+							case nameof(Game_Effect_Roll_Speed_1P_Y):
+								{
 									Game_Effect_Roll_Speed_1P_Y = strParam.Split(',').Select(float.Parse).ToArray();
 									break;
 								}
-							case nameof(Game_Effect_Roll_Speed_2P_X): {
+							case nameof(Game_Effect_Roll_Speed_2P_X):
+								{
 									Game_Effect_Roll_Speed_2P_X = strParam.Split(',').Select(float.Parse).ToArray();
 									break;
 								}
-							case nameof(Game_Effect_Roll_Speed_2P_Y): {
+							case nameof(Game_Effect_Roll_Speed_2P_Y):
+								{
 									Game_Effect_Roll_Speed_2P_Y = strParam.Split(',').Select(float.Parse).ToArray();
 									break;
 								}
-							case nameof(Game_Effect_NotesFlash): {
+							case nameof(Game_Effect_NotesFlash):
+								{
 									Game_Effect_NotesFlash = strParam.Split(',').Select(int.Parse).ToArray();
 									break;
 								}
-							case nameof(Game_Effect_NotesFlash_Timer): {
+							case nameof(Game_Effect_NotesFlash_Timer):
+								{
 									Game_Effect_NotesFlash_Timer = int.Parse(strParam);
 									break;
 								}
-							case nameof(Game_Effect_GoGoSplash): {
+							case nameof(Game_Effect_GoGoSplash):
+								{
 									Game_Effect_GoGoSplash = strParam.Split(',').Select(int.Parse).ToArray();
 									break;
 								}
-							case nameof(Game_Effect_GoGoSplash_X): {
+							case nameof(Game_Effect_GoGoSplash_X):
+								{
 									Game_Effect_GoGoSplash_X = strParam.Split(',').Select(int.Parse).ToArray();
 									break;
 								}
-							case nameof(Game_Effect_GoGoSplash_Y): {
+							case nameof(Game_Effect_GoGoSplash_Y):
+								{
 									Game_Effect_GoGoSplash_Y = strParam.Split(',').Select(int.Parse).ToArray();
 									break;
 								}
-							case nameof(Game_Effect_GoGoSplash_Rotate): {
+							case nameof(Game_Effect_GoGoSplash_Rotate):
+								{
 									Game_Effect_GoGoSplash_Rotate = CConversion.bONorOFF(strParam[0]);
 									break;
 								}
-							case nameof(Game_Effect_GoGoSplash_Timer): {
+							case nameof(Game_Effect_GoGoSplash_Timer):
+								{
 									Game_Effect_GoGoSplash_Timer = int.Parse(strParam);
 									break;
 								}
-							case nameof(Game_Effect_FlyingNotes_StartPoint_X): {
+							case nameof(Game_Effect_FlyingNotes_StartPoint_X):
+								{
 									Game_Effect_FlyingNotes_StartPoint_X = strParam.Split(',').Select(int.Parse).ToArray();
 									break;
 								}
-							case nameof(Game_Effect_FlyingNotes_StartPoint_Y): {
+							case nameof(Game_Effect_FlyingNotes_StartPoint_Y):
+								{
 									Game_Effect_FlyingNotes_StartPoint_Y = strParam.Split(',').Select(int.Parse).ToArray();
 									break;
 								}
-							case nameof(Game_Effect_FlyingNotes_EndPoint_X): {
+							case nameof(Game_Effect_FlyingNotes_EndPoint_X):
+								{
 									Game_Effect_FlyingNotes_EndPoint_X = strParam.Split(',').Select(int.Parse).ToArray();
 									break;
 								}
-							case nameof(Game_Effect_FlyingNotes_EndPoint_Y): {
+							case nameof(Game_Effect_FlyingNotes_EndPoint_Y):
+								{
 									Game_Effect_FlyingNotes_EndPoint_Y = strParam.Split(',').Select(int.Parse).ToArray();
 									break;
 								}
-							case nameof(Game_Effect_FlyingNotes_EndPoint_X_AI): {
+							case nameof(Game_Effect_FlyingNotes_EndPoint_X_AI):
+								{
 									Game_Effect_FlyingNotes_EndPoint_X_AI = strParam.Split(',').Select(int.Parse).ToArray();
 									break;
 								}
-							case nameof(Game_Effect_FlyingNotes_EndPoint_Y_AI): {
+							case nameof(Game_Effect_FlyingNotes_EndPoint_Y_AI):
+								{
 									Game_Effect_FlyingNotes_EndPoint_Y_AI = strParam.Split(',').Select(int.Parse).ToArray();
 									break;
 								}
-							case nameof(Game_Effect_FlyingNotes_Sine): {
+							case nameof(Game_Effect_FlyingNotes_Sine):
+								{
 									Game_Effect_FlyingNotes_Sine = int.Parse(strParam);
 									break;
 								}
-							case nameof(Game_Effect_FlyingNotes_IsUsingEasing): {
+							case nameof(Game_Effect_FlyingNotes_IsUsingEasing):
+								{
 									Game_Effect_FlyingNotes_IsUsingEasing = CConversion.bONorOFF(strParam[0]);
 									break;
 								}
-							case nameof(Game_Effect_FlyingNotes_Timer): {
+							case nameof(Game_Effect_FlyingNotes_Timer):
+								{
 									Game_Effect_FlyingNotes_Timer = int.Parse(strParam);
 									break;
 								}
-							case nameof(Game_Effect_FireWorks): {
+							case nameof(Game_Effect_FireWorks):
+								{
 									Game_Effect_FireWorks = strParam.Split(',').Select(int.Parse).ToArray();
 									break;
 								}
-							case nameof(Game_Effect_FireWorks_Timer): {
+							case nameof(Game_Effect_FireWorks_Timer):
+								{
 									Game_Effect_FireWorks_Timer = int.Parse(strParam);
 									break;
 								}
-							case "Game_Effect_Rainbow_X": {
+							case "Game_Effect_Rainbow_X":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										this.Game_Effect_Rainbow_X[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_Effect_Rainbow_Y": {
+							case "Game_Effect_Rainbow_Y":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										this.Game_Effect_Rainbow_Y[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case nameof(Game_Effect_Rainbow_Timer): {
+							case nameof(Game_Effect_Rainbow_Timer):
+								{
 									Game_Effect_Rainbow_Timer = int.Parse(strParam);
 									break;
 								}
-							case "Game_Effects_Hit_Explosion_X": {
+							case "Game_Effects_Hit_Explosion_X":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_Effects_Hit_Explosion_X[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_Effects_Hit_Explosion_Y": {
+							case "Game_Effects_Hit_Explosion_Y":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_Effects_Hit_Explosion_Y[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case nameof(Game_Effect_HitExplosion_AddBlend): {
+							case nameof(Game_Effect_HitExplosion_AddBlend):
+								{
 									Game_Effect_HitExplosion_AddBlend = CConversion.bONorOFF(strParam[0]);
 									break;
 								}
-							case nameof(Game_Effect_HitExplosionBig_AddBlend): {
+							case nameof(Game_Effect_HitExplosionBig_AddBlend):
+								{
 									Game_Effect_HitExplosionBig_AddBlend = CConversion.bONorOFF(strParam[0]);
 									break;
 								}
-							case "Game_Effect_Fire_X": {
+							case "Game_Effect_Fire_X":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_Effect_Fire_X[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_Effect_Fire_Y": {
+							case "Game_Effect_Fire_Y":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_Effect_Fire_Y[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case nameof(Game_Effect_FireWorks_AddBlend): {
+							case nameof(Game_Effect_FireWorks_AddBlend):
+								{
 									Game_Effect_FireWorks_AddBlend = CConversion.bONorOFF(strParam[0]);
 									break;
 								}
-							case nameof(Game_Effect_Fire_AddBlend): {
+							case nameof(Game_Effect_Fire_AddBlend):
+								{
 									Game_Effect_Fire_AddBlend = CConversion.bONorOFF(strParam[0]);
 									break;
 								}
-							case nameof(Game_Effect_GoGoSplash_AddBlend): {
+							case nameof(Game_Effect_GoGoSplash_AddBlend):
+								{
 									Game_Effect_GoGoSplash_AddBlend = CConversion.bONorOFF(strParam[0]);
 									break;
 								}
-							case nameof(Game_Effect_FireWorks_Timing): {
+							case nameof(Game_Effect_FireWorks_Timing):
+								{
 									Game_Effect_FireWorks_Timing = int.Parse(strParam);
 									break;
 								}
 
 
-							case "Game_Effects_Hit_Explosion_4P": {
+							case "Game_Effects_Hit_Explosion_4P":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_Effects_Hit_Explosion_4P[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_Effects_Hit_Explosion_5P": {
+							case "Game_Effects_Hit_Explosion_5P":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_Effects_Hit_Explosion_5P[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_Effect_Fire_4P": {
+							case "Game_Effect_Fire_4P":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_Effect_Fire_4P[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_Effect_Fire_5P": {
+							case "Game_Effect_Fire_5P":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_Effect_Fire_5P[i] = int.Parse(strSplit[i]);
 									}
 									break;
@@ -5026,45 +6225,57 @@ internal class CSkin : IDisposable {
 
 							#region Lane
 
-							case "Game_Lane_X": {
+							case "Game_Lane_X":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_Lane_X[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_Lane_Y": {
+							case "Game_Lane_Y":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_Lane_Y[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_Lane_Sub_X": {
+							case "Game_Lane_Sub_X":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_Lane_Sub_X[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_Lane_Sub_Y": {
+							case "Game_Lane_Sub_Y":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_Lane_Sub_Y[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
 
-							case "Game_Lane_4P": {
+							case "Game_Lane_4P":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_Lane_4P[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_Lane_5P": {
+							case "Game_Lane_5P":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_Lane_5P[i] = int.Parse(strSplit[i]);
 									}
 									break;
@@ -5075,168 +6286,206 @@ internal class CSkin : IDisposable {
 							#endregion
 
 							#region Dan_C
-							case nameof(Game_DanC_Title_ForeColor): {
+							case nameof(Game_DanC_Title_ForeColor):
+								{
 									Game_DanC_Title_ForeColor = ColorTranslator.FromHtml(strParam);
 									break;
 								}
-							case nameof(Game_DanC_Title_BackColor): {
+							case nameof(Game_DanC_Title_BackColor):
+								{
 									Game_DanC_Title_BackColor = ColorTranslator.FromHtml(strParam);
 									break;
 								}
-							case nameof(Game_DanC_SubTitle_ForeColor): {
+							case nameof(Game_DanC_SubTitle_ForeColor):
+								{
 									Game_DanC_SubTitle_ForeColor = ColorTranslator.FromHtml(strParam);
 									break;
 								}
-							case nameof(Game_DanC_SubTitle_BackColor): {
+							case nameof(Game_DanC_SubTitle_BackColor):
+								{
 									Game_DanC_SubTitle_BackColor = ColorTranslator.FromHtml(strParam);
 									break;
 								}
-							case nameof(Game_DanC_X): {
+							case nameof(Game_DanC_X):
+								{
 									Game_DanC_X = strParam.Split(',').Select(int.Parse).ToArray();
 									break;
 								}
-							case nameof(Game_DanC_Y): {
+							case nameof(Game_DanC_Y):
+								{
 									Game_DanC_Y = strParam.Split(',').Select(int.Parse).ToArray();
 									break;
 								}
-							case nameof(Game_DanC_Base_Offset_X): {
+							case nameof(Game_DanC_Base_Offset_X):
+								{
 									Game_DanC_Base_Offset_X = strParam.Split(',').Select(int.Parse).ToArray();
 									break;
 								}
-							case nameof(Game_DanC_Base_Offset_Y): {
+							case nameof(Game_DanC_Base_Offset_Y):
+								{
 									Game_DanC_Base_Offset_Y = strParam.Split(',').Select(int.Parse).ToArray();
 									break;
 								}
-							case nameof(Game_DanC_SmallBase_Offset_X): {
+							case nameof(Game_DanC_SmallBase_Offset_X):
+								{
 									Game_DanC_SmallBase_Offset_X = strParam.Split(',').Select(int.Parse).ToArray();
 									break;
 								}
-							case nameof(Game_DanC_SmallBase_Offset_Y): {
+							case nameof(Game_DanC_SmallBase_Offset_Y):
+								{
 									Game_DanC_SmallBase_Offset_Y = strParam.Split(',').Select(int.Parse).ToArray();
 									break;
 								}
 
-							case nameof(Game_DanC_Size): {
+							case nameof(Game_DanC_Size):
+								{
 									Game_DanC_Size = strParam.Split(',').Select(int.Parse).ToArray();
 									break;
 								}
 
-							case nameof(Game_DanC_Padding): {
+							case nameof(Game_DanC_Padding):
+								{
 									ParseInt32(value => Game_DanC_Padding = value);
 									break;
 								}
 
-							case nameof(Game_DanC_Offset): {
+							case nameof(Game_DanC_Offset):
+								{
 									Game_DanC_Offset = strParam.Split(',').Select(int.Parse).ToArray();
 									break;
 								}
 
-							case nameof(Game_DanC_Number_Size): {
+							case nameof(Game_DanC_Number_Size):
+								{
 									Game_DanC_Number_Size = strParam.Split(',').Select(int.Parse).ToArray();
 									break;
 								}
 
-							case nameof(Game_DanC_Small_Number_Size): {
+							case nameof(Game_DanC_Small_Number_Size):
+								{
 									Game_DanC_Small_Number_Size = strParam.Split(',').Select(int.Parse).ToArray();
 									break;
 								}
 
-							case nameof(Game_DanC_MiniNumber_Size): {
+							case nameof(Game_DanC_MiniNumber_Size):
+								{
 									Game_DanC_MiniNumber_Size = strParam.Split(',').Select(int.Parse).ToArray();
 									break;
 								}
 
-							case nameof(Game_DanC_Number_Padding): {
+							case nameof(Game_DanC_Number_Padding):
+								{
 									ParseInt32(value => Game_DanC_Number_Padding = value);
 									break;
 								}
 
-							case nameof(Game_DanC_Number_Small_Scale): {
+							case nameof(Game_DanC_Number_Small_Scale):
+								{
 									Game_DanC_Number_Small_Scale = float.Parse(strParam);
 									break;
 								}
 
-							case nameof(Game_DanC_Number_Small_Padding): {
+							case nameof(Game_DanC_Number_Small_Padding):
+								{
 									ParseInt32(value => Game_DanC_Number_Small_Padding = value);
 									break;
 								}
 
-							case nameof(Game_DanC_Number_XY): {
+							case nameof(Game_DanC_Number_XY):
+								{
 									Game_DanC_Number_XY = strParam.Split(',').Select(int.Parse).ToArray();
 									break;
 								}
-							case nameof(Game_DanC_Number_Small_Number_Offset): {
+							case nameof(Game_DanC_Number_Small_Number_Offset):
+								{
 									Game_DanC_Number_Small_Number_Offset = strParam.Split(',').Select(int.Parse).ToArray();
 									break;
 								}
-							case nameof(Game_DanC_ExamType_Size): {
+							case nameof(Game_DanC_ExamType_Size):
+								{
 									Game_DanC_ExamType_Size = strParam.Split(',').Select(int.Parse).ToArray();
 									break;
 								}
-							case nameof(Game_DanC_ExamRange_Size): {
+							case nameof(Game_DanC_ExamRange_Size):
+								{
 									Game_DanC_ExamRange_Size = strParam.Split(',').Select(int.Parse).ToArray();
 									break;
 								}
 
-							case nameof(Game_DanC_ExamRange_Padding): {
+							case nameof(Game_DanC_ExamRange_Padding):
+								{
 									ParseInt32(value => Game_DanC_ExamRange_Padding = value);
 									break;
 								}
 
-							case nameof(Game_DanC_Percent_Hit_Score_Padding): {
+							case nameof(Game_DanC_Percent_Hit_Score_Padding):
+								{
 									Game_DanC_Percent_Hit_Score_Padding = strParam.Split(',').Select(int.Parse).ToArray();
 									break;
 								}
-							case nameof(Game_DanC_ExamUnit_Size): {
+							case nameof(Game_DanC_ExamUnit_Size):
+								{
 									Game_DanC_ExamUnit_Size = strParam.Split(',').Select(int.Parse).ToArray();
 									break;
 								}
-							case nameof(Game_DanC_Exam_Offset): {
+							case nameof(Game_DanC_Exam_Offset):
+								{
 									Game_DanC_Exam_Offset = strParam.Split(',').Select(int.Parse).ToArray();
 									break;
 								}
-							case nameof(Game_DanC_Dan_Plate): {
+							case nameof(Game_DanC_Dan_Plate):
+								{
 									Game_DanC_Dan_Plate = strParam.Split(',').Select(int.Parse).ToArray();
 									break;
 								}
-							case nameof(Game_DanC_DanIcon_Offset): {
+							case nameof(Game_DanC_DanIcon_Offset):
+								{
 									Game_DanC_DanIcon_Offset = strParam.Split(',').Select(int.Parse).ToArray();
 									break;
 								}
-							case nameof(Game_DanC_DanIcon_Offset_Mini): {
+							case nameof(Game_DanC_DanIcon_Offset_Mini):
+								{
 									Game_DanC_DanIcon_Offset_Mini = strParam.Split(',').Select(int.Parse).ToArray();
 									break;
 								}
-							case nameof(Game_DanC_Title_X): {
+							case nameof(Game_DanC_Title_X):
+								{
 									Game_DanC_Title_X = strParam.Split(',').Select(int.Parse).ToArray();
 									break;
 								}
-							case nameof(Game_DanC_Title_Y): {
+							case nameof(Game_DanC_Title_Y):
+								{
 									Game_DanC_Title_Y = strParam.Split(',').Select(int.Parse).ToArray();
 									break;
 								}
-							case nameof(Game_DanC_SubTitle): {
+							case nameof(Game_DanC_SubTitle):
+								{
 									Game_DanC_SubTitle = strParam.Split(',').Select(int.Parse).ToArray();
 									break;
 								}
 
-							case nameof(Game_DanC_Title_Size): {
+							case nameof(Game_DanC_Title_Size):
+								{
 									ParseInt32(value => Game_DanC_Title_Size = value);
 									break;
 								}
-							case nameof(Game_DanC_SubTitle_Size): {
+							case nameof(Game_DanC_SubTitle_Size):
+								{
 									ParseInt32(value => Game_DanC_SubTitle_Size = value);
 									break;
 								}
-							case nameof(Game_DanC_ExamFont_Size): {
+							case nameof(Game_DanC_ExamFont_Size):
+								{
 									ParseInt32(value => Game_DanC_ExamFont_Size = value);
 									break;
 								}
-							case nameof(Game_DanC_Title_MaxWidth): {
+							case nameof(Game_DanC_Title_MaxWidth):
+								{
 									ParseInt32(value => Game_DanC_Title_MaxWidth = value);
 									break;
 								}
-							case nameof(Game_DanC_SubTitle_MaxWidth): {
+							case nameof(Game_DanC_SubTitle_MaxWidth):
+								{
 									ParseInt32(value => Game_DanC_SubTitle_MaxWidth = value);
 									break;
 								}
@@ -5244,173 +6493,217 @@ internal class CSkin : IDisposable {
 							#endregion
 
 							#region PuchiChara
-							case nameof(Game_PuchiChara_X): {
+							case nameof(Game_PuchiChara_X):
+								{
 									Game_PuchiChara_X = strParam.Split(',').Select(int.Parse).ToArray();
 									break;
 								}
-							case nameof(Game_PuchiChara_Y): {
+							case nameof(Game_PuchiChara_Y):
+								{
 									Game_PuchiChara_Y = strParam.Split(',').Select(int.Parse).ToArray();
 									break;
 								}
-							case nameof(Game_PuchiChara_4P): {
+							case nameof(Game_PuchiChara_4P):
+								{
 									Game_PuchiChara_4P = strParam.Split(',').Select(int.Parse).ToArray();
 									break;
 								}
-							case nameof(Game_PuchiChara_5P): {
+							case nameof(Game_PuchiChara_5P):
+								{
 									Game_PuchiChara_5P = strParam.Split(',').Select(int.Parse).ToArray();
 									break;
 								}
-							case nameof(Game_PuchiChara_BalloonX): {
+							case nameof(Game_PuchiChara_BalloonX):
+								{
 									Game_PuchiChara_BalloonX = strParam.Split(',').Select(int.Parse).ToArray();
 									break;
 								}
-							case nameof(Game_PuchiChara_BalloonY): {
+							case nameof(Game_PuchiChara_BalloonY):
+								{
 									Game_PuchiChara_BalloonY = strParam.Split(',').Select(int.Parse).ToArray();
 									break;
 								}
-							case nameof(Game_PuchiChara_KusudamaX): {
+							case nameof(Game_PuchiChara_KusudamaX):
+								{
 									Game_PuchiChara_KusudamaX = strParam.Split(',').Select(int.Parse).ToArray();
 									break;
 								}
-							case nameof(Game_PuchiChara_KusudamaY): {
+							case nameof(Game_PuchiChara_KusudamaY):
+								{
 									Game_PuchiChara_KusudamaY = strParam.Split(',').Select(int.Parse).ToArray();
 									break;
 								}
-							case nameof(Game_PuchiChara_Scale): {
+							case nameof(Game_PuchiChara_Scale):
+								{
 									Game_PuchiChara_Scale = strParam.Split(',').Select(float.Parse).ToArray();
 									break;
 								}
-							case nameof(Game_PuchiChara): {
+							case nameof(Game_PuchiChara):
+								{
 									Game_PuchiChara = strParam.Split(',').Select(int.Parse).ToArray();
 									break;
 								}
-							case nameof(Game_PuchiChara_Sine): {
+							case nameof(Game_PuchiChara_Sine):
+								{
 									ParseInt32(value => Game_PuchiChara_Sine = value);
 									break;
 								}
-							case nameof(Game_PuchiChara_Timer): {
+							case nameof(Game_PuchiChara_Timer):
+								{
 									ParseInt32(value => Game_PuchiChara_Timer = value);
 									break;
 								}
-							case nameof(Game_PuchiChara_SineTimer): {
+							case nameof(Game_PuchiChara_SineTimer):
+								{
 									Game_PuchiChara_SineTimer = double.Parse(strParam);
 									break;
 								}
 							#endregion
 
 							#region Training
-							case "Game_Training_DownBG": {
+							case "Game_Training_DownBG":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_Training_DownBG[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_Training_BigTaiko": {
+							case "Game_Training_BigTaiko":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_Training_BigTaiko[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_Training_Speed_Measure": {
+							case "Game_Training_Speed_Measure":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_Training_Speed_Measure[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case nameof(Game_Training_ScrollTime): {
+							case nameof(Game_Training_ScrollTime):
+								{
 									Game_Training_ScrollTime = int.Parse(strParam);
 									break;
 								}
-							case nameof(Game_Training_ProgressBar_XY): {
+							case nameof(Game_Training_ProgressBar_XY):
+								{
 									Game_Training_ProgressBar_XY = strParam.Split(',').Select(int.Parse).ToArray();
 									break;
 								}
-							case nameof(Game_Training_GoGoPoint_Y): {
+							case nameof(Game_Training_GoGoPoint_Y):
+								{
 									Game_Training_GoGoPoint_Y = int.Parse(strParam);
 									break;
 								}
-							case nameof(Game_Training_JumpPoint_Y): {
+							case nameof(Game_Training_JumpPoint_Y):
+								{
 									Game_Training_JumpPoint_Y = int.Parse(strParam);
 									break;
 								}
-							case nameof(Game_Training_MaxMeasureCount_XY): {
+							case nameof(Game_Training_MaxMeasureCount_XY):
+								{
 									Game_Training_MaxMeasureCount_XY = strParam.Split(',').Select(int.Parse).ToArray();
 									break;
 								}
-							case nameof(Game_Training_CurrentMeasureCount_XY): {
+							case nameof(Game_Training_CurrentMeasureCount_XY):
+								{
 									Game_Training_CurrentMeasureCount_XY = strParam.Split(',').Select(int.Parse).ToArray();
 									break;
 								}
-							case nameof(Game_Training_SpeedDisplay_XY): {
+							case nameof(Game_Training_SpeedDisplay_XY):
+								{
 									Game_Training_SpeedDisplay_XY = strParam.Split(',').Select(int.Parse).ToArray();
 									break;
 								}
-							case nameof(Game_Training_SmallNumber_Width): {
+							case nameof(Game_Training_SmallNumber_Width):
+								{
 									Game_Training_SmallNumber_Width = int.Parse(strParam);
 									break;
 								}
-							case nameof(Game_Training_BigNumber_Width): {
+							case nameof(Game_Training_BigNumber_Width):
+								{
 									Game_Training_BigNumber_Width = int.Parse(strParam);
 									break;
 								}
 							#endregion
 
 							#region Tower
-							case "Game_Tower_Sky_Gradient": {
+							case "Game_Tower_Sky_Gradient":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_Tower_Sky_Gradient[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_Tower_Sky_Gradient_Size": {
+							case "Game_Tower_Sky_Gradient_Size":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_Tower_Sky_Gradient_Size[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_Tower_Floors_Body": {
+							case "Game_Tower_Floors_Body":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_Tower_Floors_Body[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_Tower_Floors_Deco": {
+							case "Game_Tower_Floors_Deco":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_Tower_Floors_Deco[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_Tower_Floors_Move": {
+							case "Game_Tower_Floors_Move":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_Tower_Floors_Move[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_Tower_Don": {
+							case "Game_Tower_Don":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_Tower_Don[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_Tower_Don_Move": {
+							case "Game_Tower_Don_Move":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_Tower_Don_Move[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_Tower_Miss": {
+							case "Game_Tower_Miss":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_Tower_Miss[i] = int.Parse(strSplit[i]);
 									}
 									break;
@@ -5418,139 +6711,178 @@ internal class CSkin : IDisposable {
 							#endregion
 
 							#region AIBattle
-							case "Game_AIBattle_CharaMove": {
+							case "Game_AIBattle_CharaMove":
+								{
 									Game_AIBattle_CharaMove = int.Parse(strParam);
 									break;
 								}
-							case "Game_AIBattle_SectionTime_Panel": {
+							case "Game_AIBattle_SectionTime_Panel":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_AIBattle_SectionTime_Panel[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_AIBattle_SectionTime_Bar": {
+							case "Game_AIBattle_SectionTime_Bar":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_AIBattle_SectionTime_Bar[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_AIBattle_Batch_Base": {
+							case "Game_AIBattle_Batch_Base":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_AIBattle_Batch_Base[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_AIBattle_Batch": {
+							case "Game_AIBattle_Batch":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_AIBattle_Batch[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_AIBattle_Batch_Size": {
+							case "Game_AIBattle_Batch_Size":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_AIBattle_Batch_Size[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_AIBattle_Batch_Anime": {
+							case "Game_AIBattle_Batch_Anime":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_AIBattle_Batch_Anime[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_AIBattle_Batch_Anime_Size": {
+							case "Game_AIBattle_Batch_Anime_Size":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_AIBattle_Batch_Anime_Size[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_AIBattle_Batch_Move": {
+							case "Game_AIBattle_Batch_Move":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_AIBattle_Batch_Move[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_AIBattle_Judge_Meter_X": {
+							case "Game_AIBattle_Judge_Meter_X":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_AIBattle_Judge_Meter_X[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_AIBattle_Judge_Meter_Y": {
+							case "Game_AIBattle_Judge_Meter_Y":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_AIBattle_Judge_Meter_Y[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_AIBattle_Judge_Number_Perfect_X": {
+							case "Game_AIBattle_Judge_Number_Perfect_X":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_AIBattle_Judge_Number_Perfect_X[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_AIBattle_Judge_Number_Perfect_Y": {
+							case "Game_AIBattle_Judge_Number_Perfect_Y":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_AIBattle_Judge_Number_Perfect_Y[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_AIBattle_Judge_Number_Good_X": {
+							case "Game_AIBattle_Judge_Number_Good_X":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_AIBattle_Judge_Number_Good_X[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_AIBattle_Judge_Number_Good_Y": {
+							case "Game_AIBattle_Judge_Number_Good_Y":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_AIBattle_Judge_Number_Good_Y[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_AIBattle_Judge_Number_Miss_X": {
+							case "Game_AIBattle_Judge_Number_Miss_X":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_AIBattle_Judge_Number_Miss_X[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_AIBattle_Judge_Number_Miss_Y": {
+							case "Game_AIBattle_Judge_Number_Miss_Y":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_AIBattle_Judge_Number_Miss_Y[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_AIBattle_Judge_Number_Roll_X": {
+							case "Game_AIBattle_Judge_Number_Roll_X":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_AIBattle_Judge_Number_Roll_X[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_AIBattle_Judge_Number_Roll_Y": {
+							case "Game_AIBattle_Judge_Number_Roll_Y":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_AIBattle_Judge_Number_Roll_Y[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Game_AIBattle_Judge_Number_Interval": {
+							case "Game_AIBattle_Judge_Number_Interval":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Game_AIBattle_Judge_Number_Interval[i] = int.Parse(strSplit[i]);
 									}
 									break;
@@ -5560,508 +6892,645 @@ internal class CSkin : IDisposable {
 							#endregion
 
 							#region Result
-							case "Result_Use1PUI": {
+							case "Result_Use1PUI":
+								{
 									Result_Use1PUI = CConversion.bONorOFF(strParam[0]);
 									break;
 								}
-							case nameof(Result_Cloud_Count): {
+							case nameof(Result_Cloud_Count):
+								{
 									Result_Cloud_Count = int.Parse(strParam);
 									break;
 								}
-							case "Result_Cloud_X": {
+							case "Result_Cloud_X":
+								{
 									Result_Cloud_X = new int[Result_Cloud_Count];
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < Result_Cloud_Count; i++) {
+									for (int i = 0; i < Result_Cloud_Count; i++)
+									{
 										Result_Cloud_X[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Result_Result_Cloud_Y": {
+							case "Result_Result_Cloud_Y":
+								{
 									Result_Cloud_Y = new int[Result_Cloud_Count];
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < Result_Cloud_Count; i++) {
+									for (int i = 0; i < Result_Cloud_Count; i++)
+									{
 										Result_Cloud_Y[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Result_Result_Cloud_MaxMove": {
+							case "Result_Result_Cloud_MaxMove":
+								{
 									Result_Cloud_MaxMove = new int[Result_Cloud_Count];
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < Result_Cloud_Count; i++) {
+									for (int i = 0; i < Result_Cloud_Count; i++)
+									{
 										Result_Cloud_MaxMove[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case nameof(Result_Shine_Count): {
+							case nameof(Result_Shine_Count):
+								{
 									Result_Shine_Count = int.Parse(strParam);
 									break;
 								}
-							case "Result_Shine_1P_X": {
+							case "Result_Shine_1P_X":
+								{
 									Result_Shine_X[0] = new int[Result_Shine_Count];
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < Result_Shine_Count; i++) {
+									for (int i = 0; i < Result_Shine_Count; i++)
+									{
 										Result_Shine_X[0][i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Result_Shine_2P_X": {
+							case "Result_Shine_2P_X":
+								{
 									Result_Shine_X[1] = new int[Result_Shine_Count];
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < Result_Shine_Count; i++) {
+									for (int i = 0; i < Result_Shine_Count; i++)
+									{
 										Result_Shine_X[1][i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Result_Shine_1P_Y": {
+							case "Result_Shine_1P_Y":
+								{
 									Result_Shine_Y[0] = new int[Result_Shine_Count];
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < Result_Shine_Count; i++) {
+									for (int i = 0; i < Result_Shine_Count; i++)
+									{
 										Result_Shine_Y[0][i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Result_Shine_2P_Y": {
+							case "Result_Shine_2P_Y":
+								{
 									Result_Shine_Y[1] = new int[Result_Shine_Count];
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < Result_Shine_Count; i++) {
+									for (int i = 0; i < Result_Shine_Count; i++)
+									{
 										Result_Shine_Y[1][i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Result_Shine_Size": {
+							case "Result_Shine_Size":
+								{
 									Result_Shine_Size = new float[Result_Shine_Count];
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < Result_Cloud_Count; i++) {
+									for (int i = 0; i < Result_Cloud_Count; i++)
+									{
 										Result_Shine_Size[i] = float.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Result_Work_1P_X": {
+							case "Result_Work_1P_X":
+								{
 									Result_Work_X[0] = new int[3];
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < Result_Cloud_Count; i++) {
+									for (int i = 0; i < Result_Cloud_Count; i++)
+									{
 										Result_Work_X[0][i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Result_Work_2P_X": {
+							case "Result_Work_2P_X":
+								{
 									Result_Work_X[1] = new int[3];
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < Result_Cloud_Count; i++) {
+									for (int i = 0; i < Result_Cloud_Count; i++)
+									{
 										Result_Work_X[1][i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Result_Work_1P_Y": {
+							case "Result_Work_1P_Y":
+								{
 									Result_Work_Y[0] = new int[3];
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < Result_Cloud_Count; i++) {
+									for (int i = 0; i < Result_Cloud_Count; i++)
+									{
 										Result_Work_Y[0][i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Result_Work_2P_Y": {
+							case "Result_Work_2P_Y":
+								{
 									Result_Work_Y[1] = new int[3];
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < Result_Cloud_Count; i++) {
+									for (int i = 0; i < Result_Cloud_Count; i++)
+									{
 										Result_Work_Y[1][i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Result_DifficultyBar_Size": {
+							case "Result_DifficultyBar_Size":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Result_DifficultyBar_Size[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Result_DifficultyBar_X": {
+							case "Result_DifficultyBar_X":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Result_DifficultyBar_X[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Result_DifficultyBar_Y": {
+							case "Result_DifficultyBar_Y":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Result_DifficultyBar_Y[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Result_Gauge_Base_X": {
+							case "Result_Gauge_Base_X":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Result_Gauge_Base_X[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Result_Gauge_Base_Y": {
+							case "Result_Gauge_Base_Y":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Result_Gauge_Base_Y[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Result_Gauge_X": {
+							case "Result_Gauge_X":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Result_Gauge_X[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Result_Gauge_Y": {
+							case "Result_Gauge_Y":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Result_Gauge_Y[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Result_Gauge_Rect": {
+							case "Result_Gauge_Rect":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 4; i++) {
+									for (int i = 0; i < 4; i++)
+									{
 										Result_Gauge_Rect[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Result_Gauge_Rainbow_X": {
+							case "Result_Gauge_Rainbow_X":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Result_Gauge_Rainbow_X[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Result_Gauge_Rainbow_Y": {
+							case "Result_Gauge_Rainbow_Y":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Result_Gauge_Rainbow_Y[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Result_Gauge_Rainbow_Interval": {
+							case "Result_Gauge_Rainbow_Interval":
+								{
 									Result_Gauge_Rainbow_Interval = int.Parse(strParam);
 									break;
 								}
-							case "Result_Gauge_ClearText_X": {
+							case "Result_Gauge_ClearText_X":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Result_Gauge_ClearText_X[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Result_Gauge_ClearText_Y": {
+							case "Result_Gauge_ClearText_Y":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Result_Gauge_ClearText_Y[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Result_Gauge_ClearText_Rect": {
+							case "Result_Gauge_ClearText_Rect":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 4; i++) {
+									for (int i = 0; i < 4; i++)
+									{
 										Result_Gauge_ClearText_Rect[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Result_Gauge_ClearText_Clear_Rect": {
+							case "Result_Gauge_ClearText_Clear_Rect":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 4; i++) {
+									for (int i = 0; i < 4; i++)
+									{
 										Result_Gauge_ClearText_Clear_Rect[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Result_Number_Interval": {
+							case "Result_Number_Interval":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Result_Number_Interval[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Result_Number_Scale_4P": {
+							case "Result_Number_Scale_4P":
+								{
 									Result_Number_Scale_4P = float.Parse(strParam);
 									break;
 								}
-							case "Result_Number_Scale_5P": {
+							case "Result_Number_Scale_5P":
+								{
 									Result_Number_Scale_5P = float.Parse(strParam);
 									break;
 								}
-							case "Result_Soul_Fire_X": {
+							case "Result_Soul_Fire_X":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Result_Soul_Fire_X[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Result_Soul_Fire_Y": {
+							case "Result_Soul_Fire_Y":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Result_Soul_Fire_Y[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Result_Soul_Text_X": {
+							case "Result_Soul_Text_X":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Result_Soul_Text_X[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Result_Soul_Text_Y": {
+							case "Result_Soul_Text_Y":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Result_Soul_Text_Y[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Result_Perfect_X": {
+							case "Result_Perfect_X":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Result_Perfect_X[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Result_Perfect_Y": {
+							case "Result_Perfect_Y":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Result_Perfect_Y[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Result_Good_X": {
+							case "Result_Good_X":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Result_Good_X[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Result_Good_Y": {
+							case "Result_Good_Y":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Result_Good_Y[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Result_Miss_X": {
+							case "Result_Miss_X":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Result_Miss_X[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Result_Miss_Y": {
+							case "Result_Miss_Y":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Result_Miss_Y[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Result_Roll_X": {
+							case "Result_Roll_X":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Result_Roll_X[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Result_Roll_Y": {
+							case "Result_Roll_Y":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Result_Roll_Y[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Result_MaxCombo_X": {
+							case "Result_MaxCombo_X":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Result_MaxCombo_X[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Result_MaxCombo_Y": {
+							case "Result_MaxCombo_Y":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Result_MaxCombo_Y[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Result_ADLib_Show": {
+							case "Result_ADLib_Show":
+								{
 									Result_ADLib_Show = CConversion.bONorOFF(strParam[0]);
 									break;
 								}
-							case "Result_ADLib_X": {
+							case "Result_ADLib_X":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Result_ADLib_X[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Result_ADLib_Y": {
+							case "Result_ADLib_Y":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Result_ADLib_Y[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Result_Bomb_Show": {
+							case "Result_Bomb_Show":
+								{
 									Result_Bomb_Show = CConversion.bONorOFF(strParam[0]);
 									break;
 								}
-							case "Result_Bomb_X": {
+							case "Result_Bomb_X":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Result_Bomb_X[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Result_Bomb_Y": {
+							case "Result_Bomb_Y":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Result_Bomb_Y[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Result_Score_X": {
+							case "Result_Score_X":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Result_Score_X[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Result_Score_Y": {
+							case "Result_Score_Y":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Result_Score_Y[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Result_Score_Number_Interval": {
+							case "Result_Score_Number_Interval":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Result_Score_Number_Interval[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Result_Score_Scale_4P": {
+							case "Result_Score_Scale_4P":
+								{
 									Result_Score_Scale_4P = float.Parse(strParam);
 									break;
 								}
-							case "Result_Score_Scale_5P": {
+							case "Result_Score_Scale_5P":
+								{
 									Result_Score_Scale_5P = float.Parse(strParam);
 									break;
 								}
-							case "Result_ScoreRankEffect_X": {
+							case "Result_ScoreRankEffect_X":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Result_ScoreRankEffect_X[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Result_ScoreRankEffect_Y": {
+							case "Result_ScoreRankEffect_Y":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Result_ScoreRankEffect_Y[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Result_CrownEffect_X": {
+							case "Result_CrownEffect_X":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Result_CrownEffect_X[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Result_CrownEffect_Y": {
+							case "Result_CrownEffect_Y":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Result_CrownEffect_Y[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Result_Speech_Bubble_X": {
+							case "Result_Speech_Bubble_X":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Result_Speech_Bubble_X[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Result_Speech_Bubble_Y": {
+							case "Result_Speech_Bubble_Y":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Result_Speech_Bubble_Y[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Result_Speech_Bubble_V2_X": {
+							case "Result_Speech_Bubble_V2_X":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Result_Speech_Bubble_V2_X[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Result_Speech_Bubble_V2_Y": {
+							case "Result_Speech_Bubble_V2_Y":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Result_Speech_Bubble_V2_Y[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Result_Speech_Bubble_V2_2P_X": {
+							case "Result_Speech_Bubble_V2_2P_X":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Result_Speech_Bubble_V2_2P_X[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Result_Speech_Bubble_V2_2P_Y": {
+							case "Result_Speech_Bubble_V2_2P_Y":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Result_Speech_Bubble_V2_2P_Y[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case nameof(Result_MusicName_X): {
+							case nameof(Result_MusicName_X):
+								{
 									Result_MusicName_X = int.Parse(strParam);
 									break;
 								}
-							case nameof(Result_MusicName_Y): {
+							case nameof(Result_MusicName_Y):
+								{
 									Result_MusicName_Y = int.Parse(strParam);
 									break;
 								}
-							case nameof(Result_MusicName_FontSize): {
+							case nameof(Result_MusicName_FontSize):
+								{
 									if (int.Parse(strParam) > 0)
 										Result_MusicName_FontSize = int.Parse(strParam);
 									break;
 								}
-							case nameof(Result_MusicName_MaxSize): {
+							case nameof(Result_MusicName_MaxSize):
+								{
 									Result_MusicName_MaxSize = int.Parse(strParam);
 									break;
 								}
-							case nameof(Result_MusicName_ReferencePoint): {
+							case nameof(Result_MusicName_ReferencePoint):
+								{
 									Result_MusicName_ReferencePoint = (ReferencePoint)int.Parse(strParam);
 									break;
 								}
-							case nameof(Result_StageText_X): {
+							case nameof(Result_StageText_X):
+								{
 									Result_StageText_X = int.Parse(strParam);
 									break;
 								}
-							case nameof(Result_StageText_Y): {
+							case nameof(Result_StageText_Y):
+								{
 									Result_StageText_Y = int.Parse(strParam);
 									break;
 								}
-							case nameof(Result_StageText_FontSize): {
+							case nameof(Result_StageText_FontSize):
+								{
 									if (int.Parse(strParam) > 0)
 										Result_StageText_FontSize = int.Parse(strParam);
 									break;
 								}
-							case nameof(Result_StageText_ReferencePoint): {
+							case nameof(Result_StageText_ReferencePoint):
+								{
 									Result_StageText_ReferencePoint = (ReferencePoint)int.Parse(strParam);
 									break;
 								}
 
-							case nameof(Result_MusicName_ForeColor): {
+							case nameof(Result_MusicName_ForeColor):
+								{
 									Result_MusicName_ForeColor = ColorTranslator.FromHtml(strParam);
 									break;
 								}
-							case nameof(Result_StageText_ForeColor): {
+							case nameof(Result_StageText_ForeColor):
+								{
 									Result_StageText_ForeColor = ColorTranslator.FromHtml(strParam);
 									break;
 								}
@@ -6069,11 +7538,13 @@ internal class CSkin : IDisposable {
 							//{
 							//    Result_StageText_ForeColor_Red = ColorTranslator.FromHtml(strParam);
 							//}
-							case nameof(Result_MusicName_BackColor): {
+							case nameof(Result_MusicName_BackColor):
+								{
 									Result_MusicName_BackColor = ColorTranslator.FromHtml(strParam);
 									break;
 								}
-							case nameof(Result_StageText_BackColor): {
+							case nameof(Result_StageText_BackColor):
+								{
 									Result_StageText_BackColor = ColorTranslator.FromHtml(strParam);
 									break;
 								}
@@ -6082,130 +7553,164 @@ internal class CSkin : IDisposable {
 							//    Result_StageText_BackColor_Red = ColorTranslator.FromHtml(strParam);
 							//}
 
-							case "Result_NamePlate_X": {
+							case "Result_NamePlate_X":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Result_NamePlate_X[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Result_NamePlate_Y": {
+							case "Result_NamePlate_Y":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Result_NamePlate_Y[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Result_ModIcons_X": {
+							case "Result_ModIcons_X":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Result_ModIcons_X[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Result_ModIcons_Y": {
+							case "Result_ModIcons_Y":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Result_ModIcons_Y[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Result_Flower_X": {
+							case "Result_Flower_X":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Result_Flower_X[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Result_Flower_Y": {
+							case "Result_Flower_Y":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Result_Flower_Y[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Result_Flower_Rotate_1P_X": {
+							case "Result_Flower_Rotate_1P_X":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 5; i++) {
+									for (int i = 0; i < 5; i++)
+									{
 										Result_Flower_Rotate_X[0][i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Result_Flower_Rotate_2P_X": {
+							case "Result_Flower_Rotate_2P_X":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 5; i++) {
+									for (int i = 0; i < 5; i++)
+									{
 										Result_Flower_Rotate_X[1][i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Result_Flower_Rotate_1P_Y": {
+							case "Result_Flower_Rotate_1P_Y":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 5; i++) {
+									for (int i = 0; i < 5; i++)
+									{
 										Result_Flower_Rotate_Y[0][i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Result_Flower_Rotate_2P_Y": {
+							case "Result_Flower_Rotate_2P_Y":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 5; i++) {
+									for (int i = 0; i < 5; i++)
+									{
 										Result_Flower_Rotate_Y[1][i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case nameof(Result_PlateShine_Count): {
+							case nameof(Result_PlateShine_Count):
+								{
 									Result_PlateShine_Count = int.Parse(strParam);
 									break;
 								}
-							case "Result_PlateShine_1P_X": {
+							case "Result_PlateShine_1P_X":
+								{
 									Result_PlateShine_X[0] = new int[Result_PlateShine_Count];
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < Result_PlateShine_Count; i++) {
+									for (int i = 0; i < Result_PlateShine_Count; i++)
+									{
 										Result_PlateShine_X[0][i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Result_PlateShine_2P_X": {
+							case "Result_PlateShine_2P_X":
+								{
 									Result_PlateShine_X[1] = new int[Result_PlateShine_Count];
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < Result_PlateShine_Count; i++) {
+									for (int i = 0; i < Result_PlateShine_Count; i++)
+									{
 										Result_PlateShine_X[1][i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Result_PlateShine_1P_Y": {
+							case "Result_PlateShine_1P_Y":
+								{
 									Result_PlateShine_Y[0] = new int[Result_PlateShine_Count];
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < Result_PlateShine_Count; i++) {
+									for (int i = 0; i < Result_PlateShine_Count; i++)
+									{
 										Result_PlateShine_Y[0][i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Result_PlateShine_2P_Y": {
+							case "Result_PlateShine_2P_Y":
+								{
 									Result_PlateShine_Y[1] = new int[Result_PlateShine_Count];
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < Result_PlateShine_Count; i++) {
+									for (int i = 0; i < Result_PlateShine_Count; i++)
+									{
 										Result_PlateShine_Y[1][i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
 
-							case nameof(Result_Dan): {
+							case nameof(Result_Dan):
+								{
 									Result_Dan = strParam.Split(',').Select(int.Parse).ToArray();
 									break;
 								}
-							case nameof(Result_Dan_XY): {
+							case nameof(Result_Dan_XY):
+								{
 									Result_Dan_XY = strParam.Split(',').Select(int.Parse).ToArray();
 									break;
 								}
-							case nameof(Result_Dan_Plate_XY): {
+							case nameof(Result_Dan_Plate_XY):
+								{
 									Result_Dan_Plate_XY = strParam.Split(',').Select(int.Parse).ToArray();
 									break;
 								}
 
 
-							case "Result_UIMove_4P": {
+							case "Result_UIMove_4P":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 4; i++) {
+									for (int i = 0; i < 4; i++)
+									{
 										int moveX = int.Parse(strSplit[0]);
 										Result_UIMove_4P_X[i] = moveX * i;
 
@@ -6214,9 +7719,11 @@ internal class CSkin : IDisposable {
 									}
 									break;
 								}
-							case "Result_UIMove_5P": {
+							case "Result_UIMove_5P":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 5; i++) {
+									for (int i = 0; i < 5; i++)
+									{
 										int moveX = int.Parse(strSplit[0]);
 										Result_UIMove_5P_X[i] = moveX * i;
 
@@ -6225,325 +7732,417 @@ internal class CSkin : IDisposable {
 									}
 									break;
 								}
-							case "Result_UIMove_4P_X": {
+							case "Result_UIMove_4P_X":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 4; i++) {
+									for (int i = 0; i < 4; i++)
+									{
 										Result_UIMove_4P_X[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Result_UIMove_4P_Y": {
+							case "Result_UIMove_4P_Y":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 4; i++) {
+									for (int i = 0; i < 4; i++)
+									{
 										Result_UIMove_4P_Y[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Result_UIMove_5P_X": {
+							case "Result_UIMove_5P_X":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 5; i++) {
+									for (int i = 0; i < 5; i++)
+									{
 										Result_UIMove_5P_X[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Result_UIMove_5P_Y": {
+							case "Result_UIMove_5P_Y":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 5; i++) {
+									for (int i = 0; i < 5; i++)
+									{
 										Result_UIMove_5P_Y[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Result_DifficultyBar_4P": {
+							case "Result_DifficultyBar_4P":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Result_DifficultyBar_4P[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Result_DifficultyBar_5P": {
+							case "Result_DifficultyBar_5P":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Result_DifficultyBar_5P[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Result_Gauge_Base_4P": {
+							case "Result_Gauge_Base_4P":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Result_Gauge_Base_4P[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Result_Gauge_Base_5P": {
+							case "Result_Gauge_Base_5P":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Result_Gauge_Base_5P[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Result_Gauge_4P": {
+							case "Result_Gauge_4P":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Result_Gauge_4P[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Result_Gauge_5P": {
+							case "Result_Gauge_5P":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Result_Gauge_5P[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Result_Gauge_ClearText_4P": {
+							case "Result_Gauge_ClearText_4P":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Result_Gauge_ClearText_4P[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Result_Gauge_ClearText_5P": {
+							case "Result_Gauge_ClearText_5P":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Result_Gauge_ClearText_5P[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Result_Gauge_Rainbow_4P": {
+							case "Result_Gauge_Rainbow_4P":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Result_Gauge_Rainbow_4P[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Result_Gauge_Rainbow_5P": {
+							case "Result_Gauge_Rainbow_5P":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Result_Gauge_Rainbow_5P[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Result_Soul_Fire_4P": {
+							case "Result_Soul_Fire_4P":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Result_Soul_Fire_4P[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Result_Soul_Fire_5P": {
+							case "Result_Soul_Fire_5P":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Result_Soul_Fire_5P[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Result_Soul_Text_4P": {
+							case "Result_Soul_Text_4P":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Result_Soul_Text_4P[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Result_Soul_Text_5P": {
+							case "Result_Soul_Text_5P":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Result_Soul_Text_5P[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Result_Perfect_4P": {
+							case "Result_Perfect_4P":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Result_Perfect_4P[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Result_Perfect_5P": {
+							case "Result_Perfect_5P":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Result_Perfect_5P[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Result_Good_4P": {
+							case "Result_Good_4P":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Result_Good_4P[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Result_Good_5P": {
+							case "Result_Good_5P":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Result_Good_5P[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Result_Miss_4P": {
+							case "Result_Miss_4P":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Result_Miss_4P[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Result_Miss_5P": {
+							case "Result_Miss_5P":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Result_Miss_5P[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Result_Roll_4P": {
+							case "Result_Roll_4P":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Result_Roll_4P[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Result_Roll_5P": {
+							case "Result_Roll_5P":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Result_Roll_5P[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Result_MaxCombo_4P": {
+							case "Result_MaxCombo_4P":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Result_MaxCombo_4P[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Result_MaxCombo_5P": {
+							case "Result_MaxCombo_5P":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Result_MaxCombo_5P[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Result_ADLib_4P": {
+							case "Result_ADLib_4P":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Result_ADLib_4P[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Result_ADLib_5P": {
+							case "Result_ADLib_5P":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Result_ADLib_5P[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Result_Bomb_4P": {
+							case "Result_Bomb_4P":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Result_Bomb_4P[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Result_Bomb_5P": {
+							case "Result_Bomb_5P":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Result_Bomb_5P[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Result_Score_4P": {
+							case "Result_Score_4P":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Result_Score_4P[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Result_Score_5P": {
+							case "Result_Score_5P":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Result_Score_5P[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Result_ScoreRankEffect_4P": {
+							case "Result_ScoreRankEffect_4P":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Result_ScoreRankEffect_4P[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Result_ScoreRankEffect_5P": {
+							case "Result_ScoreRankEffect_5P":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Result_ScoreRankEffect_5P[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Result_CrownEffect_4P": {
+							case "Result_CrownEffect_4P":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Result_CrownEffect_4P[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Result_CrownEffect_5P": {
+							case "Result_CrownEffect_5P":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Result_CrownEffect_5P[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Result_Speech_Bubble_V2_4P": {
+							case "Result_Speech_Bubble_V2_4P":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Result_Speech_Bubble_V2_4P[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Result_Speech_Bubble_V2_5P": {
+							case "Result_Speech_Bubble_V2_5P":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Result_Speech_Bubble_V2_5P[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Result_Speech_Text_Offset": {
+							case "Result_Speech_Text_Offset":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Result_Speech_Text_Offset[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Result_Speech_Text_Size": {
+							case "Result_Speech_Text_Size":
+								{
 									Result_Speech_Text_Size = int.Parse(strParam);
 									break;
 								}
-							case "Result_Speech_Text_MaxWidth": {
+							case "Result_Speech_Text_MaxWidth":
+								{
 									Result_Speech_Text_MaxWidth = int.Parse(strParam);
 									break;
 								}
-							case "Result_NamePlate_4P": {
+							case "Result_NamePlate_4P":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Result_NamePlate_4P[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Result_NamePlate_5P": {
+							case "Result_NamePlate_5P":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Result_NamePlate_5P[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Result_ModIcons_4P": {
+							case "Result_ModIcons_4P":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Result_ModIcons_4P[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Result_ModIcons_5P": {
+							case "Result_ModIcons_5P":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Result_ModIcons_5P[i] = int.Parse(strSplit[i]);
 									}
 									break;
@@ -6552,41 +8151,52 @@ internal class CSkin : IDisposable {
 							#endregion
 
 							#region AIResult
-							case "Result_AIBattle_Batch": {
+							case "Result_AIBattle_Batch":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Result_AIBattle_Batch[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Result_AIBattle_Batch_Move": {
+							case "Result_AIBattle_Batch_Move":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Result_AIBattle_Batch_Move[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Result_AIBattle_SectionPlate_Offset": {
+							case "Result_AIBattle_SectionPlate_Offset":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Result_AIBattle_SectionPlate_Offset[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Result_AIBattle_SectionText_Offset": {
+							case "Result_AIBattle_SectionText_Offset":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Result_AIBattle_SectionText_Offset[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Result_AIBattle_SectionText_Scale": {
+							case "Result_AIBattle_SectionText_Scale":
+								{
 									Result_AIBattle_SectionText_Scale = int.Parse(strParam);
 									break;
 								}
-							case "Result_AIBattle_WinFlag": {
+							case "Result_AIBattle_WinFlag":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Result_AIBattle_WinFlag[i] = int.Parse(strSplit[i]);
 									}
 									break;
@@ -6594,386 +8204,493 @@ internal class CSkin : IDisposable {
 							#endregion
 
 							#region DanResult
-							case "DanResult_StatePanel": {
+							case "DanResult_StatePanel":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										DanResult_StatePanel[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "DanResult_SongPanel_Main_X": {
+							case "DanResult_SongPanel_Main_X":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 3; i++) {
+									for (int i = 0; i < 3; i++)
+									{
 										DanResult_SongPanel_Main_X[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "DanResult_SongPanel_Main_Y": {
+							case "DanResult_SongPanel_Main_Y":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 3; i++) {
+									for (int i = 0; i < 3; i++)
+									{
 										DanResult_SongPanel_Main_Y[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "DanResult_Difficulty_Cymbol_X": {
+							case "DanResult_Difficulty_Cymbol_X":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 3; i++) {
+									for (int i = 0; i < 3; i++)
+									{
 										DanResult_Difficulty_Cymbol_X[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "DanResult_Difficulty_Cymbol_Y": {
+							case "DanResult_Difficulty_Cymbol_Y":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 3; i++) {
+									for (int i = 0; i < 3; i++)
+									{
 										DanResult_Difficulty_Cymbol_Y[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "DanResult_Level_Number_X": {
+							case "DanResult_Level_Number_X":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 3; i++) {
+									for (int i = 0; i < 3; i++)
+									{
 										DanResult_Level_Number_X[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "DanResult_Level_Number_Y": {
+							case "DanResult_Level_Number_Y":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 3; i++) {
+									for (int i = 0; i < 3; i++)
+									{
 										DanResult_Level_Number_Y[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "DanResult_Sections_Perfect_X": {
+							case "DanResult_Sections_Perfect_X":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 3; i++) {
+									for (int i = 0; i < 3; i++)
+									{
 										DanResult_Sections_Perfect_X[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "DanResult_Sections_Perfect_Y": {
+							case "DanResult_Sections_Perfect_Y":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 3; i++) {
+									for (int i = 0; i < 3; i++)
+									{
 										DanResult_Sections_Perfect_Y[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "DanResult_Sections_Good_X": {
+							case "DanResult_Sections_Good_X":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 3; i++) {
+									for (int i = 0; i < 3; i++)
+									{
 										DanResult_Sections_Good_X[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "DanResult_Sections_Good_Y": {
+							case "DanResult_Sections_Good_Y":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 3; i++) {
+									for (int i = 0; i < 3; i++)
+									{
 										DanResult_Sections_Good_Y[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "DanResult_Sections_Miss_X": {
+							case "DanResult_Sections_Miss_X":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 3; i++) {
+									for (int i = 0; i < 3; i++)
+									{
 										DanResult_Sections_Miss_X[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "DanResult_Sections_Miss_Y": {
+							case "DanResult_Sections_Miss_Y":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 3; i++) {
+									for (int i = 0; i < 3; i++)
+									{
 										DanResult_Sections_Miss_Y[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "DanResult_Sections_Roll_X": {
+							case "DanResult_Sections_Roll_X":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 3; i++) {
+									for (int i = 0; i < 3; i++)
+									{
 										DanResult_Sections_Roll_X[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "DanResult_Sections_Roll_Y": {
+							case "DanResult_Sections_Roll_Y":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 3; i++) {
+									for (int i = 0; i < 3; i++)
+									{
 										DanResult_Sections_Roll_Y[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "DanResult_Perfect": {
+							case "DanResult_Perfect":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										DanResult_Perfect[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "DanResult_Good": {
+							case "DanResult_Good":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										DanResult_Good[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "DanResult_Miss": {
+							case "DanResult_Miss":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										DanResult_Miss[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "DanResult_Roll": {
+							case "DanResult_Roll":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										DanResult_Roll[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "DanResult_MaxCombo": {
+							case "DanResult_MaxCombo":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										DanResult_MaxCombo[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "DanResult_TotalHit": {
+							case "DanResult_TotalHit":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										DanResult_TotalHit[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "DanResult_Score": {
+							case "DanResult_Score":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										DanResult_Score[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "DanResult_Exam": {
+							case "DanResult_Exam":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										DanResult_Exam[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "DanResult_DanTitles_X": {
+							case "DanResult_DanTitles_X":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 3; i++) {
+									for (int i = 0; i < 3; i++)
+									{
 										DanResult_DanTitles_X[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "DanResult_DanTitles_Y": {
+							case "DanResult_DanTitles_Y":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 3; i++) {
+									for (int i = 0; i < 3; i++)
+									{
 										DanResult_DanTitles_Y[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "DanResult_DanIcon_X": {
+							case "DanResult_DanIcon_X":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 3; i++) {
+									for (int i = 0; i < 3; i++)
+									{
 										DanResult_DanIcon_X[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "DanResult_DanIcon_Y": {
+							case "DanResult_DanIcon_Y":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 3; i++) {
+									for (int i = 0; i < 3; i++)
+									{
 										DanResult_DanIcon_Y[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "DanResult_Rank": {
+							case "DanResult_Rank":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										DanResult_Rank[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "DanResult_Font_DanTitles_Size": {
+							case "DanResult_Font_DanTitles_Size":
+								{
 									DanResult_Font_DanTitles_Size = int.Parse(strParam);
 									break;
 								}
 							#endregion
 
 							#region TowerResult
-							case "TowerResult_ScoreRankEffect": {
+							case "TowerResult_ScoreRankEffect":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										TowerResult_ScoreRankEffect[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "TowerResult_Toutatsu": {
+							case "TowerResult_Toutatsu":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										TowerResult_Toutatsu[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "TowerResult_MaxFloors": {
+							case "TowerResult_MaxFloors":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										TowerResult_MaxFloors[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "TowerResult_Ten": {
+							case "TowerResult_Ten":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										TowerResult_Ten[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "TowerResult_Score": {
+							case "TowerResult_Score":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										TowerResult_Score[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "TowerResult_CurrentFloor": {
+							case "TowerResult_CurrentFloor":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										TowerResult_CurrentFloor[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "TowerResult_ScoreCount": {
+							case "TowerResult_ScoreCount":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										TowerResult_ScoreCount[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "TowerResult_RemainingLifes": {
+							case "TowerResult_RemainingLifes":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										TowerResult_RemainingLifes[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "TowerResult_Gauge_Soul": {
+							case "TowerResult_Gauge_Soul":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										TowerResult_Gauge_Soul[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "TowerResult_Font_TowerText": {
+							case "TowerResult_Font_TowerText":
+								{
 									TowerResult_Font_TowerText = int.Parse(strParam);
 									break;
 								}
-							case "TowerResult_Font_TowerText48": {
+							case "TowerResult_Font_TowerText48":
+								{
 									TowerResult_Font_TowerText48 = int.Parse(strParam);
 									break;
 								}
-							case "TowerResult_Font_TowerText72": {
+							case "TowerResult_Font_TowerText72":
+								{
 									TowerResult_Font_TowerText72 = int.Parse(strParam);
 									break;
 								}
 							#endregion
 
 							#region Heya
-							case "Heya_Main_Menu_X": {
+							case "Heya_Main_Menu_X":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < Math.Min(6, strSplit.Length); i++) {
+									for (int i = 0; i < Math.Min(6, strSplit.Length); i++)
+									{
 										Heya_Main_Menu_X[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Heya_Main_Menu_Y": {
+							case "Heya_Main_Menu_Y":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < Math.Min(6, strSplit.Length); i++) {
+									for (int i = 0; i < Math.Min(6, strSplit.Length); i++)
+									{
 										Heya_Main_Menu_Y[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Heya_Main_Menu_Font_Offset": {
+							case "Heya_Main_Menu_Font_Offset":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Heya_Main_Menu_Font_Offset[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Heya_Font_Scale": {
+							case "Heya_Font_Scale":
+								{
 									Heya_Font_Scale = int.Parse(strParam);
 									break;
 								}
-							case "Heya_Center_Menu_Box_Count": {
+							case "Heya_Center_Menu_Box_Count":
+								{
 									Heya_Center_Menu_Box_Count = int.Parse(strParam);
 									break;
 								}
-							case "Heya_Center_Menu_Box_X": {
+							case "Heya_Center_Menu_Box_X":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < Heya_Center_Menu_Box_Count; i++) {
+									for (int i = 0; i < Heya_Center_Menu_Box_Count; i++)
+									{
 										Heya_Center_Menu_Box_X[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Heya_Center_Menu_Box_Y": {
+							case "Heya_Center_Menu_Box_Y":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < Heya_Center_Menu_Box_Count; i++) {
+									for (int i = 0; i < Heya_Center_Menu_Box_Count; i++)
+									{
 										Heya_Center_Menu_Box_Y[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Heya_Center_Menu_Box_Item_Offset": {
+							case "Heya_Center_Menu_Box_Item_Offset":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Heya_Center_Menu_Box_Item_Offset[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Heya_Center_Menu_Box_Name_Offset": {
+							case "Heya_Center_Menu_Box_Name_Offset":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Heya_Center_Menu_Box_Name_Offset[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Heya_Center_Menu_Box_Authors_Offset": {
+							case "Heya_Center_Menu_Box_Authors_Offset":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Heya_Center_Menu_Box_Authors_Offset[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Heya_Side_Menu_Count": {
+							case "Heya_Side_Menu_Count":
+								{
 									Heya_Side_Menu_Count = int.Parse(strParam);
 									break;
 								}
-							case "Heya_Side_Menu_X": {
+							case "Heya_Side_Menu_X":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < Heya_Side_Menu_Count; i++) {
+									for (int i = 0; i < Heya_Side_Menu_Count; i++)
+									{
 										Heya_Side_Menu_X[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Heya_Side_Menu_Y": {
+							case "Heya_Side_Menu_Y":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < Heya_Side_Menu_Count; i++) {
+									for (int i = 0; i < Heya_Side_Menu_Count; i++)
+									{
 										Heya_Side_Menu_Y[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Heya_Side_Menu_Font_Offset": {
+							case "Heya_Side_Menu_Font_Offset":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Heya_Side_Menu_Font_Offset[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Heya_InfoSection": {
+							case "Heya_InfoSection":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Heya_InfoSection[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Heya_DescriptionTextOrigin": {
+							case "Heya_DescriptionTextOrigin":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Heya_DescriptionTextOrigin[i] = int.Parse(strSplit[i]);
 									}
 									break;
@@ -6981,156 +8698,197 @@ internal class CSkin : IDisposable {
 							#endregion
 
 							#region OnlineLounge
-							case "OnlineLounge_Side_Menu": {
+							case "OnlineLounge_Side_Menu":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										OnlineLounge_Side_Menu[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "OnlineLounge_Side_Menu_Text_Offset": {
+							case "OnlineLounge_Side_Menu_Text_Offset":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										OnlineLounge_Side_Menu_Text_Offset[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "OnlineLounge_Side_Menu_Move": {
+							case "OnlineLounge_Side_Menu_Move":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										OnlineLounge_Side_Menu_Move[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "OnlineLounge_Song": {
+							case "OnlineLounge_Song":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										OnlineLounge_Song[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "OnlineLounge_Song_Title_Offset": {
+							case "OnlineLounge_Song_Title_Offset":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										OnlineLounge_Song_Title_Offset[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "OnlineLounge_Song_SubTitle_Offset": {
+							case "OnlineLounge_Song_SubTitle_Offset":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										OnlineLounge_Song_SubTitle_Offset[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "OnlineLounge_Song_Move": {
+							case "OnlineLounge_Song_Move":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										OnlineLounge_Song_Move[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "OnlineLounge_Context_Charter": {
+							case "OnlineLounge_Context_Charter":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										OnlineLounge_Context_Charter[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "OnlineLounge_Context_Genre": {
+							case "OnlineLounge_Context_Genre":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										OnlineLounge_Context_Genre[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "OnlineLounge_Context_Couse_Symbol": {
+							case "OnlineLounge_Context_Couse_Symbol":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										OnlineLounge_Context_Couse_Symbol[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "OnlineLounge_Context_Level": {
+							case "OnlineLounge_Context_Level":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										OnlineLounge_Context_Level[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "OnlineLounge_Context_Couse_Move": {
+							case "OnlineLounge_Context_Couse_Move":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										OnlineLounge_Context_Couse_Move[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "OnlineLounge_Downloading": {
+							case "OnlineLounge_Downloading":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										OnlineLounge_Downloading[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "OnlineLounge_Font_OLFont": {
+							case "OnlineLounge_Font_OLFont":
+								{
 									OnlineLounge_Font_OLFont = int.Parse(strParam);
 									break;
 								}
-							case "OnlineLounge_Font_OLFontLarge": {
+							case "OnlineLounge_Font_OLFontLarge":
+								{
 									OnlineLounge_Font_OLFontLarge = int.Parse(strParam);
 									break;
 								}
 							#endregion
 
 							#region TowerSelect
-							case "TowerSelect_Title_Size": {
+							case "TowerSelect_Title_Size":
+								{
 									TowerSelect_Title_Size = int.Parse(strParam);
 									break;
 								}
-							case "TowerSelect_Title_MaxWidth": {
+							case "TowerSelect_Title_MaxWidth":
+								{
 									TowerSelect_Title_MaxWidth = int.Parse(strParam);
 									break;
 								}
-							case "TowerSelect_Title_Offset": {
+							case "TowerSelect_Title_Offset":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										TowerSelect_Title_Offset[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "TowerSelect_SubTitle_Size": {
+							case "TowerSelect_SubTitle_Size":
+								{
 									TowerSelect_SubTitle_Size = int.Parse(strParam);
 									break;
 								}
-							case "TowerSelect_SubTitle_MaxWidth": {
+							case "TowerSelect_SubTitle_MaxWidth":
+								{
 									TowerSelect_SubTitle_MaxWidth = int.Parse(strParam);
 									break;
 								}
-							case "TowerSelect_SubTitle_Offset": {
+							case "TowerSelect_SubTitle_Offset":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										TowerSelect_SubTitle_Offset[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "TowerSelect_Bar_Count": {
+							case "TowerSelect_Bar_Count":
+								{
 									TowerSelect_Bar_Count = int.Parse(strParam);
 									break;
 								}
-							case "TowerSelect_Bar_X": {
+							case "TowerSelect_Bar_X":
+								{
 									TowerSelect_Bar_X = new int[TowerSelect_Bar_Count];
 
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < TowerSelect_Bar_Count; i++) {
+									for (int i = 0; i < TowerSelect_Bar_Count; i++)
+									{
 										TowerSelect_Bar_X[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "TowerSelect_Bar_Y": {
+							case "TowerSelect_Bar_Y":
+								{
 									TowerSelect_Bar_Y = new int[TowerSelect_Bar_Count];
 
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < TowerSelect_Bar_Count; i++) {
+									for (int i = 0; i < TowerSelect_Bar_Count; i++)
+									{
 										TowerSelect_Bar_Y[i] = int.Parse(strSplit[i]);
 									}
 									break;
@@ -7138,56 +8896,70 @@ internal class CSkin : IDisposable {
 							#endregion
 
 							#region OpenEncyclopedia
-							case "OpenEncyclopedia_Context_Item2": {
+							case "OpenEncyclopedia_Context_Item2":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										OpenEncyclopedia_Context_Item2[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "OpenEncyclopedia_Context_Item3": {
+							case "OpenEncyclopedia_Context_Item3":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										OpenEncyclopedia_Context_Item3[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "OpenEncyclopedia_Context_PageText": {
+							case "OpenEncyclopedia_Context_PageText":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										OpenEncyclopedia_Context_PageText[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "OpenEncyclopedia_Side_Menu": {
+							case "OpenEncyclopedia_Side_Menu":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										OpenEncyclopedia_Side_Menu[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "OpenEncyclopedia_Side_Menu_Move": {
+							case "OpenEncyclopedia_Side_Menu_Move":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										OpenEncyclopedia_Side_Menu_Move[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "OpenEncyclopedia_Side_Menu_Text_Offset": {
+							case "OpenEncyclopedia_Side_Menu_Text_Offset":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										OpenEncyclopedia_Side_Menu_Text_Offset[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "OpenEncyclopedia_Font_EncyclopediaMenu_Size": {
+							case "OpenEncyclopedia_Font_EncyclopediaMenu_Size":
+								{
 									OpenEncyclopedia_Font_EncyclopediaMenu_Size = int.Parse(strParam);
 									break;
 								}
 							#endregion
 
 							#region Exit
-							case "Exit_Duration": {
+							case "Exit_Duration":
+								{
 									Exit_Duration = int.Parse(strParam);
 									break;
 								}
@@ -7195,300 +8967,376 @@ internal class CSkin : IDisposable {
 
 							#region Font
 							case nameof(Font_Edge_Ratio): //Config画面や簡易メニューのフォントについて(rhimm)
-							{
+								{
 									if (int.Parse(strParam) > 0)
 										Font_Edge_Ratio = int.Parse(strParam);
 									break;
 								}
 							case nameof(Font_Edge_Ratio_Vertical): //TITLEやSUBTITLEなど、縦に書かれることのあるフォントについて(rhimm)
-							{
+								{
 									if (int.Parse(strParam) > 0)
 										Font_Edge_Ratio_Vertical = int.Parse(strParam);
 									break;
 								}
-							case nameof(Text_Correction_X): {
+							case nameof(Text_Correction_X):
+								{
 									Text_Correction_X = int.Parse(strParam);
 									break;
 								}
-							case nameof(Text_Correction_Y): {
+							case nameof(Text_Correction_Y):
+								{
 									Text_Correction_Y = int.Parse(strParam);
 									break;
 								}
 							#endregion
 
 							#region PopupMenu
-							case "PopupMenu_Menu_Title": {
+							case "PopupMenu_Menu_Title":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										PopupMenu_Menu_Title[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "PopupMenu_Title": {
+							case "PopupMenu_Title":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										PopupMenu_Title[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "PopupMenu_Menu_Highlight": {
+							case "PopupMenu_Menu_Highlight":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										PopupMenu_Menu_Highlight[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "PopupMenu_MenuItem_Name": {
+							case "PopupMenu_MenuItem_Name":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										PopupMenu_MenuItem_Name[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "PopupMenu_MenuItem_Value": {
+							case "PopupMenu_MenuItem_Value":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										PopupMenu_MenuItem_Value[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "PopupMenu_Move": {
+							case "PopupMenu_Move":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										PopupMenu_Move[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "PopupMenu_Font_Size": {
+							case "PopupMenu_Font_Size":
+								{
 									PopupMenu_Font_Size = int.Parse(strParam);
 									break;
 								}
 							#endregion
 
 							#region NamePlate
-							case "NamePlate_Title_Offset": {
+							case "NamePlate_Title_Offset":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										NamePlate_Title_Offset[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "NamePlate_Dan_Offset": {
+							case "NamePlate_Dan_Offset":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										NamePlate_Dan_Offset[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "NamePlate_Name_Offset_Normal": {
+							case "NamePlate_Name_Offset_Normal":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										NamePlate_Name_Offset_Normal[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "NamePlate_Name_Offset_WithTitle": {
+							case "NamePlate_Name_Offset_WithTitle":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										NamePlate_Name_Offset_WithTitle[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "NamePlate_Name_Offset_Full": {
+							case "NamePlate_Name_Offset_Full":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										NamePlate_Name_Offset_Full[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "NamePlate_Name_Width_Normal": {
+							case "NamePlate_Name_Width_Normal":
+								{
 									NamePlate_Name_Width_Normal = int.Parse(strParam);
 									break;
 								}
-							case "NamePlate_Name_Width_Full": {
+							case "NamePlate_Name_Width_Full":
+								{
 									NamePlate_Name_Width_Full = int.Parse(strParam);
 									break;
 								}
-							case "NamePlate_Title_Width": {
+							case "NamePlate_Title_Width":
+								{
 									NamePlate_Title_Width = int.Parse(strParam);
 									break;
 								}
-							case "NamePlate_Dan_Width": {
+							case "NamePlate_Dan_Width":
+								{
 									NamePlate_Dan_Width = int.Parse(strParam);
 									break;
 								}
-							case "NamePlate_Font_Name_Size_Normal": {
+							case "NamePlate_Font_Name_Size_Normal":
+								{
 									NamePlate_Font_Name_Size_Normal = int.Parse(strParam);
 									break;
 								}
-							case "NamePlate_Font_Name_Size_WithTitle": {
+							case "NamePlate_Font_Name_Size_WithTitle":
+								{
 									NamePlate_Font_Name_Size_WithTitle = int.Parse(strParam);
 									break;
 								}
-							case "NamePlate_Font_Title_Size": {
+							case "NamePlate_Font_Title_Size":
+								{
 									NamePlate_Font_Title_Size = int.Parse(strParam);
 									break;
 								}
-							case "NamePlate_Font_Dan_Size": {
+							case "NamePlate_Font_Dan_Size":
+								{
 									NamePlate_Font_Dan_Size = int.Parse(strParam);
 									break;
 								}
 							#endregion
 
 							#region Modal
-							case "Modal_Title_Full": {
+							case "Modal_Title_Full":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Modal_Title_Full[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Modal_Title_Half_X": {
+							case "Modal_Title_Half_X":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Modal_Title_Half_X[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Modal_Title_Half_Y": {
+							case "Modal_Title_Half_Y":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Modal_Title_Half_Y[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Modal_Text_Full": {
+							case "Modal_Text_Full":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Modal_Text_Full[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Modal_Text_Full_Move": {
+							case "Modal_Text_Full_Move":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Modal_Text_Full_Move[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Modal_Text_Half_X": {
+							case "Modal_Text_Half_X":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Modal_Text_Half_X[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Modal_Text_Half_Y": {
+							case "Modal_Text_Half_Y":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Modal_Text_Half_Y[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Modal_Text_Half_Move": {
+							case "Modal_Text_Half_Move":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Modal_Text_Half_Move[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Modal_Font_ModalContentHalf_Size": {
+							case "Modal_Font_ModalContentHalf_Size":
+								{
 									Modal_Font_ModalContentHalf_Size = int.Parse(strParam);
 									break;
 								}
-							case "Modal_Font_ModalTitleHalf_Size": {
+							case "Modal_Font_ModalTitleHalf_Size":
+								{
 									Modal_Font_ModalTitleHalf_Size = int.Parse(strParam);
 									break;
 								}
-							case "Modal_Font_ModalContentFull_Size": {
+							case "Modal_Font_ModalContentFull_Size":
+								{
 									Modal_Font_ModalContentFull_Size = int.Parse(strParam);
 									break;
 								}
-							case "Modal_Font_ModalTitleFull_Size": {
+							case "Modal_Font_ModalTitleFull_Size":
+								{
 									Modal_Font_ModalTitleFull_Size = int.Parse(strParam);
 									break;
 								}
-							case "Modal_Title_Half_X_4P": {
+							case "Modal_Title_Half_X_4P":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 4; i++) {
+									for (int i = 0; i < 4; i++)
+									{
 										Modal_Title_Half_X_4P[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Modal_Title_Half_X_5P": {
+							case "Modal_Title_Half_X_5P":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 5; i++) {
+									for (int i = 0; i < 5; i++)
+									{
 										Modal_Title_Half_X_5P[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Modal_Title_Half_Y_4P": {
+							case "Modal_Title_Half_Y_4P":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 4; i++) {
+									for (int i = 0; i < 4; i++)
+									{
 										Modal_Title_Half_Y_4P[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Modal_Title_Half_Y_5P": {
+							case "Modal_Title_Half_Y_5P":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 5; i++) {
+									for (int i = 0; i < 5; i++)
+									{
 										Modal_Title_Half_Y_5P[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Modal_Text_Half_X_4P": {
+							case "Modal_Text_Half_X_4P":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 4; i++) {
+									for (int i = 0; i < 4; i++)
+									{
 										Modal_Text_Half_X_4P[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Modal_Text_Half_X_5P": {
+							case "Modal_Text_Half_X_5P":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 5; i++) {
+									for (int i = 0; i < 5; i++)
+									{
 										Modal_Text_Half_X_5P[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Modal_Text_Half_Y_4P": {
+							case "Modal_Text_Half_Y_4P":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 4; i++) {
+									for (int i = 0; i < 4; i++)
+									{
 										Modal_Text_Half_Y_4P[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Modal_Text_Half_Y_5P": {
+							case "Modal_Text_Half_Y_5P":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 5; i++) {
+									for (int i = 0; i < 5; i++)
+									{
 										Modal_Text_Half_Y_5P[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Modal_Text_Half_Move_4P": {
+							case "Modal_Text_Half_Move_4P":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Modal_Text_Half_Move_4P[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
-							case "Modal_Text_Half_Move_5P": {
+							case "Modal_Text_Half_Move_5P":
+								{
 									string[] strSplit = strParam.Split(',');
-									for (int i = 0; i < 2; i++) {
+									for (int i = 0; i < 2; i++)
+									{
 										Modal_Text_Half_Move_5P[i] = int.Parse(strSplit[i]);
 									}
 									break;
 								}
 							#endregion
 							default:
-								foreach (string code in CLangManager.Langcodes) {
-									if (strCommand == "FontName" + code.ToUpper()) {
+								foreach (string code in CLangManager.Langcodes)
+								{
+									if (strCommand == "FontName" + code.ToUpper())
+									{
 										strParam = strParam.Replace('/', System.IO.Path.DirectorySeparatorChar);
 										strParam = strParam.Replace('\\', System.IO.Path.DirectorySeparatorChar);
 										if (HPrivateFastFont.FontExists(strParam)) _fontNameLocalized.Add(code, strParam);
 										strParam = Path(strParam);
 										if (HPrivateFastFont.FontExists(strParam)) _fontNameLocalized.Add(code, strParam);
 									}
-									if (strCommand == "BoxFontName" + code.ToUpper()) {
+									if (strCommand == "BoxFontName" + code.ToUpper())
+									{
 										strParam = strParam.Replace('/', System.IO.Path.DirectorySeparatorChar);
 										strParam = strParam.Replace('\\', System.IO.Path.DirectorySeparatorChar);
 										if (HPrivateFastFont.FontExists(strParam)) _boxFontNameLocalized.Add(code, strParam);
@@ -7502,7 +9350,9 @@ internal class CSkin : IDisposable {
 						}
 					}
 					continue;
-				} catch (Exception exception) {
+				}
+				catch (Exception exception)
+				{
 					Trace.TraceError(exception.ToString());
 					Trace.TraceError("例外が発生しましたが処理を継続します。 (6a32cc37-1527-412e-968a-512c1f0135cd)");
 					continue;
@@ -7511,17 +9361,21 @@ internal class CSkin : IDisposable {
 		}
 	}
 
-	private void t座標の追従設定() {
+	private void t座標の追従設定()
+	{
 		//
-		if (bFieldBgPointOverride == true) {
+		if (bFieldBgPointOverride == true)
+		{
 
 		}
 	}
 
 	#region [ IDisposable 実装 ]
 	//-----------------
-	public void Dispose() {
-		if (!this.bDisposed済み) {
+	public void Dispose()
+	{
+		if (!this.bDisposed済み)
+		{
 			for (int i = 0; i < this.nシステムサウンド数; i++)
 				this[i].Dispose();
 
@@ -7620,12 +9474,14 @@ internal class CSkin : IDisposable {
 	public int nResultGaugeBodyP1Y = 125;
 	#endregion
 
-	public string[] strStringを配列に直す(string str) {
+	public string[] strStringを配列に直す(string str)
+	{
 		string[] strArray = str.Split(',');
 		return strArray;
 	}
 
-	public enum RollColorMode {
+	public enum RollColorMode
+	{
 		None, // PS4, Switchなど
 		All, // 旧筐体(旧作含む)
 		WithoutStart // 新筐体

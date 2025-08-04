@@ -4,7 +4,8 @@ namespace FDK;
 // 構造体
 
 [StructLayout(LayoutKind.Sequential)]
-public struct STInputEvent {
+public struct STInputEvent
+{
 	public int nKey { get; set; }
 	public bool Pressed { get; set; }
 	public bool Released { get; set; }

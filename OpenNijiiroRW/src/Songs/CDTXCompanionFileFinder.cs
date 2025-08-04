@@ -3,14 +3,17 @@ using System.Text;
 
 namespace OpenNijiiroRW;
 
-internal static class CDTXCompanionFileFinder {
+internal static class CDTXCompanionFileFinder
+{
 	internal static string FindFileName(
 		string directory,
 		string mainFileName,
-		string expectedCompanionFileName) {
+		string expectedCompanionFileName)
+	{
 		var expectedCompanionPath = Path.Combine(directory, expectedCompanionFileName);
 
-		if (File.Exists(expectedCompanionPath)) {
+		if (File.Exists(expectedCompanionPath))
+		{
 			return expectedCompanionFileName;
 		}
 
@@ -32,15 +35,20 @@ internal static class CDTXCompanionFileFinder {
 		// the file by interpreting the byte representation encoded
 		// just above, this time in terms of some other encoding which
 		// might be in use in the user's file system.
-		bool TryFindViaDecodedFileName(string prefix, Encoding encoding, out string foundCompanionFileName) {
+		bool TryFindViaDecodedFileName(string prefix, Encoding encoding, out string foundCompanionFileName)
+		{
 			var decodedCompanionFileName = DecodeToLegalFileName(encodedCompanionFileNameBytes, encoding);
 
-			try {
-				if (!File.Exists(Path.Combine(directory, decodedCompanionFileName))) {
+			try
+			{
+				if (!File.Exists(Path.Combine(directory, decodedCompanionFileName)))
+				{
 					foundCompanionFileName = null;
 					return false;
 				}
-			} catch {
+			}
+			catch
+			{
 				Trace.TraceWarning(
 					$"{nameof(CDTXCompanionFileFinder)} could not find expected file '{expectedCompanionPath}' and could not check the existence of a file via {prefix} '{encoding.EncodingName}'. Possible illegal file path when combining directory '{directory}' with encoded file name '{decodedCompanionFileName}'.");
 
@@ -62,7 +70,8 @@ internal static class CDTXCompanionFileFinder {
 		if (TryFindViaDecodedFileName(
 				"Encoding.GetEncoding(437)",
 				Encoding.GetEncoding(437),
-				out var foundCompanionFileNameViaEncoding437)) {
+				out var foundCompanionFileNameViaEncoding437))
+		{
 			return foundCompanionFileNameViaEncoding437;
 		}
 
@@ -73,7 +82,8 @@ internal static class CDTXCompanionFileFinder {
 		if (TryFindViaDecodedFileName(
 				"Encoding.Default",
 				Encoding.Default,
-				out var foundCompanionFileNameViaEncodingDefault)) {
+				out var foundCompanionFileNameViaEncodingDefault))
+		{
 			return foundCompanionFileNameViaEncodingDefault;
 		}
 
@@ -84,7 +94,8 @@ internal static class CDTXCompanionFileFinder {
 				directory,
 				mainFileName,
 				expectedCompanionPath,
-				out var foundCompanionFileNameByMainFileName)) {
+				out var foundCompanionFileNameByMainFileName))
+		{
 			return foundCompanionFileNameByMainFileName;
 		}
 
@@ -95,7 +106,8 @@ internal static class CDTXCompanionFileFinder {
 		if (TryFindViaCompanionFileExtension(
 				directory,
 				expectedCompanionPath,
-				out var foundCompanionFileNameByExtension)) {
+				out var foundCompanionFileNameByExtension))
+		{
 			return foundCompanionFileNameByExtension;
 		}
 
@@ -108,7 +120,8 @@ internal static class CDTXCompanionFileFinder {
 		return expectedCompanionFileName;
 	}
 
-	private static string DecodeToLegalFileName(byte[] encodedBytes, Encoding encoding) {
+	private static string DecodeToLegalFileName(byte[] encodedBytes, Encoding encoding)
+	{
 		// Decode and then replace characters which are illegal in file
 		// names in all locales, except for the backslash character which
 		// will be handled immediately after this.
@@ -142,7 +155,8 @@ internal static class CDTXCompanionFileFinder {
 		string directory,
 		string mainFileName,
 		string expectedCompanionPath,
-		out string foundCompanionFileName) {
+		out string foundCompanionFileName)
+	{
 		var mainFilePath = Path.Combine(directory, mainFileName);
 
 		var companionFileExtension = Path.GetExtension(expectedCompanionPath);
@@ -157,7 +171,8 @@ internal static class CDTXCompanionFileFinder {
 		// appropriate one and then check for the existence of that file.
 		var mainFileNameWithCompanionFileExtension =
 			Path.GetFileName(mainFilePathWithCompanionFileExtension);
-		if (File.Exists(mainFilePathWithCompanionFileExtension)) {
+		if (File.Exists(mainFilePathWithCompanionFileExtension))
+		{
 			Trace.TraceInformation(
 				$"{nameof(CDTXCompanionFileFinder)} could not find expected file '{expectedCompanionPath}' but found '{mainFileNameWithCompanionFileExtension}' by matching the '{mainFileName}' file name with the expected file extension.");
 
@@ -172,13 +187,17 @@ internal static class CDTXCompanionFileFinder {
 	private static bool TryFindViaCompanionFileExtension(
 		string directory,
 		string expectedCompanionPath,
-		out string foundCompanionFileName) {
+		out string foundCompanionFileName)
+	{
 		var companionFileExtension = Path.GetExtension(expectedCompanionPath);
 
-		if (string.IsNullOrEmpty(companionFileExtension)) {
+		if (string.IsNullOrEmpty(companionFileExtension))
+		{
 			Trace.TraceWarning(
 				$"{nameof(CDTXCompanionFileFinder)} could not find expected file '{expectedCompanionPath}' and could not search for appropriate sibling files because this file has no extension.");
-		} else {
+		}
+		else
+		{
 			// If no more precise approach can find the right file, we can
 			// usually safely find it by looking for any file with the
 			// expected file extension in the same folder as the main file.
@@ -189,7 +208,8 @@ internal static class CDTXCompanionFileFinder {
 			// extension within in the directory in question.
 			var filesWithTheCompanionFileExtension =
 				Directory.GetFiles(directory, "*" + companionFileExtension);
-			if (filesWithTheCompanionFileExtension.Length == 1) {
+			if (filesWithTheCompanionFileExtension.Length == 1)
+			{
 				var foundCompanionFilePath = filesWithTheCompanionFileExtension[0];
 				foundCompanionFileName = Path.GetFileName(foundCompanionFilePath);
 

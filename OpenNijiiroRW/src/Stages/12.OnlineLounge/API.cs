@@ -3,16 +3,20 @@ using Newtonsoft.Json.Serialization;
 
 namespace OpenNijiiroRW;
 
-internal class API {
-	public class APICharterInfo {
+internal class API
+{
+	public class APICharterInfo
+	{
 		public string charter_name;
 	}
 
-	public class APIGenreInfo {
+	public class APIGenreInfo
+	{
 		public string genre;
 	}
 
-	public class APISongData {
+	public class APISongData
+	{
 		public int Id;
 		public string SongTitle;
 		public string SongSubtitle;
@@ -38,16 +42,19 @@ internal class API {
 
 
 
-	public class SongContractResolver : DefaultContractResolver {
+	public class SongContractResolver : DefaultContractResolver
+	{
 		private Dictionary<string, string> PropertyMappings { get; set; }
 
-		private string GetAssignedLanguageValue(Dictionary<string, string> ens) {
+		private string GetAssignedLanguageValue(Dictionary<string, string> ens)
+		{
 			if (ens.ContainsKey(OpenNijiiroRW.ConfigIni.sLang))
 				return ens[OpenNijiiroRW.ConfigIni.sLang];
 			return ens["default"];
 		}
 
-		public SongContractResolver(DBCDN.CDNData cdnData) {
+		public SongContractResolver(DBCDN.CDNData cdnData)
+		{
 			this.PropertyMappings = new Dictionary<string, string>
 			{
 				{"SongTitle", GetAssignedLanguageValue(cdnData.Hooks.title)},
@@ -67,7 +74,8 @@ internal class API {
 			};
 		}
 
-		protected override string ResolvePropertyName(string propertyName) {
+		protected override string ResolvePropertyName(string propertyName)
+		{
 			string resolvedName = null;
 			var resolved = this.PropertyMappings.TryGetValue(propertyName, out resolvedName);
 			return (resolved) ? resolvedName : base.ResolvePropertyName(propertyName);
@@ -76,14 +84,16 @@ internal class API {
 
 	#endregion
 
-	public API(DBCDN.CDNData selectedCDN) {
+	public API(DBCDN.CDNData selectedCDN)
+	{
 		cdnData = selectedCDN;
 		FetchedSongsList = new APISongData[0];
 	}
 
 	public APISongData[] FetchedSongsList;
 
-	public void tLoadSongsFromInternalCDN() {
+	public void tLoadSongsFromInternalCDN()
+	{
 		string url = cdnData.BaseUrl + cdnData.SongList;
 
 
@@ -101,12 +111,16 @@ internal class API {
 
 	private DBCDN.CDNData cdnData;
 
-	private async Task<APISongData[]> GetCallAPI(string url) {
-		try {
-			using (HttpClient client = new HttpClient()) {
+	private async Task<APISongData[]> GetCallAPI(string url)
+	{
+		try
+		{
+			using (HttpClient client = new HttpClient())
+			{
 				var response = await client.GetAsync(url).ConfigureAwait(false);
 
-				if (response != null) {
+				if (response != null)
+				{
 					var jsonString = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
 
 					var settings = new JsonSerializerSettings();
@@ -115,7 +129,9 @@ internal class API {
 					return JsonConvert.DeserializeObject<APISongData[]>(jsonString, settings);
 				}
 			}
-		} catch (Exception e) {
+		}
+		catch (Exception e)
+		{
 			//throw e;
 		}
 		return null;

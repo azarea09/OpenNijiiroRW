@@ -4,10 +4,12 @@ using SlimDXKey = SlimDXKeys.Key;
 
 namespace FDK;
 
-public static class DeviceConstantConverter {
+public static class DeviceConstantConverter
+{
 	// メソッド
 
-	public static Key DIKtoKey(Silk.NET.Input.Key key) {
+	public static Key DIKtoKey(Silk.NET.Input.Key key)
+	{
 		return _DIKtoKey.TryGetValue(key, out Key value) ? value : Key.Unknown;
 	}
 

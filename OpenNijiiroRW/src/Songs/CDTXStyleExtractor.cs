@@ -30,7 +30,8 @@ namespace OpenNijiiroRW;
 ///    the selected sheet, to reduce risk of incorrect command processing.
 /// 8. Reassemble the string
 /// </summary>
-public static class CDTXStyleExtractor {
+public static class CDTXStyleExtractor
+{
 	// The sections are splitted right before the header or command for the section kind,
 	// so only the first line need to be considered.
 	private const RegexOptions StyleGetSectionKindRegexOptions =
@@ -193,17 +194,21 @@ public static class CDTXStyleExtractor {
 			},
 		};
 
-	public static string tセッション譜面がある(string strTJA, int seqNo, string strファイル名の絶対パス) {
-		void TraceError(string subMessage) {
+	public static string tセッション譜面がある(string strTJA, int seqNo, string strファイル名の絶対パス)
+	{
+		void TraceError(string subMessage)
+		{
 			Trace.TraceError(FormatTraceMessage(subMessage));
 		}
 
-		string FormatTraceMessage(string subMessage) {
+		string FormatTraceMessage(string subMessage)
+		{
 			return $"{nameof(CDTXStyleExtractor)} {subMessage} (seqNo={seqNo}, {strファイル名の絶対パス})";
 		}
 
 		//入力された譜面がnullでないかチェック。
-		if (string.IsNullOrEmpty(strTJA)) {
+		if (string.IsNullOrEmpty(strTJA))
+		{
 			TraceError("is returning its input value early due to null or empty strTJA.");
 			return strTJA;
 		}
@@ -230,9 +235,12 @@ public static class CDTXStyleExtractor {
 
 		// 4. Determine the best-ranked sheet
 		int bestRank;
-		try {
+		try
+		{
 			bestRank = GetBestRank(sections);
-		} catch (Exception) {
+		}
+		catch (Exception)
+		{
 			TraceError("is returning its input value early due to an inability to determine the best rank. This can occur if a course contains no #START.");
 			return strTJA;
 		}
@@ -256,43 +264,51 @@ public static class CDTXStyleExtractor {
 	//   b) STYLE Double/Couple
 	//   c) STYLE unrecognized
 	//   d) non-STYLE
-	private static List<Section> GetSections(string strTJA) {
+	private static List<Section> GetSections(string strTJA)
+	{
 		return SectionSplitRegex
 			.Split(strTJA)
 			.Select(o => new Section(GetSectionKind(o), o))
 			.ToList();
 	}
 
-	private static SectionKind GetSectionKind(string section) {
-		if (StyleSingleSectionMatchRegex.IsMatch(section)) {
+	private static SectionKind GetSectionKind(string section)
+	{
+		if (StyleSingleSectionMatchRegex.IsMatch(section))
+		{
 			return SectionKind.StyleSingle;
 		}
 
-		if (StyleDoubleSectionMatchRegex.IsMatch(section)) {
+		if (StyleDoubleSectionMatchRegex.IsMatch(section))
+		{
 			return SectionKind.StyleDouble;
 		}
 
-		if (StyleUnrecognizedSectionMatchRegex.IsMatch(section)) {
+		if (StyleUnrecognizedSectionMatchRegex.IsMatch(section))
+		{
 			return SectionKind.StyleUnrecognized;
 		}
 
 		return SectionKind.NonStyle;
 	}
 
-	private enum SectionKind {
+	private enum SectionKind
+	{
 		StyleSingle,
 		StyleDouble,
 		StyleUnrecognized,
 		NonStyle
 	}
 
-	private sealed class Section {
+	private sealed class Section
+	{
 		public readonly SectionKind SectionKind;
 		public readonly string OriginalRawValue;
 
 		public List<SubSection> SubSections;
 
-		public Section(SectionKind sectionKind, string originalRawValue) {
+		public Section(SectionKind sectionKind, string originalRawValue)
+		{
 			SectionKind = sectionKind;
 			OriginalRawValue = originalRawValue;
 		}
@@ -304,8 +320,10 @@ public static class CDTXStyleExtractor {
 	//   c) sheet START bare
 	//   d) sheet START unrecognized
 	//   e) non-sheet
-	private static void SubdivideSectionsIntoSubSections(IEnumerable<Section> sections) {
-		foreach (var section in sections) {
+	private static void SubdivideSectionsIntoSubSections(IEnumerable<Section> sections)
+	{
+		foreach (var section in sections)
+		{
 			section.SubSections = SubSectionSplitRegex
 				.Split(section.OriginalRawValue)
 				.Select(o => new SubSection(GetSubsectionKind(o), o))
@@ -313,27 +331,33 @@ public static class CDTXStyleExtractor {
 		}
 	}
 
-	private static SubSectionKind GetSubsectionKind(string subsection) {
-		if (SheetStartBareMatchRegex.IsMatch(subsection)) {
+	private static SubSectionKind GetSubsectionKind(string subsection)
+	{
+		if (SheetStartBareMatchRegex.IsMatch(subsection))
+		{
 			return SubSectionKind.SheetStartBare;
 		}
 
-		if (SheetStartP1MatchRegex.IsMatch(subsection)) {
+		if (SheetStartP1MatchRegex.IsMatch(subsection))
+		{
 			return SubSectionKind.SheetStartP1;
 		}
 
-		if (SheetStartP2MatchRegex.IsMatch(subsection)) {
+		if (SheetStartP2MatchRegex.IsMatch(subsection))
+		{
 			return SubSectionKind.SheetStartP2;
 		}
 
-		if (SheetStartUnrecognizedMatchRegex.IsMatch(subsection)) {
+		if (SheetStartUnrecognizedMatchRegex.IsMatch(subsection))
+		{
 			return SubSectionKind.SheetStartUnrecognized;
 		}
 
 		return SubSectionKind.NonSheet;
 	}
 
-	private enum SubSectionKind {
+	private enum SubSectionKind
+	{
 		SheetStartP1,
 		SheetStartP2,
 		SheetStartBare,
@@ -341,13 +365,15 @@ public static class CDTXStyleExtractor {
 		NonSheet
 	}
 
-	private sealed class SubSection {
+	private sealed class SubSection
+	{
 		public readonly SubSectionKind SubSectionKind;
 		public readonly string OriginalRawValue;
 
 		public int Rank;
 
-		public SubSection(SubSectionKind subSectionKind, string originalRawValue) {
+		public SubSection(SubSectionKind subSectionKind, string originalRawValue)
+		{
 			SubSectionKind = subSectionKind;
 			OriginalRawValue = originalRawValue;
 		}
@@ -356,16 +382,20 @@ public static class CDTXStyleExtractor {
 	// 3. For the current seqNo, rank the found sheets
 	//    using a per-seqNo set of rankings for each
 	//    relevant section/subsection combination.
-	private static void RankSheets(int seqNo, IList<Section> sections) {
+	private static void RankSheets(int seqNo, IList<Section> sections)
+	{
 		var sheetRanksBySectionKindAndSubSectionKind = SeqNoSheetRanksBySectionKindAndSubSectionKind[((seqNo - 1) % 2) + 1];
 
-		foreach (var section in sections) {
+		foreach (var section in sections)
+		{
 			var sectionKind = section.SectionKind;
 
-			foreach (var subSection in section.SubSections) {
+			foreach (var subSection in section.SubSections)
+			{
 				var subSectionKind = subSection.SubSectionKind;
 
-				if (subSectionKind == SubSectionKind.NonSheet) {
+				if (subSectionKind == SubSectionKind.NonSheet)
+				{
 					continue;
 				}
 
@@ -377,44 +407,53 @@ public static class CDTXStyleExtractor {
 		}
 	}
 
-	private sealed class SectionKindAndSubSectionKind : IEquatable<SectionKindAndSubSectionKind> {
+	private sealed class SectionKindAndSubSectionKind : IEquatable<SectionKindAndSubSectionKind>
+	{
 		public readonly SectionKind SectionKind;
 		public readonly SubSectionKind SubSectionKind;
 
-		public SectionKindAndSubSectionKind(SectionKind sectionKind, SubSectionKind subSectionKind) {
+		public SectionKindAndSubSectionKind(SectionKind sectionKind, SubSectionKind subSectionKind)
+		{
 			SectionKind = sectionKind;
 			SubSectionKind = subSectionKind;
 		}
 
-		public bool Equals(SectionKindAndSubSectionKind other) {
+		public bool Equals(SectionKindAndSubSectionKind other)
+		{
 			if (ReferenceEquals(null, other)) return false;
 			if (ReferenceEquals(this, other)) return true;
 			return SectionKind == other.SectionKind && SubSectionKind == other.SubSectionKind;
 		}
 
-		public override bool Equals(object obj) {
+		public override bool Equals(object obj)
+		{
 			if (ReferenceEquals(null, obj)) return false;
 			if (ReferenceEquals(this, obj)) return true;
 			return obj is SectionKindAndSubSectionKind other && Equals(other);
 		}
 
-		public override int GetHashCode() {
-			unchecked {
+		public override int GetHashCode()
+		{
+			unchecked
+			{
 				return ((int)SectionKind * 397) ^ (int)SubSectionKind;
 			}
 		}
 
-		public static bool operator ==(SectionKindAndSubSectionKind left, SectionKindAndSubSectionKind right) {
+		public static bool operator ==(SectionKindAndSubSectionKind left, SectionKindAndSubSectionKind right)
+		{
 			return Equals(left, right);
 		}
 
-		public static bool operator !=(SectionKindAndSubSectionKind left, SectionKindAndSubSectionKind right) {
+		public static bool operator !=(SectionKindAndSubSectionKind left, SectionKindAndSubSectionKind right)
+		{
 			return !Equals(left, right);
 		}
 	}
 
 	// 4. Determine the best-ranked sheet
-	private static int GetBestRank(IList<Section> sections) {
+	private static int GetBestRank(IList<Section> sections)
+	{
 		return sections
 			.SelectMany(o => o.SubSections)
 			.Where(o => o.SubSectionKind != SubSectionKind.NonSheet)
@@ -423,11 +462,13 @@ public static class CDTXStyleExtractor {
 	}
 
 	// 5. Remove sheets other than the best-ranked
-	private static void RemoveSheetsOtherThanTheBestRanked(IList<Section> sections, int bestRank) {
+	private static void RemoveSheetsOtherThanTheBestRanked(IList<Section> sections, int bestRank)
+	{
 		// We can safely remove based on > bestRank because the subsection types
 		// which are never removed always have a Rank value of 0.
 
-		foreach (var section in sections) {
+		foreach (var section in sections)
+		{
 			section.SubSections.RemoveAll(o => o.Rank > bestRank);
 		}
 
@@ -438,13 +479,15 @@ public static class CDTXStyleExtractor {
 			.Where(o => o.Rank == bestRank)
 			.Skip(1));
 
-		foreach (var section in sections) {
+		foreach (var section in sections)
+		{
 			section.SubSections.RemoveAll(extraBestRankedSheets.Contains);
 		}
 	}
 
 	// 6. Remove top-level STYLE-type sections which no longer contain a sheet
-	private static void RemoveRecognizedStyleSectionsWithoutSheets(List<Section> sections) {
+	private static void RemoveRecognizedStyleSectionsWithoutSheets(List<Section> sections)
+	{
 		// Note that we dare not remove SectionKind.StyleUnrecognized instances without sheets.
 		// The reason is because there are plenty of .tja files with weird STYLE: header values
 		// and which are located very early in the file. Removing those sections would remove
@@ -458,15 +501,19 @@ public static class CDTXStyleExtractor {
 
 	// 7. From supported STYLE-type sections, remove non-sheet subsections beyond
 	//    the selected sheet, to reduce risk of incorrect command processing.
-	private static void RemoveStyleSectionSubSectionsBeyondTheSelectedSheet(List<Section> sections) {
-		foreach (var section in sections) {
-			if (section.SectionKind == SectionKind.StyleSingle || section.SectionKind == SectionKind.StyleDouble) {
+	private static void RemoveStyleSectionSubSectionsBeyondTheSelectedSheet(List<Section> sections)
+	{
+		foreach (var section in sections)
+		{
+			if (section.SectionKind == SectionKind.StyleSingle || section.SectionKind == SectionKind.StyleDouble)
+			{
 				var subSections = section.SubSections;
 
 				var lastIndex = subSections.FindIndex(o => o.SubSectionKind != SubSectionKind.NonSheet);
 				var removalIndex = lastIndex + 1;
 
-				if (lastIndex != -1 && removalIndex < subSections.Count) {
+				if (lastIndex != -1 && removalIndex < subSections.Count)
+				{
 					subSections.RemoveRange(removalIndex, subSections.Count - removalIndex);
 				}
 			}
@@ -474,11 +521,14 @@ public static class CDTXStyleExtractor {
 	}
 
 	// 8. Reassemble the string
-	private static string Reassemble(List<Section> sections) {
+	private static string Reassemble(List<Section> sections)
+	{
 		var sb = new StringBuilder();
 
-		foreach (var section in sections) {
-			foreach (var subSection in section.SubSections) {
+		foreach (var section in sections)
+		{
+			foreach (var subSection in section.SubSections)
+			{
 				sb.Append(subSection.OriginalRawValue);
 			}
 		}

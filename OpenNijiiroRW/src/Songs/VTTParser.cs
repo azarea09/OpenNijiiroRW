@@ -8,17 +8,20 @@ using static OpenNijiiroRW.CTja;
 
 namespace OpenNijiiroRW;
 
-public class VTTParser : IDisposable {
+public class VTTParser : IDisposable
+{
 	// TODO : timestamp tag support
 	[Flags]
-	private enum ParseMode {
+	private enum ParseMode
+	{
 		None = 0,
 		Tag = 1,
 		TagEnd = 2,
 		Rt = 4
 	}
 
-	internal struct LyricData {
+	internal struct LyricData
+	{
 		public long timestamp; // TODO: WIP, only first timestamp is accounted for
 		public string Text;
 
@@ -44,7 +47,8 @@ public class VTTParser : IDisposable {
 
 	private bool _isDisposed;
 
-	public VTTParser() {
+	public VTTParser()
+	{
 		_vttdelimiter = new[] { "-->", "- >", "->" };
 
 		regexTimestamp = new Regex(@"(-)?(([0-9]+):)?([0-9]+):([0-9]+)[,\\.]([0-9]+)");
@@ -56,13 +60,16 @@ public class VTTParser : IDisposable {
 	}
 
 	#region Dispose stuff
-	public void Dispose() {
+	public void Dispose()
+	{
 		Dispose(true);
 		GC.SuppressFinalize(this);
 	}
 
-	protected virtual void Dispose(bool disposing) {
-		if (!_isDisposed && disposing) {
+	protected virtual void Dispose(bool disposing)
+	{
+		if (!_isDisposed && disposing)
+		{
 			_vttdelimiter = null;
 			regexTimestamp = null;
 
@@ -77,12 +84,14 @@ public class VTTParser : IDisposable {
 	}
 	#endregion
 
-	internal List<STLYRIC> ParseVTTFile(string filepath, int order, long offset) {
+	internal List<STLYRIC> ParseVTTFile(string filepath, int order, long offset)
+	{
 		List<STLYRIC> lrclist = new List<STLYRIC>();
 		List<string> lines = File.ReadAllLines(filepath).ToList();
 
 		#region Header data
-		if (!lines[0].StartsWith("WEBVTT")) {
+		if (!lines[0].StartsWith("WEBVTT"))
+		{
 			Trace.TraceWarning("Aborting VTT parse at {0}. WebVTT header does not start with \"WEBVTT\".", filepath);
 			return lrclist;
 		}
@@ -96,43 +105,56 @@ public class VTTParser : IDisposable {
 
 		List<LyricData> lyricData = new List<LyricData>();
 
-		LyricData data = new LyricData() {
+		LyricData data = new LyricData()
+		{
 			ForeColor = OpenNijiiroRW.Skin.Game_Lyric_ForeColor,
 			BackColor = OpenNijiiroRW.Skin.Game_Lyric_BackColor
 		};
 
 		bool readingHeader = true;
-		for (int i = 0; i < lines.Count; i++) {
+		for (int i = 0; i < lines.Count; i++)
+		{
 			long start;
 			long end;
 
-			if (readingHeader) {
+			if (readingHeader)
+			{
 				Match languageMatch = regexLang.Match(lines[i]);
-				if (languageMatch.Success) {
-					if (!(languageMatch.Groups[1].Value.ToLower() == CLangManager.fetchLang())) {
+				if (languageMatch.Success)
+				{
+					if (!(languageMatch.Groups[1].Value.ToLower() == CLangManager.fetchLang()))
+					{
 						Trace.TraceWarning("Aborting VTT parse at {0}. WebVTT header language does not match user's selected language.", filepath);
 						return lrclist;
 					}
 				}
 				Match offsetMatch = regexOffset.Match(lines[i]);
-				if (offsetMatch.Success && regexTimestamp.Match(offsetMatch.Groups[1].Value).Success) {
+				if (offsetMatch.Success && regexTimestamp.Match(offsetMatch.Groups[1].Value).Success)
+				{
 					offset += ParseTimestamp(offsetMatch.Groups[1].Value);
-				} else if (offsetMatch.Success && float.TryParse(offsetMatch.Groups[1].Value, out float result)) {
+				}
+				else if (offsetMatch.Success && float.TryParse(offsetMatch.Groups[1].Value, out float result))
+				{
 					offset += (long)(result * 1000);
 				}
 
 				if (String.IsNullOrEmpty(lines[i]))
 					readingHeader = false;
-			} else {
+			}
+			else
+			{
 				// Check for blank (process data if true), or else check for NOTE, or else check for Timestamps, or else parse text
-				if (String.IsNullOrEmpty(lines[i])) {
-					if (!ignoreLyrics && lyricData.Count != 0) {
+				if (String.IsNullOrEmpty(lines[i]))
+				{
+					if (!ignoreLyrics && lyricData.Count != 0)
+					{
 						lyricData.RemoveAll(empty => String.IsNullOrEmpty(empty.Text));
 						lrclist.Add(CreateLyric(lyricData, order));
 					}
 
 					lyricData = new List<LyricData>();
-					data = new LyricData() {
+					data = new LyricData()
+					{
 						timestamp = startTime,
 						ForeColor = OpenNijiiroRW.Skin.Game_Lyric_ForeColor,
 						BackColor = OpenNijiiroRW.Skin.Game_Lyric_BackColor
@@ -144,10 +166,13 @@ public class VTTParser : IDisposable {
 					continue;
 				}
 
-				if (lines[i].StartsWith("NOTE ")) { ignoreLyrics = true; } else if (!ignoreLyrics && TryParseTimestamp(lines[i], out start, out end)) {
+				if (lines[i].StartsWith("NOTE ")) { ignoreLyrics = true; }
+				else if (!ignoreLyrics && TryParseTimestamp(lines[i], out start, out end))
+				{
 					lyricData = new List<LyricData>(); // Prevents chapters from being included by mistake
 
-					if (start > endTime && endTime != -1) {
+					if (start > endTime && endTime != -1)
+					{
 						lrclist.Add(CreateLyric(new List<LyricData>() { new LyricData() { timestamp = endTime + offset } }, order));
 						// If new start timestamp is greater than old end timestamp,
 						// it is assumed there is a gap in-between displaying lyrics.
@@ -157,7 +182,8 @@ public class VTTParser : IDisposable {
 					endTime = end;
 
 					data.timestamp = start + offset;
-				} else if (!ignoreLyrics) // If all else fails, let's assume it's a lyric. ¯\_(ツ)_/¯
+				}
+				else if (!ignoreLyrics) // If all else fails, let's assume it's a lyric. ¯\_(ツ)_/¯
 				{
 					int j = 0;
 					var parseMode = ParseMode.None;
@@ -165,8 +191,10 @@ public class VTTParser : IDisposable {
 					string tagdata = String.Empty;
 					data.Text = String.Empty;
 
-					for (j = 0; j < lines[i].Length; j++) {
-						switch (lines[i].Substring(j, 1)) {
+					for (j = 0; j < lines[i].Length; j++)
+					{
+						switch (lines[i].Substring(j, 1))
+						{
 							#region HTML Tags
 							case "<":
 								parseMode |= ParseMode.Tag;
@@ -175,42 +203,61 @@ public class VTTParser : IDisposable {
 								if (parseMode.HasFlag(ParseMode.Tag)) { parseMode |= ParseMode.TagEnd; } else { goto default; }
 								break;
 							case ">":
-								if (parseMode.HasFlag(ParseMode.TagEnd)) {
-									if (tagdata == ("c")) {
+								if (parseMode.HasFlag(ParseMode.TagEnd))
+								{
+									if (tagdata == ("c"))
+									{
 										lyricData.Add(data);
 										data.Text = String.Empty;
 										data.ForeColor = OpenNijiiroRW.Skin.Game_Lyric_ForeColor;
 										data.BackColor = OpenNijiiroRW.Skin.Game_Lyric_BackColor;
-									} else if (tagdata.StartsWith("lang")) { data.Language = String.Empty; } else if (tagdata == "ruby") {
+									}
+									else if (tagdata.StartsWith("lang")) { data.Language = String.Empty; }
+									else if (tagdata == "ruby")
+									{
 										lyricData.Add(data);
 										data.IsRuby = false;
 										data.RubyText = String.Empty;
 										data.Text = String.Empty;
-									} else if (tagdata == "rt") { parseMode &= ~ParseMode.Rt; } else if (tagdata == "b") {
+									}
+									else if (tagdata == "rt") { parseMode &= ~ParseMode.Rt; }
+									else if (tagdata == "b")
+									{
 										lyricData.Add(data);
 										data.Text = String.Empty;
 										data.Style &= ~CCachedFontRenderer.FontStyle.Bold;
-									} else if (tagdata == "i") {
+									}
+									else if (tagdata == "i")
+									{
 										lyricData.Add(data);
 										data.Text = String.Empty;
 										data.Style &= ~CCachedFontRenderer.FontStyle.Italic;
-									} else if (tagdata == "u") {
+									}
+									else if (tagdata == "u")
+									{
 										lyricData.Add(data);
 										data.Text = String.Empty;
 										data.Style &= ~CCachedFontRenderer.FontStyle.Underline;
-									} else if (tagdata == "s") {
+									}
+									else if (tagdata == "s")
+									{
 										lyricData.Add(data);
 										data.Text = String.Empty;
 										data.Style &= ~CCachedFontRenderer.FontStyle.Strikeout;
 									}
-								} else if (parseMode.HasFlag(ParseMode.Tag)) {
-									if (tagdata.StartsWith("c.")) {
+								}
+								else if (parseMode.HasFlag(ParseMode.Tag))
+								{
+									if (tagdata.StartsWith("c."))
+									{
 										lyricData.Add(data);
 										data.Text = String.Empty;
 										string[] colordata = tagdata.Split('.').Skip(1).ToArray();
 										int clr_index = 0;
-										foreach (string clr in colordata) {
-											switch (clr) {
+										foreach (string clr in colordata)
+										{
+											switch (clr)
+											{
 												case "white":
 													data.ForeColor = OpenNijiiroRW.Skin.Game_Lyric_VTTForeColor[0];
 													break;
@@ -260,12 +307,14 @@ public class VTTParser : IDisposable {
 													data.BackColor = OpenNijiiroRW.Skin.Game_Lyric_VTTBackColor[7];
 													break;
 												default:
-													if (clr.StartsWith('#')) {
+													if (clr.StartsWith('#'))
+													{
 														var hex = System.Globalization.NumberStyles.HexNumber;
 														if (clr.Length == 7 &&
-															int.TryParse(clr.Substring(1,2), hex, null, out int red) &&
-															int.TryParse(clr.Substring(3,2), hex, null, out int green) &&
-															int.TryParse(clr.Substring(5,2), hex, null, out int blue)) {
+															int.TryParse(clr.Substring(1, 2), hex, null, out int red) &&
+															int.TryParse(clr.Substring(3, 2), hex, null, out int green) &&
+															int.TryParse(clr.Substring(5, 2), hex, null, out int blue))
+														{
 															if (clr_index % 2 == 0) data.ForeColor = Color.FromArgb(red, green, blue);
 															else data.BackColor = Color.FromArgb(red, green, blue);
 														}
@@ -274,10 +323,14 @@ public class VTTParser : IDisposable {
 											}
 											clr_index++;
 										}
-									} else if (tagdata.StartsWith("lang")) {
+									}
+									else if (tagdata.StartsWith("lang"))
+									{
 										string[] langdata = tagdata.Split(' ');
-										foreach (string lng in langdata) {
-											if (lng != "lang") {
+										foreach (string lng in langdata)
+										{
+											if (lng != "lang")
+											{
 												data.Language = lng;
 												isUsingLang = true;
 
@@ -285,44 +338,61 @@ public class VTTParser : IDisposable {
 												else { langIsMatch = false; }
 											}
 										}
-									} else if (tagdata == "ruby") {
+									}
+									else if (tagdata == "ruby")
+									{
 										lyricData.Add(data);
 										data.Text = String.Empty;
 										data.IsRuby = true;
-									} else if (tagdata == "rt") { parseMode |= ParseMode.Rt; } else if (tagdata == "b") {
+									}
+									else if (tagdata == "rt") { parseMode |= ParseMode.Rt; }
+									else if (tagdata == "b")
+									{
 										lyricData.Add(data);
 										data.Text = String.Empty;
 										data.Style |= CCachedFontRenderer.FontStyle.Bold;
-									} else if (tagdata == "i") {
+									}
+									else if (tagdata == "i")
+									{
 										lyricData.Add(data);
 										data.Text = String.Empty;
 										data.Style |= CCachedFontRenderer.FontStyle.Italic;
-									} else if (tagdata == "u") {
+									}
+									else if (tagdata == "u")
+									{
 										lyricData.Add(data);
 										data.Text = String.Empty;
 										data.Style |= CCachedFontRenderer.FontStyle.Underline;
-									} else if (tagdata == "s") {
+									}
+									else if (tagdata == "s")
+									{
 										lyricData.Add(data);
 										data.Text = String.Empty;
 										data.Style |= CCachedFontRenderer.FontStyle.Strikeout;
 									}
-								} else { goto default; }
+								}
+								else { goto default; }
 								parseMode &= ~ParseMode.Tag & ~ParseMode.TagEnd;
 								tagdata = String.Empty;
 								break;
 							#endregion
 							default:
-								if (parseMode.HasFlag(ParseMode.Tag)) { tagdata += lines[i].Substring(j, 1); } else if (!isUsingLang || (isUsingLang && langIsMatch)) {
+								if (parseMode.HasFlag(ParseMode.Tag)) { tagdata += lines[i].Substring(j, 1); }
+								else if (!isUsingLang || (isUsingLang && langIsMatch))
+								{
 									if (parseMode.HasFlag(ParseMode.Rt)) { data.RubyText += lines[i].Substring(j, 1); } else { data.Text += lines[i].Substring(j, 1); }
 								}
 								break;
 						}
 					}
-					string betterDecode(string sourceText) {
+					string betterDecode(string sourceText)
+					{
 						if (sourceText == null) return "";
 						string decodeResult = "";
-						for (int i = 0; i < sourceText.Length; i++) {
-							switch (sourceText[i]) {
+						for (int i = 0; i < sourceText.Length; i++)
+						{
+							switch (sourceText[i])
+							{
 								case '<':
 								case '>':
 								case '&':
@@ -346,7 +416,8 @@ public class VTTParser : IDisposable {
 			}
 		}
 		// Add last lyric to list
-		if (lyricData.Count > 0) {
+		if (lyricData.Count > 0)
+		{
 			lyricData.RemoveAll(empty => String.IsNullOrEmpty(empty.Text));
 			lrclist.Add(CreateLyric(lyricData, order));
 		}
@@ -354,26 +425,32 @@ public class VTTParser : IDisposable {
 		return lrclist;
 
 	}
-	internal bool TryParseTimestamp(string input, out long startTime, out long endTime) {
+	internal bool TryParseTimestamp(string input, out long startTime, out long endTime)
+	{
 		var split = input.Split(_vttdelimiter, StringSplitOptions.None);
-		if (split.Length == 2 && regexTimestamp.IsMatch(split[0]) && regexTimestamp.IsMatch(split[1])) {
+		if (split.Length == 2 && regexTimestamp.IsMatch(split[0]) && regexTimestamp.IsMatch(split[1]))
+		{
 			startTime = ParseTimestamp(split[0]);
 			endTime = ParseTimestamp(split[1]);
 			return true;
-		} else {
+		}
+		else
+		{
 			startTime = -1;
 			endTime = -1;
 			return false;
 		}
 	}
-	internal long ParseTimestamp(string input) {
+	internal long ParseTimestamp(string input)
+	{
 		int hours;
 		int minutes;
 		int seconds;
 		int milliseconds = -1;
 
 		Match match = regexTimestamp.Match(input);
-		if (match.Success) {
+		if (match.Success)
+		{
 			hours = !string.IsNullOrEmpty(match.Groups[3].Value) ? int.Parse(match.Groups[3].Value) : 0; // Hours are sometimes not included in timestamps.
 			minutes = int.Parse(match.Groups[4].Value);
 			seconds = int.Parse(match.Groups[5].Value);
@@ -385,7 +462,8 @@ public class VTTParser : IDisposable {
 
 		return -1;
 	}
-	internal STLYRIC CreateLyric(List<LyricData> datalist, int order) {
+	internal STLYRIC CreateLyric(List<LyricData> datalist, int order)
+	{
 		long timestamp = datalist[0].timestamp; // Function will change later w/ timestamp tag implementation
 
 		List<List<SKBitmap>> textures = new List<List<SKBitmap>>();
@@ -393,7 +471,8 @@ public class VTTParser : IDisposable {
 		List<int> rubyheightoffset = new List<int>();
 		int linecount = datalist.Max((data => data.line)) + 1;
 
-		for (int i = 0; i < linecount; i++) {
+		for (int i = 0; i < linecount; i++)
+		{
 			textures.Add(new List<SKBitmap>());
 			rubywidthoffset.Add(new List<int>());
 			rubyheightoffset.Add(0);
@@ -401,19 +480,23 @@ public class VTTParser : IDisposable {
 
 		string text = String.Empty;
 
-		foreach (LyricData data in datalist) {
-			using (CCachedFontRenderer fastdraw = HPrivateFastFont.tInstantiateFont(OpenNijiiroRW.Skin.Game_Lyric_FontName, OpenNijiiroRW.Skin.Game_Lyric_FontSize, data.Style)) {
+		foreach (LyricData data in datalist)
+		{
+			using (CCachedFontRenderer fastdraw = HPrivateFastFont.tInstantiateFont(OpenNijiiroRW.Skin.Game_Lyric_FontName, OpenNijiiroRW.Skin.Game_Lyric_FontSize, data.Style))
+			{
 				SKBitmap textdrawing = fastdraw.DrawText(data.Text, data.ForeColor, data.BackColor, null, 30); // Draw main text
 
 				if (data.IsRuby) // ruby time
 				{
-					using (CCachedFontRenderer rubydraw = HPrivateFastFont.tInstantiateFont(OpenNijiiroRW.Skin.Game_Lyric_FontName, OpenNijiiroRW.Skin.Game_Lyric_FontSize / 2, data.Style)) {
+					using (CCachedFontRenderer rubydraw = HPrivateFastFont.tInstantiateFont(OpenNijiiroRW.Skin.Game_Lyric_FontName, OpenNijiiroRW.Skin.Game_Lyric_FontSize / 2, data.Style))
+					{
 						SKBitmap ruby = rubydraw.DrawText(data.RubyText, data.ForeColor, data.BackColor, null, 30);
 						Size size = new Size(textdrawing.Width > ruby.Width ? textdrawing.Width : ruby.Width, textdrawing.Height + (OpenNijiiroRW.Skin.Game_Lyric_VTTRubyOffset + (ruby.Height / 2)));
 						SKBitmap fullruby = new SKBitmap(size.Width, size.Height);
 
 
-						using (SKCanvas canvas = new SKCanvas(fullruby)) {
+						using (SKCanvas canvas = new SKCanvas(fullruby))
+						{
 							canvas.DrawBitmap(textdrawing, (fullruby.Width / 2) - (textdrawing.Width / 2), (fullruby.Height / 2) - (textdrawing.Height / 2));
 							canvas.DrawBitmap(ruby, (fullruby.Width - ruby.Width) / 2, (fullruby.Height / 2) - (ruby.Height / 2) - OpenNijiiroRW.Skin.Game_Lyric_VTTRubyOffset);
 						}
@@ -421,7 +504,9 @@ public class VTTParser : IDisposable {
 						rubywidthoffset[data.line].Add((fullruby.Width - textdrawing.Width) / 2 > 0 ? (fullruby.Width - textdrawing.Width) / 2 : 0);
 						rubyheightoffset[data.line] = (fullruby.Height - (fullruby.Height - ruby.Height)) / 2 > rubyheightoffset[data.line] ? (fullruby.Height - (fullruby.Height - ruby.Height)) / 2 : rubyheightoffset[data.line];
 					}
-				} else {
+				}
+				else
+				{
 					textures[data.line].Add(textdrawing);
 					rubywidthoffset[data.line].Add(0);
 				}
@@ -437,10 +522,12 @@ public class VTTParser : IDisposable {
 		int max_height = 0;
 
 		int space = 50;
-		for (int i = 0; i < textures.Count; i++) {
+		for (int i = 0; i < textures.Count; i++)
+		{
 			widths[i] = new int[textures[i].Count];
 			heights[i] = new int[textures[i].Count];
-			for (int j = 0; j < textures[i].Count; j++) {
+			for (int j = 0; j < textures[i].Count; j++)
+			{
 				int nowWidth = Math.Max(textures[i][j].Width - space, 0);
 				int nowHeight = textures[i][j].Height;
 
@@ -456,14 +543,18 @@ public class VTTParser : IDisposable {
 
 		SKBitmap lyrictex = new SKBitmap(max_width > 0 ? max_width : 1, max_height - rubyheightoffset.Sum() > 0 ? max_height - rubyheightoffset.Sum() : 1); // Prevent exception with 0x0y Bitmap
 
-		if (textures.Count > 0) {
-			using (SKCanvas canvas = new SKCanvas(lyrictex)) {
+		if (textures.Count > 0)
+		{
+			using (SKCanvas canvas = new SKCanvas(lyrictex))
+			{
 				canvas.Clear();
 
 				int y = 0;
-				for (int i = 0; i < textures.Count; i++) {
+				for (int i = 0; i < textures.Count; i++)
+				{
 					int x = (lyrictex.Width - width[i]) / 2;
-					for (int j = 0; j < textures[i].Count; j++) {
+					for (int j = 0; j < textures[i].Count; j++)
+					{
 						canvas.DrawBitmap(textures[i][j], x, y + ((height[i] - textures[i][j].Height) / 2) + (rubyheightoffset[i] / 2));
 						x += widths[i][j];
 					}
@@ -472,7 +563,8 @@ public class VTTParser : IDisposable {
 			}
 		}
 
-		STLYRIC st = new STLYRIC() {
+		STLYRIC st = new STLYRIC()
+		{
 			index = order,
 			Text = text,
 			TextTex = lyrictex,

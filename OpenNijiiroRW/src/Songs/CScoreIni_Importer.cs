@@ -3,24 +3,28 @@ using Microsoft.Data.Sqlite;
 
 namespace OpenNijiiroRW;
 
-static class CScoreIni_Importer {
+static class CScoreIni_Importer
+{
 	public static string Status { get; private set; } = "";
 	private static readonly string langSUBTITLE = "SUBTITLE" + CLangManager.LangInstance.Id.ToUpper();
-	public static void ImportScoreInisToSavesDb3() {
+	public static void ImportScoreInisToSavesDb3()
+	{
 		Trace.TraceInformation("Importing score.ini files to Saves.db3 database!");
 
 		//Status = "Establishing connection to database..."; // I don't think the player needs to know this info ¯\_(ツ)_/¯
 		Status = CLangManager.LangInstance.GetString("SETTINGS_SYSTEM_IMPORTSCOREINI_STATUS1");
 
 		SqliteConnection? connection = DBSaves.GetSavesDBConnection();
-		if (connection == null) {
+		if (connection == null)
+		{
 			Trace.TraceError("Could not establish a connection to Saves.db3 database. Aborting score import.");
 			Status = "";
 			return;
 		}
 
 		List<string> _scoreFiles = new List<string>();
-		foreach (string path in OpenNijiiroRW.ConfigIni.strSongsPath.Split(';', StringSplitOptions.RemoveEmptyEntries)) {
+		foreach (string path in OpenNijiiroRW.ConfigIni.strSongsPath.Split(';', StringSplitOptions.RemoveEmptyEntries))
+		{
 			_scoreFiles.AddRange(Directory.GetFiles(path, "*.score.ini", SearchOption.AllDirectories));
 		}
 		Trace.TraceInformation($"{_scoreFiles.Count} score.ini files have been found. Beginning import.");
@@ -30,13 +34,15 @@ static class CScoreIni_Importer {
 		int skipcount = 0;
 		int errorcount = 0;
 
-		foreach (string _score in _scoreFiles) {
+		foreach (string _score in _scoreFiles)
+		{
 
 			Status = CLangManager.LangInstance.GetString("SETTINGS_SYSTEM_IMPORTSCOREINI_STATUS2", _scoreFiles.Count, successcount, totalcount, skipcount, errorcount, Path.GetFileName(_score));
 			//Status = $"Importing {_scoreFiles.Count} scores...\n{importcount} of {totalcount} imported ({skipcount} skipped / {errorcount} failed)\n\n{Path.GetFileName(_score)}";
 
 			//Trace.TraceInformation(Status);
-			try {
+			try
+			{
 				string directory = Path.GetDirectoryName(_score);
 				DirectoryInfo dir_parent = Directory.GetParent(directory);
 
@@ -61,9 +67,11 @@ static class CScoreIni_Importer {
 				int[] Rank = { -1, -1, -1, -1, -1, -1, -1 };
 				int[] HighScore = { 0, 0, 0, 0, 0, 0, 0 };
 
-				foreach (string data in TJAData) {
+				foreach (string data in TJAData)
+				{
 					string[] split = data.Split(":", 2);
-					switch (split[0]) {
+					switch (split[0])
+					{
 						case "SUBTITLE":
 							Artist = split[1].StartsWith("--") || split[1].StartsWith("++") ? split[1].Substring(2) : split[1];
 							break;
@@ -99,12 +107,14 @@ static class CScoreIni_Importer {
 				}
 
 				// Tower/Dan score data is saved in index 0 (Easy).
-				for (int i = 0; i < Difficulties.Length; i++) {
+				for (int i = 0; i < Difficulties.Length; i++)
+				{
 					int diff_index = Difficulties[i].IndexOf(':') + 1;
 					int lvl_index = Levels[i].IndexOf(":") + 1;
 
 					int level = int.TryParse(Levels[i].Substring(lvl_index), out int result) ? result : -1;
-					switch (Difficulties[i].Substring(diff_index).ToLower()) {
+					switch (Difficulties[i].Substring(diff_index).ToLower())
+					{
 						case "0":
 						case "easy":
 							Level[0] = level;
@@ -136,11 +146,13 @@ static class CScoreIni_Importer {
 					}
 				}
 
-				foreach (string data in ScoreData) {
+				foreach (string data in ScoreData)
+				{
 					string[] split = data.Split('=', 2);
 					int num = 0;
 					if (split.Length == 2) num = int.TryParse(split[1], out int result) ? result : 0;
-					switch (split[0]) {
+					switch (split[0])
+					{
 						case "HiScore1":
 							HighScore[0] = num;
 							HighScore[5] = num;
@@ -198,9 +210,11 @@ static class CScoreIni_Importer {
 				}
 
 				bool success = false;
-				for (int i = 0; i < Level.Length; i++) {
+				for (int i = 0; i < Level.Length; i++)
+				{
 					int score_index = i < 5 ? i : 0;
-					if (Level[i] != -1 && HighScore[score_index] > 0) {
+					if (Level[i] != -1 && HighScore[score_index] > 0)
+					{
 						SqliteCommand cmd = connection.CreateCommand();
 						cmd.CommandText = $@"
                     INSERT INTO best_plays(ChartUniqueId,ChartGenre,Charter,Artist,PlayMods,ChartDifficulty,ChartLevel,ClearStatus,ScoreRank,HighScore,SaveId,TowerBestFloor,DanExam1,DanExam2,DanExam3,DanExam4,DanExam5,DanExam6,DanExam7,PlayCount,HighScoreGoodCount,HighScoreOkCount,HighScoreBadCount,HighScoreMaxCombo,HighScoreRollCount,HighScoreADLibCount,HighScoreBoomCount)
@@ -239,16 +253,20 @@ static class CScoreIni_Importer {
 					}
 				}
 				if (!success) { skipcount++; }
-			} catch (Exception ex) {
+			}
+			catch (Exception ex)
+			{
 				Trace.TraceWarning($"Failed to import {_score} into new database. More details:\n{ex}");
 				errorcount++;
-			} finally { totalcount++; }
+			}
+			finally { totalcount++; }
 		}
 		Trace.TraceInformation($"Imported {successcount} of {_scoreFiles.Count} scores from score.ini files. ({errorcount} failed imports; {skipcount} skipped imports;)");
 		Status = "";
 	}
 
-	private static string GetTJAFile(string path) {
+	private static string GetTJAFile(string path)
+	{
 		FileInfo info = new FileInfo(path);
 
 		if (info.FullName.EndsWith($"{OpenNijiiroRW.ConfigIni.sSaveFile[0]}.score.ini")) return info.FullName.Replace($"{OpenNijiiroRW.ConfigIni.sSaveFile[0]}.score.ini", "");
@@ -258,7 +276,8 @@ static class CScoreIni_Importer {
 		if (info.FullName.EndsWith($"{OpenNijiiroRW.ConfigIni.sSaveFile[4]}.score.ini")) return info.FullName.Replace($"{OpenNijiiroRW.ConfigIni.sSaveFile[4]}.score.ini", "");
 		return info.FullName.Replace(".score.ini", "");
 	}
-	private static int GetPlayerId(string path) {
+	private static int GetPlayerId(string path)
+	{
 		FileInfo info = new FileInfo(path);
 
 		if (info.Name.EndsWith($"{OpenNijiiroRW.ConfigIni.sSaveFile[0]}.score.ini")) return 0;

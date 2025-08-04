@@ -4,17 +4,20 @@ using FDK;
 
 namespace OpenNijiiroRW;
 
-internal class CActSelectInformation : CActivity {
+internal class CActSelectInformation : CActivity
+{
 	// Constructor
 
-	public CActSelectInformation() {
+	public CActSelectInformation()
+	{
 		base.IsDeActivated = true;
 	}
 
 
 	// CActivity 実装
 
-	public override void Activate() {
+	public override void Activate()
+	{
 		this.n画像Index上 = -1;
 		this.n画像Index下 = 0;
 
@@ -22,25 +25,31 @@ internal class CActSelectInformation : CActivity {
 		this.ct進行用 = new CCounter(0, 3000, 3, OpenNijiiroRW.Timer);
 		base.Activate();
 	}
-	public override void DeActivate() {
+	public override void DeActivate()
+	{
 		this.ctスクロール用 = null;
 		base.DeActivate();
 	}
-	public override void CreateManagedResource() {
+	public override void CreateManagedResource()
+	{
 		this.txInfo_Back = OpenNijiiroRW.tテクスチャの生成(CSkin.Path(@$"Graphics{Path.DirectorySeparatorChar}5_information_BG.png"));
 		this.txInfo[0] = OpenNijiiroRW.tテクスチャの生成(CSkin.Path(@$"Graphics{Path.DirectorySeparatorChar}5_information.png"));
 		this.txInfo[1] = OpenNijiiroRW.tテクスチャの生成(CSkin.Path(@$"Graphics{Path.DirectorySeparatorChar}5_information2.png"));
 		base.CreateManagedResource();
 	}
-	public override void ReleaseManagedResource() {
+	public override void ReleaseManagedResource()
+	{
 		OpenNijiiroRW.tテクスチャの解放(ref this.txInfo_Back);
 		OpenNijiiroRW.tテクスチャの解放(ref this.txInfo[0]);
 		OpenNijiiroRW.tテクスチャの解放(ref this.txInfo[1]);
 		base.ReleaseManagedResource();
 	}
-	public override int Draw() {
-		if (!base.IsDeActivated) {
-			if (base.IsFirstDraw) {
+	public override int Draw()
+	{
+		if (!base.IsDeActivated)
+		{
+			if (base.IsFirstDraw)
+			{
 				base.IsFirstDraw = false;
 			}
 
@@ -49,23 +58,32 @@ internal class CActSelectInformation : CActivity {
 
 
 			this.ct進行用.TickLoop();
-			if (this.bFirst) {
+			if (this.bFirst)
+			{
 				this.ct進行用.CurrentValue = 300;
 			}
 
 			#region[ 透明度制御 ]
-			if (this.txInfo[0] != null && this.txInfo[1] != null) {
-				if (this.ct進行用.CurrentValue < 255) {
+			if (this.txInfo[0] != null && this.txInfo[1] != null)
+			{
+				if (this.ct進行用.CurrentValue < 255)
+				{
 					this.txInfo[0].Opacity = this.ct進行用.CurrentValue;
 					this.txInfo[1].Opacity = 255 - this.ct進行用.CurrentValue;
-				} else if (this.ct進行用.CurrentValue >= 255 && this.ct進行用.CurrentValue < 1245) {
+				}
+				else if (this.ct進行用.CurrentValue >= 255 && this.ct進行用.CurrentValue < 1245)
+				{
 					this.bFirst = false;
 					this.txInfo[0].Opacity = 255;
 					this.txInfo[1].Opacity = 0;
-				} else if (this.ct進行用.CurrentValue >= 1245 && this.ct進行用.CurrentValue < 1500) {
+				}
+				else if (this.ct進行用.CurrentValue >= 1245 && this.ct進行用.CurrentValue < 1500)
+				{
 					this.txInfo[0].Opacity = 255 - (this.ct進行用.CurrentValue - 1245);
 					this.txInfo[1].Opacity = this.ct進行用.CurrentValue - 1245;
-				} else if (this.ct進行用.CurrentValue >= 1500 && this.ct進行用.CurrentValue <= 3000) {
+				}
+				else if (this.ct進行用.CurrentValue >= 1500 && this.ct進行用.CurrentValue <= 3000)
+				{
 					this.txInfo[0].Opacity = 0;
 					this.txInfo[1].Opacity = 255;
 				}
@@ -87,10 +105,12 @@ internal class CActSelectInformation : CActivity {
 	#region [ private ]
 	//-----------------
 	[StructLayout(LayoutKind.Sequential)]
-	private struct STINFO {
+	private struct STINFO
+	{
 		public int nTexture番号;
 		public Point pt左上座標;
-		public STINFO(int nTexture番号, int x, int y) {
+		public STINFO(int nTexture番号, int x, int y)
+		{
 			this.nTexture番号 = nTexture番号;
 			this.pt左上座標 = new Point(x, y);
 		}

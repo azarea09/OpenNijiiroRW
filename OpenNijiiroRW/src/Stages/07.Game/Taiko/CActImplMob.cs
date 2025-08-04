@@ -2,25 +2,30 @@
 
 namespace OpenNijiiroRW;
 
-internal class CActImplMob : CActivity {
+internal class CActImplMob : CActivity
+{
 	/// <summary>
 	/// 踊り子
 	/// </summary>
-	public CActImplMob() {
+	public CActImplMob()
+	{
 		base.IsDeActivated = true;
 	}
 
-	public override void Activate() {
+	public override void Activate()
+	{
 		var mobDir = CSkin.Path($"{TextureLoader.BASE}{TextureLoader.GAME}{TextureLoader.MOB}");
 		var preset = HScenePreset.GetBGPreset();
 
 		if (preset == null) return;
 
-		if (System.IO.Directory.Exists(mobDir)) {
+		if (System.IO.Directory.Exists(mobDir))
+		{
 			Random random = new Random();
 
 			var upDirs = System.IO.Directory.GetDirectories(mobDir);
-			if (preset.MobSet?.Length > 0) {
+			if (preset.MobSet?.Length > 0)
+			{
 				var _presetPath = (preset.MobSet.Length > 0) ? $@"{mobDir}" + preset.MobSet[random.Next(0, preset.MobSet.Length)] : "";
 				var path = Directory.Exists(_presetPath)
 					? _presetPath
@@ -34,23 +39,29 @@ internal class CActImplMob : CActivity {
 		base.Activate();
 	}
 
-	public override void DeActivate() {
+	public override void DeActivate()
+	{
 		MobScript?.Dispose();
 
 		base.DeActivate();
 	}
 
-	public override void CreateManagedResource() {
+	public override void CreateManagedResource()
+	{
 		base.CreateManagedResource();
 	}
 
-	public override void ReleaseManagedResource() {
+	public override void ReleaseManagedResource()
+	{
 		base.ReleaseManagedResource();
 	}
 
-	public override int Draw() {
-		if (!OpenNijiiroRW.stageGameScreen.isMultiPlay) {
-			if (OpenNijiiroRW.stageSongSelect.nChoosenSongDifficulty[0] != (int)Difficulty.Tower && OpenNijiiroRW.stageSongSelect.nChoosenSongDifficulty[0] != (int)Difficulty.Dan) {
+	public override int Draw()
+	{
+		if (!OpenNijiiroRW.stageGameScreen.isMultiPlay)
+		{
+			if (OpenNijiiroRW.stageSongSelect.nChoosenSongDifficulty[0] != (int)Difficulty.Tower && OpenNijiiroRW.stageSongSelect.nChoosenSongDifficulty[0] != (int)Difficulty.Dan)
+			{
 				if (!OpenNijiiroRW.stageGameScreen.bPAUSE) MobScript?.Update();
 				MobScript?.Draw();
 

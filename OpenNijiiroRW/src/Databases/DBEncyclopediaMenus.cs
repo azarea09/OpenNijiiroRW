@@ -2,14 +2,17 @@
 
 namespace OpenNijiiroRW;
 
-class DBEncyclopediaMenus : CSavableT<DBEncyclopediaMenus.EncyclopediaMenu> {
-	public DBEncyclopediaMenus() {
+class DBEncyclopediaMenus : CSavableT<DBEncyclopediaMenus.EncyclopediaMenu>
+{
+	public DBEncyclopediaMenus()
+	{
 		_fn = @$"{OpenNijiiroRW.strEXEのあるフォルダ}Encyclopedia{Path.DirectorySeparatorChar}Menus.json";
 		base.tDBInitSavable();
 	}
 
 	#region [Auxiliary classes]
-	public class EncyclopediaMenu {
+	public class EncyclopediaMenu
+	{
 		[JsonProperty("menus")]
 		public KeyValuePair<int, EncyclopediaMenu>[] Menus;
 

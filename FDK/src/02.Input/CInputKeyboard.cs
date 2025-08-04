@@ -2,8 +2,10 @@
 
 namespace FDK;
 
-public class CInputKeyboard : CInputButtonsBase, IInputDevice, IDisposable {
-	public CInputKeyboard(IKeyboard keyboard) : base(144) {
+public class CInputKeyboard : CInputButtonsBase, IInputDevice, IDisposable
+{
+	public CInputKeyboard(IKeyboard keyboard) : base(144)
+	{
 		this.Device = keyboard;
 		this.CurrentType = InputDeviceType.Keyboard;
 		this.GUID = keyboard.Name;
@@ -15,7 +17,8 @@ public class CInputKeyboard : CInputButtonsBase, IInputDevice, IDisposable {
 		keyboard.KeyChar += KeyChar;
 	}
 
-	private void KeyDown(IKeyboard keyboard, Key key, int keyCode) {
+	private void KeyDown(IKeyboard keyboard, Key key, int keyCode)
+	{
 #if DEBUG
 		if (IMGUI_WindowIsFocused) return;
 #endif
@@ -26,7 +29,8 @@ public class CInputKeyboard : CInputButtonsBase, IInputDevice, IDisposable {
 		base.ButtonDown((int)keyNum);
 	}
 
-	private void KeyUp(IKeyboard keyboard, Key key, int keyCode) {
+	private void KeyUp(IKeyboard keyboard, Key key, int keyCode)
+	{
 #if DEBUG
 		if (IMGUI_WindowIsFocused) return;
 #endif
@@ -36,7 +40,8 @@ public class CInputKeyboard : CInputButtonsBase, IInputDevice, IDisposable {
 		base.ButtonUp((int)keyNum);
 	}
 
-	private void KeyChar(IKeyboard keyboard, char ch) {
+	private void KeyChar(IKeyboard keyboard, char ch)
+	{
 
 	}
 

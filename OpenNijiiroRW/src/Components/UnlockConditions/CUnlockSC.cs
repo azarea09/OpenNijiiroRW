@@ -1,31 +1,41 @@
 ﻿using static OpenNijiiroRW.BestPlayRecords;
 
-namespace OpenNijiiroRW {
-	internal class CUnlockSC : CUnlockCondition {
+namespace OpenNijiiroRW
+{
+	internal class CUnlockSC : CUnlockCondition
+	{
 
 
-		public CUnlockSC(CUnlockConditionFactory.UnlockConditionJsonRaw rawJson) : base(rawJson) {
+		public CUnlockSC(CUnlockConditionFactory.UnlockConditionJsonRaw rawJson) : base(rawJson)
+		{
 			this.RequiredArgCount = 2;
 			this.ConditionId = "sc";
 		}
 
-		public override (bool, string?) tConditionMet(int player, EScreen screen = EScreen.MyRoom) {
+		public override (bool, string?) tConditionMet(int player, EScreen screen = EScreen.MyRoom)
+		{
 			if (this.Values.Length % this.RequiredArgCount == 0
-						&& this.Reference.Length == this.Values.Length / this.RequiredArgCount) {
+						&& this.Reference.Length == this.Values.Length / this.RequiredArgCount)
+			{
 				int _satisfactoryPlays = this.tGetCountChartsPassingCondition(player);
 
 				bool fulfiled = this.tValueRequirementMet(_satisfactoryPlays, this.Reference.Length);
 
-				if (screen == EScreen.Internal) {
+				if (screen == EScreen.Internal)
+				{
 					return (fulfiled, "");
-				} else {
+				}
+				else
+				{
 					return (fulfiled, null);
 				}
-			} else
+			}
+			else
 				return (false, CLangManager.LangInstance.GetString("UNLOCK_CONDITION_ERROR2", this.ConditionId, this.RequiredArgCount.ToString()));
 		}
 
-		public override string tConditionMessage(EScreen screen = EScreen.MyRoom) {
+		public override string tConditionMessage(EScreen screen = EScreen.MyRoom)
+		{
 			if (!(this.Values.Length % this.RequiredArgCount == 0
 						&& this.Reference.Length == this.Values.Length / this.RequiredArgCount))
 				return CLangManager.LangInstance.GetString("UNLOCK_CONDITION_ERROR2", this.ConditionId, this.RequiredArgCount.ToString());
@@ -39,7 +49,8 @@ namespace OpenNijiiroRW {
 			var _challengeCount = this.Values.Length / this.RequiredArgCount;
 
 			var _count = 0;
-			for (int i = 0; i < _challengeCount; i++) {
+			for (int i = 0; i < _challengeCount; i++)
+			{
 				int _base = i * this.RequiredArgCount;
 				string _charterName = this.Reference[i];
 				int _songCount = this.Values[_base];
@@ -62,12 +73,14 @@ namespace OpenNijiiroRW {
 			return String.Join("\n", _rows);
 		}
 
-		protected override int tGetCountChartsPassingCondition(int player) {
+		protected override int tGetCountChartsPassingCondition(int player)
+		{
 			var bpDistinctCharts = OpenNijiiroRW.SaveFileInstances[player].data.bestPlaysDistinctCharts;
 			var chartStats = OpenNijiiroRW.SaveFileInstances[player].data.bestPlaysStats;
 
 			var _count = 0;
-			for (int i = 0; i < this.Values.Length / this.RequiredArgCount; i++) {
+			for (int i = 0; i < this.Values.Length / this.RequiredArgCount; i++)
+			{
 				int _base = i * this.RequiredArgCount;
 				string _charterName = this.Reference[i];
 				int _songCount = this.Values[_base];

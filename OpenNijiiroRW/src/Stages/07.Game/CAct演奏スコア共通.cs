@@ -4,7 +4,8 @@ using FDK;
 
 namespace OpenNijiiroRW;
 
-internal class CAct演奏スコア共通 : CActivity {
+internal class CAct演奏スコア共通 : CActivity
+{
 	// Properties
 
 	protected long[] nScoreIncrease;
@@ -22,7 +23,8 @@ internal class CAct演奏スコア共通 : CActivity {
 	protected int nNowDisplayedAddScore;
 
 	[StructLayout(LayoutKind.Sequential)]
-	protected struct STスコア {
+	protected struct STスコア
+	{
 		public bool bAddEnd;
 		public bool b使用中;
 		public bool b表示中;
@@ -33,20 +35,23 @@ internal class CAct演奏スコア共通 : CActivity {
 	}
 
 	[StructLayout(LayoutKind.Sequential)]
-	private struct ST文字位置 {
+	private struct ST文字位置
+	{
 		public char ch;
 		public Point pt;
 	}
 	private ST文字位置[] stFont;
 
 
-	public long GetScore(int player) {
+	public long GetScore(int player)
+	{
 		return nCurrentlyDisplayedScore[player];
 	}
 
 	// コンストラクタ
 
-	public CAct演奏スコア共通() {
+	public CAct演奏スコア共通()
+	{
 		ST文字位置[] st文字位置Array = new ST文字位置[11];
 		ST文字位置 st文字位置 = new ST文字位置();
 		st文字位置.ch = '0';
@@ -165,14 +170,18 @@ internal class CAct演奏スコア共通 : CActivity {
 		1f
 	};
 
-	public double Get(int player) {
+	public double Get(int player)
+	{
 		return this.nCurrentRealScore[player];
 	}
-	public void Set(double nScore, int player) {
-		if (this.nCurrentRealScore[player] != nScore) {
+	public void Set(double nScore, int player)
+	{
+		if (this.nCurrentRealScore[player] != nScore)
+		{
 			this.nCurrentRealScore[player] = nScore;
 			this.nScoreIncrease[player] = (long)(((double)(this.nCurrentRealScore[player] - this.nCurrentlyDisplayedScore[player])) / 20.0);
-			if (this.nScoreIncrease[player] < 1L) {
+			if (this.nScoreIncrease[player] < 1L)
+			{
 				this.nScoreIncrease[player] = 1L;
 			}
 		}
@@ -184,7 +193,8 @@ internal class CAct演奏スコア共通 : CActivity {
 	/// <param name="part"></param>
 	/// <param name="bAutoPlay"></param>
 	/// <param name="delta"></param>
-	public void Add(long delta, int player) {
+	public void Add(long delta, int player)
+	{
 		if (OpenNijiiroRW.ConfigIni.bAIBattleMode && player == 1) return;
 
 		double rev = 1.0;
@@ -193,9 +203,12 @@ internal class CAct演奏スコア共通 : CActivity {
 
 		this.ctTimer = new CCounter(0, 400, 1, OpenNijiiroRW.Timer);
 
-		for (int sc = 0; sc < 1; sc++) {
-			for (int i = 0; i < 256; i++) {
-				if (this.stScore[i].b使用中 == false) {
+		for (int sc = 0; sc < 1; sc++)
+		{
+			for (int i = 0; i < 256; i++)
+			{
+				if (this.stScore[i].b使用中 == false)
+				{
 					this.stScore[i].b使用中 = true;
 					this.stScore[i].b表示中 = true;
 					this.stScore[i].nAddScore = (int)delta;
@@ -212,12 +225,16 @@ internal class CAct演奏スコア共通 : CActivity {
 		this.Set(this.Get(player) + delta * rev, player);
 	}
 
-	public void BonusAdd(int player) {
+	public void BonusAdd(int player)
+	{
 		if (OpenNijiiroRW.ConfigIni.bAIBattleMode && player == 1) return;
 
-		for (int sc = 0; sc < 1; sc++) {
-			for (int i = 0; i < 256; i++) {
-				if (this.stScore[i].b使用中 == false) {
+		for (int sc = 0; sc < 1; sc++)
+		{
+			for (int i = 0; i < 256; i++)
+			{
+				if (this.stScore[i].b使用中 == false)
+				{
 					this.stScore[i].b使用中 = true;
 					this.stScore[i].b表示中 = true;
 					this.stScore[i].nAddScore = 10000;
@@ -236,12 +253,14 @@ internal class CAct演奏スコア共通 : CActivity {
 
 	// CActivity 実装
 
-	public override void Activate() {
+	public override void Activate()
+	{
 		this.nCurrentlyDisplayedScore = new long[5] { 0L, 0L, 0L, 0L, 0L };
 		this.nCurrentRealScore = new double[5] { 0L, 0L, 0L, 0L, 0L };
 		this.nScoreIncrease = new long[5] { 0L, 0L, 0L, 0L, 0L };
 
-		for (int sc = 0; sc < 256; sc++) {
+		for (int sc = 0; sc < 256; sc++)
+		{
 			this.stScore[sc].b使用中 = false;
 			this.stScore[sc].ctTimer = new CCounter();
 			this.stScore[sc].nAddScore = 0;
@@ -254,39 +273,52 @@ internal class CAct演奏スコア共通 : CActivity {
 		this.ctTimer = new CCounter();
 
 		this.ct点数アニメタイマ = new CCounter[5];
-		for (int i = 0; i < 5; i++) {
+		for (int i = 0; i < 5; i++)
+		{
 			this.ct点数アニメタイマ[i] = new CCounter();
 		}
 		this.ctBonusAddTimer = new CCounter[5];
-		for (int i = 0; i < 5; i++) {
+		for (int i = 0; i < 5; i++)
+		{
 			this.ctBonusAddTimer[i] = new CCounter();
 		}
 		base.Activate();
 	}
-	public override void CreateManagedResource() {
+	public override void CreateManagedResource()
+	{
 		//this.txScore = CDTXMania.tテクスチャの生成( CSkin.Path( @"Graphics\7_Score_number.png" ) );
 		//      this.txScore_1P = CDTXMania.tテクスチャの生成(CSkin.Path(@"Graphics\7_Score_number_1P.png"));
 		base.CreateManagedResource();
 	}
-	public override void ReleaseManagedResource() {
+	public override void ReleaseManagedResource()
+	{
 		//CDTXMania.tテクスチャの解放( ref this.txScore );
 		//      CDTXMania.tテクスチャの解放(ref this.txScore_1P);
 		base.ReleaseManagedResource();
 	}
 
-	protected void t小文字表示(int x, int y, string str, int mode, int alpha, int player) {
-		foreach (char ch in str) {
-			for (int i = 0; i < this.stFont.Length; i++) {
-				if (this.stFont[i].ch == ch) {
+	protected void t小文字表示(int x, int y, string str, int mode, int alpha, int player)
+	{
+		foreach (char ch in str)
+		{
+			for (int i = 0; i < this.stFont.Length; i++)
+			{
+				if (this.stFont[i].ch == ch)
+				{
 					Rectangle rectangle = new Rectangle(OpenNijiiroRW.Skin.Game_Score_Size[0] * i, 0, OpenNijiiroRW.Skin.Game_Score_Size[0], OpenNijiiroRW.Skin.Game_Score_Size[1]);
-					switch (mode) {
+					switch (mode)
+					{
 						case 0:
-							if (OpenNijiiroRW.Tx.Taiko_Score[0] != null) {
+							if (OpenNijiiroRW.Tx.Taiko_Score[0] != null)
+							{
 								//this.txScore.color4 = new SlimDX.Color4( 1.0f, 1.0f, 1.0f );
 								OpenNijiiroRW.Tx.Taiko_Score[0].Opacity = alpha;
-								if (OpenNijiiroRW.ConfigIni.SimpleMode) {
+								if (OpenNijiiroRW.ConfigIni.SimpleMode)
+								{
 									OpenNijiiroRW.Tx.Taiko_Score[0].Scale.Y = 1;
-								} else {
+								}
+								else
+								{
 									OpenNijiiroRW.Tx.Taiko_Score[0].Scale.Y = ScoreScale[this.ct点数アニメタイマ[player].CurrentValue];
 								}
 								OpenNijiiroRW.Tx.Taiko_Score[0].t2D拡大率考慮下基準描画(x, y, rectangle);
@@ -294,7 +326,8 @@ internal class CAct演奏スコア共通 : CActivity {
 							}
 							break;
 						case 1:
-							if (OpenNijiiroRW.Tx.Taiko_Score[1] != null) {
+							if (OpenNijiiroRW.Tx.Taiko_Score[1] != null)
+							{
 								//this.txScore.color4 = new SlimDX.Color4( 1.0f, 0.5f, 0.4f );
 								//this.txScore.color4 = CDTXMania.Skin.cScoreColor1P;
 								OpenNijiiroRW.Tx.Taiko_Score[1].Opacity = alpha;
@@ -303,7 +336,8 @@ internal class CAct演奏スコア共通 : CActivity {
 							}
 							break;
 						case 2:
-							if (OpenNijiiroRW.Tx.Taiko_Score[2] != null) {
+							if (OpenNijiiroRW.Tx.Taiko_Score[2] != null)
+							{
 								//this.txScore.color4 = new SlimDX.Color4( 0.4f, 0.5f, 1.0f );
 								//this.txScore.color4 = CDTXMania.Skin.cScoreColor2P;
 								OpenNijiiroRW.Tx.Taiko_Score[2].Opacity = alpha;
@@ -312,7 +346,8 @@ internal class CAct演奏スコア共通 : CActivity {
 							}
 							break;
 						case 3:
-							if (OpenNijiiroRW.Tx.Taiko_Score[3] != null) {
+							if (OpenNijiiroRW.Tx.Taiko_Score[3] != null)
+							{
 								//this.txScore.color4 = new SlimDX.Color4( 0.4f, 0.5f, 1.0f );
 								//this.txScore.color4 = CDTXMania.Skin.cScoreColor2P;
 								OpenNijiiroRW.Tx.Taiko_Score[3].Opacity = alpha;
@@ -321,7 +356,8 @@ internal class CAct演奏スコア共通 : CActivity {
 							}
 							break;
 						case 4:
-							if (OpenNijiiroRW.Tx.Taiko_Score[4] != null) {
+							if (OpenNijiiroRW.Tx.Taiko_Score[4] != null)
+							{
 								//this.txScore.color4 = new SlimDX.Color4( 0.4f, 0.5f, 1.0f );
 								//this.txScore.color4 = CDTXMania.Skin.cScoreColor2P;
 								OpenNijiiroRW.Tx.Taiko_Score[4].Opacity = alpha;
@@ -330,7 +366,8 @@ internal class CAct演奏スコア共通 : CActivity {
 							}
 							break;
 						case 5:
-							if (OpenNijiiroRW.Tx.Taiko_Score[5] != null) {
+							if (OpenNijiiroRW.Tx.Taiko_Score[5] != null)
+							{
 								//this.txScore.color4 = new SlimDX.Color4( 0.4f, 0.5f, 1.0f );
 								//this.txScore.color4 = CDTXMania.Skin.cScoreColor2P;
 								OpenNijiiroRW.Tx.Taiko_Score[5].Opacity = alpha;

@@ -3,11 +3,14 @@ using FDK;
 
 namespace OpenNijiiroRW;
 
-internal class CActConfigKeyAssign : CActivity {
+internal class CActConfigKeyAssign : CActivity
+{
 	// Properties
 
-	public bool bキー入力待ちの最中である {
-		get {
+	public bool bキー入力待ちの最中である
+	{
+		get
+		{
 			return this.bキー入力待ち;
 		}
 	}
@@ -15,12 +18,15 @@ internal class CActConfigKeyAssign : CActivity {
 
 	// メソッド
 
-	public void t開始(EKeyConfigPart part, EKeyConfigPad pad, string strパッド名) {
-		if (part != EKeyConfigPart.Unknown) {
+	public void t開始(EKeyConfigPart part, EKeyConfigPad pad, string strパッド名)
+	{
+		if (part != EKeyConfigPart.Unknown)
+		{
 			this.part = part;
 			this.pad = pad;
 			this.strパッド名 = strパッド名;
-			for (int i = 0; i < 0x10; i++) {
+			for (int i = 0; i < 0x10; i++)
+			{
 				this.structReset用KeyAssign[i].InputDevice = OpenNijiiroRW.ConfigIni.KeyAssign[(int)part][(int)pad][i].InputDevice;
 				this.structReset用KeyAssign[i].ID = OpenNijiiroRW.ConfigIni.KeyAssign[(int)part][(int)pad][i].ID;
 				this.structReset用KeyAssign[i].Code = OpenNijiiroRW.ConfigIni.KeyAssign[(int)part][(int)pad][i].Code;
@@ -28,12 +34,16 @@ internal class CActConfigKeyAssign : CActivity {
 		}
 	}
 
-	public void tEnter押下() {
-		if (!this.bキー入力待ち) {
+	public void tEnter押下()
+	{
+		if (!this.bキー入力待ち)
+		{
 			OpenNijiiroRW.Skin.soundDecideSFX.tPlay();
-			switch (this.n現在の選択行) {
+			switch (this.n現在の選択行)
+			{
 				case 0x10:
-					for (int i = 0; i < 0x10; i++) {
+					for (int i = 0; i < 0x10; i++)
+					{
 						OpenNijiiroRW.ConfigIni.KeyAssign[(int)this.part][(int)this.pad][i].InputDevice = this.structReset用KeyAssign[i].InputDevice;
 						OpenNijiiroRW.ConfigIni.KeyAssign[(int)this.part][(int)this.pad][i].ID = this.structReset用KeyAssign[i].ID;
 						OpenNijiiroRW.ConfigIni.KeyAssign[(int)this.part][(int)this.pad][i].Code = this.structReset用KeyAssign[i].Code;
@@ -47,14 +57,18 @@ internal class CActConfigKeyAssign : CActivity {
 			this.bキー入力待ち = true;
 		}
 	}
-	public void t次に移動() {
-		if (!this.bキー入力待ち) {
+	public void t次に移動()
+	{
+		if (!this.bキー入力待ち)
+		{
 			OpenNijiiroRW.Skin.soundカーソル移動音.tPlay();
 			this.n現在の選択行 = (this.n現在の選択行 + 1) % 0x12;
 		}
 	}
-	public void t前に移動() {
-		if (!this.bキー入力待ち) {
+	public void t前に移動()
+	{
+		if (!this.bキー入力待ち)
+		{
 			OpenNijiiroRW.Skin.soundカーソル移動音.tPlay();
 			this.n現在の選択行 = ((this.n現在の選択行 - 1) + 0x12) % 0x12;
 		}
@@ -63,7 +77,8 @@ internal class CActConfigKeyAssign : CActivity {
 
 	// CActivity 実装
 
-	public override void Activate() {
+	public override void Activate()
+	{
 		this.part = EKeyConfigPart.Unknown;
 		this.pad = EKeyConfigPad.Unknown;
 		this.strパッド名 = "";
@@ -72,45 +87,59 @@ internal class CActConfigKeyAssign : CActivity {
 		this.structReset用KeyAssign = new CConfigIni.CKeyAssign.STKEYASSIGN[0x10];
 		base.Activate();
 	}
-	public override void DeActivate() {
-		if (!base.IsDeActivated) {
+	public override void DeActivate()
+	{
+		if (!base.IsDeActivated)
+		{
 			//CDTXMania.tテクスチャの解放( ref this.txカーソル );
 			//CDTXMania.tテクスチャの解放( ref this.txHitKeyダイアログ );
 			base.DeActivate();
 		}
 	}
-	public override void CreateManagedResource() {
+	public override void CreateManagedResource()
+	{
 		//this.txカーソル = CDTXMania.tテクスチャの生成( CSkin.Path( @"Graphics\ScreenConfig menu cursor.png" ), false );
 		//this.txHitKeyダイアログ = CDTXMania.tテクスチャの生成( CSkin.Path( @"Graphics\ScreenConfig hit key to assign dialog.png" ), false );
 		base.CreateManagedResource();
 	}
-	public override void ReleaseManagedResource() {
+	public override void ReleaseManagedResource()
+	{
 		base.ReleaseManagedResource();
 	}
-	public override int Draw() {
-		if (!base.IsDeActivated) {
-			if (this.bキー入力待ち) {
-				if (OpenNijiiroRW.InputManager.Keyboard.KeyPressed((int)SlimDXKeys.Key.Escape)) {
+	public override int Draw()
+	{
+		if (!base.IsDeActivated)
+		{
+			if (this.bキー入力待ち)
+			{
+				if (OpenNijiiroRW.InputManager.Keyboard.KeyPressed((int)SlimDXKeys.Key.Escape))
+				{
 					OpenNijiiroRW.Skin.soundCancelSFX.tPlay();
 					this.bキー入力待ち = false;
 					OpenNijiiroRW.InputManager.Polling();
-				} else if ((this.tキーチェックとアサイン_Keyboard() || this.tキーチェックとアサイン_MidiIn()) || (this.tキーチェックとアサイン_Joypad() || tキーチェックとアサイン_Gamepad() || this.tキーチェックとアサイン_Mouse())) {
+				}
+				else if ((this.tキーチェックとアサイン_Keyboard() || this.tキーチェックとアサイン_MidiIn()) || (this.tキーチェックとアサイン_Joypad() || tキーチェックとアサイン_Gamepad() || this.tキーチェックとアサイン_Mouse()))
+				{
 					this.bキー入力待ち = false;
 					OpenNijiiroRW.InputManager.Polling();
 				}
-			} else if ((OpenNijiiroRW.InputManager.Keyboard.KeyPressed((int)SlimDXKeys.Key.Delete) && (this.n現在の選択行 >= 0)) && (this.n現在の選択行 <= 15)) {
+			}
+			else if ((OpenNijiiroRW.InputManager.Keyboard.KeyPressed((int)SlimDXKeys.Key.Delete) && (this.n現在の選択行 >= 0)) && (this.n現在の選択行 <= 15))
+			{
 				OpenNijiiroRW.Skin.soundDecideSFX.tPlay();
 				OpenNijiiroRW.ConfigIni.KeyAssign[(int)this.part][(int)this.pad][this.n現在の選択行].InputDevice = EInputDevice.Unknown;
 				OpenNijiiroRW.ConfigIni.KeyAssign[(int)this.part][(int)this.pad][this.n現在の選択行].ID = 0;
 				OpenNijiiroRW.ConfigIni.KeyAssign[(int)this.part][(int)this.pad][this.n現在の選択行].Code = 0;
 			}
-			if (OpenNijiiroRW.Tx.Menu_Highlight != null) {
+			if (OpenNijiiroRW.Tx.Menu_Highlight != null)
+			{
 				int num = OpenNijiiroRW.Skin.Config_KeyAssign_Move;
 				int num2 = OpenNijiiroRW.Skin.Config_KeyAssign_Menu_Highlight[0];
 				int num3 = OpenNijiiroRW.Skin.Config_KeyAssign_Menu_Highlight[1] + (num * (this.n現在の選択行 + 1));
 				//TJAPlayer3.Tx.Menu_Highlight.t2D描画( num2, num3, new Rectangle( 0, 0, 0x10, 0x20 ) );
 				float scale = 0.55f;
-				for (int j = 0; j < 14; j++) {
+				for (int j = 0; j < 14; j++)
+				{
 					OpenNijiiroRW.Tx.Menu_Highlight.Scale.X = scale;
 					OpenNijiiroRW.Tx.Menu_Highlight.Scale.Y = scale;
 
@@ -128,8 +157,10 @@ internal class CActConfigKeyAssign : CActivity {
 			OpenNijiiroRW.stageConfig.actFont.t文字列描画(x, y, this.strパッド名, false, 0.75f);
 			y += num5;
 			CConfigIni.CKeyAssign.STKEYASSIGN[] stkeyassignArray = OpenNijiiroRW.ConfigIni.KeyAssign[(int)this.part][(int)this.pad];
-			for (int i = 0; i < 0x10; i++) {
-				switch (stkeyassignArray[i].InputDevice) {
+			for (int i = 0; i < 0x10; i++)
+			{
+				switch (stkeyassignArray[i].InputDevice)
+				{
 					case EInputDevice.Keyboard:
 						this.tアサインコードの描画_Keyboard(i + 1, x + num5, y, stkeyassignArray[i].ID, stkeyassignArray[i].Code, this.n現在の選択行 == i);
 						break;
@@ -160,7 +191,8 @@ internal class CActConfigKeyAssign : CActivity {
 			y += num5;
 			OpenNijiiroRW.stageConfig.actFont.t文字列描画(x + num5, y, "<< Returnto List", this.n現在の選択行 == 0x11, 0.75f);
 			y += num5;
-			if (this.bキー入力待ち && (OpenNijiiroRW.Tx.Config_KeyAssign != null)) {
+			if (this.bキー入力待ち && (OpenNijiiroRW.Tx.Config_KeyAssign != null))
+			{
 				OpenNijiiroRW.Tx.Config_KeyAssign.t2D描画(OpenNijiiroRW.Skin.Config_KeyAssign[0], OpenNijiiroRW.Skin.Config_KeyAssign[1]);
 			}
 		}
@@ -173,10 +205,12 @@ internal class CActConfigKeyAssign : CActivity {
 	#region [ private ]
 	//-----------------
 	[StructLayout(LayoutKind.Sequential)]
-	private struct STKEYLABEL {
+	private struct STKEYLABEL
+	{
 		public int nCode;
 		public string strLabel;
-		public STKEYLABEL(int nCode, string strLabel) {
+		public STKEYLABEL(int nCode, string strLabel)
+		{
 			this.nCode = nCode;
 			this.strLabel = strLabel;
 		}
@@ -202,38 +236,50 @@ internal class CActConfigKeyAssign : CActivity {
 	//private CTexture txHitKeyダイアログ;
 	//private CTexture txカーソル;
 
-	private void tアサインコードの描画_Joypad(int line, int x, int y, int nID, int nCode, bool b強調) {
+	private void tアサインコードの描画_Joypad(int line, int x, int y, int nID, int nCode, bool b強調)
+	{
 		OpenNijiiroRW.stageConfig.actFont.t文字列描画(x, y, $"{String.Format("{0,2}", line)}. Joystick #{nID} - {OpenNijiiroRW.InputManager.Joystick(nID)?.GetButtonName(nCode) ?? "(Missing Device)"}", b強調, 0.75f);
 	}
-	private void tアサインコードの描画_Gamepad(int line, int x, int y, int nID, int nCode, bool b強調) {
+	private void tアサインコードの描画_Gamepad(int line, int x, int y, int nID, int nCode, bool b強調)
+	{
 		OpenNijiiroRW.stageConfig.actFont.t文字列描画(x, y, $"{String.Format("{0,2}", line)}. Gamepad #{nID} - {OpenNijiiroRW.InputManager.Gamepad(nID)?.GetButtonName(nCode) ?? "(Missing Device)"}", b強調, 0.75f);
 	}
-	private void tアサインコードの描画_Keyboard(int line, int x, int y, int nID, int nCode, bool b強調) {
+	private void tアサインコードの描画_Keyboard(int line, int x, int y, int nID, int nCode, bool b強調)
+	{
 		string str = null;
-		foreach (STKEYLABEL stkeylabel in this.KeyLabel) {
-			if (stkeylabel.nCode == nCode) {
+		foreach (STKEYLABEL stkeylabel in this.KeyLabel)
+		{
+			if (stkeylabel.nCode == nCode)
+			{
 				str = string.Format("{0,2}. Key {1}", line, stkeylabel.strLabel);
 				break;
 			}
 		}
-		if (str == null) {
+		if (str == null)
+		{
 			str = string.Format("{0,2}. Key 0x{1:X2}", line, nCode);
 		}
 		OpenNijiiroRW.stageConfig.actFont.t文字列描画(x, y, str, b強調, 0.75f);
 	}
-	private void tアサインコードの描画_MidiIn(int line, int x, int y, int nID, int nCode, bool b強調) {
+	private void tアサインコードの描画_MidiIn(int line, int x, int y, int nID, int nCode, bool b強調)
+	{
 		OpenNijiiroRW.stageConfig.actFont.t文字列描画(x, y, string.Format("{0,2}. MidiIn #{1} code.{2}", line, nID, nCode), b強調, 0.75f);
 	}
-	private void tアサインコードの描画_Mouse(int line, int x, int y, int nID, int nCode, bool b強調) {
+	private void tアサインコードの描画_Mouse(int line, int x, int y, int nID, int nCode, bool b強調)
+	{
 		OpenNijiiroRW.stageConfig.actFont.t文字列描画(x, y, string.Format("{0,2}. Mouse Button{1}", line, nCode), b強調, 0.75f);
 	}
 
-	private bool tキーチェックとアサイン_Gamepad() {
-		foreach (CInputButtonsBase device in OpenNijiiroRW.InputManager.InputDevices) {
-			if (device.CurrentType == InputDeviceType.Gamepad) {
+	private bool tキーチェックとアサイン_Gamepad()
+	{
+		foreach (CInputButtonsBase device in OpenNijiiroRW.InputManager.InputDevices)
+		{
+			if (device.CurrentType == InputDeviceType.Gamepad)
+			{
 				for (int i = 0; i < device.ButtonStates.Length; i++)
 				{
-					if (device.KeyPressed(i)) {
+					if (device.KeyPressed(i))
+					{
 						OpenNijiiroRW.Skin.soundDecideSFX.tPlay();
 						OpenNijiiroRW.ConfigIni.RemoveDuplicateKeyAssignments(EInputDevice.Gamepad, device.ID, i, this.pad);
 						OpenNijiiroRW.ConfigIni.KeyAssign[(int)this.part][(int)this.pad][this.n現在の選択行].InputDevice = EInputDevice.Gamepad;
@@ -246,12 +292,16 @@ internal class CActConfigKeyAssign : CActivity {
 		}
 		return false;
 	}
-	private bool tキーチェックとアサイン_Joypad() {
-		foreach (CInputButtonsBase device in OpenNijiiroRW.InputManager.InputDevices) {
-			if (device.CurrentType == InputDeviceType.Joystick) {
+	private bool tキーチェックとアサイン_Joypad()
+	{
+		foreach (CInputButtonsBase device in OpenNijiiroRW.InputManager.InputDevices)
+		{
+			if (device.CurrentType == InputDeviceType.Joystick)
+			{
 				for (int i = 0; i < device.ButtonStates.Length; i++)
 				{
-					if (device.KeyPressed(i)) {
+					if (device.KeyPressed(i))
+					{
 						OpenNijiiroRW.Skin.soundDecideSFX.tPlay();
 						OpenNijiiroRW.ConfigIni.RemoveDuplicateKeyAssignments(EInputDevice.Joypad, device.ID, i, this.pad);
 						OpenNijiiroRW.ConfigIni.KeyAssign[(int)this.part][(int)this.pad][this.n現在の選択行].InputDevice = EInputDevice.Joypad;
@@ -264,8 +314,10 @@ internal class CActConfigKeyAssign : CActivity {
 		}
 		return false;
 	}
-	private bool tキーチェックとアサイン_Keyboard() {
-		for (int i = 0; i < 144; i++) {
+	private bool tキーチェックとアサイン_Keyboard()
+	{
+		for (int i = 0; i < 144; i++)
+		{
 			//if (i != (int)SlimDXKeys.Key.Escape &&
 			//	i != (int)SlimDXKeys.Key.Return &&
 			//	i != (int)SlimDXKeys.Key.UpArrow &&
@@ -276,7 +328,8 @@ internal class CActConfigKeyAssign : CActivity {
 			//{
 			if (i != (int)SlimDXKeys.Key.Escape &&
 				i != (int)SlimDXKeys.Key.Return &&
-				OpenNijiiroRW.InputManager.Keyboard.KeyPressed(i)) {
+				OpenNijiiroRW.InputManager.Keyboard.KeyPressed(i))
+			{
 				OpenNijiiroRW.Skin.soundDecideSFX.tPlay();
 				if (pad < EKeyConfigPad.Capture)
 					OpenNijiiroRW.ConfigIni.RemoveDuplicateKeyAssignments(EInputDevice.Keyboard, 0, i, this.pad);
@@ -284,7 +337,8 @@ internal class CActConfigKeyAssign : CActivity {
 				OpenNijiiroRW.ConfigIni.KeyAssign[(int)this.part][(int)this.pad][this.n現在の選択行].ID = 0;
 				OpenNijiiroRW.ConfigIni.KeyAssign[(int)this.part][(int)this.pad][this.n現在の選択行].Code = i;
 				return true;
-			} else if (i == (int)SlimDXKeys.Key.Return && OpenNijiiroRW.InputManager.Keyboard.KeyPressed(i)) // Remove keybind
+			}
+			else if (i == (int)SlimDXKeys.Key.Return && OpenNijiiroRW.InputManager.Keyboard.KeyPressed(i)) // Remove keybind
 			{
 				OpenNijiiroRW.Skin.soundCancelSFX.tPlay();
 				OpenNijiiroRW.ConfigIni.KeyAssign[(int)this.part][(int)this.pad][this.n現在の選択行].InputDevice = EInputDevice.Unknown;
@@ -295,11 +349,16 @@ internal class CActConfigKeyAssign : CActivity {
 		}
 		return false;
 	}
-	private bool tキーチェックとアサイン_MidiIn() {
-		foreach (IInputDevice device in OpenNijiiroRW.InputManager.InputDevices) {
-			if (device.CurrentType == InputDeviceType.MidiIn) {
-				for (int i = 0; i < 0x100; i++) {
-					if (device.KeyPressed(i)) {
+	private bool tキーチェックとアサイン_MidiIn()
+	{
+		foreach (IInputDevice device in OpenNijiiroRW.InputManager.InputDevices)
+		{
+			if (device.CurrentType == InputDeviceType.MidiIn)
+			{
+				for (int i = 0; i < 0x100; i++)
+				{
+					if (device.KeyPressed(i))
+					{
 						OpenNijiiroRW.Skin.soundDecideSFX.tPlay();
 						OpenNijiiroRW.ConfigIni.RemoveDuplicateKeyAssignments(EInputDevice.MIDIInput, device.ID, i, this.pad);
 						OpenNijiiroRW.ConfigIni.KeyAssign[(int)this.part][(int)this.pad][this.n現在の選択行].InputDevice = EInputDevice.MIDIInput;
@@ -312,9 +371,12 @@ internal class CActConfigKeyAssign : CActivity {
 		}
 		return false;
 	}
-	private bool tキーチェックとアサイン_Mouse() {
-		for (int i = 0; i < 8; i++) {
-			if (OpenNijiiroRW.InputManager.Mouse.KeyPressed(i)) {
+	private bool tキーチェックとアサイン_Mouse()
+	{
+		for (int i = 0; i < 8; i++)
+		{
+			if (OpenNijiiroRW.InputManager.Mouse.KeyPressed(i))
+			{
 				OpenNijiiroRW.ConfigIni.RemoveDuplicateKeyAssignments(EInputDevice.Mouse, 0, i, this.pad);
 				OpenNijiiroRW.ConfigIni.KeyAssign[(int)this.part][(int)this.pad][this.n現在の選択行].InputDevice = EInputDevice.Mouse;
 				OpenNijiiroRW.ConfigIni.KeyAssign[(int)this.part][(int)this.pad][this.n現在の選択行].ID = 0;

@@ -2,19 +2,24 @@
 
 namespace OpenNijiiroRW;
 
-class CHitSounds {
-	public CHitSounds(string path) {
+class CHitSounds
+{
+	public CHitSounds(string path)
+	{
 		tLoadFile(path);
-		for (int i = 0; i < 5; i++) {
+		for (int i = 0; i < 5; i++)
+		{
 			tReloadHitSounds(OpenNijiiroRW.ConfigIni.nHitSounds[i], i);
 		}
 	}
 
-	public bool tReloadHitSounds(int id, int player) {
+	public bool tReloadHitSounds(int id, int player)
+	{
 		if (id >= names.Length || id >= data.Length)
 			return false;
 
-		string fileExtension(string file) {
+		string fileExtension(string file)
+		{
 			string path = Path.Combine(data[id].path, file);
 			return File.Exists(path + ".ogg") ? path + ".ogg" : path + ".wav";
 		}
@@ -36,7 +41,8 @@ class CHitSounds {
 
 	#region [private]
 
-	private class HitSoundsData {
+	private class HitSoundsData
+	{
 		[JsonProperty("name")]
 		[JsonConverter(typeof(LocalizedStringConverter<CLocalizationData>))]
 		public CLocalizationData name = new();
@@ -45,7 +51,8 @@ class CHitSounds {
 		public string path = $"Global{Path.DirectorySeparatorChar}HitSounds{Path.DirectorySeparatorChar}_fallback{Path.DirectorySeparatorChar}";
 
 		public HitSoundsData() { name.SetString("default", "Unknown Hitsound"); }
-		public HitSoundsData(string path) : this() {
+		public HitSoundsData(string path) : this()
+		{
 			name.SetString("default", Path.GetRelativePath($"Global{Path.DirectorySeparatorChar}HitSounds{Path.DirectorySeparatorChar}", path));
 			this.path = path;
 		}
@@ -53,12 +60,14 @@ class CHitSounds {
 
 	private HitSoundsData[] data;
 
-	private void tLoadFile(string path) {
+	private void tLoadFile(string path)
+	{
 		string[] directories = Directory.GetDirectories(path);
 		data = new HitSoundsData[directories.Length];
 		names = new CLocalizationData[data.Length];
 
-		for (int i = 0; i < data.Length; i++) {
+		for (int i = 0; i < data.Length; i++)
+		{
 			string dir_path = Path.Combine(directories[i], "HitSounds.json");
 			data[i] = File.Exists(dir_path) ? ConfigManager.GetConfig<HitSoundsData>(dir_path) : new(directories[i]);
 			data[i].path = directories[i];

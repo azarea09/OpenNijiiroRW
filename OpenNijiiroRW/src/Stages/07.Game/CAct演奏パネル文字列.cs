@@ -1,23 +1,26 @@
 ﻿using System.Diagnostics;
 using FDK;
 using SkiaSharp;
-using static OpenNijiiroRW.CActSelect曲リスト;
 using Color = System.Drawing.Color;
 
 namespace OpenNijiiroRW;
 
-internal class CAct演奏パネル文字列 : CActivity {
-	public static int tToArgb(int r, int g, int b) {
+internal class CAct演奏パネル文字列 : CActivity
+{
+	public static int tToArgb(int r, int g, int b)
+	{
 		return (b * 65536 + g * 256 + r);
 	}
 
 	// コンストラクタ
-	public CAct演奏パネル文字列() {
+	public CAct演奏パネル文字列()
+	{
 		base.IsDeActivated = true;
 		this.Start();
 	}
 
-	private readonly Dictionary<string, Color4> tTagDict = new Dictionary<string, Color4> {
+	private readonly Dictionary<string, Color4> tTagDict = new Dictionary<string, Color4>
+	{
 		["アニメ"] = new Color4(tToArgb(253, 145, 208)),
 		["Anime"] = new Color4(tToArgb(253, 145, 208)),
 		["クラシック"] = new Color4(tToArgb(221, 172, 4)),
@@ -53,22 +56,30 @@ internal class CAct演奏パネル文字列 : CActivity {
 	/// <param name="songName">曲名</param>
 	/// <param name="genreName">ジャンル名</param>
 	/// <param name="stageText">曲数</param>
-	public void SetPanelString(string songName, string genreName, string stageText = null, CSongListNode songNode = null) {
-		if (base.IsActivated) {
+	public void SetPanelString(string songName, string genreName, string stageText = null, CSongListNode songNode = null)
+	{
+		if (base.IsActivated)
+		{
 			OpenNijiiroRW.tテクスチャの解放(ref this.txPanel);
-			if ((songName != null) && (songName.Length > 0)) {
-				try {
-					using (var bmpSongTitle = pfMusicName.DrawText(songName, OpenNijiiroRW.Skin.Game_MusicName_ForeColor, OpenNijiiroRW.Skin.Game_MusicName_BackColor, null, 30)) {
+			if ((songName != null) && (songName.Length > 0))
+			{
+				try
+				{
+					using (var bmpSongTitle = pfMusicName.DrawText(songName, OpenNijiiroRW.Skin.Game_MusicName_ForeColor, OpenNijiiroRW.Skin.Game_MusicName_BackColor, null, 30))
+					{
 						this.txMusicName = OpenNijiiroRW.tテクスチャの生成(bmpSongTitle, false);
 					}
-					if (txMusicName != null) {
+					if (txMusicName != null)
+					{
 						this.txMusicName.Scale.X = OpenNijiiroRW.GetSongNameXScaling(ref txMusicName);
 					}
 
 					SKBitmap bmpDiff;
 					string strDiff = "";
-					if (OpenNijiiroRW.Skin.eDiffDispMode == EDifficultyDisplayType.TextOnNthSong) {
-						switch (OpenNijiiroRW.stageSongSelect.nChoosenSongDifficulty[0]) {
+					if (OpenNijiiroRW.Skin.eDiffDispMode == EDifficultyDisplayType.TextOnNthSong)
+					{
+						switch (OpenNijiiroRW.stageSongSelect.nChoosenSongDifficulty[0])
+						{
 							case 0:
 								strDiff = "かんたん ";
 								break;
@@ -89,14 +100,19 @@ internal class CAct演奏パネル文字列 : CActivity {
 								break;
 						}
 						bmpDiff = pfMusicName.DrawText(strDiff + stageText, OpenNijiiroRW.Skin.Game_StageText_ForeColor, OpenNijiiroRW.Skin.Game_StageText_BackColor, null, 30);
-					} else {
+					}
+					else
+					{
 						bmpDiff = pfMusicName.DrawText(stageText, OpenNijiiroRW.Skin.Game_StageText_ForeColor, OpenNijiiroRW.Skin.Game_StageText_BackColor, null, 30);
 					}
 
-					using (bmpDiff) {
+					using (bmpDiff)
+					{
 						txStage = OpenNijiiroRW.Tx.TxCGen("Songs");
 					}
-				} catch (CTextureCreateFailedException e) {
+				}
+				catch (CTextureCreateFailedException e)
+				{
 					Trace.TraceError(e.ToString());
 					Trace.TraceError("パネル文字列テクスチャの生成に失敗しました。");
 					this.txPanel = null;
@@ -111,11 +127,16 @@ internal class CAct演奏パネル文字列 : CActivity {
 
 			if (!(songNode != null && songNode.isChangedBoxColor)
 				&& tTagDict != null
-				&& tTagDict.ContainsKey(genreName)) {
+				&& tTagDict.ContainsKey(genreName))
+			{
 				this.txGENRE.color4 = tTagDict[genreName];
-			} else if (genreName == CLangManager.LangInstance.GetString("TITLE_MODE_DAN")) {
+			}
+			else if (genreName == CLangManager.LangInstance.GetString("TITLE_MODE_DAN"))
+			{
 				this.txGENRE.color4 = tTagDict["段位道場"];
-			} else {
+			}
+			else
+			{
 				this.txGENRE.color4 = CConversion.ColorToColor4(stageColor);
 			}
 
@@ -131,39 +152,51 @@ internal class CAct演奏パネル文字列 : CActivity {
 		}
 	}
 
-	public void t歌詞テクスチャを生成する(SKBitmap bmplyric) {
+	public void t歌詞テクスチャを生成する(SKBitmap bmplyric)
+	{
 		OpenNijiiroRW.tDisposeSafely(ref this.tx歌詞テクスチャ);
 		this.tx歌詞テクスチャ = OpenNijiiroRW.tテクスチャの生成(bmplyric);
 	}
-	public void t歌詞テクスチャを削除する() {
+	public void t歌詞テクスチャを削除する()
+	{
 		OpenNijiiroRW.tテクスチャの解放(ref this.tx歌詞テクスチャ);
 	}
 	/// <summary>
 	/// レイヤー管理のため、On進行描画から分離。
 	/// </summary>
-	public void t歌詞テクスチャを描画する() {
-		if (this.tx歌詞テクスチャ != null) {
-			if (OpenNijiiroRW.Skin.Game_Lyric_ReferencePoint == CSkin.ReferencePoint.Left) {
+	public void t歌詞テクスチャを描画する()
+	{
+		if (this.tx歌詞テクスチャ != null)
+		{
+			if (OpenNijiiroRW.Skin.Game_Lyric_ReferencePoint == CSkin.ReferencePoint.Left)
+			{
 				this.tx歌詞テクスチャ.t2D描画(OpenNijiiroRW.Skin.Game_Lyric_X, OpenNijiiroRW.Skin.Game_Lyric_Y - (this.tx歌詞テクスチャ.szTextureSize.Height));
-			} else if (OpenNijiiroRW.Skin.Game_Lyric_ReferencePoint == CSkin.ReferencePoint.Right) {
+			}
+			else if (OpenNijiiroRW.Skin.Game_Lyric_ReferencePoint == CSkin.ReferencePoint.Right)
+			{
 				this.tx歌詞テクスチャ.t2D描画(OpenNijiiroRW.Skin.Game_Lyric_X - this.tx歌詞テクスチャ.szTextureSize.Width, OpenNijiiroRW.Skin.Game_Lyric_Y - (this.tx歌詞テクスチャ.szTextureSize.Height));
-			} else {
+			}
+			else
+			{
 				this.tx歌詞テクスチャ.t2D描画(OpenNijiiroRW.Skin.Game_Lyric_X - (this.tx歌詞テクスチャ.szTextureSize.Width / 2), OpenNijiiroRW.Skin.Game_Lyric_Y - (this.tx歌詞テクスチャ.szTextureSize.Height));
 			}
 		}
 	}
 
-	public void Stop() {
+	public void Stop()
+	{
 		this.bMute = true;
 	}
-	public void Start() {
+	public void Start()
+	{
 		this.bMute = false;
 	}
 
 
 	// CActivity 実装
 
-	public override void Activate() {
+	public override void Activate()
+	{
 		this.pfMusicName = HPrivateFastFont.tInstantiateMainFont(OpenNijiiroRW.Skin.Game_MusicName_FontSize);
 		this.txPanel = null;
 		this.ct進行用 = new CCounter();
@@ -171,7 +204,8 @@ internal class CAct演奏パネル文字列 : CActivity {
 		this.bFirst = true;
 		base.Activate();
 	}
-	public override void DeActivate() {
+	public override void DeActivate()
+	{
 		this.ct進行用 = null;
 		OpenNijiiroRW.tDisposeSafely(ref this.txPanel);
 		OpenNijiiroRW.tDisposeSafely(ref this.txMusicName);
@@ -183,26 +217,33 @@ internal class CAct演奏パネル文字列 : CActivity {
 		OpenNijiiroRW.tDisposeSafely(ref this.tx歌詞テクスチャ);
 		base.DeActivate();
 	}
-	public override void CreateManagedResource() {
+	public override void CreateManagedResource()
+	{
 		base.CreateManagedResource();
 	}
-	public override void ReleaseManagedResource() {
+	public override void ReleaseManagedResource()
+	{
 		base.ReleaseManagedResource();
 	}
-	public override int Draw() {
+	public override int Draw()
+	{
 		if (OpenNijiiroRW.stageGameScreen.actDan.IsAnimating || OpenNijiiroRW.ConfigIni.nPlayerCount > 2) return 0;
-		if (!base.IsDeActivated && !this.bMute) {
+		if (!base.IsDeActivated && !this.bMute)
+		{
 			this.ct進行用.TickLoop();
 
-			if (this.txGENRE != null) {
+			if (this.txGENRE != null)
+			{
 				this.txGENRE.t2D描画(OpenNijiiroRW.Skin.Game_Genre_X, OpenNijiiroRW.Skin.Game_Genre_Y);
 				TitleTextureKey.ResolveTitleTexture(this.ttkGENRE).t2D拡大率考慮中央基準描画(OpenNijiiroRW.Skin.Game_Genre_X + OpenNijiiroRW.Skin.Game_GenreText_Offset[0], OpenNijiiroRW.Skin.Game_Genre_Y + OpenNijiiroRW.Skin.Game_GenreText_Offset[1]);
 			}
 			if (this.txStage != null)
 				this.txStage.t2D描画(OpenNijiiroRW.Skin.Game_Genre_X, OpenNijiiroRW.Skin.Game_Genre_Y);
 
-			if (OpenNijiiroRW.Skin.b現在のステージ数を表示しない) {
-				if (this.txMusicName != null) {
+			if (OpenNijiiroRW.Skin.b現在のステージ数を表示しない)
+			{
+				if (this.txMusicName != null)
+				{
 					float fRate = (float)OpenNijiiroRW.Skin.Game_MusicName_MaxWidth / this.txMusicName.szTextureSize.Width;
 					if (this.txMusicName.szTextureSize.Width <= OpenNijiiroRW.Skin.Game_MusicName_MaxWidth)
 						fRate = 1.0f;
@@ -211,29 +252,41 @@ internal class CAct演奏パネル文字列 : CActivity {
 
 					this.txMusicName.t2D描画(OpenNijiiroRW.Skin.Game_MusicName_X - (this.txMusicName.szTextureSize.Width * fRate), OpenNijiiroRW.Skin.Game_MusicName_Y);
 				}
-			} else {
+			}
+			else
+			{
 				#region[ 透明度制御 ]
 
-				if (this.ct進行用.CurrentValue < 745) {
+				if (this.ct進行用.CurrentValue < 745)
+				{
 					if (this.txStage != null)
 						this.txStage.Opacity = 0;
-				} else if (this.ct進行用.CurrentValue >= 745 && this.ct進行用.CurrentValue < 1000) {
+				}
+				else if (this.ct進行用.CurrentValue >= 745 && this.ct進行用.CurrentValue < 1000)
+				{
 					if (this.txStage != null)
 						this.txStage.Opacity = (this.ct進行用.CurrentValue - 745);
-				} else if (this.ct進行用.CurrentValue >= 1000 && this.ct進行用.CurrentValue <= 1745) {
+				}
+				else if (this.ct進行用.CurrentValue >= 1000 && this.ct進行用.CurrentValue <= 1745)
+				{
 					if (this.txStage != null)
 						this.txStage.Opacity = 255;
-				} else if (this.ct進行用.CurrentValue >= 1745) {
+				}
+				else if (this.ct進行用.CurrentValue >= 1745)
+				{
 					if (this.txStage != null)
 						this.txStage.Opacity = 255 - (this.ct進行用.CurrentValue - 1745);
 				}
 				#endregion
 
-				if (this.txMusicName != null) {
-					if (this.IsFirstDraw) {
+				if (this.txMusicName != null)
+				{
+					if (this.IsFirstDraw)
+					{
 						IsFirstDraw = false;
 					}
-					if (this.txMusicName != null) {
+					if (this.txMusicName != null)
+					{
 						float fRate = (float)OpenNijiiroRW.Skin.Game_MusicName_MaxWidth / this.txMusicName.szTextureSize.Width;
 						if (this.txMusicName.szTextureSize.Width <= OpenNijiiroRW.Skin.Game_MusicName_MaxWidth)
 							fRate = 1.0f;
@@ -252,7 +305,8 @@ internal class CAct演奏パネル文字列 : CActivity {
 		return 0;
 	}
 
-	public enum ESongType {
+	public enum ESongType
+	{
 		REGULAR,
 		DAN,
 		TOWER,

@@ -2,8 +2,10 @@
 
 namespace OpenNijiiroRW;
 
-class Easing {
-	public int EaseIn(CCounter counter, float startPoint, float endPoint, CalcType type) {
+class Easing
+{
+	public int EaseIn(CCounter counter, float startPoint, float endPoint, CalcType type)
+	{
 		StartPoint = startPoint;
 		EndPoint = endPoint;
 		Sa = EndPoint - StartPoint;
@@ -11,7 +13,8 @@ class Easing {
 		Type = type;
 		CounterValue = counter.CurrentValue;
 
-		switch (Type) {
+		switch (Type)
+		{
 			case CalcType.Quadratic: //Quadratic
 				CounterValue /= TimeMs;
 				Value = Sa * CounterValue * CounterValue + StartPoint;
@@ -45,7 +48,8 @@ class Easing {
 
 		return (int)Value;
 	}
-	public int EaseOut(CCounter counter, float startPoint, float endPoint, CalcType type) {
+	public int EaseOut(CCounter counter, float startPoint, float endPoint, CalcType type)
+	{
 		StartPoint = startPoint;
 		EndPoint = endPoint;
 		Sa = EndPoint - StartPoint;
@@ -53,7 +57,8 @@ class Easing {
 		Type = type;
 		CounterValue = counter.CurrentValue;
 
-		switch (Type) {
+		switch (Type)
+		{
 			case CalcType.Quadratic: //Quadratic
 				CounterValue /= TimeMs;
 				Value = -Sa * CounterValue * (CounterValue - 2) + StartPoint;
@@ -92,7 +97,8 @@ class Easing {
 
 		return (int)Value;
 	}
-	public float EaseInOut(CCounter counter, float startPoint, float endPoint, CalcType type) {
+	public float EaseInOut(CCounter counter, float startPoint, float endPoint, CalcType type)
+	{
 		StartPoint = startPoint;
 		EndPoint = endPoint;
 		Sa = EndPoint - StartPoint;
@@ -100,10 +106,12 @@ class Easing {
 		Type = type;
 		CounterValue = counter.CurrentValue;
 
-		switch (Type) {
+		switch (Type)
+		{
 			case CalcType.Quadratic: //Quadratic
 				CounterValue /= TimeMs / 2;
-				if (CounterValue < 1) {
+				if (CounterValue < 1)
+				{
 					Value = Sa / 2 * CounterValue * CounterValue + StartPoint;
 					break;
 				}
@@ -112,7 +120,8 @@ class Easing {
 				break;
 			case CalcType.Cubic: //Cubic
 				CounterValue /= TimeMs / 2;
-				if (CounterValue < 1) {
+				if (CounterValue < 1)
+				{
 					Value = Sa / 2 * CounterValue * CounterValue * CounterValue + StartPoint;
 					break;
 				}
@@ -121,7 +130,8 @@ class Easing {
 				break;
 			case CalcType.Quartic: //Quartic
 				CounterValue /= TimeMs / 2;
-				if (CounterValue < 1) {
+				if (CounterValue < 1)
+				{
 					Value = Sa / 2 * CounterValue * CounterValue * CounterValue * CounterValue + StartPoint;
 					break;
 				}
@@ -131,7 +141,8 @@ class Easing {
 			case CalcType.Quintic: //Quintic
 				CounterValue /= TimeMs;
 				CounterValue /= TimeMs / 2;
-				if (CounterValue < 1) {
+				if (CounterValue < 1)
+				{
 					Value = Sa / 2 * CounterValue * CounterValue * CounterValue * CounterValue * CounterValue + StartPoint;
 					break;
 				}
@@ -143,7 +154,8 @@ class Easing {
 				break;
 			case CalcType.Exponential: //Exponential
 				CounterValue /= TimeMs / 2;
-				if (CounterValue < 1) {
+				if (CounterValue < 1)
+				{
 					Value = Sa / 2 * Math.Pow(2, 10 * (CounterValue - 1)) + StartPoint;
 					break;
 				}
@@ -152,7 +164,8 @@ class Easing {
 				break;
 			case CalcType.Circular: //Circular
 				CounterValue /= TimeMs / 2;
-				if (CounterValue < 1) {
+				if (CounterValue < 1)
+				{
 					Value = -Sa / 2 * (Math.Sqrt(1 - CounterValue * CounterValue) - 1) + StartPoint;
 					break;
 				}
@@ -175,7 +188,8 @@ class Easing {
 	private CalcType Type;
 	private double CounterValue;
 	private double Value;
-	public enum CalcType {
+	public enum CalcType
+	{
 		Quadratic,
 		Cubic,
 		Quartic,

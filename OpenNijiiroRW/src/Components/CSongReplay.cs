@@ -1,6 +1,7 @@
 ﻿namespace OpenNijiiroRW;
 
-class CSongReplay {
+class CSongReplay
+{
 	/* Game version used for the replay
 	 * 521 = 0.5.2.1
 	 * 530 = 0.5.3
@@ -26,7 +27,8 @@ class CSongReplay {
 	 * - 8 (256) : Safe (Bad => Ok)
 	 */
 	[Flags]
-	public enum EModFlag {
+	public enum EModFlag
+	{
 		None = 0,
 		Mirror = 1 << 0,
 		Random = 1 << 1,
@@ -39,33 +41,40 @@ class CSongReplay {
 		Safe = 1 << 8
 	}
 
-	public CSongReplay() {
+	public CSongReplay()
+	{
 		replayFolder = "";
 		storedPlayer = 0;
 	}
 
-	public CSongReplay(string ChartPath, int player) {
+	public CSongReplay(string ChartPath, int player)
+	{
 		string _chartFolder = Path.GetDirectoryName(ChartPath);
 		replayFolder = Path.Combine(_chartFolder, REPLAY_FOLDER_NAME);
 
-		try {
+		try
+		{
 			Directory.CreateDirectory(replayFolder);
 
 			Console.WriteLine("Folder Path: " + replayFolder);
-		} catch (Exception ex) {
+		}
+		catch (Exception ex)
+		{
 			Console.WriteLine("An error occurred: " + ex.Message);
 		}
 
 		storedPlayer = player;
 	}
 
-	public void tRegisterInput(double timestamp, byte keypress) {
+	public void tRegisterInput(double timestamp, byte keypress)
+	{
 		allInputs.Add(Tuple.Create(timestamp, keypress));
 	}
 
 	#region [Dan methods]
 
-	public void tDanRegisterSongCount(int songCount) {
+	public void tDanRegisterSongCount(int songCount)
+	{
 		DanSongCount = songCount;
 		IndividualGoodCount = new int[songCount];
 		IndividualOkCount = new int[songCount];
@@ -77,7 +86,8 @@ class CSongReplay {
 		IndividualScore = new int[songCount];
 	}
 
-	public void tDanInputSongResults(int songNo) {
+	public void tDanInputSongResults(int songNo)
+	{
 		if (songNo >= DanSongCount) return;
 		if (songNo < 0) return;
 		IndividualGoodCount[songNo] = OpenNijiiroRW.stageGameScreen.DanSongScore[songNo].nGreat;
@@ -96,10 +106,12 @@ class CSongReplay {
 
 	#region [Load methods]
 
-	private List<Tuple<double, byte>> ConvertByteArrayToTupleList(byte[] byteArray) {
+	private List<Tuple<double, byte>> ConvertByteArrayToTupleList(byte[] byteArray)
+	{
 		List<Tuple<double, byte>> tupleList = new List<Tuple<double, byte>>();
 
-		for (int i = 0; i < byteArray.Length; i += sizeof(double) + sizeof(byte)) {
+		for (int i = 0; i < byteArray.Length; i += sizeof(double) + sizeof(byte))
+		{
 			double doubleValue = BitConverter.ToDouble(byteArray, i);
 			byte byteValue = byteArray[i + sizeof(double)];
 			tupleList.Add(Tuple.Create(doubleValue, byteValue));
@@ -108,10 +120,14 @@ class CSongReplay {
 		return tupleList;
 	}
 
-	public void tLoadReplayFile(string optkrFilePath) {
-		try {
-			using (FileStream fileStream = new FileStream(optkrFilePath, FileMode.Open)) {
-				using (BinaryReader reader = new BinaryReader(fileStream)) {
+	public void tLoadReplayFile(string optkrFilePath)
+	{
+		try
+		{
+			using (FileStream fileStream = new FileStream(optkrFilePath, FileMode.Open))
+			{
+				using (BinaryReader reader = new BinaryReader(fileStream))
+				{
 					GameMode = reader.ReadByte();
 					GameVersion = reader.ReadInt32();
 					ChartChecksum = reader.ReadString();
@@ -128,7 +144,8 @@ class CSongReplay {
 					ReachedFloor = reader.ReadInt32();
 					RemainingLives = reader.ReadInt32();
 					DanSongCount = reader.ReadInt32();
-					for (int i = 0; i < DanSongCount; i++) {
+					for (int i = 0; i < DanSongCount; i++)
+					{
 						IndividualGoodCount[i] = reader.ReadInt32();
 						IndividualOkCount[i] = reader.ReadInt32();
 						IndividualBadCount[i] = reader.ReadInt32();
@@ -157,7 +174,9 @@ class CSongReplay {
 					OnlineScoreID = reader.ReadInt64();
 				}
 			}
-		} catch (Exception ex) {
+		}
+		catch (Exception ex)
+		{
 
 		}
 	}
@@ -166,10 +185,12 @@ class CSongReplay {
 
 	#region [Save methods]
 
-	private byte[] ConvertTupleListToByteArray(List<Tuple<double, byte>> tupleList) {
+	private byte[] ConvertTupleListToByteArray(List<Tuple<double, byte>> tupleList)
+	{
 		List<byte> byteArray = new List<byte>();
 
-		foreach (var tuple in tupleList) {
+		foreach (var tuple in tupleList)
+		{
 			byte[] doubleBytes = BitConverter.GetBytes(tuple.Item1);
 			byteArray.AddRange(doubleBytes);
 			byteArray.Add(tuple.Item2);
@@ -178,12 +199,16 @@ class CSongReplay {
 		return byteArray.ToArray();
 	}
 
-	public void tSaveReplayFile() {
+	public void tSaveReplayFile()
+	{
 		string _path = replayFolder + @"/Replay_" + ChartUniqueID + @"_" + PlayerName + @"_" + Timestamp.ToString() + @".optkr";
 
-		try {
-			using (FileStream fileStream = new FileStream(_path, FileMode.Create)) {
-				using (BinaryWriter writer = new BinaryWriter(fileStream)) {
+		try
+		{
+			using (FileStream fileStream = new FileStream(_path, FileMode.Create))
+			{
+				using (BinaryWriter writer = new BinaryWriter(fileStream))
+				{
 					writer.Write(GameMode);
 					writer.Write(GameVersion);
 					writer.Write(ChartChecksum);
@@ -200,7 +225,8 @@ class CSongReplay {
 					writer.Write(ReachedFloor);
 					writer.Write(RemainingLives);
 					writer.Write(DanSongCount);
-					for (int i = 0; i < DanSongCount; i++) {
+					for (int i = 0; i < DanSongCount; i++)
+					{
 						writer.Write(IndividualGoodCount[i]);
 						writer.Write(IndividualOkCount[i]);
 						writer.Write(IndividualBadCount[i]);
@@ -227,17 +253,21 @@ class CSongReplay {
 					writer.Write(OnlineScoreID);
 				}
 			}
-		} catch (Exception ex) {
+		}
+		catch (Exception ex)
+		{
 
 		}
 	}
 
-	public void tResultsRegisterReplayInformations(int Coins, int Clear, int SRank) {
+	public void tResultsRegisterReplayInformations(int Coins, int Clear, int SRank)
+	{
 		// Actual player (Used for saved informations)
 		int actualPlayer = OpenNijiiroRW.GetActualPlayer(storedPlayer);
 
 		// Game mode
-		switch (OpenNijiiroRW.stageSongSelect.nChoosenSongDifficulty[0]) {
+		switch (OpenNijiiroRW.stageSongSelect.nChoosenSongDifficulty[0])
+		{
 			case (int)Difficulty.Dan:
 				GameMode = 1;
 				break;
@@ -265,7 +295,8 @@ class CSongReplay {
 		Score = OpenNijiiroRW.stageGameScreen.CChartScore[storedPlayer].nScore;
 		CoinValue = (short)Coins;
 		// Tower parameters
-		if (GameMode == 2) {
+		if (GameMode == 2)
+		{
 			ReachedFloor = CFloorManagement.LastRegisteredFloor;
 			RemainingLives = CFloorManagement.CurrentNumberOfLives;
 		}

@@ -3,7 +3,8 @@ using static OpenNijiiroRW.CTja;
 
 namespace OpenNijiiroRW;
 
-internal class CChip : IComparable<CChip>, ICloneable {
+internal class CChip : IComparable<CChip>, ICloneable
+{
 	public EScrollMode eScrollMode;
 	public bool bHit; // note is hit/broken or roll end is reached
 	public bool bVisible = true;
@@ -115,10 +116,13 @@ internal class CChip : IComparable<CChip>, ICloneable {
 	//
 
 
-	public bool b自動再生音チャンネルである {
-		get {
+	public bool b自動再生音チャンネルである
+	{
+		get
+		{
 			int num = this.nChannelNo;
-			if ((((num != 1) && ((0x61 > num) || (num > 0x69))) && ((0x70 > num) || (num > 0x79))) && ((0x80 > num) || (num > 0x89))) {
+			if ((((num != 1) && ((0x61 > num) || (num > 0x69))) && ((0x70 > num) || (num > 0x79))) && ((0x80 > num) || (num > 0x89)))
+			{
 				return ((0x90 <= num) && (num <= 0x92));
 			}
 			return true;
@@ -132,7 +136,8 @@ internal class CChip : IComparable<CChip>, ICloneable {
 	public CCounter? RollInputTime; // 18.9.22 AioiLight Add  連打入力後、RollDelayが作動するまでのタイマー
 	public int RollEffectLevel; // 18.9.22 AioiLight Add 連打時に赤くなるやつの度合い
 
-	public void ResetRollEffect() {
+	public void ResetRollEffect()
+	{
 		this.RollInputTime?.Stop();
 		this.RollInputTime = null;
 		this.RollDelay?.Stop();
@@ -140,13 +145,15 @@ internal class CChip : IComparable<CChip>, ICloneable {
 		this.RollEffectLevel = 0;
 	}
 
-	public CChip() {
+	public CChip()
+	{
 		this.nHorizontalChipDistance = 0;
 		this.nVerticalChipDistance = 0;
 		this.start = this;
 		this.end = this;
 	}
-	public void t初期化() {
+	public void t初期化()
+	{
 		this.bBranch = false;
 		this.nChannelNo = 0;
 		this.n整数値 = 0; //整数値をList上の番号として用いる。
@@ -173,7 +180,8 @@ internal class CChip : IComparable<CChip>, ICloneable {
 		this.dbSCROLL = 1.0;
 		this.dbSCROLL_Y = 0.0f;
 	}
-	public override string ToString() {
+	public override string ToString()
+	{
 
 		//2016.10.07 kairera0467 近日中に再編成予定
 		string[] chToStr =
@@ -257,25 +265,33 @@ internal class CChip : IComparable<CChip>, ICloneable {
 	/// チップの再生長を取得する。現状、WAVチップとBGAチップでのみ使用可能。
 	/// </summary>
 	/// <returns>再生長(ms)</returns>
-	public int GetDuration() {
+	public int GetDuration()
+	{
 		int nDuration = 0;
 
 		if (this.nChannelNo == 0x01)       // WAV
 		{
 			CTja.CWAV wc;
 			OpenNijiiroRW.TJA.listWAV.TryGetValue(this.n整数値_内部番号, out wc);
-			if (wc == null) {
+			if (wc == null)
+			{
 				nDuration = 0;
-			} else {
+			}
+			else
+			{
 				nDuration = (wc.rSound[0] == null) ? 0 : wc.rSound[0].TotalPlayTime;
 			}
-		} else if (this.nChannelNo == 0x54) // AVI
+		}
+		else if (this.nChannelNo == 0x54) // AVI
 		{
 			CVideoDecoder wc;
 			OpenNijiiroRW.TJA.listVD.TryGetValue(this.n整数値_内部番号, out wc);
-			if (wc == null) {
+			if (wc == null)
+			{
 				nDuration = 0;
-			} else {
+			}
+			else
+			{
 				nDuration = (int)(wc.Duration * 1000);
 			}
 		}
@@ -309,7 +325,8 @@ internal class CChip : IComparable<CChip>, ICloneable {
 	public static readonly int nChannelNoMostPrior = Array.IndexOf(n優先度, n優先度.Min());
 	public static readonly int nChannelNoLeastPrior = Array.IndexOf(n優先度, n優先度.Max());
 
-	public int CompareTo(CChip other) {
+	public int CompareTo(CChip other)
+	{
 		// まずは位置で比較。
 
 		//BGMチップだけ発声位置
@@ -331,12 +348,14 @@ internal class CChip : IComparable<CChip>, ICloneable {
 		//譜面解析メソッドV4では発声時刻msで比較する。
 		var n発声時刻msCompareToResult = 0;
 		n発声時刻msCompareToResult = this.n発声時刻ms.CompareTo(other.n発声時刻ms);
-		if (n発声時刻msCompareToResult != 0) {
+		if (n発声時刻msCompareToResult != 0)
+		{
 			return n発声時刻msCompareToResult;
 		}
 
 		n発声時刻msCompareToResult = this.db発声時刻ms.CompareTo(other.db発声時刻ms);
-		if (n発声時刻msCompareToResult != 0) {
+		if (n発声時刻msCompareToResult != 0)
+		{
 			return n発声時刻msCompareToResult;
 		}
 
@@ -351,7 +370,8 @@ internal class CChip : IComparable<CChip>, ICloneable {
 	/// shallow copy。
 	/// </summary>
 	/// <returns></returns>
-	public object Clone() {
+	public object Clone()
+	{
 		return MemberwiseClone();
 	}
 }

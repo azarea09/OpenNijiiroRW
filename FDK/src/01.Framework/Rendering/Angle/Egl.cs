@@ -41,14 +41,16 @@ using EGLNativePixmapType = IntPtr;
 using EGLNativeWindowType = IntPtr;
 using EGLSurface = IntPtr;
 
-public enum RenderApi {
+public enum RenderApi
+{
 	ES = Egl.OPENGL_ES_API,
 	GL = Egl.OPENGL_API,
 	VG = Egl.OPENVG_API
 }
 
 [Flags]
-public enum RenderableFlags {
+public enum RenderableFlags
+{
 	ES = Egl.OPENGL_ES_BIT,
 	ES2 = Egl.OPENGL_ES2_BIT,
 	ES3 = Egl.OPENGL_ES3_BIT,
@@ -56,7 +58,8 @@ public enum RenderableFlags {
 	VG = Egl.OPENVG_BIT,
 }
 
-public enum ErrorCode {
+public enum ErrorCode
+{
 	SUCCESS = 12288,
 	NOT_INITIALIZED = 12289,
 	BAD_ACCESS = 12290,
@@ -74,7 +77,8 @@ public enum ErrorCode {
 	CONTEXT_LOST = 12302,
 }
 
-public enum SurfaceType {
+public enum SurfaceType
+{
 	PBUFFER_BIT = 0x0001,
 	PIXMAP_BIT = 0x0002,
 	WINDOW_BIT = 0x0004,
@@ -84,13 +88,15 @@ public enum SurfaceType {
 	SWAP_BEHAVIOR_PRESERVED_BIT = 0x0400,
 }
 
-public class EglException : Exception {
+public class EglException : Exception
+{
 	public EglException() : base() { }
 
 	public EglException(string message) : base(message) { }
 }
 
-public static partial class Egl {
+public static partial class Egl
+{
 	public const int CONTEXT_MAJOR_VERSION = 0x3098;
 	public const int CONTEXT_MINOR_VERSION = 0x30FB;
 
@@ -334,9 +340,11 @@ public static partial class Egl {
 	[DllImportAttribute("libEGL", EntryPoint = "eglCreateContext")]
 	private static extern IntPtr eglCreateContext(EGLDisplay dpy, EGLConfig config, EGLContext share_context, int[] attrib_list);
 
-	public static EGLContext CreateContext(EGLDisplay dpy, EGLConfig config, EGLContext share_context, int[] attrib_list) {
+	public static EGLContext CreateContext(EGLDisplay dpy, EGLConfig config, EGLContext share_context, int[] attrib_list)
+	{
 		IntPtr ptr = eglCreateContext(dpy, config, share_context, attrib_list);
-		if (ptr == IntPtr.Zero) {
+		if (ptr == IntPtr.Zero)
+		{
 			throw new EglException(string.Format("Failed to create EGL context, error: {0}.", Egl.GetError()));
 		}
 		return ptr;
@@ -396,8 +404,10 @@ public static partial class Egl {
 	public static extern EGLSurface CreatePlatformPixmapSurfaceEXT(EGLDisplay dpy, EGLConfig config, EGLNativePixmapType native_pixmap, int[] attrib_list);
 
 	// Returns true if Egl drivers exist on the system.
-	public static bool IsSupported {
-		get {
+	public static bool IsSupported
+	{
+		get
+		{
 			try { GetCurrentContext(); } catch (Exception) { return false; }
 			return true;
 		}

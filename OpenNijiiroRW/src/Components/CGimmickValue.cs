@@ -1,4 +1,5 @@
 ﻿namespace OpenNijiiroRW;
 
-internal class CGimmickValue {
+internal class CGimmickValue
+{
 }

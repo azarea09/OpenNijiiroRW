@@ -2,8 +2,10 @@
 
 namespace OpenNijiiroRW;
 
-class CSongObject {
-	public CSongObject(string name, float x, float y, string path) {
+class CSongObject
+{
+	public CSongObject(string name, float x, float y, string path)
+	{
 		this.name = path;
 		this.isVisible = false;
 
@@ -18,15 +20,19 @@ class CSongObject {
 
 		FileAttributes attr = File.GetAttributes(path);
 
-		if ((attr & FileAttributes.Directory) == FileAttributes.Directory) {
+		if ((attr & FileAttributes.Directory) == FileAttributes.Directory)
+		{
 			textures = OpenNijiiroRW.Tx.TxCSongFolder(path);
-		} else {
+		}
+		else
+		{
 			textures = new CTexture[1];
 			textures[0] = OpenNijiiroRW.Tx.TxCSong(path);
 		}
 	}
 
-	public void tStartAnimation(double animInterval, bool loop) {
+	public void tStartAnimation(double animInterval, bool loop)
+	{
 		counter.Start(0, textures.Length - 1, animInterval, OpenNijiiroRW.Timer);
 		counter.CurrentValue = this.frame;
 
@@ -34,15 +40,19 @@ class CSongObject {
 		this.isAnimating = true;
 	}
 
-	public void tStopAnimation() {
+	public void tStopAnimation()
+	{
 		counter.Stop();
 		this.isAnimating = false;
 	}
 
-	public void tDraw() {
-		if (isAnimating) {
+	public void tDraw()
+	{
+		if (isAnimating)
+		{
 			if (isLooping) counter.TickLoop();
-			else {
+			else
+			{
 				counter.Tick();
 				if (counter.IsEnded) this.tStopAnimation();
 			}
@@ -63,9 +73,11 @@ class CSongObject {
 		if (isVisible) tx.t2D描画SongObj((int)(this.x * screen_ratiox), (int)(this.y * screen_ratioy), this.xScale * screen_ratiox, this.yScale * screen_ratioy);
 	}
 
-	public void tDispose() {
+	public void tDispose()
+	{
 		this.isVisible = false;
-		foreach (CTexture tx in textures) {
+		foreach (CTexture tx in textures)
+		{
 			if (tx != null) tx.Dispose();
 		}
 	}

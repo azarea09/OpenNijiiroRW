@@ -4,33 +4,41 @@ using Newtonsoft.Json;
 
 namespace OpenNijiiroRW;
 
-internal class DBSaves {
+internal class DBSaves
+{
 	private static string _savesDBFilename = $@"Saves.db3";
 	private static string _savesDBPath = @$"{OpenNijiiroRW.strEXEのあるフォルダ}{_savesDBFilename}";
 	private static SqliteConnection SavesDBConnection = new SqliteConnection(@$"Data Source={_savesDBPath}");
 
 	private static string _DBNotFoundError = @$"The database {_savesDBFilename} was not found or the connection failed";
 
-	public static SqliteConnection? GetSavesDBConnection() {
-		try {
-			if (SavesDBConnection != null && SavesDBConnection.State == ConnectionState.Closed) {
+	public static SqliteConnection? GetSavesDBConnection()
+	{
+		try
+		{
+			if (SavesDBConnection != null && SavesDBConnection.State == ConnectionState.Closed)
+			{
 				SavesDBConnection.Open();
 				DBSavesAutoupdate.HandleSavesDBAutoupdates(SavesDBConnection);
 			}
 			return SavesDBConnection;
-		} catch {
+		}
+		catch
+		{
 			LogNotification.PopError(_DBNotFoundError);
 			return null;
 		}
 	}
 
-	public static Int64 GetPlayerSaveId(int player) {
+	public static Int64 GetPlayerSaveId(int player)
+	{
 		return OpenNijiiroRW.SaveFileInstances[OpenNijiiroRW.GetActualPlayer(player)].data.SaveId;
 	}
 
 	#region [Unlocked Dan Titles]
 
-	public static Dictionary<string, SaveFile.CDanTitle> FetchUnlockedDanTitles(Int64 sid) {
+	public static Dictionary<string, SaveFile.CDanTitle> FetchUnlockedDanTitles(Int64 sid)
+	{
 		Dictionary<string, SaveFile.CDanTitle> _dans = new Dictionary<string, SaveFile.CDanTitle>();
 		SqliteConnection? connection = GetSavesDBConnection();
 		if (connection == null) return _dans;
@@ -38,7 +46,8 @@ internal class DBSaves {
 		var command = connection.CreateCommand();
 		command.CommandText = @$"SELECT * FROM dan_titles WHERE SaveId={sid};";
 		SqliteDataReader reader = command.ExecuteReader();
-		while (reader.Read()) {
+		while (reader.Read())
+		{
 			SaveFile.CDanTitle dt = new SaveFile.CDanTitle();
 
 			string key = (string)reader["DanTitleText"];
@@ -51,7 +60,8 @@ internal class DBSaves {
 		return _dans;
 	}
 
-	public static void RegisterDanTitle(Int64 SaveId, string DanTitle, int DanClearStatus, bool DanIsGold) {
+	public static void RegisterDanTitle(Int64 SaveId, string DanTitle, int DanClearStatus, bool DanIsGold)
+	{
 		SqliteConnection? connection = GetSavesDBConnection();
 		if (connection == null) return;
 
@@ -76,7 +86,8 @@ internal class DBSaves {
 
 	#region [Unlocked Nameplates]
 
-	public static List<int> FetchUnlockedNameplateIds(Int64 sid) {
+	public static List<int> FetchUnlockedNameplateIds(Int64 sid)
+	{
 		List<int> _nps = new List<int>();
 		SqliteConnection? connection = GetSavesDBConnection();
 		if (connection == null) return _nps;
@@ -84,7 +95,8 @@ internal class DBSaves {
 		var command = connection.CreateCommand();
 		command.CommandText = @$"SELECT * FROM nameplate_titles WHERE SaveId={sid};";
 		SqliteDataReader reader = command.ExecuteReader();
-		while (reader.Read()) {
+		while (reader.Read())
+		{
 			_nps.Add((int)(Int64)reader["NameplateId"]);
 		}
 		reader.Close();
@@ -92,7 +104,8 @@ internal class DBSaves {
 		return _nps;
 	}
 
-	public static void RegisterUnlockedNameplate(Int64 SaveId, Int64 NameplateId) {
+	public static void RegisterUnlockedNameplate(Int64 SaveId, Int64 NameplateId)
+	{
 		SqliteConnection? connection = GetSavesDBConnection();
 		if (connection == null) return;
 
@@ -105,7 +118,8 @@ internal class DBSaves {
 
 	#region [Characters and Puchicharas]
 
-	public static List<string> FetchStringUnlockedAsset(Int64 sid, string table) {
+	public static List<string> FetchStringUnlockedAsset(Int64 sid, string table)
+	{
 		List<string> _chara = new List<string>();
 		SqliteConnection? connection = GetSavesDBConnection();
 		if (connection == null) return _chara;
@@ -113,7 +127,8 @@ internal class DBSaves {
 		var command = connection.CreateCommand();
 		command.CommandText = @$"SELECT * FROM {table} WHERE SaveId={sid};";
 		SqliteDataReader reader = command.ExecuteReader();
-		while (reader.Read()) {
+		while (reader.Read())
+		{
 			_chara.Add((string)reader["Asset"]);
 		}
 		reader.Close();
@@ -121,7 +136,8 @@ internal class DBSaves {
 		return _chara;
 	}
 
-	public static void RegisterStringUnlockedAsset(Int64 SaveId, string table, string asset) {
+	public static void RegisterStringUnlockedAsset(Int64 SaveId, string table, string asset)
+	{
 		SqliteConnection? connection = GetSavesDBConnection();
 		if (connection == null) return;
 
@@ -134,7 +150,8 @@ internal class DBSaves {
 
 	#region [saves Table]
 
-	public static SaveFile[] FetchSaveInstances() {
+	public static SaveFile[] FetchSaveInstances()
+	{
 		SaveFile[] _instances = new SaveFile[5] { new SaveFile(), new SaveFile(), new SaveFile(), new SaveFile(), new SaveFile() };
 		SqliteConnection? connection = GetSavesDBConnection();
 		if (connection == null) return _instances;
@@ -143,7 +160,8 @@ internal class DBSaves {
 		command.CommandText = @$"SELECT * FROM saves WHERE CurrentSlot IS NOT NULL ORDER BY CurrentSlot ASC;";
 		SqliteDataReader reader = command.ExecuteReader();
 		int _file = 0;
-		while (reader.Read()) {
+		while (reader.Read())
+		{
 			SaveFile sf = new SaveFile();
 
 			sf.data.SaveId = (Int64)reader["SaveId"];
@@ -175,7 +193,8 @@ internal class DBSaves {
 		return _instances;
 	}
 
-	public static void AlterCoinsAndTotalPlayCount(Int64 SaveId, Int64 CoinsDelta, int PlayCountDelta) {
+	public static void AlterCoinsAndTotalPlayCount(Int64 SaveId, Int64 CoinsDelta, int PlayCountDelta)
+	{
 		SqliteConnection? connection = GetSavesDBConnection();
 		if (connection == null) return;
 
@@ -186,7 +205,8 @@ internal class DBSaves {
 		command.ExecuteNonQuery();
 	}
 
-	public static void RegisterAIBattleModePlay(Int64 SaveId, bool IsWon) {
+	public static void RegisterAIBattleModePlay(Int64 SaveId, bool IsWon)
+	{
 		SqliteConnection? connection = GetSavesDBConnection();
 		if (connection == null) return;
 
@@ -197,7 +217,8 @@ internal class DBSaves {
 		command.ExecuteNonQuery();
 	}
 
-	public static void ApplyChangesFromMyRoom(SaveFile File) {
+	public static void ApplyChangesFromMyRoom(SaveFile File)
+	{
 		SqliteConnection? connection = GetSavesDBConnection();
 		if (connection == null) return;
 
@@ -225,7 +246,8 @@ internal class DBSaves {
 
 	#region [global_counters Table]
 
-	public static Dictionary<string, double> GetGlobalCountersDict(Int64 saveId) {
+	public static Dictionary<string, double> GetGlobalCountersDict(Int64 saveId)
+	{
 		Dictionary<string, double> _globalCounters = new Dictionary<string, double>();
 		SqliteConnection? connection = GetSavesDBConnection();
 		if (connection == null) return _globalCounters;
@@ -238,7 +260,8 @@ internal class DBSaves {
                     WHERE SaveId={saveId};
                 ";
 		SqliteDataReader reader = command.ExecuteReader();
-		while (reader.Read()) {
+		while (reader.Read())
+		{
 			string _counterName = (string)reader["CounterName"];
 			double _counterValue = (double)reader["CounterValue"];
 			_globalCounters[_counterName] = _counterValue;
@@ -248,7 +271,8 @@ internal class DBSaves {
 		return _globalCounters;
 	}
 
-	public static void DBSetGlobalCounter(Int64 saveId, string counterName, double counterValue) {
+	public static void DBSetGlobalCounter(Int64 saveId, string counterName, double counterValue)
+	{
 		SqliteConnection? connection = GetSavesDBConnection();
 		if (connection == null) return;
 
@@ -278,7 +302,8 @@ internal class DBSaves {
 
 	#region [active_triggers Table]
 
-	public static HashSet<string> GetActiveTriggersSet(Int64 saveId) {
+	public static HashSet<string> GetActiveTriggersSet(Int64 saveId)
+	{
 		HashSet<string> _activeTriggers = new HashSet<string>();
 		SqliteConnection? connection = GetSavesDBConnection();
 		if (connection == null) return _activeTriggers;
@@ -291,7 +316,8 @@ internal class DBSaves {
                     WHERE SaveId={saveId};
                 ";
 		SqliteDataReader reader = command.ExecuteReader();
-		while (reader.Read()) {
+		while (reader.Read())
+		{
 			string _triggerName = (string)reader["Trigger"];
 			_activeTriggers.Add(_triggerName);
 		}
@@ -300,12 +326,14 @@ internal class DBSaves {
 		return _activeTriggers;
 	}
 
-	public static void DBToggleGlobalTrigger(Int64 saveId, string triggerName, bool triggerValue) {
+	public static void DBToggleGlobalTrigger(Int64 saveId, string triggerName, bool triggerValue)
+	{
 		SqliteConnection? connection = GetSavesDBConnection();
 		if (connection == null) return;
 
 		var command = connection.CreateCommand();
-		if (triggerValue) {
+		if (triggerValue)
+		{
 			command.CommandText =
 			@$"
                     INSERT INTO active_triggers (Trigger, SaveId)
@@ -314,7 +342,9 @@ internal class DBSaves {
 						SELECT 1 FROM active_triggers WHERE Trigger='{triggerName}' AND SaveId={saveId}
 					);
                 ";
-		} else {
+		}
+		else
+		{
 			command.CommandText =
 			@$"
                     DELETE FROM active_triggers
@@ -328,7 +358,8 @@ internal class DBSaves {
 
 	#region [best_plays Table]
 
-	public static Dictionary<string, BestPlayRecords.CBestPlayRecord> GetBestPlaysAsDict(Int64 saveId) {
+	public static Dictionary<string, BestPlayRecords.CBestPlayRecord> GetBestPlaysAsDict(Int64 saveId)
+	{
 		Dictionary<string, BestPlayRecords.CBestPlayRecord> _bestPlays = new Dictionary<string, BestPlayRecords.CBestPlayRecord>();
 		SqliteConnection? connection = GetSavesDBConnection();
 		if (connection == null) return _bestPlays;
@@ -341,7 +372,8 @@ internal class DBSaves {
                     WHERE SaveId={saveId};
                 ";
 		SqliteDataReader reader = command.ExecuteReader();
-		while (reader.Read()) {
+		while (reader.Read())
+		{
 			BestPlayRecords.CBestPlayRecord record = new BestPlayRecords.CBestPlayRecord();
 
 			record.ChartUniqueId = (string)reader["ChartUniqueId"];
@@ -380,7 +412,8 @@ internal class DBSaves {
 	}
 
 	// return whether the score is valid and registered successfully
-	public static bool RegisterPlay(int player, int clearStatus, int scoreRank) {
+	public static bool RegisterPlay(int player, int clearStatus, int scoreRank)
+	{
 		SqliteConnection? connection = GetSavesDBConnection();
 		if (connection == null) return false;
 
@@ -408,10 +441,14 @@ internal class DBSaves {
 			currentPlay.ScoreRank = scoreRank;
 			currentPlay.HighScore = chartScore.nScore;
 			if (choosenDifficulty == (int)Difficulty.Tower) currentPlay.TowerBestFloor = CFloorManagement.LastRegisteredFloor;
-			if (choosenDifficulty == (int)Difficulty.Dan) {
-				for (int i = 0; i < OpenNijiiroRW.stageSongSelect.rChoosenSong.DanSongs.Count; i++) {
-					for (int j = 0; j < OpenNijiiroRW.stageSongSelect.rChoosenSong.DanSongs[i].Dan_C.Length; j++) {
-						if (OpenNijiiroRW.stageSongSelect.rChoosenSong.DanSongs[i].Dan_C[j] != null) {
+			if (choosenDifficulty == (int)Difficulty.Dan)
+			{
+				for (int i = 0; i < OpenNijiiroRW.stageSongSelect.rChoosenSong.DanSongs.Count; i++)
+				{
+					for (int j = 0; j < OpenNijiiroRW.stageSongSelect.rChoosenSong.DanSongs[i].Dan_C.Length; j++)
+					{
+						if (OpenNijiiroRW.stageSongSelect.rChoosenSong.DanSongs[i].Dan_C[j] != null)
+						{
 							int amount = OpenNijiiroRW.stageSongSelect.rChoosenSong.DanSongs[i].Dan_C[j].Amount;
 							danResults[j].Add(amount);
 						}
@@ -436,10 +473,12 @@ internal class DBSaves {
                         SELECT * FROM best_plays WHERE ChartUniqueId='{currentPlay.ChartUniqueId}' AND PlayMods={currentPlay.PlayMods} and ChartDifficulty={currentPlay.ChartDifficulty} AND SaveId={saveData.SaveId};
                     ";
 			SqliteDataReader reader = cmd.ExecuteReader();
-			while (reader.Read()) {
+			while (reader.Read())
+			{
 				// Overwrite multiple variables at once if the highscore is replaced
 				Int64 _highscore = (Int64)reader["HighScore"];
-				if (_highscore > currentPlay.HighScore) {
+				if (_highscore > currentPlay.HighScore)
+				{
 					currentPlay.HighScore = _highscore;
 					currentPlay.HighScoreGoodCount = (Int64)reader["HighScoreGoodCount"];
 					currentPlay.HighScoreOkCount = (Int64)reader["HighScoreOkCount"];
@@ -452,7 +491,8 @@ internal class DBSaves {
 				currentPlay.ClearStatus = Math.Max(currentPlay.ClearStatus, (Int64)reader["ClearStatus"]);
 				currentPlay.ScoreRank = Math.Max(currentPlay.ScoreRank, (Int64)reader["ScoreRank"]);
 				if (choosenDifficulty == (int)Difficulty.Tower) currentPlay.TowerBestFloor = Math.Max(currentPlay.TowerBestFloor, (Int64)reader["TowerBestFloor"]);
-				if (choosenDifficulty == (int)Difficulty.Dan) {
+				if (choosenDifficulty == (int)Difficulty.Dan)
+				{
 					List<int>[] oldDanResults = new List<int>[7]
 					{
 						JsonConvert.DeserializeObject<List<int>>((string)reader["DanExam1"]) ?? new List<int> { -1 },
@@ -463,18 +503,27 @@ internal class DBSaves {
 						JsonConvert.DeserializeObject<List<int>>((string)reader["DanExam6"]) ?? new List<int> { -1 },
 						JsonConvert.DeserializeObject<List<int>>((string)reader["DanExam7"]) ?? new List<int> { -1 }
 					};
-					for (int i = 0; i < OpenNijiiroRW.stageSongSelect.rChoosenSong.DanSongs.Count; i++) {
-						for (int j = 0; j < OpenNijiiroRW.stageSongSelect.rChoosenSong.DanSongs[i].Dan_C.Length; j++) {
-							if (OpenNijiiroRW.stageSongSelect.rChoosenSong.DanSongs[i].Dan_C[j] != null) {
+					for (int i = 0; i < OpenNijiiroRW.stageSongSelect.rChoosenSong.DanSongs.Count; i++)
+					{
+						for (int j = 0; j < OpenNijiiroRW.stageSongSelect.rChoosenSong.DanSongs[i].Dan_C.Length; j++)
+						{
+							if (OpenNijiiroRW.stageSongSelect.rChoosenSong.DanSongs[i].Dan_C[j] != null)
+							{
 								int amount = danResults[j][i];
 
-								if (i < oldDanResults[j].Count) {
+								if (i < oldDanResults[j].Count)
+								{
 									int current = oldDanResults[j][i];
-									if (current == -1) {
+									if (current == -1)
+									{
 										danResults[j][i] = amount;
-									} else if (OpenNijiiroRW.stageSongSelect.rChoosenSong.DanSongs[i].Dan_C[j].ExamRange == Exam.Range.More) {
+									}
+									else if (OpenNijiiroRW.stageSongSelect.rChoosenSong.DanSongs[i].Dan_C[j].ExamRange == Exam.Range.More)
+									{
 										danResults[j][i] = Math.Max(amount, current);
-									} else if (OpenNijiiroRW.stageSongSelect.rChoosenSong.DanSongs[i].Dan_C[j].ExamRange == Exam.Range.Less) {
+									}
+									else if (OpenNijiiroRW.stageSongSelect.rChoosenSong.DanSongs[i].Dan_C[j].ExamRange == Exam.Range.Less)
+									{
 										danResults[j][i] = Math.Min(amount, current);
 									}
 								}
@@ -489,7 +538,8 @@ internal class DBSaves {
 
 		// Intermede: Dan results to Dan exams
 		{
-			if (choosenDifficulty == (int)Difficulty.Dan) {
+			if (choosenDifficulty == (int)Difficulty.Dan)
+			{
 				currentPlay.DanExam1 = danResults[0];
 				currentPlay.DanExam2 = danResults[1];
 				currentPlay.DanExam3 = danResults[2];

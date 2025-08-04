@@ -1,15 +1,18 @@
 ﻿namespace OpenNijiiroRW;
 
 [Serializable()]
-internal class CSongUniqueID {
-	public CSongUniqueID(string path) {
+internal class CSongUniqueID
+{
+	public CSongUniqueID(string path)
+	{
 		filePath = path;
 
 		tGenerateUniqueID();
 		tSongUniqueID();
 	}
 
-	public void tSongUniqueID() {
+	public void tSongUniqueID()
+	{
 		if (!File.Exists(filePath))
 			tSaveFile();
 
@@ -18,19 +21,22 @@ internal class CSongUniqueID {
 
 	#region [Auxiliary methods]
 
-	public void tAttachOnlineAddress(string url) {
+	public void tAttachOnlineAddress(string url)
+	{
 		data.url = url;
 		tSaveFile();
 	}
 
-	public void tGenerateUniqueID() {
+	public void tGenerateUniqueID()
+	{
 		data.id = CCrypto.GetUniqueKey(64);
 	}
 
 	#endregion
 
 	[Serializable]
-	public class Data {
+	public class Data
+	{
 		public string id = "";
 		public string url = "";
 	}
@@ -41,11 +47,13 @@ internal class CSongUniqueID {
 
 	#region [private]
 
-	private void tSaveFile() {
+	private void tSaveFile()
+	{
 		ConfigManager.SaveConfig(data, filePath);
 	}
 
-	private void tLoadFile() {
+	private void tLoadFile()
+	{
 		data = ConfigManager.GetConfig<Data>(filePath);
 	}
 

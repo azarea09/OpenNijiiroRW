@@ -1,6 +1,7 @@
 ﻿namespace OpenNijiiroRW;
 
-internal class CLuaInfo {
+internal class CLuaInfo
+{
 	public int playerCount => OpenNijiiroRW.ConfigIni.nPlayerCount;
 	public string lang => OpenNijiiroRW.ConfigIni.sLang;
 	public bool simplemode => OpenNijiiroRW.ConfigIni.SimpleMode;
@@ -9,7 +10,8 @@ internal class CLuaInfo {
 
 	public string dir { get; init; }
 
-	public CLuaInfo(string dir) {
+	public CLuaInfo(string dir)
+	{
 		this.dir = dir;
 	}
 }

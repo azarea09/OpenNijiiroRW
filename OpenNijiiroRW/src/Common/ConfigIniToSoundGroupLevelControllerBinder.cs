@@ -9,16 +9,20 @@ namespace OpenNijiiroRW;
 /// without either of those two classes being aware of one another.
 /// See those classes properties, methods, and events for more details.
 /// </summary>
-internal static class ConfigIniToSoundGroupLevelControllerBinder {
-	internal static void Bind(CConfigIni configIni, SoundGroupLevelController soundGroupLevelController) {
+internal static class ConfigIniToSoundGroupLevelControllerBinder
+{
+	internal static void Bind(CConfigIni configIni, SoundGroupLevelController soundGroupLevelController)
+	{
 		soundGroupLevelController.SetLevel(ESoundGroup.SoundEffect, configIni.SoundEffectLevel);
 		soundGroupLevelController.SetLevel(ESoundGroup.Voice, configIni.VoiceLevel);
 		soundGroupLevelController.SetLevel(ESoundGroup.SongPreview, configIni.SongPreviewLevel);
 		soundGroupLevelController.SetLevel(ESoundGroup.SongPlayback, configIni.SongPlaybackLevel);
 		soundGroupLevelController.SetKeyboardSoundLevelIncrement(configIni.KeyboardSoundLevelIncrement);
 
-		configIni.PropertyChanged += (sender, args) => {
-			switch (args.PropertyName) {
+		configIni.PropertyChanged += (sender, args) =>
+		{
+			switch (args.PropertyName)
+			{
 				case nameof(CConfigIni.SoundEffectLevel):
 					soundGroupLevelController.SetLevel(ESoundGroup.SoundEffect, configIni.SoundEffectLevel);
 					break;
@@ -37,8 +41,10 @@ internal static class ConfigIniToSoundGroupLevelControllerBinder {
 			}
 		};
 
-		soundGroupLevelController.LevelChanged += (sender, args) => {
-			switch (args.SoundGroup) {
+		soundGroupLevelController.LevelChanged += (sender, args) =>
+		{
+			switch (args.SoundGroup)
+			{
 				case ESoundGroup.SoundEffect:
 					configIni.SoundEffectLevel = args.Level;
 					break;

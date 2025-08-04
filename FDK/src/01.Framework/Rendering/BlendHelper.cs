@@ -2,7 +2,8 @@ using Silk.NET.OpenGLES;
 
 namespace FDK;
 
-public enum BlendType {
+public enum BlendType
+{
 	Normal,
 	Add,
 	Screen,
@@ -10,9 +11,12 @@ public enum BlendType {
 	Sub
 }
 
-public static class BlendHelper {
-	public static void SetBlend(BlendType blendType) {
-		switch (blendType) {
+public static class BlendHelper
+{
+	public static void SetBlend(BlendType blendType)
+	{
+		switch (blendType)
+		{
 			case BlendType.Normal:
 				Game.Gl.BlendEquation(BlendEquationModeEXT.FuncAdd);
 				Game.Gl.BlendFunc(GLEnum.SrcAlpha, GLEnum.OneMinusSrcAlpha);

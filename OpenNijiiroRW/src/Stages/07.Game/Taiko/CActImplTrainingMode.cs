@@ -3,12 +3,15 @@ using FDK;
 
 namespace OpenNijiiroRW;
 
-class CActImplTrainingMode : CActivity {
-	public CActImplTrainingMode() {
+class CActImplTrainingMode : CActivity
+{
+	public CActImplTrainingMode()
+	{
 		base.IsDeActivated = true;
 	}
 
-	public override void Activate() {
+	public override void Activate()
+	{
 		this.nCurrentMeasure = 0;
 		this.bTrainingPAUSE = false;
 		this.n最終演奏位置ms = 0;
@@ -23,14 +26,18 @@ class CActImplTrainingMode : CActivity {
 		int endtime = 1;
 		int bgmlength = 1;
 
-		for (int index = 0; index < OpenNijiiroRW.TJA.listChip.Count; index++) {
-			if (OpenNijiiroRW.TJA.listChip[index].nChannelNo == 0xff) {
+		for (int index = 0; index < OpenNijiiroRW.TJA.listChip.Count; index++)
+		{
+			if (OpenNijiiroRW.TJA.listChip[index].nChannelNo == 0xff)
+			{
 				endtime = OpenNijiiroRW.TJA.listChip[index].n発声時刻ms;
 				break;
 			}
 		}
-		for (int index = 0; index < OpenNijiiroRW.TJA.listChip.Count; index++) {
-			if (OpenNijiiroRW.TJA.listChip[index].nChannelNo == 0x01) {
+		for (int index = 0; index < OpenNijiiroRW.TJA.listChip.Count; index++)
+		{
+			if (OpenNijiiroRW.TJA.listChip[index].nChannelNo == 0x01)
+			{
 				bgmlength = OpenNijiiroRW.TJA.listChip[index].GetDuration() + OpenNijiiroRW.TJA.listChip[index].n発声時刻ms;
 				break;
 			}
@@ -41,12 +48,14 @@ class CActImplTrainingMode : CActivity {
 		gogoXList = new List<int>();
 		JumpPointList = new List<STJUMPP>();
 
-		for (int i = 0; i < dTX.listChip.Count; i++) {
+		for (int i = 0; i < dTX.listChip.Count; i++)
+		{
 			CChip pChip = dTX.listChip[i];
 
 			if (pChip.n整数値_内部番号 > measureCount && pChip.nChannelNo == 0x50) measureCount = pChip.n整数値_内部番号;
 
-			if (pChip.nChannelNo == 0x9E && !bIsInGoGo) {
+			if (pChip.nChannelNo == 0x9E && !bIsInGoGo)
+			{
 				bIsInGoGo = true;
 
 				var current = pChip.db発声時刻ms;
@@ -55,7 +64,8 @@ class CActImplTrainingMode : CActivity {
 
 				this.gogoXList.Add((int)(width * (current / length)));
 			}
-			if (pChip.nChannelNo == 0x9F && bIsInGoGo) {
+			if (pChip.nChannelNo == 0x9F && bIsInGoGo)
+			{
 				bIsInGoGo = false;
 			}
 		}
@@ -65,7 +75,8 @@ class CActImplTrainingMode : CActivity {
 		if (OpenNijiiroRW.Tx.Tokkun_Background_Up != null) this.ctBackgroundScrollTimer = new CCounter(1, OpenNijiiroRW.Tx.Tokkun_Background_Up.szTextureSize.Width, 16, OpenNijiiroRW.Timer);
 	}
 
-	public override void DeActivate() {
+	public override void DeActivate()
+	{
 		length = 1;
 		gogoXList = null;
 		JumpPointList = null;
@@ -75,35 +86,46 @@ class CActImplTrainingMode : CActivity {
 		base.DeActivate();
 	}
 
-	public override void CreateManagedResource() {
+	public override void CreateManagedResource()
+	{
 		base.CreateManagedResource();
 	}
 
-	public override void ReleaseManagedResource() {
+	public override void ReleaseManagedResource()
+	{
 		base.ReleaseManagedResource();
 	}
 
-	public override int Draw() {
+	public override int Draw()
+	{
 		CTja tja = OpenNijiiroRW.TJA!;
 
-		if (!base.IsDeActivated) {
-			if (base.IsFirstDraw) {
+		if (!base.IsDeActivated)
+		{
+			if (base.IsFirstDraw)
+			{
 				base.IsFirstDraw = false;
 			}
 
 			OpenNijiiroRW.actTextConsole.Print(0, 0, CTextConsole.EFontType.White, "TRAINING MODE (BETA)");
 
-			if (OpenNijiiroRW.ConfigIni.KeyAssign.KeyIsPressed(OpenNijiiroRW.ConfigIni.KeyAssign.Drums.TrainingPause)) {
-				if (this.bTrainingPAUSE) {
+			if (OpenNijiiroRW.ConfigIni.KeyAssign.KeyIsPressed(OpenNijiiroRW.ConfigIni.KeyAssign.Drums.TrainingPause))
+			{
+				if (this.bTrainingPAUSE)
+				{
 					OpenNijiiroRW.Skin.sound特訓再生音.tPlay();
 					this.tResumePlay();
-				} else {
+				}
+				else
+				{
 					OpenNijiiroRW.Skin.sound特訓停止音.tPlay();
 					this.tPausePlay();
 				}
 			}
-			if (OpenNijiiroRW.ConfigIni.KeyAssign.KeyIsPressed(OpenNijiiroRW.ConfigIni.KeyAssign.Drums.TrainingSkipForwardMeasure)) {
-				if (this.bTrainingPAUSE) {
+			if (OpenNijiiroRW.ConfigIni.KeyAssign.KeyIsPressed(OpenNijiiroRW.ConfigIni.KeyAssign.Drums.TrainingSkipForwardMeasure))
+			{
+				if (this.bTrainingPAUSE)
+				{
 					this.nCurrentMeasure += OpenNijiiroRW.ConfigIni.TokkunSkipMeasures;
 					if (this.nCurrentMeasure > this.nMeasureCount)
 						this.nCurrentMeasure = this.nMeasureCount;
@@ -112,8 +134,10 @@ class CActImplTrainingMode : CActivity {
 					OpenNijiiroRW.Skin.soundTrainingModeScrollSFX.tPlay();
 				}
 			}
-			if (OpenNijiiroRW.ConfigIni.KeyAssign.KeyIsPressed(OpenNijiiroRW.ConfigIni.KeyAssign.Drums.TrainingSkipBackMeasure)) {
-				if (this.bTrainingPAUSE) {
+			if (OpenNijiiroRW.ConfigIni.KeyAssign.KeyIsPressed(OpenNijiiroRW.ConfigIni.KeyAssign.Drums.TrainingSkipBackMeasure))
+			{
+				if (this.bTrainingPAUSE)
+				{
 					this.nCurrentMeasure -= OpenNijiiroRW.ConfigIni.TokkunSkipMeasures;
 					if (this.nCurrentMeasure <= 0)
 						this.nCurrentMeasure = 1;
@@ -122,17 +146,23 @@ class CActImplTrainingMode : CActivity {
 					OpenNijiiroRW.Skin.soundTrainingModeScrollSFX.tPlay();
 				}
 			}
-			if (OpenNijiiroRW.ConfigIni.KeyAssign.KeyIsPressed(OpenNijiiroRW.ConfigIni.KeyAssign.Drums.TrainingMoveForwardMeasure)) {
-				if (this.bTrainingPAUSE) {
-					if (this.nCurrentMeasure < this.nMeasureCount) {
+			if (OpenNijiiroRW.ConfigIni.KeyAssign.KeyIsPressed(OpenNijiiroRW.ConfigIni.KeyAssign.Drums.TrainingMoveForwardMeasure))
+			{
+				if (this.bTrainingPAUSE)
+				{
+					if (this.nCurrentMeasure < this.nMeasureCount)
+					{
 						this.nCurrentMeasure++;
 
 						this.tMatchWithTheChartDisplayPosition(true);
 						OpenNijiiroRW.Skin.soundTrainingModeScrollSFX.tPlay();
 					}
-					if (t配列の値interval以下か(ref this.RBlue, SoundManager.PlayTimer.SystemTimeMs, OpenNijiiroRW.ConfigIni.TokkunMashInterval)) {
-						for (int index = 0; index < this.JumpPointList.Count; index++) {
-							if (this.JumpPointList[index].Time >= tja.GameTimeToTjaTime(SoundManager.PlayTimer.NowTimeMs)) {
+					if (t配列の値interval以下か(ref this.RBlue, SoundManager.PlayTimer.SystemTimeMs, OpenNijiiroRW.ConfigIni.TokkunMashInterval))
+					{
+						for (int index = 0; index < this.JumpPointList.Count; index++)
+						{
+							if (this.JumpPointList[index].Time >= tja.GameTimeToTjaTime(SoundManager.PlayTimer.NowTimeMs))
+							{
 								this.nCurrentMeasure = this.JumpPointList[index].Measure;
 								OpenNijiiroRW.Skin.soundSkip.tPlay();
 								this.tMatchWithTheChartDisplayPosition(false);
@@ -143,18 +173,24 @@ class CActImplTrainingMode : CActivity {
 
 				}
 			}
-			if (OpenNijiiroRW.ConfigIni.KeyAssign.KeyIsPressed(OpenNijiiroRW.ConfigIni.KeyAssign.Drums.TrainingMoveBackMeasure)) {
-				if (this.bTrainingPAUSE) {
-					if (this.nCurrentMeasure > 1) {
+			if (OpenNijiiroRW.ConfigIni.KeyAssign.KeyIsPressed(OpenNijiiroRW.ConfigIni.KeyAssign.Drums.TrainingMoveBackMeasure))
+			{
+				if (this.bTrainingPAUSE)
+				{
+					if (this.nCurrentMeasure > 1)
+					{
 						this.nCurrentMeasure--;
 						OpenNijiiroRW.stageGameScreen.actPlayInfo.NowMeasure[0] = this.nCurrentMeasure;
 
 						this.tMatchWithTheChartDisplayPosition(true);
 						OpenNijiiroRW.Skin.soundTrainingModeScrollSFX.tPlay();
 					}
-					if (t配列の値interval以下か(ref this.LBlue, SoundManager.PlayTimer.SystemTimeMs, OpenNijiiroRW.ConfigIni.TokkunMashInterval)) {
-						for (int index = this.JumpPointList.Count - 1; index >= 0; index--) {
-							if (this.JumpPointList[index].Time <= tja.GameTimeToTjaTime(SoundManager.PlayTimer.NowTimeMs)) {
+					if (t配列の値interval以下か(ref this.LBlue, SoundManager.PlayTimer.SystemTimeMs, OpenNijiiroRW.ConfigIni.TokkunMashInterval))
+					{
+						for (int index = this.JumpPointList.Count - 1; index >= 0; index--)
+						{
+							if (this.JumpPointList[index].Time <= tja.GameTimeToTjaTime(SoundManager.PlayTimer.NowTimeMs))
+							{
 								this.nCurrentMeasure = this.JumpPointList[index].Measure;
 								OpenNijiiroRW.Skin.sound特訓スキップ音.tPlay();
 								this.tMatchWithTheChartDisplayPosition(false);
@@ -164,25 +200,34 @@ class CActImplTrainingMode : CActivity {
 					}
 				}
 			}
-			if (OpenNijiiroRW.ConfigIni.KeyAssign.KeyIsPressed(OpenNijiiroRW.ConfigIni.KeyAssign.Drums.TrainingDecreaseSongSpeed)) {
-				if (this.bTrainingPAUSE) {
-					if (OpenNijiiroRW.ConfigIni.nSongSpeed > 6) {
+			if (OpenNijiiroRW.ConfigIni.KeyAssign.KeyIsPressed(OpenNijiiroRW.ConfigIni.KeyAssign.Drums.TrainingDecreaseSongSpeed))
+			{
+				if (this.bTrainingPAUSE)
+				{
+					if (OpenNijiiroRW.ConfigIni.nSongSpeed > 6)
+					{
 						OpenNijiiroRW.ConfigIni.nSongSpeed = OpenNijiiroRW.ConfigIni.nSongSpeed - 2;
 						this.tMatchWithTheChartDisplayPosition(false);
 					}
 				}
 			}
-			if (OpenNijiiroRW.ConfigIni.KeyAssign.KeyIsPressed(OpenNijiiroRW.ConfigIni.KeyAssign.Drums.TrainingIncreaseSongSpeed)) {
-				if (this.bTrainingPAUSE) {
-					if (OpenNijiiroRW.ConfigIni.nSongSpeed < 399) {
+			if (OpenNijiiroRW.ConfigIni.KeyAssign.KeyIsPressed(OpenNijiiroRW.ConfigIni.KeyAssign.Drums.TrainingIncreaseSongSpeed))
+			{
+				if (this.bTrainingPAUSE)
+				{
+					if (OpenNijiiroRW.ConfigIni.nSongSpeed < 399)
+					{
 						OpenNijiiroRW.ConfigIni.nSongSpeed = OpenNijiiroRW.ConfigIni.nSongSpeed + 2;
 						this.tMatchWithTheChartDisplayPosition(false);
 					}
 				}
 			}
-			if (OpenNijiiroRW.ConfigIni.KeyAssign.KeyIsPressed(OpenNijiiroRW.ConfigIni.KeyAssign.Drums.TrainingJumpToFirstMeasure)) {
-				if (this.bTrainingPAUSE) {
-					if (this.nCurrentMeasure > 1) {
+			if (OpenNijiiroRW.ConfigIni.KeyAssign.KeyIsPressed(OpenNijiiroRW.ConfigIni.KeyAssign.Drums.TrainingJumpToFirstMeasure))
+			{
+				if (this.bTrainingPAUSE)
+				{
+					if (this.nCurrentMeasure > 1)
+					{
 						this.nCurrentMeasure = 1;
 
 						this.tMatchWithTheChartDisplayPosition(true);
@@ -190,9 +235,12 @@ class CActImplTrainingMode : CActivity {
 					}
 				}
 			}
-			if (OpenNijiiroRW.ConfigIni.KeyAssign.KeyIsPressed(OpenNijiiroRW.ConfigIni.KeyAssign.Drums.TrainingJumpToLastMeasure)) {
-				if (this.bTrainingPAUSE) {
-					if (this.nCurrentMeasure < this.nMeasureCount) {
+			if (OpenNijiiroRW.ConfigIni.KeyAssign.KeyIsPressed(OpenNijiiroRW.ConfigIni.KeyAssign.Drums.TrainingJumpToLastMeasure))
+			{
+				if (this.bTrainingPAUSE)
+				{
+					if (this.nCurrentMeasure < this.nMeasureCount)
+					{
 						this.nCurrentMeasure = this.nMeasureCount;
 
 						this.tMatchWithTheChartDisplayPosition(true);
@@ -203,12 +251,14 @@ class CActImplTrainingMode : CActivity {
 			if (OpenNijiiroRW.ConfigIni.KeyAssign.KeyIsPressed(OpenNijiiroRW.ConfigIni.KeyAssign.Drums.TrainingBookmark))
 				this.tToggleBookmarkAtTheCurrentPosition();
 
-			if (this.bCurrentlyScrolling) {
+			if (this.bCurrentlyScrolling)
+			{
 				int msTargetTime = easing.EaseOut(this.ctScrollCounter, (int)this.nスクロール前ms, (int)this.nスクロール後ms, Easing.CalcType.Circular);
 
 				this.ctScrollCounter.Tick();
 
-				if (msTargetTime == (int)this.nスクロール後ms) {
+				if (msTargetTime == (int)this.nスクロール後ms)
+				{
 					this.bCurrentlyScrolling = false;
 				}
 				CChip? lastChipAtNow = OpenNijiiroRW.TJA!.listChip.ElementAtOrDefault(OpenNijiiroRW.stageGameScreen.nCurrentTopChip[0] - 1);
@@ -217,10 +267,12 @@ class CActImplTrainingMode : CActivity {
 
 				SoundManager.PlayTimer.NowTimeMs = msTargetTime;
 			}
-			if (!this.bTrainingPAUSE) {
+			if (!this.bTrainingPAUSE)
+			{
 				this.nCurrentMeasure = OpenNijiiroRW.stageGameScreen.actPlayInfo.NowMeasure[0];
 
-				if (tja.GameTimeToTjaTime(SoundManager.PlayTimer.NowTimeMs) > this.n最終演奏位置ms) {
+				if (tja.GameTimeToTjaTime(SoundManager.PlayTimer.NowTimeMs) > this.n最終演奏位置ms)
+				{
 					this.n最終演奏位置ms = (long)(tja.GameTimeToTjaTime(SoundManager.PlayTimer.NowTimeMs));
 				}
 			}
@@ -235,14 +287,18 @@ class CActImplTrainingMode : CActivity {
 
 		if (OpenNijiiroRW.Tx.Tokkun_ProgressBarWhite != null) OpenNijiiroRW.Tx.Tokkun_ProgressBarWhite.t2D描画(OpenNijiiroRW.Skin.Game_Training_ProgressBar_XY[0], OpenNijiiroRW.Skin.Game_Training_ProgressBar_XY[1], new Rectangle(1, 1, (int)(OpenNijiiroRW.Tx.Tokkun_ProgressBarWhite.szTextureSize.Width * percentageWhite), OpenNijiiroRW.Tx.Tokkun_ProgressBarWhite.szTextureSize.Height));
 		if (OpenNijiiroRW.Tx.Tokkun_ProgressBar != null) OpenNijiiroRW.Tx.Tokkun_ProgressBar.t2D描画(OpenNijiiroRW.Skin.Game_Training_ProgressBar_XY[0], OpenNijiiroRW.Skin.Game_Training_ProgressBar_XY[1], new Rectangle(1, 1, (int)(OpenNijiiroRW.Tx.Tokkun_ProgressBar.szTextureSize.Width * percentage), OpenNijiiroRW.Tx.Tokkun_ProgressBar.szTextureSize.Height));
-		if (OpenNijiiroRW.Tx.Tokkun_GoGoPoint != null) {
-			foreach (int xpos in gogoXList) {
+		if (OpenNijiiroRW.Tx.Tokkun_GoGoPoint != null)
+		{
+			foreach (int xpos in gogoXList)
+			{
 				OpenNijiiroRW.Tx.Tokkun_GoGoPoint.t2D描画(xpos + OpenNijiiroRW.Skin.Game_Training_ProgressBar_XY[0] - (OpenNijiiroRW.Tx.Tokkun_GoGoPoint.szTextureSize.Width / 2), OpenNijiiroRW.Skin.Game_Training_GoGoPoint_Y);
 			}
 		}
 
-		if (OpenNijiiroRW.Tx.Tokkun_JumpPoint != null) {
-			foreach (STJUMPP xpos in JumpPointList) {
+		if (OpenNijiiroRW.Tx.Tokkun_JumpPoint != null)
+		{
+			foreach (STJUMPP xpos in JumpPointList)
+			{
 				var width = 0;
 				if (OpenNijiiroRW.Tx.Tokkun_ProgressBar != null) width = OpenNijiiroRW.Tx.Tokkun_ProgressBar.szTextureSize.Width;
 
@@ -254,15 +310,18 @@ class CActImplTrainingMode : CActivity {
 		return base.Draw();
 	}
 
-	public int On進行描画_背景() {
-		if (this.ctBackgroundScrollTimer != null) {
+	public int On進行描画_背景()
+	{
+		if (this.ctBackgroundScrollTimer != null)
+		{
 			this.ctBackgroundScrollTimer.TickLoop();
 
 			double TexSize = OpenNijiiroRW.Skin.Resolution[0] / OpenNijiiroRW.Tx.Tokkun_Background_Up.szTextureSize.Width;
 			// 1280をテクスチャサイズで割ったものを切り上げて、プラス+1足す。
 			int ForLoop = (int)Math.Ceiling(TexSize) + 1;
 			OpenNijiiroRW.Tx.Tokkun_Background_Up.t2D描画(0 - this.ctBackgroundScrollTimer.CurrentValue, OpenNijiiroRW.Skin.Background_Scroll_Y[0]);
-			for (int l = 1; l < ForLoop + 1; l++) {
+			for (int l = 1; l < ForLoop + 1; l++)
+			{
 				OpenNijiiroRW.Tx.Tokkun_Background_Up.t2D描画(+(l * OpenNijiiroRW.Tx.Tokkun_Background_Up.szTextureSize.Width) - this.ctBackgroundScrollTimer.CurrentValue, OpenNijiiroRW.Skin.Background_Scroll_Y[0]);
 			}
 		}
@@ -273,14 +332,17 @@ class CActImplTrainingMode : CActivity {
 		return base.Draw();
 	}
 
-	public void On進行描画_小節_速度() {
+	public void On進行描画_小節_速度()
+	{
 		if (OpenNijiiroRW.Tx.Tokkun_Speed_Measure != null)
 			OpenNijiiroRW.Tx.Tokkun_Speed_Measure.t2D描画(OpenNijiiroRW.Skin.Game_Training_Speed_Measure[0], OpenNijiiroRW.Skin.Game_Training_Speed_Measure[1]);
 		var maxMeasureStr = this.nMeasureCount.ToString();
 		var measureStr = this.nCurrentMeasure.ToString();
-		if (OpenNijiiroRW.Tx.Tokkun_SmallNumber != null) {
+		if (OpenNijiiroRW.Tx.Tokkun_SmallNumber != null)
+		{
 			var x = OpenNijiiroRW.Skin.Game_Training_MaxMeasureCount_XY[0];
-			foreach (char c in maxMeasureStr) {
+			foreach (char c in maxMeasureStr)
+			{
 				var currentNum = int.Parse(c.ToString());
 				OpenNijiiroRW.Tx.Tokkun_SmallNumber.t2D描画(x, OpenNijiiroRW.Skin.Game_Training_MaxMeasureCount_XY[1], new Rectangle(OpenNijiiroRW.Skin.Game_Training_SmallNumber_Width * currentNum, 0, OpenNijiiroRW.Skin.Game_Training_SmallNumber_Width, OpenNijiiroRW.Tx.Tokkun_SmallNumber.szTextureSize.Height));
 				x += OpenNijiiroRW.Skin.Game_Training_SmallNumber_Width - 2;
@@ -289,9 +351,11 @@ class CActImplTrainingMode : CActivity {
 
 		var subtractVal = (OpenNijiiroRW.Skin.Game_Training_BigNumber_Width - 2) * (measureStr.Length - 1);
 
-		if (OpenNijiiroRW.Tx.Tokkun_BigNumber != null) {
+		if (OpenNijiiroRW.Tx.Tokkun_BigNumber != null)
+		{
 			var x = OpenNijiiroRW.Skin.Game_Training_CurrentMeasureCount_XY[0];
-			foreach (char c in measureStr) {
+			foreach (char c in measureStr)
+			{
 				var currentNum = int.Parse(c.ToString());
 				OpenNijiiroRW.Tx.Tokkun_BigNumber.t2D描画(x - subtractVal, OpenNijiiroRW.Skin.Game_Training_CurrentMeasureCount_XY[1], new Rectangle(OpenNijiiroRW.Skin.Game_Training_BigNumber_Width * currentNum, 0, OpenNijiiroRW.Skin.Game_Training_BigNumber_Width, OpenNijiiroRW.Tx.Tokkun_BigNumber.szTextureSize.Height));
 				x += OpenNijiiroRW.Skin.Game_Training_BigNumber_Width - 2;
@@ -311,7 +375,8 @@ class CActImplTrainingMode : CActivity {
 
 			subtractVal = OpenNijiiroRW.Skin.Game_Training_BigNumber_Width * (((int)playSpd).ToString().Length - 1);
 
-			foreach (char c in ((int)playSpd).ToString()) {
+			foreach (char c in ((int)playSpd).ToString())
+			{
 				var currentNum = int.Parse(c.ToString());
 				OpenNijiiroRW.Tx.Tokkun_BigNumber.t2D描画(x - subtractVal, OpenNijiiroRW.Skin.Game_Training_SpeedDisplay_XY[1], new Rectangle(OpenNijiiroRW.Skin.Game_Training_BigNumber_Width * currentNum, 0, OpenNijiiroRW.Skin.Game_Training_BigNumber_Width, OpenNijiiroRW.Tx.Tokkun_BigNumber.szTextureSize.Height));
 				x += OpenNijiiroRW.Skin.Game_Training_BigNumber_Width - 2;
@@ -319,7 +384,8 @@ class CActImplTrainingMode : CActivity {
 		}
 	}
 
-	public void tPausePlay() {
+	public void tPausePlay()
+	{
 		CTja dTX = OpenNijiiroRW.TJA;
 
 		this.nスクロール後ms = SoundManager.PlayTimer.NowTimeMs;
@@ -327,11 +393,13 @@ class CActImplTrainingMode : CActivity {
 		OpenNijiiroRW.stageGameScreen.Activate();
 		SoundManager.PlayTimer.Pause();
 
-		for (int i = 0; i < dTX.listChip.Count; i++) {
+		for (int i = 0; i < dTX.listChip.Count; i++)
+		{
 			CChip pChip = dTX.listChip[i];
 			pChip.bHit = false;
 			pChip.ResetRollEffect();
-			if (dTX.listChip[i].nChannelNo != 0x50) {
+			if (dTX.listChip[i].nChannelNo != 0x50)
+			{
 				pChip.bShow = true;
 				pChip.bVisible = true;
 			}
@@ -345,7 +413,8 @@ class CActImplTrainingMode : CActivity {
 		this.tMatchWithTheChartDisplayPosition(false);
 	}
 
-	public void tResumePlay() {
+	public void tResumePlay()
+	{
 		CTja dTX = OpenNijiiroRW.TJA;
 
 		this.bCurrentlyScrolling = false;
@@ -360,15 +429,20 @@ class CActImplTrainingMode : CActivity {
 
 		OpenNijiiroRW.stageGameScreen.t数値の初期化(true, true);
 
-		for (int i = 0; i < n演奏開始Chip; i++) {
+		for (int i = 0; i < n演奏開始Chip; i++)
+		{
 			//2020.07.08 ノーツだけ消す。
 			CChip chip = dTX.listChip[i];
-			if (!NotesManager.IsHittableNote(chip)) {
+			if (!NotesManager.IsHittableNote(chip))
+			{
 				continue;
 			}
-			if (NotesManager.IsRollEnd(chip)) {
+			if (NotesManager.IsRollEnd(chip))
+			{
 				chip = chip.start;
-			} else if (NotesManager.IsGenericRoll(chip)) {
+			}
+			else if (NotesManager.IsGenericRoll(chip))
+			{
 				continue;
 			}
 			chip.bHit = true;
@@ -380,29 +454,36 @@ class CActImplTrainingMode : CActivity {
 		this.bTrainingPAUSE = false;
 	}
 
-	public void tMatchWithTheChartDisplayPosition(bool doScroll) {
+	public void tMatchWithTheChartDisplayPosition(bool doScroll)
+	{
 		this.nスクロール前ms = SoundManager.PlayTimer.NowTimeMs;
 
 		CTja dTX = OpenNijiiroRW.TJA;
 
 		int iCurrentMeasureChip = dTX.GetListChipIndexOfMeasure(this.nCurrentMeasure);
-		if (OpenNijiiroRW.stageGameScreen.hasChipBeenPlayed(iCurrentMeasureChip + 1, 0)) {
+		if (OpenNijiiroRW.stageGameScreen.hasChipBeenPlayed(iCurrentMeasureChip + 1, 0))
+		{
 			OpenNijiiroRW.stageGameScreen.t数値の初期化(false, false); // reset to handle past chips
 		}
 
-		if (doScroll) {
+		if (doScroll)
+		{
 			this.nスクロール後ms = (long)dTX.TjaTimeToGameTime(dTX.listChip[iCurrentMeasureChip].n発声時刻ms);
 			this.bCurrentlyScrolling = true;
 
 			this.ctScrollCounter = new CCounter(0, OpenNijiiroRW.Skin.Game_Training_ScrollTime, 1, OpenNijiiroRW.Timer);
-		} else {
+		}
+		else
+		{
 			SoundManager.PlayTimer.NowTimeMs = (long)dTX.TjaTimeToGameTime(dTX.listChip[iCurrentMeasureChip].n発声時刻ms);
 			this.nスクロール後ms = SoundManager.PlayTimer.NowTimeMs;
 		}
 	}
 
-	public void tToggleBookmarkAtTheCurrentPosition() {
-		if (!this.bCurrentlyScrolling && this.bTrainingPAUSE) {
+	public void tToggleBookmarkAtTheCurrentPosition()
+	{
+		if (!this.bCurrentlyScrolling && this.bTrainingPAUSE)
+		{
 			CTja tja = OpenNijiiroRW.TJA!;
 			STJUMPP _JumpPoint = new STJUMPP() { Time = (long)tja.GameTimeToTjaTime(SoundManager.PlayTimer.NowTimeMs), Measure = this.nCurrentMeasure };
 
@@ -415,9 +496,11 @@ class CActImplTrainingMode : CActivity {
 		}
 	}
 
-	private bool t配列の値interval以下か(ref long[] array, long num, int interval) {
+	private bool t配列の値interval以下か(ref long[] array, long num, int interval)
+	{
 		long[] arraytmp = array;
-		for (int index = 0; index < (array.Length - 1); index++) {
+		for (int index = 0; index < (array.Length - 1); index++)
+		{
 			array[index] = array[index + 1];
 		}
 		array[array.Length - 1] = num;
@@ -445,7 +528,8 @@ class CActImplTrainingMode : CActivity {
 	private long[] LBlue = new long[] { 0, 0, 0, 0, 0 };
 	private long[] RBlue = new long[] { 0, 0, 0, 0, 0 };
 
-	private struct STJUMPP {
+	private struct STJUMPP
+	{
 		public long Time;
 		public int Measure;
 	}
@@ -458,13 +542,15 @@ class CActImplTrainingMode : CActivity {
 	/// <param name="change">最終の値-最初の値</param>
 	/// <param name="duration">全体の時間</param>
 	/// <returns></returns>
-	private int EasingCircular(int time, int begin, int change, int duration) {
+	private int EasingCircular(int time, int begin, int change, int duration)
+	{
 		double t = time, b = begin, c = change, d = duration;
 
 		t = t / d * 2;
 		if (t < 1)
 			return (int)(-c / 2 * (Math.Sqrt(1 - t * t) - 1) + b);
-		else {
+		else
+		{
 			t = t - 2;
 			return (int)(c / 2 * (Math.Sqrt(1 - t * t) + 1) + b);
 		}

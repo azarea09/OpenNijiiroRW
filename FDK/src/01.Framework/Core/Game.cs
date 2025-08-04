@@ -1,20 +1,14 @@
-﻿using System.Drawing;
-using System.Reflection;
-using System.Runtime.InteropServices;
-using FDK;
-using ImGuiNET;
-using Silk.NET.Core;
+﻿using Silk.NET.Core;
 using Silk.NET.GLFW;
-using Silk.NET.Input;
 using Silk.NET.Maths;
 using Silk.NET.OpenGLES;
-using Silk.NET.OpenGLES.Extensions.ImGui;
 using Silk.NET.Windowing;
 using SkiaSharp;
 
 namespace FDK;
 
-public abstract class Game : IDisposable {
+public abstract class Game : IDisposable
+{
 	public static GL Gl { get; private set; }
 	public static Silk.NET.Core.Contexts.IGLContext Context { get; private set; }
 	public static AnglePlatformType GraphicsDeviceType_ = AnglePlatformType.OpenGL;
@@ -26,78 +20,102 @@ public abstract class Game : IDisposable {
 	public IWindow WindowContext;
 
 	private string _windowTitle = "OpenNijiiroRW";
-	public string WindowTitle {
-		get {
+	public string WindowTitle
+	{
+		get
+		{
 			return _windowTitle;
 		}
-		set {
+		set
+		{
 			_windowTitle = value;
-			if (WindowContext != null) {
+			if (WindowContext != null)
+			{
 				WindowContext.Title = value;
 			}
 		}
 	}
 
 	private Vector2D<int> _windowSize = new(1280, 720);
-	public Vector2D<int> WindowSize {
-		get {
+	public Vector2D<int> WindowSize
+	{
+		get
+		{
 			return _windowSize;
 		}
-		set {
+		set
+		{
 			_windowSize = value;
-			if (WindowContext != null) {
+			if (WindowContext != null)
+			{
 				WindowContext.Size = value;
 			}
 		}
 	}
 
 	private Vector2D<int> _windowPosition = new(0, 0);
-	public Vector2D<int> WindowPosition {
-		get {
+	public Vector2D<int> WindowPosition
+	{
+		get
+		{
 			return _windowPosition;
 		}
-		set {
+		set
+		{
 			_windowPosition = value;
-			if (WindowContext != null) {
+			if (WindowContext != null)
+			{
 				WindowContext.Position = value;
 			}
 		}
 	}
 
 	private int _framerate;
-	public int Framerate {
-		get {
+	public int Framerate
+	{
+		get
+		{
 			return _framerate;
 		}
-		set {
+		set
+		{
 			_framerate = value;
-			if (WindowContext != null) {
+			if (WindowContext != null)
+			{
 				UpdateWindowFramerate(VSync, value);
 			}
 		}
 	}
 
 	private bool _fullScreen;
-	public bool FullScreen {
-		get {
+	public bool FullScreen
+	{
+		get
+		{
 			return _fullScreen;
 		}
-		set {
+		set
+		{
 			_fullScreen = value;
-			if (WindowContext != null) {
+			if (WindowContext != null)
+			{
 				WindowContext.WindowState = value ? WindowState.Fullscreen : WindowState.Normal;
 			}
 		}
 	}
 
 	private bool _vSync = true;
-	public bool VSync {
-		get {
+	public bool VSync
+	{
+		get
+		{
 			return _vSync;
 		}
-		set {
+		set
+		{
 			_vSync = value;
-			if (WindowContext != null) {
+			if (WindowContext != null)
+			{
 				UpdateWindowFramerate(value, Framerate);
 				WindowContext.VSync = value;
 			}
@@ -108,39 +126,47 @@ public abstract class Game : IDisposable {
 	private Vector2D<int> ViewPortOffset = new Vector2D<int>();
 	private RenderTexture renderTexture;
 
-	protected virtual void Configuration() {
+	protected virtual void Configuration()
+	{
 
 	}
 
-	protected virtual void Initialize() {
+	protected virtual void Initialize()
+	{
 
 	}
 
 
-	protected virtual void LoadContent() {
+	protected virtual void LoadContent()
+	{
 
 	}
 
-	protected virtual void UnloadContent() {
+	protected virtual void UnloadContent()
+	{
 
 	}
 
-	protected virtual void OnExiting() {
+	protected virtual void OnExiting()
+	{
 
 	}
 
-	protected virtual void Update() {
+	protected virtual void Update()
+	{
 
 	}
 
-	protected virtual void Draw() {
+	protected virtual void Draw()
+	{
 
 	}
 
 	/// <summary>
 	/// Initializes a new instance of the <see cref="Game"/> class.
 	/// </summary>
-	protected Game(string iconFileName) {
+	protected Game(string iconFileName)
+	{
 		strIconFileName = iconFileName;
 
 		MainThreadID = Thread.CurrentThread.ManagedThreadId;
@@ -178,12 +204,16 @@ public abstract class Game : IDisposable {
 		WindowContext.FramebufferResize += Window_FramebufferResize;
 	}
 
-	private void UpdateWindowFramerate(bool vsync, int value) {
-		if (vsync) {
+	private void UpdateWindowFramerate(bool vsync, int value)
+	{
+		if (vsync)
+		{
 			WindowContext.UpdatesPerSecond = 0;
 			WindowContext.FramesPerSecond = 0;
 			Context.SwapInterval(1);
-		} else {
+		}
+		else
+		{
 			WindowContext.UpdatesPerSecond = value;
 			WindowContext.FramesPerSecond = value;
 			Context.SwapInterval(0);
@@ -193,34 +223,43 @@ public abstract class Game : IDisposable {
 	/// <summary>
 	/// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
 	/// </summary>
-	public void Dispose() {
+	public void Dispose()
+	{
 		WindowContext.Dispose();
 	}
 
-	public void Exit() {
+	public void Exit()
+	{
 		WindowContext.Close();
 	}
 
-	protected void ToggleWindowMode() {
+	protected void ToggleFullScreen()
+	{
 		FullScreen = !FullScreen;
 	}
 
 	/// <summary>
 	/// Runs the game.
 	/// </summary>
-	public void Run() {
+	public void Run()
+	{
 		WindowContext.Run();
 	}
 
-	public void Window_Load() {
+	public void Window_Load()
+	{
 		WindowContext.SetWindowIcon(new ReadOnlySpan<RawImage>(GetIconData(strIconFileName)));
 
-		if (OperatingSystem.IsMacOS()) {
-			if (WindowContext.GLContext == null) {
+		if (OperatingSystem.IsMacOS())
+		{
+			if (WindowContext.GLContext == null)
+			{
 				throw new Exception("No native OpenGL context available");
 			}
 			Context = WindowContext.GLContext;
-		} else {
+		}
+		else
+		{
 			Context = new AngleContext(GraphicsDeviceType_, WindowContext);
 			Context.MakeCurrent();
 		}
@@ -248,7 +287,8 @@ public abstract class Game : IDisposable {
 		LoadContent();
 	}
 
-	public void Window_Closing() {
+	public void Window_Closing()
+	{
 		// リソースを解放
 		renderTexture?.Dispose();
 		ScreenRenderer.Terminate();
@@ -259,13 +299,16 @@ public abstract class Game : IDisposable {
 		Context.Dispose();
 	}
 
-	public void Window_Update(double deltaTime) {
+	public void Window_Update(double deltaTime)
+	{
 		TimeMs = (long)(WindowContext.Time * 1000);
 		Update();
 	}
 
-	public void Window_Render(double deltaTime) {
-		if (AsyncActions.Count > 0) {
+	public void Window_Render(double deltaTime)
+	{
+		if (AsyncActions.Count > 0)
+		{
 			AsyncActions[0]?.Invoke();
 			AsyncActions.Remove(AsyncActions[0]);
 		}
@@ -291,19 +334,23 @@ public abstract class Game : IDisposable {
 		if (!OperatingSystem.IsMacOS()) Context.SwapBuffers();
 	}
 
-	public void Window_Resize(Vector2D<int> size) {
+	public void Window_Resize(Vector2D<int> size)
+	{
 		if (size.X <= 0 || size.Y <= 0) return;
 
 		float gameAspect = (float)RenderSurfaceSize.Width / RenderSurfaceSize.Height; // 16:9 = 1.777...
 		float windowAspect = (float)size.X / size.Y;
 
-		if (windowAspect > gameAspect) {
+		if (windowAspect > gameAspect)
+		{
 			// ウィンドウが横長の場合：高さに合わせてスケール
 			ViewPortSize.Y = size.Y;
 			ViewPortSize.X = (int)(size.Y * gameAspect);
 			ViewPortOffset.X = (size.X - ViewPortSize.X) / 2;
 			ViewPortOffset.Y = 0;
-		} else {
+		}
+		else
+		{
 			// ウィンドウが縦長の場合：幅に合わせてスケール
 			ViewPortSize.X = size.X;
 			ViewPortSize.Y = (int)(size.X / gameAspect);
@@ -325,16 +372,21 @@ public abstract class Game : IDisposable {
 
 	#region [Helper Function]
 
-	public unsafe SKBitmap GetScreenShot() {
+	public unsafe SKBitmap GetScreenShot()
+	{
 		int ViewportWidth = ViewPortSize.X;
 		int ViewportHeight = ViewPortSize.Y;
-		fixed (uint* pixels = new uint[(uint)ViewportWidth * (uint)ViewportHeight]) {
+		fixed (uint* pixels = new uint[(uint)ViewportWidth * (uint)ViewportHeight])
+		{
 			Gl.ReadBuffer(GLEnum.Front);
 			Gl.ReadPixels(ViewPortOffset.X, ViewPortOffset.Y, (uint)ViewportWidth, (uint)ViewportHeight, PixelFormat.Bgra, GLEnum.UnsignedByte, pixels);
 
-			fixed (uint* pixels2 = new uint[(uint)ViewportWidth * (uint)ViewportHeight]) {
-				for (int x = 0; x < ViewportWidth; x++) {
-					for (int y = 1; y < ViewportHeight; y++) {
+			fixed (uint* pixels2 = new uint[(uint)ViewportWidth * (uint)ViewportHeight])
+			{
+				for (int x = 0; x < ViewportWidth; x++)
+				{
+					for (int y = 1; y < ViewportHeight; y++)
+					{
 						int pos = x + ((y - 1) * ViewportWidth);
 						int pos2 = x + ((ViewportHeight - y) * ViewportWidth);
 						var p = pixels[pos2];
@@ -349,19 +401,25 @@ public abstract class Game : IDisposable {
 		}
 	}
 
-	public unsafe void GetScreenShotAsync(Action<SKBitmap> action) {
+	public unsafe void GetScreenShotAsync(Action<SKBitmap> action)
+	{
 		int ViewportWidth = ViewPortSize.X;
 		int ViewportHeight = ViewPortSize.Y;
 		byte[] pixels = new byte[(uint)ViewportWidth * (uint)ViewportHeight * 4];
 		Gl.ReadBuffer(GLEnum.Front);
-		fixed (byte* pix = pixels) {
+		fixed (byte* pix = pixels)
+		{
 			Gl.ReadPixels(ViewPortOffset.X, ViewPortOffset.Y, (uint)ViewportWidth, (uint)ViewportHeight, PixelFormat.Bgra, GLEnum.UnsignedByte, pix);
 		}
 
-		Task.Run(() => {
-			fixed (byte* pixels2 = new byte[(uint)ViewportWidth * (uint)ViewportHeight * 4]) {
-				for (int x = 0; x < ViewportWidth; x++) {
-					for (int y = 1; y < ViewportHeight; y++) {
+		Task.Run(() =>
+		{
+			fixed (byte* pixels2 = new byte[(uint)ViewportWidth * (uint)ViewportHeight * 4])
+			{
+				for (int x = 0; x < ViewportWidth; x++)
+				{
+					for (int y = 1; y < ViewportHeight; y++)
+					{
 						int pos = x + ((y - 1) * ViewportWidth);
 						int pos2 = x + ((ViewportHeight - y) * ViewportWidth);
 						pixels2[(pos * 4) + 0] = pixels[(pos2 * 4) + 0];
@@ -381,7 +439,8 @@ public abstract class Game : IDisposable {
 		});
 	}
 
-	private RawImage GetIconData(string fileName) {
+	private RawImage GetIconData(string fileName)
+	{
 		SKCodec codec = SKCodec.Create(fileName);
 		using SKBitmap bitmap = SKBitmap.Decode(codec, new SKImageInfo(codec.Info.Width, codec.Info.Height, SKColorType.Rgba8888));
 		return new RawImage(bitmap.Width, bitmap.Height, bitmap.GetPixelSpan().ToArray());

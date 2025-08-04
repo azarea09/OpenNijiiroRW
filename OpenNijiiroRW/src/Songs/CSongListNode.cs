@@ -3,11 +3,13 @@
 namespace OpenNijiiroRW;
 
 [Serializable]
-internal class CSongListNode {
+internal class CSongListNode
+{
 	// Properties
 
 	public ENodeType nodeType = ENodeType.UNKNOWN;
-	public enum ENodeType {
+	public enum ENodeType
+	{
 		SCORE,
 		SCORE_MIDI,
 		BOX,
@@ -97,29 +99,35 @@ internal class CSongListNode {
 
 	#endregion
 
-	public string tGetUniqueId() {
+	public string tGetUniqueId()
+	{
 		return uniqueId?.data.id ?? "";
 	}
 
 	// Constructor
 
-	public CSongListNode() {
+	public CSongListNode()
+	{
 		this.nID = id++;
 	}
 
-	public CSongListNode Clone() {
+	public CSongListNode Clone()
+	{
 		return (CSongListNode)MemberwiseClone();
 	}
 
-	public override bool Equals(object other) {
-		if (other.GetType() == typeof(CSongListNode)) {
+	public override bool Equals(object other)
+	{
+		if (other.GetType() == typeof(CSongListNode))
+		{
 			CSongListNode obj = (CSongListNode)other;
 			return this.nID == obj.nID;
 		}
 		return this.GetHashCode() == other.GetHashCode();
 	}
 
-	public override int GetHashCode() {
+	public override int GetHashCode()
+	{
 		return base.GetHashCode();
 	}
 

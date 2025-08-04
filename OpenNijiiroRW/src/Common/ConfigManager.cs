@@ -7,9 +7,11 @@ namespace OpenNijiiroRW;
 /// <summary>
 /// Class for reading and writing configuration files.
 /// </summary>
-public static class ConfigManager {
+public static class ConfigManager
+{
 	private static readonly JsonSerializerSettings Settings =
-		new JsonSerializerSettings() {
+		new JsonSerializerSettings()
+		{
 			ObjectCreationHandling = ObjectCreationHandling.Auto,
 			DefaultValueHandling = DefaultValueHandling.Include,
 			NullValueHandling = NullValueHandling.Ignore,
@@ -23,18 +25,22 @@ public static class ConfigManager {
 	/// <typeparam name="T">Type of the object to deserialize.</typeparam>
 	/// <param name="filePath">File name.</param>
 	/// <returns>Deserialized object.</returns>
-	public static T GetConfig<T>(string filePath) where T : new() {
+	public static T GetConfig<T>(string filePath) where T : new()
+	{
 		var json = "";
-		if (!System.IO.File.Exists(filePath)) {
+		if (!System.IO.File.Exists(filePath))
+		{
 			SaveConfig(new T(), filePath);
 		}
-		using (var stream = new System.IO.StreamReader(filePath, Encoding.UTF8)) {
+		using (var stream = new System.IO.StreamReader(filePath, Encoding.UTF8))
+		{
 			json = stream.ReadToEnd();
 		}
 		return JsonConvert.DeserializeObject<T>(json, Settings);
 	}
 
-	public static T? JsonParse<T>(string json) where T : new() {
+	public static T? JsonParse<T>(string json) where T : new()
+	{
 		return JsonConvert.DeserializeObject<T>(json, Settings);
 	}
 
@@ -43,14 +49,17 @@ public static class ConfigManager {
 	/// </summary>
 	/// <param name="obj">Object to serialize.</param>
 	/// <param name="filePath">File name.</param>
-	public static void SaveConfig(object obj, string filePath) {
+	public static void SaveConfig(object obj, string filePath)
+	{
 		(new FileInfo(filePath)).Directory.Create();
-		using (var stream = new System.IO.StreamWriter(filePath, false, Encoding.UTF8)) {
+		using (var stream = new System.IO.StreamWriter(filePath, false, Encoding.UTF8))
+		{
 			stream.Write(JsonConvert.SerializeObject(obj, Formatting.None, Settings));
 		}
 	}
 
-	public static string JsonStringify(object obj) {
+	public static string JsonStringify(object obj)
+	{
 		return JsonConvert.SerializeObject(obj, Formatting.None, Settings);
 	}
 }

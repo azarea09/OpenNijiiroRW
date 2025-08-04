@@ -6,8 +6,10 @@ using FDK;
 // Minimalist menu class to use for custom menus
 namespace OpenNijiiroRW;
 
-class CStageTowerSelect : CStage {
-	public CStageTowerSelect() {
+class CStageTowerSelect : CStage
+{
+	public CStageTowerSelect()
+	{
 		base.eStageID = EStage.TaikoTowers;
 		base.ePhaseID = CStage.EPhase.Common_NORMAL;
 
@@ -19,7 +21,8 @@ class CStageTowerSelect : CStage {
 
 	}
 
-	public override void Activate() {
+	public override void Activate()
+	{
 		// On activation
 
 		if (base.IsActivated)
@@ -39,7 +42,8 @@ class CStageTowerSelect : CStage {
 		base.Activate();
 	}
 
-	public override void DeActivate() {
+	public override void DeActivate()
+	{
 		// On de-activation
 
 		OpenNijiiroRW.tDisposeSafely(ref Background);
@@ -47,7 +51,8 @@ class CStageTowerSelect : CStage {
 		base.DeActivate();
 	}
 
-	public override void CreateManagedResource() {
+	public override void CreateManagedResource()
+	{
 		// Ressource allocation
 
 		pfTitleFont = HPrivateFastFont.tInstantiateMainFont(OpenNijiiroRW.Skin.TowerSelect_Title_Size);
@@ -56,7 +61,8 @@ class CStageTowerSelect : CStage {
 		base.CreateManagedResource();
 	}
 
-	public override void ReleaseManagedResource() {
+	public override void ReleaseManagedResource()
+	{
 		// Ressource freeing
 
 		pfTitleFont?.Dispose();
@@ -65,11 +71,13 @@ class CStageTowerSelect : CStage {
 		base.ReleaseManagedResource();
 	}
 
-	public override int Draw() {
+	public override int Draw()
+	{
 		Background.Update();
 		Background.Draw();
 
-		for (int i = 0; i < OpenNijiiroRW.Skin.TowerSelect_Bar_Count; i++) {
+		for (int i = 0; i < OpenNijiiroRW.Skin.TowerSelect_Bar_Count; i++)
+		{
 			int currentSong = nCurrentSongIndex + i - ((OpenNijiiroRW.Skin.TowerSelect_Bar_Count - 1) / 2);
 			if (currentSong < 0 || currentSong >= BarInfos.Length) continue;
 			var bar = BarInfos[currentSong];
@@ -81,8 +89,10 @@ class CStageTowerSelect : CStage {
 
 		#region [Input]
 
-		if (this.eフェードアウト完了時の戻り値 == CStageSongSelect.EReturnValue.継続) {
-			int returnTitle() {
+		if (this.eフェードアウト完了時の戻り値 == CStageSongSelect.EReturnValue.継続)
+		{
+			int returnTitle()
+			{
 				OpenNijiiroRW.Skin.soundCancelSFX.tPlay();
 				this.eフェードアウト完了時の戻り値 = CStageSongSelect.EReturnValue.BackToTitle;
 				this.actFOtoTitle.tフェードアウト開始();
@@ -91,21 +101,28 @@ class CStageTowerSelect : CStage {
 			}
 
 			if (OpenNijiiroRW.InputManager.Keyboard.KeyPressed((int)SlimDXKeys.Key.RightArrow) ||
-				OpenNijiiroRW.Pad.bPressed(EInstrumentPad.Drums, EPad.RightChange)) {
+				OpenNijiiroRW.Pad.bPressed(EInstrumentPad.Drums, EPad.RightChange))
+			{
 				OpenNijiiroRW.Skin.soundChangeSFX.tPlay();
 
-				if (nCurrentSongIndex < BarInfos.Length - 1) {
+				if (nCurrentSongIndex < BarInfos.Length - 1)
+				{
 					nCurrentSongIndex++;
 				}
-			} else if (OpenNijiiroRW.InputManager.Keyboard.KeyPressed((int)SlimDXKeys.Key.LeftArrow) ||
-					   OpenNijiiroRW.Pad.bPressed(EInstrumentPad.Drums, EPad.LeftChange)) {
+			}
+			else if (OpenNijiiroRW.InputManager.Keyboard.KeyPressed((int)SlimDXKeys.Key.LeftArrow) ||
+					   OpenNijiiroRW.Pad.bPressed(EInstrumentPad.Drums, EPad.LeftChange))
+			{
 				OpenNijiiroRW.Skin.soundChangeSFX.tPlay();
 
-				if (nCurrentSongIndex > 0) {
+				if (nCurrentSongIndex > 0)
+				{
 					nCurrentSongIndex--;
 				}
-			} else if (OpenNijiiroRW.InputManager.Keyboard.KeyPressed((int)SlimDXKeys.Key.Escape) ||
-					   OpenNijiiroRW.Pad.bPressed(EInstrumentPad.Drums, EPad.Cancel)) {
+			}
+			else if (OpenNijiiroRW.InputManager.Keyboard.KeyPressed((int)SlimDXKeys.Key.Escape) ||
+					   OpenNijiiroRW.Pad.bPressed(EInstrumentPad.Drums, EPad.Cancel))
+			{
 
 				#region [Fast return (Escape)]
 
@@ -113,13 +130,16 @@ class CStageTowerSelect : CStage {
 				returnTitle();
 
 				#endregion
-			} else if (OpenNijiiroRW.InputManager.Keyboard.KeyPressed((int)SlimDXKeys.Key.Return) ||
-					   OpenNijiiroRW.Pad.bPressed(EInstrumentPad.Drums, EPad.Decide)) {
+			}
+			else if (OpenNijiiroRW.InputManager.Keyboard.KeyPressed((int)SlimDXKeys.Key.Return) ||
+					   OpenNijiiroRW.Pad.bPressed(EInstrumentPad.Drums, EPad.Decide))
+			{
 				#region [Decide]
 
 				OpenNijiiroRW.Skin.soundDecideSFX.tPlay();
 
-				switch (currentSong.nodeType) {
+				switch (currentSong.nodeType)
+				{
 					case CSongListNode.ENodeType.SCORE:
 						tSelectSong();
 						break;
@@ -129,10 +149,14 @@ class CStageTowerSelect : CStage {
 					case CSongListNode.ENodeType.BOX:
 						tOpenFolder(currentSong);
 						break;
-					case CSongListNode.ENodeType.BACKBOX: {
-							if (OpenNijiiroRW.Songs管理.list曲ルート.Contains(currentSong.rParentNode) && currentSong.rParentNode.songGenre == "太鼓タワー") {
+					case CSongListNode.ENodeType.BACKBOX:
+						{
+							if (OpenNijiiroRW.Songs管理.list曲ルート.Contains(currentSong.rParentNode) && currentSong.rParentNode.songGenre == "太鼓タワー")
+							{
 								returnTitle();
-							} else {
+							}
+							else
+							{
 								tCloseFolder(currentSong);
 							}
 						}
@@ -148,14 +172,17 @@ class CStageTowerSelect : CStage {
 
 
 		// Menu exit fade out transition
-		switch (base.ePhaseID) {
+		switch (base.ePhaseID)
+		{
 			case CStage.EPhase.SongSelect_FadeOutToNowLoading:
-				if (this.actFOtoNowLoading.Draw() == 0) {
+				if (this.actFOtoNowLoading.Draw() == 0)
+				{
 					break;
 				}
 				return (int)this.eフェードアウト完了時の戻り値;
 			case CStage.EPhase.Common_FADEOUT:
-				if (this.actFOtoTitle.Draw() == 0) {
+				if (this.actFOtoTitle.Draw() == 0)
+				{
 					break;
 				}
 				return (int)this.eフェードアウト完了時の戻り値;
@@ -167,7 +194,8 @@ class CStageTowerSelect : CStage {
 
 	#region [Private]
 
-	private class BarInfo {
+	private class BarInfo
+	{
 		public string strTitle;
 		public string strSubTitle;
 		public CSongListNode.ENodeType eノード種別;
@@ -175,13 +203,15 @@ class CStageTowerSelect : CStage {
 		public TitleTextureKey ttkSubTitle;
 	}
 
-	public void tSelectSong() {
+	public void tSelectSong()
+	{
 		OpenNijiiroRW.ConfigIni.bTokkunMode = false;
 		OpenNijiiroRW.stageSongSelect.rChoosenSong = listSongs[nCurrentSongIndex];
 		OpenNijiiroRW.stageSongSelect.r確定されたスコア = listSongs[nCurrentSongIndex].score[(int)Difficulty.Tower];
 		OpenNijiiroRW.stageSongSelect.nChoosenSongDifficulty[0] = (int)Difficulty.Tower;
 		OpenNijiiroRW.stageSongSelect.str確定された曲のジャンル = listSongs[nCurrentSongIndex].songGenre;
-		if ((OpenNijiiroRW.stageSongSelect.rChoosenSong != null) && (OpenNijiiroRW.stageSongSelect.r確定されたスコア != null)) {
+		if ((OpenNijiiroRW.stageSongSelect.rChoosenSong != null) && (OpenNijiiroRW.stageSongSelect.r確定されたスコア != null))
+		{
 			CFloorManagement.reinitialize(OpenNijiiroRW.stageSongSelect.rChoosenSong.score[(int)Difficulty.Tower].譜面情報.nLife);
 			this.eフェードアウト完了時の戻り値 = CStageSongSelect.EReturnValue.SongSelected;
 			this.actFOtoNowLoading.tフェードアウト開始();                // #27787 2012.3.10 yyagi 曲決定時の画面フェードアウトの省略
@@ -191,7 +221,8 @@ class CStageTowerSelect : CStage {
 		CSongSelectSongManager.stopSong();
 	}
 
-	private bool tSelectSongRandomly() {
+	private bool tSelectSongRandomly()
+	{
 		var mandatoryDiffs = new List<int>();
 		CSongListNode song = currentSong;
 
@@ -201,13 +232,15 @@ class CStageTowerSelect : CStage {
 
 		int selectableSongCount = song.randomList.Count;
 
-		if (selectableSongCount == 0) {
+		if (selectableSongCount == 0)
+		{
 			return false;
 		}
 
 		int randomSongIndex = OpenNijiiroRW.Random.Next(selectableSongCount);
 
-		if (OpenNijiiroRW.ConfigIni.bOutputDetailedDTXLog) {
+		if (OpenNijiiroRW.ConfigIni.bOutputDetailedDTXLog)
+		{
 			StringBuilder builder = new StringBuilder(0x400);
 			builder.Append(string.Format("Total number of songs to randomly choose from {0}. Randomly selected index {0}.", selectableSongCount, randomSongIndex));
 			Trace.TraceInformation(builder.ToString());
@@ -232,8 +265,10 @@ class CStageTowerSelect : CStage {
 		return true;
 	}
 
-	private void tDrawTower(int x, int y, BarInfo barInfo) {
-		switch (barInfo.eノード種別) {
+	private void tDrawTower(int x, int y, BarInfo barInfo)
+	{
+		switch (barInfo.eノード種別)
+		{
 			case CSongListNode.ENodeType.SCORE:
 				OpenNijiiroRW.Tx.TowerSelect_Tower.t2D中心基準描画(x, y);
 				break;
@@ -252,25 +287,30 @@ class CStageTowerSelect : CStage {
 		TitleTextureKey.ResolveTitleTexture(barInfo.ttkSubTitle).t2D拡大率考慮中央基準描画(x + OpenNijiiroRW.Skin.TowerSelect_SubTitle_Offset[0], y + OpenNijiiroRW.Skin.TowerSelect_SubTitle_Offset[1]);
 	}
 
-	private void tUpdateBarInfos() {
+	private void tUpdateBarInfos()
+	{
 		BarInfos = new BarInfo[listSongs.Count];
 		tSetBarInfos();
 	}
 
-	private void tOpenFolder(CSongListNode song) {
+	private void tOpenFolder(CSongListNode song)
+	{
 		nCurrentSongIndex = 0;
 		listSongs = song.childrenList;
 		tUpdateBarInfos();
 	}
 
-	private void tCloseFolder(CSongListNode song) {
+	private void tCloseFolder(CSongListNode song)
+	{
 		nCurrentSongIndex = 0;
 		listSongs = song.rParentNode.rParentNode.childrenList;
 		tUpdateBarInfos();
 	}
 
-	private void tSetBarInfos() {
-		for (int i = 0; i < BarInfos.Length; i++) {
+	private void tSetBarInfos()
+	{
+		for (int i = 0; i < BarInfos.Length; i++)
+		{
 			BarInfos[i] = new BarInfo();
 			BarInfo bar = BarInfos[i];
 			CSongListNode song = listSongs[i];
@@ -297,8 +337,10 @@ class CStageTowerSelect : CStage {
 	public CActFIFOBlack actFOtoTitle;
 
 	private int nCurrentSongIndex;
-	private CSongListNode currentSong {
-		get {
+	private CSongListNode currentSong
+	{
+		get
+		{
 			return listSongs[nCurrentSongIndex];
 		}
 	}

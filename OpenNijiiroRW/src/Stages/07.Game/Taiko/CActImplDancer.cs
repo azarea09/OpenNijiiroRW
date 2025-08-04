@@ -3,15 +3,18 @@ using FDK;
 
 namespace OpenNijiiroRW;
 
-internal class CActImplDancer : CActivity {
+internal class CActImplDancer : CActivity
+{
 	/// <summary>
 	/// 踊り子
 	/// </summary>
-	public CActImplDancer() {
+	public CActImplDancer()
+	{
 		base.IsDeActivated = true;
 	}
 
-	public override void Activate() {
+	public override void Activate()
+	{
 		//this.ct踊り子モーション = new CCounter();
 
 		if (OpenNijiiroRW.stageSongSelect.nChoosenSongDifficulty[0] == (int)Difficulty.Tower || OpenNijiiroRW.stageSongSelect.nChoosenSongDifficulty[0] == (int)Difficulty.Dan)
@@ -33,9 +36,11 @@ internal class CActImplDancer : CActivity {
 
 
 		var dancerOrigindir = CSkin.Path($"{TextureLoader.BASE}{TextureLoader.GAME}{TextureLoader.DANCER}");
-		if (Directory.Exists($@"{dancerOrigindir}")) {
+		if (Directory.Exists($@"{dancerOrigindir}"))
+		{
 			var dirs = Directory.GetDirectories($@"{dancerOrigindir}");
-			if (preset.DancerSet?.Length > 0) {
+			if (preset.DancerSet?.Length > 0)
+			{
 				var _presetPath = (preset.DancerSet.Length > 0) ? $@"{dancerOrigindir}" + preset.DancerSet[random.Next(0, preset.DancerSet.Length)] : "";
 				var path = (Directory.Exists(_presetPath))
 					? _presetPath
@@ -51,30 +56,39 @@ internal class CActImplDancer : CActivity {
 				nNowDancerOutCounter = new float[nDancerCount];
 
 				nDancerInPtn = OpenNijiiroRW.t連番画像の枚数を数える($@"{path}{Path.DirectorySeparatorChar}1_In{Path.DirectorySeparatorChar}");
-				if (nDancerInPtn != 0) {
-					for (int i = 0; i < nDancerCount; i++) {
+				if (nDancerInPtn != 0)
+				{
+					for (int i = 0; i < nDancerCount; i++)
+					{
 						Dancer_In[i] = new CTexture[nDancerInPtn];
-						for (int p = 0; p < nDancerInPtn; p++) {
+						for (int p = 0; p < nDancerInPtn; p++)
+						{
 							Dancer_In[i][p] = OpenNijiiroRW.tテクスチャの生成($@"{path}{Path.DirectorySeparatorChar}{(i + 1)}_In{Path.DirectorySeparatorChar}{p}.png");
 						}
 					}
 				}
 
 				nDancerOutPtn = OpenNijiiroRW.t連番画像の枚数を数える($@"{path}{Path.DirectorySeparatorChar}1_Out{Path.DirectorySeparatorChar}");
-				if (nDancerOutPtn != 0) {
-					for (int i = 0; i < nDancerCount; i++) {
+				if (nDancerOutPtn != 0)
+				{
+					for (int i = 0; i < nDancerCount; i++)
+					{
 						Dancer_Out[i] = new CTexture[nDancerOutPtn];
-						for (int p = 0; p < nDancerOutPtn; p++) {
+						for (int p = 0; p < nDancerOutPtn; p++)
+						{
 							Dancer_Out[i][p] = OpenNijiiroRW.tテクスチャの生成($@"{path}{Path.DirectorySeparatorChar}{(i + 1)}_Out{Path.DirectorySeparatorChar}{p}.png");
 						}
 					}
 				}
 
 				nDancerPtn = OpenNijiiroRW.t連番画像の枚数を数える($@"{path}{Path.DirectorySeparatorChar}1{Path.DirectorySeparatorChar}");
-				if (nDancerPtn != 0) {
-					for (int i = 0; i < nDancerCount; i++) {
+				if (nDancerPtn != 0)
+				{
+					for (int i = 0; i < nDancerCount; i++)
+					{
 						Dancer[i] = new CTexture[nDancerPtn];
-						for (int p = 0; p < nDancerPtn; p++) {
+						for (int p = 0; p < nDancerPtn; p++)
+						{
 							Dancer[i][p] = OpenNijiiroRW.tテクスチャの生成($@"{path}{Path.DirectorySeparatorChar}{(i + 1)}{Path.DirectorySeparatorChar}{p}.png");
 						}
 					}
@@ -97,13 +111,15 @@ internal class CActImplDancer : CActivity {
 		base.Activate();
 	}
 
-	public override void DeActivate() {
+	public override void DeActivate()
+	{
 		if (OpenNijiiroRW.stageSongSelect.nChoosenSongDifficulty[0] == (int)Difficulty.Tower || OpenNijiiroRW.stageSongSelect.nChoosenSongDifficulty[0] == (int)Difficulty.Dan)
 			return;
 
 		//this.ct踊り子モーション = null;
 
-		for (int i = 0; i < nDancerCount; i++) {
+		for (int i = 0; i < nDancerCount; i++)
+		{
 			OpenNijiiroRW.t安全にDisposeする(ref Dancer_In[i]);
 			OpenNijiiroRW.t安全にDisposeする(ref Dancer_Out[i]);
 			OpenNijiiroRW.t安全にDisposeする(ref Dancer[i]);
@@ -112,82 +128,109 @@ internal class CActImplDancer : CActivity {
 		base.DeActivate();
 	}
 
-	public override void CreateManagedResource() {
+	public override void CreateManagedResource()
+	{
 		base.CreateManagedResource();
 	}
 
-	public override void ReleaseManagedResource() {
+	public override void ReleaseManagedResource()
+	{
 		base.ReleaseManagedResource();
 	}
 
-	public override int Draw() {
-		if (this.IsFirstDraw) {
+	public override int Draw()
+	{
+		if (this.IsFirstDraw)
+		{
 			this.IsFirstDraw = true;
 		}
 
-		if (OpenNijiiroRW.stageSongSelect.nChoosenSongDifficulty[0] != (int)Difficulty.Tower && OpenNijiiroRW.stageSongSelect.nChoosenSongDifficulty[0] != (int)Difficulty.Dan) {
-			if (OpenNijiiroRW.ConfigIni.ShowDancer && (this.ar踊り子モーション番号.Length - 1) != 0) {
+		if (OpenNijiiroRW.stageSongSelect.nChoosenSongDifficulty[0] != (int)Difficulty.Tower && OpenNijiiroRW.stageSongSelect.nChoosenSongDifficulty[0] != (int)Difficulty.Dan)
+		{
+			if (OpenNijiiroRW.ConfigIni.ShowDancer && (this.ar踊り子モーション番号.Length - 1) != 0)
+			{
 				if (!OpenNijiiroRW.stageGameScreen.bPAUSE) nNowDancerCounter += Math.Abs((float)OpenNijiiroRW.stageGameScreen.actPlayInfo.dbBPM[0] / 60.0f) * (float)OpenNijiiroRW.FPS.DeltaTime / nDancerBeat;
-				if (nNowDancerCounter >= 1) {
+				if (nNowDancerCounter >= 1)
+				{
 					nNowDancerCounter = 0;
 				}
 				nNowDancerFrame = (int)(nNowDancerCounter * (this.ar踊り子モーション番号.Length - 1));
 
-				for (int i = 0; i < nDancerCount; i++) {
-					if ((int)OpenNijiiroRW.stageGameScreen.actGauge.db現在のゲージ値[0] >= OpenNijiiroRW.Skin.Game_Dancer_Gauge[i]) {
-						if (DancerStates[i] == 0) {
+				for (int i = 0; i < nDancerCount; i++)
+				{
+					if ((int)OpenNijiiroRW.stageGameScreen.actGauge.db現在のゲージ値[0] >= OpenNijiiroRW.Skin.Game_Dancer_Gauge[i])
+					{
+						if (DancerStates[i] == 0)
+						{
 							DancerStates[i] = 1;
 							nNowDancerInCounter[i] = 0;
 						}
-					} else {
-						if (DancerStates[i] == 3) {
+					}
+					else
+					{
+						if (DancerStates[i] == 3)
+						{
 							DancerStates[i] = 2;
 							nNowDancerOutCounter[i] = 0;
 						}
 					}
 
-					switch (DancerStates[i]) {
+					switch (DancerStates[i])
+					{
 						case 0:
 							break;
-						case 1: {
-								if (nDancerInInterval == 0) {
+						case 1:
+							{
+								if (nDancerInInterval == 0)
+								{
 									DancerStates[i] = 3;
-								} else {
+								}
+								else
+								{
 									if (!OpenNijiiroRW.stageGameScreen.bPAUSE) nNowDancerInCounter[i] += Math.Abs((float)OpenNijiiroRW.stageGameScreen.actPlayInfo.dbBPM[0] / nDancerInInterval) * (float)OpenNijiiroRW.FPS.DeltaTime;
 
-									if (nNowDancerInCounter[i] >= 1) {
+									if (nNowDancerInCounter[i] >= 1)
+									{
 										nNowDancerInCounter[i] = 1;
 										DancerStates[i] = 3;
 									}
 
 									int frame = (int)(nNowDancerInCounter[i] * (this.arMotionArray_In.Length - 1));
-									if (this.Dancer_In[i] != null && this.Dancer_In[i].Length > 0 && this.Dancer_In[i][this.arMotionArray_In[frame]] != null) {
+									if (this.Dancer_In[i] != null && this.Dancer_In[i].Length > 0 && this.Dancer_In[i][this.arMotionArray_In[frame]] != null)
+									{
 										this.Dancer_In[i][this.arMotionArray_In[frame]].t2D中心基準描画(OpenNijiiroRW.Skin.Game_Dancer_X[i], OpenNijiiroRW.Skin.Game_Dancer_Y[i]);
 									}
 								}
 
 							}
 							break;
-						case 2: {
-								if (nDancerOutInterval == 0) {
+						case 2:
+							{
+								if (nDancerOutInterval == 0)
+								{
 									DancerStates[i] = 0;
-								} else {
+								}
+								else
+								{
 									if (!OpenNijiiroRW.stageGameScreen.bPAUSE) nNowDancerOutCounter[i] += Math.Abs((float)OpenNijiiroRW.stageGameScreen.actPlayInfo.dbBPM[0] / nDancerOutInterval) * (float)OpenNijiiroRW.FPS.DeltaTime;
 
-									if (nNowDancerOutCounter[i] >= 1) {
+									if (nNowDancerOutCounter[i] >= 1)
+									{
 										nNowDancerOutCounter[i] = 1;
 										DancerStates[i] = 0;
 									}
 
 									int frame = (int)(nNowDancerOutCounter[i] * (this.arMotionArray_Out.Length - 1));
-									if (this.Dancer_Out[i] != null && this.Dancer_Out[i].Length > 0 && this.Dancer_Out[i][this.arMotionArray_Out[frame]] != null) {
+									if (this.Dancer_Out[i] != null && this.Dancer_Out[i].Length > 0 && this.Dancer_Out[i][this.arMotionArray_Out[frame]] != null)
+									{
 										this.Dancer_Out[i][this.arMotionArray_Out[frame]].t2D中心基準描画(OpenNijiiroRW.Skin.Game_Dancer_X[i], OpenNijiiroRW.Skin.Game_Dancer_Y[i]);
 									}
 								}
 							}
 							break;
 						case 3:
-							if (this.Dancer[i] != null && this.Dancer[i].Length > 0 && this.Dancer[i][this.ar踊り子モーション番号[nNowDancerFrame]] != null) {
+							if (this.Dancer[i] != null && this.Dancer[i].Length > 0 && this.Dancer[i][this.ar踊り子モーション番号[nNowDancerFrame]] != null)
+							{
 								this.Dancer[i][this.ar踊り子モーション番号[nNowDancerFrame]].t2D中心基準描画(OpenNijiiroRW.Skin.Game_Dancer_X[i], OpenNijiiroRW.Skin.Game_Dancer_Y[i]);
 							}
 							break;
@@ -223,7 +266,8 @@ internal class CActImplDancer : CActivity {
 	private string Game_Dancer_In_Motion;
 	private string Game_Dancer_Out_Motion;
 
-	private void LoadDancerConifg(string dancerPath) {
+	private void LoadDancerConifg(string dancerPath)
+	{
 		var _str = "";
 		OpenNijiiroRW.Skin.LoadSkinConfigFromFile(dancerPath + @$"{Path.DirectorySeparatorChar}DancerConfig.txt", ref _str);
 
@@ -236,54 +280,82 @@ internal class CActImplDancer : CActivity {
 		nDancerInInterval = 0;
 		nDancerOutInterval = 0;
 
-		foreach (string s in strSingleLine) {
+		foreach (string s in strSingleLine)
+		{
 			string str = s.Replace('\t', ' ').TrimStart(new char[] { '\t', ' ' });
-			if ((str.Length != 0) && (str[0] != ';')) {
-				try {
+			if ((str.Length != 0) && (str[0] != ';'))
+			{
+				try
+				{
 					string strCommand;
 					string strParam;
 					string[] strArray = str.Split(new char[] { '=' });
 
-					if (strArray.Length == 2) {
+					if (strArray.Length == 2)
+					{
 						strCommand = strArray[0].Trim();
 						strParam = strArray[1].Trim();
 
-						if (strCommand == "Game_Dancer_Count") {
+						if (strCommand == "Game_Dancer_Count")
+						{
 							nDancerCount = int.Parse(strParam);
 							OpenNijiiroRW.Skin.Game_Dancer_X = new int[nDancerCount];
 							OpenNijiiroRW.Skin.Game_Dancer_Y = new int[nDancerCount];
-						} else if (strCommand == "Game_Dancer_X") {
+						}
+						else if (strCommand == "Game_Dancer_X")
+						{
 							string[] strSplit = strParam.Split(',');
-							for (int i = 0; i < nDancerCount; i++) {
+							for (int i = 0; i < nDancerCount; i++)
+							{
 								OpenNijiiroRW.Skin.Game_Dancer_X[i] = int.Parse(strSplit[i]);
 							}
-						} else if (strCommand == "Game_Dancer_Y") {
+						}
+						else if (strCommand == "Game_Dancer_Y")
+						{
 							string[] strSplit = strParam.Split(',');
-							for (int i = 0; i < nDancerCount; i++) {
+							for (int i = 0; i < nDancerCount; i++)
+							{
 								OpenNijiiroRW.Skin.Game_Dancer_Y[i] = int.Parse(strSplit[i]);
 							}
-						} else if (strCommand == "Game_Dancer_Motion") {
+						}
+						else if (strCommand == "Game_Dancer_Motion")
+						{
 							OpenNijiiroRW.Skin.Game_Dancer_Motion = strParam;
-						} else if (strCommand == "Game_Dancer_In_Motion") {
+						}
+						else if (strCommand == "Game_Dancer_In_Motion")
+						{
 							Game_Dancer_In_Motion = strParam;
-						} else if (strCommand == "Game_Dancer_Out_Motion") {
+						}
+						else if (strCommand == "Game_Dancer_Out_Motion")
+						{
 							Game_Dancer_Out_Motion = strParam;
-						} else if (strCommand == "Game_Dancer_Beat") {
+						}
+						else if (strCommand == "Game_Dancer_Beat")
+						{
 							nDancerBeat = int.Parse(strParam);
-						} else if (strCommand == "Game_Dancer_In_Interval") {
+						}
+						else if (strCommand == "Game_Dancer_In_Interval")
+						{
 							nDancerInInterval = int.Parse(strParam);
-						} else if (strCommand == "Game_Dancer_Out_Interval") {
+						}
+						else if (strCommand == "Game_Dancer_Out_Interval")
+						{
 							nDancerOutInterval = int.Parse(strParam);
-						} else if (strCommand == "Game_Dancer_Gauge") {
+						}
+						else if (strCommand == "Game_Dancer_Gauge")
+						{
 							string[] strSplit = strParam.Split(',');
-							for (int i = 0; i < nDancerCount; i++) {
+							for (int i = 0; i < nDancerCount; i++)
+							{
 								OpenNijiiroRW.Skin.Game_Dancer_Gauge[i] = int.Parse(strSplit[i]);
 							}
 						}
 
 					}
 					continue;
-				} catch (Exception exception) {
+				}
+				catch (Exception exception)
+				{
 					Trace.TraceError(exception.ToString());
 					Trace.TraceError("例外が発生しましたが処理を継続します。 (6a32cc37-1527-412e-968a-512c1f0135cd)");
 					continue;

@@ -1,23 +1,29 @@
-﻿namespace OpenNijiiroRW {
-	internal class CLocalCounters {
+﻿namespace OpenNijiiroRW
+{
+	internal class CLocalCounters
+	{
 		private Dictionary<string, double> _localCounters;
 		private int _player;
 
-		public CLocalCounters() {
+		public CLocalCounters()
+		{
 			this._localCounters = new Dictionary<string, double>();
 			this._player = -1;
 		}
 
-		public CLocalCounters(int player) {
+		public CLocalCounters(int player)
+		{
 			this._localCounters = new Dictionary<string, double>();
 			this._player = player;
 		}
 
-		public void Store(string counterName, string expr) {
+		public void Store(string counterName, string expr)
+		{
 			this._localCounters[counterName] = CTExpression.Evaluate(expr, _player);
 		}
 
-		public void Elevate(string counterName) {
+		public void Elevate(string counterName)
+		{
 			if (_player < 0) return;
 			if (OpenNijiiroRW.ConfigIni.bAutoPlay[_player] || (OpenNijiiroRW.ConfigIni.bAIBattleMode && _player == 1)) return;
 
@@ -26,7 +32,8 @@
 			_sf.tSetGlobalCounter(counterName, _val);
 		}
 
-		public double Get(string counterName) {
+		public double Get(string counterName)
+		{
 			this._localCounters.TryGetValue(counterName, out double counterValue);
 			return counterValue;
 		}

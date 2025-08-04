@@ -4,10 +4,12 @@ using Rectangle = System.Drawing.Rectangle;
 
 namespace OpenNijiiroRW;
 
-internal class CActImplFireworks : CActivity {
+internal class CActImplFireworks : CActivity
+{
 	// コンストラクタ
 
-	public CActImplFireworks() {
+	public CActImplFireworks()
+	{
 		base.IsDeActivated = true;
 	}
 
@@ -18,18 +20,24 @@ internal class CActImplFireworks : CActivity {
 	/// 大音符の花火エフェクト
 	/// </summary>
 	/// <param name="nLane"></param>
-	public virtual void Start(int nLane, int nPlayer) {
+	public virtual void Start(int nLane, int nPlayer)
+	{
 		nY座標P2 = new int[] { 548, 612, 670, 712, 730, 780, 725, 690, 640 };
-		if (OpenNijiiroRW.Tx.Effects_Hit_FireWorks != null && OpenNijiiroRW.Tx.Effects_Hit_FireWorks != null) {
-			for (int i = 0; i < 9; i++) {
-				for (int j = 0; j < 45; j++) {
-					if (!this.st大音符花火[j].b使用中) {
+		if (OpenNijiiroRW.Tx.Effects_Hit_FireWorks != null && OpenNijiiroRW.Tx.Effects_Hit_FireWorks != null)
+		{
+			for (int i = 0; i < 9; i++)
+			{
+				for (int j = 0; j < 45; j++)
+				{
+					if (!this.st大音符花火[j].b使用中)
+					{
 						this.st大音符花火[j].b使用中 = true;
 						this.st大音符花火[j].ct進行 = new CCounter(0, 40, 18, OpenNijiiroRW.Timer); // カウンタ
 						this.st大音符花火[j].fX = this.nX座標[i]; //X座標
 						this.st大音符花火[j].fY = nPlayer == 0 ? this.nY座標[i] : this.nY座標P2[i];
 
-						switch (nLane) {
+						switch (nLane)
+						{
 							case 0:
 								this.st大音符花火[j].nColor = 0;
 								break;
@@ -38,7 +46,8 @@ internal class CActImplFireworks : CActivity {
 								break;
 						}
 
-						switch (i) {
+						switch (i)
+						{
 							case 0:
 								this.st大音符花火[j].n開始フレーム = 0;
 								this.st大音符花火[j].n終了フレーム = 16;
@@ -86,8 +95,10 @@ internal class CActImplFireworks : CActivity {
 		}
 	}
 
-	public virtual void Start(int nLane, ENoteJudge judge, int player) {
-		for (int j = 0; j < 3 * 4; j++) {
+	public virtual void Start(int nLane, ENoteJudge judge, int player)
+	{
+		for (int j = 0; j < 3 * 4; j++)
+		{
 			if (!this.st状態[j].b使用中)
 			//for( int n = 0; n < 1; n++ )
 			{
@@ -98,7 +109,8 @@ internal class CActImplFireworks : CActivity {
 				this.st状態[j].nPlayer = player;
 				this.st状態_大[j].nPlayer = player;
 
-				switch (nLane) {
+				switch (nLane)
+				{
 					case 0x11:
 					case 0x12:
 						this.st状態[j].nIsBig = 0;
@@ -119,72 +131,93 @@ internal class CActImplFireworks : CActivity {
 
 	// CActivity 実装
 
-	public override void Activate() {
-		for (int i = 0; i < 3 * 4; i++) {
+	public override void Activate()
+	{
+		for (int i = 0; i < 3 * 4; i++)
+		{
 			this.st状態[i].ct進行 = new CCounter();
 			this.st状態[i].b使用中 = false;
 			this.st状態_大[i].ct進行 = new CCounter();
 		}
-		for (int i = 0; i < 256; i++) {
+		for (int i = 0; i < 256; i++)
+		{
 			this.st紙吹雪[i] = new ST紙吹雪();
 			this.st紙吹雪[i].b使用中 = false;
 			this.st紙吹雪[i].ct進行 = new CCounter();
 		}
 		base.Activate();
 	}
-	public override void DeActivate() {
-		for (int i = 0; i < 3 * 4; i++) {
+	public override void DeActivate()
+	{
+		for (int i = 0; i < 3 * 4; i++)
+		{
 			this.st状態[i].ct進行 = null;
 			this.st状態_大[i].ct進行 = null;
 		}
-		for (int i = 0; i < 256; i++) {
+		for (int i = 0; i < 256; i++)
+		{
 			this.st紙吹雪[i].ct進行 = null;
 		}
 		base.DeActivate();
 	}
-	public override void CreateManagedResource() {
+	public override void CreateManagedResource()
+	{
 		base.CreateManagedResource();
 	}
-	public override void ReleaseManagedResource() {
+	public override void ReleaseManagedResource()
+	{
 		base.ReleaseManagedResource();
 	}
-	public override int Draw() {
-		if (!base.IsDeActivated) {
+	public override int Draw()
+	{
+		if (!base.IsDeActivated)
+		{
 			int nWidth = (OpenNijiiroRW.Tx.Effects_Hit_Explosion.szTextureSize.Width / 7);
 			int nHeight = (OpenNijiiroRW.Tx.Effects_Hit_Explosion.szTextureSize.Height / 4);
 			int nBombWidth = (OpenNijiiroRW.Tx.Effects_Hit_Bomb.szTextureSize.Width / 7);
 			int nBombHeight = (OpenNijiiroRW.Tx.Effects_Hit_Bomb.szTextureSize.Height / 4);
-			for (int i = 0; i < 3 * 4; i++) {
-				if (this.st状態[i].b使用中) {
-					if (!this.st状態[i].ct進行.IsStoped) {
+			for (int i = 0; i < 3 * 4; i++)
+			{
+				if (this.st状態[i].b使用中)
+				{
+					if (!this.st状態[i].ct進行.IsStoped)
+					{
 						this.st状態[i].ct進行.Tick();
-						if (this.st状態[i].ct進行.IsEnded) {
+						if (this.st状態[i].ct進行.IsEnded)
+						{
 							this.st状態[i].ct進行.Stop();
 							this.st状態[i].b使用中 = false;
 						}
 
 						// (When performing calibration, reduce visual distraction
 						// and current judgment feedback near the judgment position.)
-						if (OpenNijiiroRW.Tx.Effects_Hit_Explosion != null) {
+						if (OpenNijiiroRW.Tx.Effects_Hit_Explosion != null)
+						{
 							int n = this.st状態[i].nIsBig == 1 ? (nHeight * 2) : 0;
 
 							int nX = 0;
 							int nY = 0;
 
-							if (OpenNijiiroRW.ConfigIni.nPlayerCount == 5) {
+							if (OpenNijiiroRW.ConfigIni.nPlayerCount == 5)
+							{
 								nX = OpenNijiiroRW.Skin.Game_Effects_Hit_Explosion_5P[0] + (OpenNijiiroRW.Skin.Game_UIMove_5P[0] * this.st状態[i].nPlayer);
 								nY = OpenNijiiroRW.Skin.Game_Effects_Hit_Explosion_5P[1] + (OpenNijiiroRW.Skin.Game_UIMove_5P[1] * this.st状態[i].nPlayer);
-							} else if (OpenNijiiroRW.ConfigIni.nPlayerCount == 4 || OpenNijiiroRW.ConfigIni.nPlayerCount == 3) {
+							}
+							else if (OpenNijiiroRW.ConfigIni.nPlayerCount == 4 || OpenNijiiroRW.ConfigIni.nPlayerCount == 3)
+							{
 								nX = OpenNijiiroRW.Skin.Game_Effects_Hit_Explosion_4P[0] + (OpenNijiiroRW.Skin.Game_UIMove_4P[0] * this.st状態[i].nPlayer);
 								nY = OpenNijiiroRW.Skin.Game_Effects_Hit_Explosion_4P[1] + (OpenNijiiroRW.Skin.Game_UIMove_4P[1] * this.st状態[i].nPlayer);
-							} else {
+							}
+							else
+							{
 								nX = OpenNijiiroRW.Skin.Game_Effects_Hit_Explosion_X[this.st状態[i].nPlayer];
 								nY = OpenNijiiroRW.Skin.Game_Effects_Hit_Explosion_Y[this.st状態[i].nPlayer];
 							}
 							nX += OpenNijiiroRW.stageGameScreen.GetJPOSCROLLX(this.st状態[i].nPlayer);
 							nY += OpenNijiiroRW.stageGameScreen.GetJPOSCROLLY(this.st状態[i].nPlayer);
 
-							switch (st状態[i].judge) {
+							switch (st状態[i].judge)
+							{
 								case ENoteJudge.Perfect:
 								case ENoteJudge.Great:
 								case ENoteJudge.Auto:
@@ -205,19 +238,25 @@ internal class CActImplFireworks : CActivity {
 				}
 			}
 
-			for (int i = 0; i < 3 * 4; i++) {
-				if (!this.st状態_大[i].ct進行.IsStoped) {
+			for (int i = 0; i < 3 * 4; i++)
+			{
+				if (!this.st状態_大[i].ct進行.IsStoped)
+				{
 					this.st状態_大[i].ct進行.Tick();
-					if (this.st状態_大[i].ct進行.IsEnded) {
+					if (this.st状態_大[i].ct進行.IsEnded)
+					{
 						this.st状態_大[i].ct進行.Stop();
 					}
-					if (OpenNijiiroRW.Tx.Effects_Hit_Explosion_Big != null && this.st状態_大[i].nIsBig == 1) {
+					if (OpenNijiiroRW.Tx.Effects_Hit_Explosion_Big != null && this.st状態_大[i].nIsBig == 1)
+					{
 
-						switch (st状態_大[i].judge) {
+						switch (st状態_大[i].judge)
+						{
 							case ENoteJudge.Perfect:
 							case ENoteJudge.Great:
 							case ENoteJudge.Auto:
-								if (this.st状態_大[i].nIsBig == 1 && !OpenNijiiroRW.ConfigIni.SimpleMode) {
+								if (this.st状態_大[i].nIsBig == 1 && !OpenNijiiroRW.ConfigIni.SimpleMode)
+								{
 									//float fX = 415 - ((TJAPlayer3.Tx.Effects_Hit_Explosion_Big.sz画像サイズ.Width * TJAPlayer3.Tx.Effects_Hit_Explosion_Big.vc拡大縮小倍率.X ) / 2.0f);
 									//float fY = TJAPlayer3.Skin.nJudgePointY[ this.st状態_大[ i ].nPlayer ] - ((TJAPlayer3.Tx.Effects_Hit_Explosion_Big.sz画像サイズ.Height * TJAPlayer3.Tx.Effects_Hit_Explosion_Big.vc拡大縮小倍率.Y ) / 2.0f);
 									//float fY = 257 - ((this.txアタックエフェクトUpper_big.sz画像サイズ.Height * this.txアタックエフェクトUpper_big.vc拡大縮小倍率.Y ) / 2.0f);
@@ -244,13 +283,18 @@ internal class CActImplFireworks : CActivity {
 									float x = 0;
 									float y = 0;
 
-									if (OpenNijiiroRW.ConfigIni.nPlayerCount == 5) {
+									if (OpenNijiiroRW.ConfigIni.nPlayerCount == 5)
+									{
 										x = OpenNijiiroRW.Skin.Game_Effects_Hit_Explosion_5P[0] + (OpenNijiiroRW.Skin.Game_UIMove_5P[0] * this.st状態[i].nPlayer);
 										y = OpenNijiiroRW.Skin.Game_Effects_Hit_Explosion_5P[1] + (OpenNijiiroRW.Skin.Game_UIMove_5P[1] * this.st状態[i].nPlayer);
-									} else if (OpenNijiiroRW.ConfigIni.nPlayerCount == 4 || OpenNijiiroRW.ConfigIni.nPlayerCount == 3) {
+									}
+									else if (OpenNijiiroRW.ConfigIni.nPlayerCount == 4 || OpenNijiiroRW.ConfigIni.nPlayerCount == 3)
+									{
 										x = OpenNijiiroRW.Skin.Game_Effects_Hit_Explosion_4P[0] + (OpenNijiiroRW.Skin.Game_UIMove_4P[0] * this.st状態[i].nPlayer);
 										y = OpenNijiiroRW.Skin.Game_Effects_Hit_Explosion_4P[1] + (OpenNijiiroRW.Skin.Game_UIMove_4P[1] * this.st状態[i].nPlayer);
-									} else {
+									}
+									else
+									{
 										x = OpenNijiiroRW.Skin.Game_Effects_Hit_Explosion_X[this.st状態[i].nPlayer];
 										y = OpenNijiiroRW.Skin.Game_Effects_Hit_Explosion_Y[this.st状態[i].nPlayer];
 									}
@@ -277,14 +321,17 @@ internal class CActImplFireworks : CActivity {
 				}
 			}
 
-			for (int i = 0; i < 45; i++) {
+			for (int i = 0; i < 45; i++)
+			{
 				if (OpenNijiiroRW.Skin.nScrollFieldX[0] != 414)
 					break;
 
-				if (this.st大音符花火[i].b使用中) {
+				if (this.st大音符花火[i].b使用中)
+				{
 					this.st大音符花火[i].n前回のValue = this.st大音符花火[i].ct進行.CurrentValue;
 					this.st大音符花火[i].ct進行.Tick();
-					if (this.st大音符花火[i].ct進行.IsEnded) {
+					if (this.st大音符花火[i].ct進行.IsEnded)
+					{
 						this.st大音符花火[i].ct進行.Stop();
 						this.st大音符花火[i].b使用中 = false;
 					}
@@ -317,18 +364,24 @@ internal class CActImplFireworks : CActivity {
 
 			}
 
-			for (int i = 0; i < 256; i++) {
-				if (this.st紙吹雪[i].b使用中) {
+			for (int i = 0; i < 256; i++)
+			{
+				if (this.st紙吹雪[i].b使用中)
+				{
 					this.st紙吹雪[i].n前回のValue = this.st紙吹雪[i].ct進行.CurrentValue;
 					this.st紙吹雪[i].ct進行.Tick();
-					if (this.st紙吹雪[i].ct進行.IsEnded) {
-						this.st紙吹雪[i].ct進行.Stop();
-						this.st紙吹雪[i].b使用中 = false;
-					} else if (this.st紙吹雪[i].fX > 1300 || this.st紙吹雪[i].fX < -20) {
+					if (this.st紙吹雪[i].ct進行.IsEnded)
+					{
 						this.st紙吹雪[i].ct進行.Stop();
 						this.st紙吹雪[i].b使用中 = false;
 					}
-					for (int n = this.st紙吹雪[i].n前回のValue; n < this.st紙吹雪[i].ct進行.CurrentValue; n++) {
+					else if (this.st紙吹雪[i].fX > 1300 || this.st紙吹雪[i].fX < -20)
+					{
+						this.st紙吹雪[i].ct進行.Stop();
+						this.st紙吹雪[i].b使用中 = false;
+					}
+					for (int n = this.st紙吹雪[i].n前回のValue; n < this.st紙吹雪[i].ct進行.CurrentValue; n++)
+					{
 						this.st紙吹雪[i].fX -= this.st紙吹雪[i].f加速度X;
 						this.st紙吹雪[i].fY -= this.st紙吹雪[i].f加速度Y;
 						this.st紙吹雪[i].f加速度X *= this.st紙吹雪[i].f加速度の加速度X;
@@ -374,7 +427,8 @@ internal class CActImplFireworks : CActivity {
 	protected int[] nY座標P2 = new int[] { 172, 108, 50, 8, -10, -60, -5, 30, 90 };
 
 	[StructLayout(LayoutKind.Sequential)]
-	protected struct STSTATUS {
+	protected struct STSTATUS
+	{
 		public bool b使用中;
 		public CCounter ct進行;
 		public ENoteJudge judge;
@@ -383,7 +437,8 @@ internal class CActImplFireworks : CActivity {
 		public int nPlayer;
 	}
 	[StructLayout(LayoutKind.Sequential)]
-	protected struct STSTATUS_B {
+	protected struct STSTATUS_B
+	{
 		public CCounter ct進行;
 		public ENoteJudge judge;
 		public int nIsBig;
@@ -392,7 +447,8 @@ internal class CActImplFireworks : CActivity {
 	}
 
 	[StructLayout(LayoutKind.Sequential)]
-	private struct ST大音符花火 {
+	private struct ST大音符花火
+	{
 		public int nColor;
 		public bool b使用中;
 		public CCounter ct進行;
@@ -405,7 +461,8 @@ internal class CActImplFireworks : CActivity {
 
 	private ST紙吹雪[] st紙吹雪 = new ST紙吹雪[256];
 	[StructLayout(LayoutKind.Sequential)]
-	private struct ST紙吹雪 {
+	private struct ST紙吹雪
+	{
 		public int nGraphic;
 		public int nColor;
 		public bool b使用中;

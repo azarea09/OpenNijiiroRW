@@ -1,30 +1,40 @@
 ﻿using static OpenNijiiroRW.BestPlayRecords;
 
-namespace OpenNijiiroRW {
-	internal class CUnlockDP : CUnlockCondition {
+namespace OpenNijiiroRW
+{
+	internal class CUnlockDP : CUnlockCondition
+	{
 
 
-		public CUnlockDP(CUnlockConditionFactory.UnlockConditionJsonRaw rawJson) : base(rawJson) {
+		public CUnlockDP(CUnlockConditionFactory.UnlockConditionJsonRaw rawJson) : base(rawJson)
+		{
 			this.RequiredArgCount = 3;
 			this.ConditionId = "dp";
 		}
 
-		public override (bool, string?) tConditionMet(int player, EScreen screen = EScreen.MyRoom) {
-			if (this.Values.Length == this.RequiredArgCount) {
+		public override (bool, string?) tConditionMet(int player, EScreen screen = EScreen.MyRoom)
+		{
+			if (this.Values.Length == this.RequiredArgCount)
+			{
 				int _satisfactoryPlays = this.tGetCountChartsPassingCondition(player);
 
 				bool fulfiled = this.tValueRequirementMet(_satisfactoryPlays, this.Values[2]);
 
-				if (screen == EScreen.Internal) {
+				if (screen == EScreen.Internal)
+				{
 					return (fulfiled, "");
-				} else {
+				}
+				else
+				{
 					return (fulfiled, null);
 				}
-			} else
+			}
+			else
 				return (false, CLangManager.LangInstance.GetString("UNLOCK_CONDITION_ERROR", this.ConditionId, this.RequiredArgCount.ToString()));
 		}
 
-		public override string tConditionMessage(EScreen screen = EScreen.MyRoom) {
+		public override string tConditionMessage(EScreen screen = EScreen.MyRoom)
+		{
 			if (this.Values.Length < this.RequiredArgCount)
 				return CLangManager.LangInstance.GetString("UNLOCK_CONDITION_ERROR", this.ConditionId, this.RequiredArgCount);
 
@@ -42,7 +52,8 @@ namespace OpenNijiiroRW {
 			var _table = ChartStats.ClearStatuses[_aimedDifficulty];
 			var _ura = ChartStats.ClearStatuses[(int)Difficulty.Edit];
 			int _count = 0;
-			for (int i = _aimedStatus; i < (int)EClearStatus.TOTAL; i++) {
+			for (int i = _aimedStatus; i < (int)EClearStatus.TOTAL; i++)
+			{
 				_count += _table[i];
 				if (_aimedDifficulty == (int)Difficulty.Oni) _count += _ura[i];
 			}
@@ -52,7 +63,8 @@ namespace OpenNijiiroRW {
 			return CLangManager.LangInstance.GetString("UNLOCK_CONDITION_PLAYDIFF", statusString, this.Values[2], diffString, _count);
 		}
 
-		protected override int tGetCountChartsPassingCondition(int player) {
+		protected override int tGetCountChartsPassingCondition(int player)
+		{
 			var _aimedDifficulty = this.Values[0]; // Difficulty if dp, Level if lp
 			var _aimedStatus = this.Values[1];
 
@@ -67,7 +79,8 @@ namespace OpenNijiiroRW {
 			var _table = chartStats.ClearStatuses[_aimedDifficulty];
 			var _ura = chartStats.ClearStatuses[(int)Difficulty.Edit];
 			int _count = 0;
-			for (int i = _aimedStatus; i < (int)EClearStatus.TOTAL; i++) {
+			for (int i = _aimedStatus; i < (int)EClearStatus.TOTAL; i++)
+			{
 				_count += _table[i];
 				if (_aimedDifficulty == (int)Difficulty.Oni) _count += _ura[i];
 			}

@@ -4,60 +4,79 @@ using NLua;
 
 namespace OpenNijiiroRW;
 
-class ScriptBGFunc {
+class ScriptBGFunc
+{
 	private Dictionary<string, CTexture> Textures;
 	private string DirPath;
 
-	public ScriptBGFunc(Dictionary<string, CTexture> texs, string dirPath) {
+	public ScriptBGFunc(Dictionary<string, CTexture> texs, string dirPath)
+	{
 		Textures = texs;
 		DirPath = dirPath;
 	}
-	public (int x, int y) DrawText(double x, double y, string text) {
+	public (int x, int y) DrawText(double x, double y, string text)
+	{
 		return OpenNijiiroRW.actTextConsole.Print((int)x, (int)y, CTextConsole.EFontType.White, text);
 	}
-	public (int x, int y) DrawNum(double x, double y, double text) {
+	public (int x, int y) DrawNum(double x, double y, double text)
+	{
 		return OpenNijiiroRW.actTextConsole.Print((int)x, (int)y, CTextConsole.EFontType.White, text.ToString());
 	}
-	public void AddGraph(string fileName) {
+	public void AddGraph(string fileName)
+	{
 		string trueFileName = fileName.Replace('/', Path.DirectorySeparatorChar);
 		trueFileName = trueFileName.Replace('\\', Path.DirectorySeparatorChar);
 		Textures.Add(fileName, OpenNijiiroRW.tテクスチャの生成($@"{DirPath}{Path.DirectorySeparatorChar}{trueFileName}"));
 	}
-	public void DrawGraph(double x, double y, string fileName) {
+	public void DrawGraph(double x, double y, string fileName)
+	{
 		Textures[fileName]?.t2D描画((int)x, (int)y);
 	}
-	public void DrawRectGraph(double x, double y, int rect_x, int rect_y, int rect_width, int rect_height, string fileName) {
+	public void DrawRectGraph(double x, double y, int rect_x, int rect_y, int rect_width, int rect_height, string fileName)
+	{
 		Textures[fileName]?.t2D描画((int)x, (int)y, new System.Drawing.RectangleF(rect_x, rect_y, rect_width, rect_height));
 	}
-	public void DrawGraphCenter(double x, double y, string fileName) {
+	public void DrawGraphCenter(double x, double y, string fileName)
+	{
 		Textures[fileName]?.t2D拡大率考慮中央基準描画((int)x, (int)y);
 	}
-	public void DrawGraphRectCenter(double x, double y, int rect_x, int rect_y, int rect_width, int rect_height, string fileName) {
+	public void DrawGraphRectCenter(double x, double y, int rect_x, int rect_y, int rect_width, int rect_height, string fileName)
+	{
 		Textures[fileName]?.t2D拡大率考慮中央基準描画((int)x, (int)y, new System.Drawing.RectangleF(rect_x, rect_y, rect_width, rect_height));
 	}
-	public void SetOpacity(double opacity, string fileName) {
+	public void SetOpacity(double opacity, string fileName)
+	{
 		if (Textures[fileName] != null)
 			Textures[fileName].Opacity = (int)opacity;
 	}
-	public void SetScale(double xscale, double yscale, string fileName) {
-		if (Textures[fileName] != null) {
+	public void SetScale(double xscale, double yscale, string fileName)
+	{
+		if (Textures[fileName] != null)
+		{
 			Textures[fileName].Scale.X = (float)xscale;
 			Textures[fileName].Scale.Y = (float)yscale;
 		}
 	}
-	public void SetRotation(double angle, string fileName) {
-		if (Textures[fileName] != null) {
+	public void SetRotation(double angle, string fileName)
+	{
+		if (Textures[fileName] != null)
+		{
 			Textures[fileName].Rotation = (float)(angle * Math.PI / 180);
 		}
 	}
-	public void SetColor(double r, double g, double b, string fileName) {
-		if (Textures[fileName] != null) {
+	public void SetColor(double r, double g, double b, string fileName)
+	{
+		if (Textures[fileName] != null)
+		{
 			Textures[fileName].color4 = new Color4((float)r, (float)g, (float)b, 1f);
 		}
 	}
-	public void SetBlendMode(string type, string fileName) {
-		if (Textures[fileName] != null) {
-			switch (type) {
+	public void SetBlendMode(string type, string fileName)
+	{
+		if (Textures[fileName] != null)
+		{
+			switch (type)
+			{
 				case "Normal":
 				default:
 					Textures[fileName].b加算合成 = false;
@@ -93,21 +112,26 @@ class ScriptBGFunc {
 		}
 	}
 
-	public double GetTextureWidth(string fileName) {
-		if (Textures[fileName] != null) {
+	public double GetTextureWidth(string fileName)
+	{
+		if (Textures[fileName] != null)
+		{
 			return Textures[fileName].szTextureSize.Width;
 		}
 		return -1;
 	}
 
-	public double GetTextureHeight(string fileName) {
-		if (Textures[fileName] != null) {
+	public double GetTextureHeight(string fileName)
+	{
+		if (Textures[fileName] != null)
+		{
 			return Textures[fileName].szTextureSize.Height;
 		}
 		return -1;
 	}
 }
-class ScriptBG : IDisposable {
+class ScriptBG : IDisposable
+{
 	public Dictionary<string, CTexture> Textures;
 
 	protected Lua LuaScript;
@@ -120,7 +144,8 @@ class ScriptBG : IDisposable {
 	protected LuaFunction LuaUpdate;
 	protected LuaFunction LuaDraw;
 
-	public ScriptBG(string filePath) {
+	public ScriptBG(string filePath)
+	{
 		Textures = new Dictionary<string, CTexture>();
 
 		if (!File.Exists(filePath)) return;
@@ -132,9 +157,12 @@ class ScriptBG : IDisposable {
 		LuaScript["func"] = new ScriptBGFunc(Textures, Path.GetDirectoryName(filePath));
 
 
-		try {
-			using (var streamAPI = new StreamReader("BGScriptAPI.lua", Encoding.UTF8)) {
-				using (var stream = new StreamReader(filePath, Encoding.UTF8)) {
+		try
+		{
+			using (var streamAPI = new StreamReader("BGScriptAPI.lua", Encoding.UTF8))
+			{
+				using (var stream = new StreamReader(filePath, Encoding.UTF8))
+				{
 					var text = $"{streamAPI.ReadToEnd()}\n{stream.ReadToEnd()}";
 					LuaScript.DoString(text);
 				}
@@ -147,24 +175,31 @@ class ScriptBG : IDisposable {
 			LuaInit = LuaScript.GetFunction("init");
 			LuaUpdate = LuaScript.GetFunction("update");
 			LuaDraw = LuaScript.GetFunction("draw");
-		} catch (Exception ex) {
+		}
+		catch (Exception ex)
+		{
 			Crash(ex);
 		}
 	}
-	public bool Exists() {
+	public bool Exists()
+	{
 		return LuaScript != null;
 	}
-	private void Crash(Exception exception) {
+	private void Crash(Exception exception)
+	{
 		LogNotification.PopError($"Lua ScriptBG Error: {exception.ToString()}");
 		LuaScript?.Dispose();
 		LuaScript = null;
 	}
-	public void Dispose() {
+	public void Dispose()
+	{
 		List<CTexture> texs = new List<CTexture>();
-		foreach (var tex in Textures.Values) {
+		foreach (var tex in Textures.Values)
+		{
 			texs.Add(tex);
 		}
-		for (int i = 0; i < texs.Count; i++) {
+		for (int i = 0; i < texs.Count; i++)
+		{
 			var tex = texs[i];
 			OpenNijiiroRW.tテクスチャの解放(ref tex);
 		}
@@ -182,31 +217,43 @@ class ScriptBG : IDisposable {
 		LuaDraw?.Dispose();
 	}
 
-	public void ClearIn(int player) {
+	public void ClearIn(int player)
+	{
 		if (LuaScript == null) return;
-		try {
+		try
+		{
 			LuaClearIn.Call(player);
-		} catch (Exception ex) {
+		}
+		catch (Exception ex)
+		{
 			Crash(ex);
 		}
 	}
-	public void ClearOut(int player) {
+	public void ClearOut(int player)
+	{
 		if (LuaScript == null) return;
-		try {
+		try
+		{
 			LuaClearOut.Call(player);
-		} catch (Exception ex) {
+		}
+		catch (Exception ex)
+		{
 			Crash(ex);
 		}
 	}
-	public void Init() {
+	public void Init()
+	{
 		if (LuaScript == null) return;
-		try {
+		try
+		{
 			// Preprocessing
 			string[] raritiesP = { "Common", "Common", "Common", "Common", "Common" };
 			string[] raritiesC = { "Common", "Common", "Common", "Common", "Common" };
 
-			if (OpenNijiiroRW.Tx.Puchichara != null && OpenNijiiroRW.Tx.Characters != null) {
-				for (int i = 0; i < OpenNijiiroRW.ConfigIni.nPlayerCount; i++) {
+			if (OpenNijiiroRW.Tx.Puchichara != null && OpenNijiiroRW.Tx.Characters != null)
+			{
+				for (int i = 0; i < OpenNijiiroRW.ConfigIni.nPlayerCount; i++)
+				{
 					raritiesP[i] = OpenNijiiroRW.Tx.Puchichara[PuchiChara.tGetPuchiCharaIndexByName(OpenNijiiroRW.GetActualPlayer(i))].metadata.Rarity;
 					raritiesC[i] = OpenNijiiroRW.Tx.Characters[OpenNijiiroRW.SaveFileInstances[OpenNijiiroRW.GetActualPlayer(i)].data.Character].metadata.Rarity;
 				}
@@ -234,17 +281,22 @@ class ScriptBG : IDisposable {
 			);
 
 			LuaInit.Call();
-		} catch (Exception ex) {
+		}
+		catch (Exception ex)
+		{
 			Crash(ex);
 		}
 	}
 
-	public void Update() {
+	public void Update()
+	{
 		if (LuaScript == null) return;
-		try {
+		try
+		{
 			float currentFloorPositionMax140 = 0;
 
-			if (OpenNijiiroRW.stageSongSelect.rChoosenSong != null && OpenNijiiroRW.stageSongSelect.rChoosenSong.score[5] != null) {
+			if (OpenNijiiroRW.stageSongSelect.rChoosenSong != null && OpenNijiiroRW.stageSongSelect.rChoosenSong.score[5] != null)
+			{
 				int maxFloor = OpenNijiiroRW.stageSongSelect.rChoosenSong.score[5].譜面情報.nTotalFloor;
 				int nightTime = Math.Max(140, maxFloor / 2);
 
@@ -252,7 +304,8 @@ class ScriptBG : IDisposable {
 			}
 			double timestamp = -1.0;
 
-			if (OpenNijiiroRW.TJA != null) {
+			if (OpenNijiiroRW.TJA != null)
+			{
 				double msTimeOffset = OpenNijiiroRW.stageSongSelect.nChoosenSongDifficulty[0] != (int)Difficulty.Dan ? 0 : -CTja.msDanNextSongDelay;
 				// Due to the fact that all Dans use DELAY to offset instead of OFFSET, Dan offset can't be properly synced. ¯\_(ツ)_/¯
 
@@ -277,15 +330,21 @@ class ScriptBG : IDisposable {
             LuaScript.SetObjectToPath("isClear", TJAPlayer3.stage演奏ドラム画面.bIsAlreadyCleared);
             LuaScript.SetObjectToPath("towerNightOpacity", (double)(255 * currentFloorPositionMax140));*/
 			LuaUpdate.Call();
-		} catch (Exception ex) {
+		}
+		catch (Exception ex)
+		{
 			Crash(ex);
 		}
 	}
-	public void Draw() {
+	public void Draw()
+	{
 		if (LuaScript == null) return;
-		try {
+		try
+		{
 			LuaDraw.Call();
-		} catch (Exception ex) {
+		}
+		catch (Exception ex)
+		{
 			Crash(ex);
 		}
 	}

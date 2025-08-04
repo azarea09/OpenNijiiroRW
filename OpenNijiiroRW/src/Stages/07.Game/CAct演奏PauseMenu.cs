@@ -3,19 +3,24 @@ using FDK;
 
 namespace OpenNijiiroRW;
 
-internal class CAct演奏PauseMenu : CActSelectPopupMenu {
+internal class CAct演奏PauseMenu : CActSelectPopupMenu
+{
 	// コンストラクタ
 
-	public CAct演奏PauseMenu() {
+	public CAct演奏PauseMenu()
+	{
 		CAct演奏PauseMenuMain();
 	}
 
-	private void CAct演奏PauseMenuMain() {
+	private void CAct演奏PauseMenuMain()
+	{
 		this.bEsc有効 = false;
 		lci = new List<List<List<CItemBase>>>();                                    // この画面に来る度に、メニューを作り直す。
-		for (int nConfSet = 0; nConfSet < (OpenNijiiroRW.stageSongSelect.nChoosenSongDifficulty[0] != (int)Difficulty.Dan ? 3 : 2); nConfSet++) {
+		for (int nConfSet = 0; nConfSet < (OpenNijiiroRW.stageSongSelect.nChoosenSongDifficulty[0] != (int)Difficulty.Dan ? 3 : 2); nConfSet++)
+		{
 			lci.Add(new List<List<CItemBase>>());                                   // ConfSet用の3つ分の枠。
-			for (int nInst = 0; nInst < 3; nInst++) {
+			for (int nInst = 0; nInst < 3; nInst++)
+			{
 				lci[nConfSet].Add(null);                                        // Drum/Guitar/Bassで3つ分、枠を作っておく
 				lci[nConfSet][nInst] = MakeListCItemBase(nConfSet, nInst);
 			}
@@ -23,7 +28,8 @@ internal class CAct演奏PauseMenu : CActSelectPopupMenu {
 		base.Initialize(lci[nCurrentConfigSet][0], true, CLangManager.LangInstance.GetString("PAUSE_TITLE"), 0);    // ConfSet=0, nInst=Drums
 	}
 
-	private List<CItemBase> MakeListCItemBase(int nConfigSet, int nInst) {
+	private List<CItemBase> MakeListCItemBase(int nConfigSet, int nInst)
+	{
 		List<CItemBase> l = new List<CItemBase>();
 
 		#region [ 共通 SET切り替え/More/Return ]
@@ -36,7 +42,8 @@ internal class CAct演奏PauseMenu : CActSelectPopupMenu {
 	}
 
 	// メソッド
-	public override void tActivatePopupMenu(EInstrumentPad einst) {
+	public override void tActivatePopupMenu(EInstrumentPad einst)
+	{
 		this.CAct演奏PauseMenuMain();
 		CActSelectPopupMenu.b選択した = false;
 		this.bやり直しを選択した = false;
@@ -47,11 +54,14 @@ internal class CAct演奏PauseMenu : CActSelectPopupMenu {
 	//	base.tDeativatePopupMenu();
 	//}
 
-	public override void t進行描画sub() {
-		if (this.bやり直しを選択した) {
+	public override void t進行描画sub()
+	{
+		if (this.bやり直しを選択した)
+		{
 			if (!sw.IsRunning)
 				this.sw = Stopwatch.StartNew();
-			if (sw.ElapsedMilliseconds > 1500) {
+			if (sw.ElapsedMilliseconds > 1500)
+			{
 				OpenNijiiroRW.stageGameScreen.bPAUSE = false;
 				OpenNijiiroRW.stageGameScreen.t演奏やりなおし();
 
@@ -61,8 +71,10 @@ internal class CAct演奏PauseMenu : CActSelectPopupMenu {
 		}
 	}
 
-	public override void tEnter押下Main(int nSortOrder) {
-		switch (n現在の選択行) {
+	public override void tEnter押下Main(int nSortOrder)
+	{
+		switch (n現在の選択行)
+		{
 			case (int)EOrder.Continue:
 				OpenNijiiroRW.stageGameScreen.bPAUSE = false;
 
@@ -75,10 +87,13 @@ internal class CAct演奏PauseMenu : CActSelectPopupMenu {
 				break;
 
 			case (int)EOrder.Redoing:
-				if (OpenNijiiroRW.stageSongSelect.nChoosenSongDifficulty[0] != (int)Difficulty.Dan) {
+				if (OpenNijiiroRW.stageSongSelect.nChoosenSongDifficulty[0] != (int)Difficulty.Dan)
+				{
 					this.bやり直しを選択した = true;
 					CActSelectPopupMenu.b選択した = true;
-				} else {
+				}
+				else
+				{
 					SoundManager.PlayTimer.Resume();
 					OpenNijiiroRW.Timer.Resume();
 					OpenNijiiroRW.stageGameScreen.t演奏中止();
@@ -99,28 +114,34 @@ internal class CAct演奏PauseMenu : CActSelectPopupMenu {
 		}
 	}
 
-	public override void tCancel() {
+	public override void tCancel()
+	{
 	}
 
 	// CActivity 実装
 
-	public override void Activate() {
+	public override void Activate()
+	{
 		base.Activate();
 		this.bGotoDetailConfig = false;
 		this.sw = new Stopwatch();
 	}
-	public override void DeActivate() {
+	public override void DeActivate()
+	{
 		base.DeActivate();
 	}
-	public override void CreateManagedResource() {
+	public override void CreateManagedResource()
+	{
 		string pathパネル本体 = CSkin.Path(@$"Graphics{Path.DirectorySeparatorChar}ScreenSelect popup auto settings.png");
-		if (File.Exists(pathパネル本体)) {
+		if (File.Exists(pathパネル本体))
+		{
 			this.txパネル本体 = OpenNijiiroRW.tテクスチャの生成(pathパネル本体, true);
 		}
 
 		base.CreateManagedResource();
 	}
-	public override void ReleaseManagedResource() {
+	public override void ReleaseManagedResource()
+	{
 		OpenNijiiroRW.tテクスチャの解放(ref this.txパネル本体);
 		OpenNijiiroRW.tテクスチャの解放(ref this.tx文字列パネル);
 		base.ReleaseManagedResource();
@@ -131,7 +152,8 @@ internal class CAct演奏PauseMenu : CActSelectPopupMenu {
 	private int nCurrentTarget = 0;
 	private int nCurrentConfigSet = 0;
 	private List<List<List<CItemBase>>> lci;
-	private enum EOrder : int {
+	private enum EOrder : int
+	{
 		Continue,
 		Redoing,
 		Return, END,

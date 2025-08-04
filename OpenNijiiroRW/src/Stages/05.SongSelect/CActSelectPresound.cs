@@ -3,31 +3,41 @@ using FDK;
 
 namespace OpenNijiiroRW;
 
-internal class CActSelectPresound : CActivity {
+internal class CActSelectPresound : CActivity
+{
 	// メソッド
 
-	public CActSelectPresound() {
+	public CActSelectPresound()
+	{
 		base.IsDeActivated = true;
 	}
-	public void tStopSound() {
-		if (this.sound != null) {
+	public void tStopSound()
+	{
+		if (this.sound != null)
+		{
 			this.sound.Stop();
 			OpenNijiiroRW.SoundManager.tDisposeSound(this.sound);
 			this.sound = null;
 		}
 	}
-	public void t選択曲が変更された() {
+	public void t選択曲が変更された()
+	{
 		CScore cスコア = OpenNijiiroRW.stageSongSelect.r現在選択中のスコア;
 
-		if ((cスコア != null) && ((!(cスコア.ファイル情報.フォルダの絶対パス + cスコア.譜面情報.strBGMファイル名).Equals(this.str現在のファイル名) || (this.sound == null)) || !this.sound.IsPlaying)) {
+		if ((cスコア != null) && ((!(cスコア.ファイル情報.フォルダの絶対パス + cスコア.譜面情報.strBGMファイル名).Equals(this.str現在のファイル名) || (this.sound == null)) || !this.sound.IsPlaying))
+		{
 			this.tStopSound();
 			this.tBGMフェードイン開始();
 			this.long再生位置 = -1;
-			if ((cスコア.譜面情報.strBGMファイル名 != null) && (cスコア.譜面情報.strBGMファイル名.Length > 0)) {
+			if ((cスコア.譜面情報.strBGMファイル名 != null) && (cスコア.譜面情報.strBGMファイル名.Length > 0))
+			{
 				//this.ct再生待ちウェイト = new CCounter( 0, CDTXMania.ConfigIni.n曲が選択されてからプレビュー音が鳴るまでのウェイトms, 1, CDTXMania.Timer );
-				if (OpenNijiiroRW.SoundManager.GetCurrentSoundDeviceType() != "DirectSound") {
+				if (OpenNijiiroRW.SoundManager.GetCurrentSoundDeviceType() != "DirectSound")
+				{
 					this.ct再生待ちウェイト = new CCounter(0, 1, 270, OpenNijiiroRW.Timer);
-				} else {
+				}
+				else
+				{
 					this.ct再生待ちウェイト = new CCounter(0, 1, 500, OpenNijiiroRW.Timer);
 				}
 			}
@@ -47,7 +57,8 @@ internal class CActSelectPresound : CActivity {
 
 	// CActivity 実装
 
-	public override void Activate() {
+	public override void Activate()
+	{
 		this.sound = null;
 		this.str現在のファイル名 = "";
 		this.ct再生待ちウェイト = null;
@@ -57,40 +68,51 @@ internal class CActSelectPresound : CActivity {
 		this.long再生開始時のシステム時刻 = -1;
 		base.Activate();
 	}
-	public override void DeActivate() {
+	public override void DeActivate()
+	{
 		this.tStopSound();
 		this.ct再生待ちウェイト = null;
 		this.ctBGMフェードイン用 = null;
 		this.ctBGMフェードアウト用 = null;
 		base.DeActivate();
 	}
-	public override int Draw() {
-		if (!base.IsDeActivated) {
-			if ((this.ctBGMフェードイン用 != null) && this.ctBGMフェードイン用.IsTicked) {
+	public override int Draw()
+	{
+		if (!base.IsDeActivated)
+		{
+			if ((this.ctBGMフェードイン用 != null) && this.ctBGMフェードイン用.IsTicked)
+			{
 				this.ctBGMフェードイン用.Tick();
 				OpenNijiiroRW.Skin.bgm選曲画面.nAutomationLevel_現在のサウンド = this.ctBGMフェードイン用.CurrentValue;
-				if (this.ctBGMフェードイン用.IsEnded) {
+				if (this.ctBGMフェードイン用.IsEnded)
+				{
 					this.ctBGMフェードイン用.Stop();
 				}
 			}
-			if ((this.ctBGMフェードアウト用 != null) && this.ctBGMフェードアウト用.IsTicked) {
+			if ((this.ctBGMフェードアウト用 != null) && this.ctBGMフェードアウト用.IsTicked)
+			{
 				this.ctBGMフェードアウト用.Tick();
 				OpenNijiiroRW.Skin.bgm選曲画面.nAutomationLevel_現在のサウンド = CSound.MaximumAutomationLevel - this.ctBGMフェードアウト用.CurrentValue;
-				if (this.ctBGMフェードアウト用.IsEnded) {
+				if (this.ctBGMフェードアウト用.IsEnded)
+				{
 					this.ctBGMフェードアウト用.Stop();
 				}
 			}
 			this.t進行処理_プレビューサウンド();
 
-			if (this.sound != null) {
+			if (this.sound != null)
+			{
 				CScore cスコア = OpenNijiiroRW.stageSongSelect.r現在選択中のスコア;
-				if (long再生位置 == -1) {
+				if (long再生位置 == -1)
+				{
 					this.long再生開始時のシステム時刻 = SoundManager.PlayTimer.SystemTimeMs;
 					this.long再生位置 = cスコア.譜面情報.nデモBGMオフセット;
 
 					this.sound.tSetPositonToBegin(cスコア.譜面情報.nデモBGMオフセット);
 
-				} else {
+				}
+				else
+				{
 					this.long再生位置 = SoundManager.PlayTimer.SystemTimeMs - this.long再生開始時のシステム時刻;
 					if (this.long再生位置 >= this.sound.TotalPlayTime - cスコア.譜面情報.nデモBGMオフセット) //2020.04.18 Mr-Ojii #DEMOSTARTから何度も再生するために追加
 						this.long再生位置 = -1;
@@ -118,30 +140,37 @@ internal class CActSelectPresound : CActivity {
 	private CSound sound;
 	private string str現在のファイル名;
 
-	private void tBGMフェードアウト開始() {
-		if (this.ctBGMフェードイン用 != null) {
+	private void tBGMフェードアウト開始()
+	{
+		if (this.ctBGMフェードイン用 != null)
+		{
 			this.ctBGMフェードイン用.Stop();
 		}
 		this.ctBGMフェードアウト用 = new CCounter(0, 100, 10, OpenNijiiroRW.Timer);
 		this.ctBGMフェードアウト用.CurrentValue = 100 - OpenNijiiroRW.Skin.bgm選曲画面.nAutomationLevel_現在のサウンド;
 	}
-	private void tBGMフェードイン開始() {
-		if (this.ctBGMフェードアウト用 != null) {
+	private void tBGMフェードイン開始()
+	{
+		if (this.ctBGMフェードアウト用 != null)
+		{
 			this.ctBGMフェードアウト用.Stop();
 		}
 		this.ctBGMフェードイン用 = new CCounter(0, 100, 20, OpenNijiiroRW.Timer);
 		this.ctBGMフェードイン用.CurrentValue = OpenNijiiroRW.Skin.bgm選曲画面.nAutomationLevel_現在のサウンド;
 	}
-	private void tプレビューサウンドの作成() {
+	private void tプレビューサウンドの作成()
+	{
 		CScore cスコア = OpenNijiiroRW.stageSongSelect.r現在選択中のスコア;
 		var HiddenIndex = OpenNijiiroRW.Databases.DBSongUnlockables.tGetSongHiddenIndex(OpenNijiiroRW.stageSongSelect.rNowSelectedSong);
 		if ((cスコア != null)
 			&& !string.IsNullOrEmpty(cスコア.譜面情報.strBGMファイル名)
 			&& OpenNijiiroRW.stageSongSelect.ePhaseID != CStage.EPhase.SongSelect_FadeOutToNowLoading
 			&& HiddenIndex < DBSongUnlockables.EHiddenIndex.GRAYED
-		   ) {
+		   )
+		{
 			string strPreviewFilename = cスコア.ファイル情報.フォルダの絶対パス + cスコア.譜面情報.Presound;
-			try {
+			try
+			{
 				strPreviewFilename = cスコア.ファイル情報.フォルダの絶対パス + cスコア.譜面情報.strBGMファイル名;
 				if (OpenNijiiroRW.ConfigIni.bBGMPlayVoiceSound)
 					this.sound = OpenNijiiroRW.SoundManager.tCreateSound(strPreviewFilename, ESoundGroup.SongPreview);
@@ -161,7 +190,8 @@ internal class CActSelectPresound : CActivity {
 
 				this.sound.PlayStart(true);
 
-				if (long再生位置 == -1) {
+				if (long再生位置 == -1)
+				{
 					this.long再生開始時のシステム時刻 = SoundManager.PlayTimer.SystemTimeMs;
 					this.long再生位置 = cスコア.譜面情報.nデモBGMオフセット;
 					this.sound.tSetPositonToBegin(cスコア.譜面情報.nデモBGMオフセット);
@@ -174,22 +204,29 @@ internal class CActSelectPresound : CActivity {
 				this.tBGMフェードアウト開始();
 				Trace.TraceInformation("プレビューサウンドを生成しました。({0})", strPreviewFilename);
 
-			} catch (Exception e) {
+			}
+			catch (Exception e)
+			{
 				Trace.TraceError(e.ToString());
 				Trace.TraceError("プレビューサウンドの生成に失敗しました。({0})", strPreviewFilename);
-				if (this.sound != null) {
+				if (this.sound != null)
+				{
 					this.sound.Dispose();
 				}
 				this.sound = null;
 			}
 		}
 	}
-	private void t進行処理_プレビューサウンド() {
-		if ((this.ct再生待ちウェイト != null) && !this.ct再生待ちウェイト.IsStoped) {
+	private void t進行処理_プレビューサウンド()
+	{
+		if ((this.ct再生待ちウェイト != null) && !this.ct再生待ちウェイト.IsStoped)
+		{
 			this.ct再生待ちウェイト.Tick();
-			if (!this.ct再生待ちウェイト.IsUnEnded) {
+			if (!this.ct再生待ちウェイト.IsUnEnded)
+			{
 				this.ct再生待ちウェイト.Stop();
-				if (!OpenNijiiroRW.stageSongSelect.bCurrentlyScrolling) {
+				if (!OpenNijiiroRW.stageSongSelect.bCurrentlyScrolling)
+				{
 					this.tプレビューサウンドの作成();
 				}
 			}

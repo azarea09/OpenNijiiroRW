@@ -2,7 +2,8 @@
 
 namespace OpenNijiiroRW;
 
-internal class CAct演奏演奏情報 : CActivity {
+internal class CAct演奏演奏情報 : CActivity
+{
 	// Properties
 
 	public double[] dbBPM = new double[5];
@@ -12,15 +13,18 @@ internal class CAct演奏演奏情報 : CActivity {
 
 	// コンストラクタ
 
-	public CAct演奏演奏情報() {
+	public CAct演奏演奏情報()
+	{
 		base.IsDeActivated = true;
 	}
 
 
 	// CActivity 実装
 
-	public override void Activate() {
-		for (int i = 0; i < 5; i++) {
+	public override void Activate()
+	{
+		for (int i = 0; i < 5; i++)
+		{
 			NowMeasure[i] = 0;
 			this.dbBPM[i] = OpenNijiiroRW.TJA.BASEBPM;
 		}
@@ -39,12 +43,14 @@ internal class CAct演奏演奏情報 : CActivity {
 
 		base.Activate();
 	}
-	public override int Draw() {
+	public override int Draw()
+	{
 		int dx = OpenNijiiroRW.actTextConsole.fontWidth;
 		int dy = OpenNijiiroRW.actTextConsole.fontHeight;
 		int x = OpenNijiiroRW.Skin.Resolution[0] - 8 - 34 * dx;
 		int y = 404 * OpenNijiiroRW.Skin.Resolution[1] / 720;
-		if (!base.IsDeActivated) {
+		if (!base.IsDeActivated)
+		{
 			y += (13 - 1) * dy;
 			OpenNijiiroRW.actTextConsole.Print(x, y, CTextConsole.EFontType.White, string.Format("Song/G. Offset:{0:####0}/{1:####0} ms", OpenNijiiroRW.TJA.nBGMAdjust, OpenNijiiroRW.ConfigIni.nGlobalOffsetMs));
 			y -= dy;

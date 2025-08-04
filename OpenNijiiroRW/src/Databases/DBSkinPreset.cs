@@ -2,9 +2,12 @@
 
 namespace OpenNijiiroRW;
 
-internal class DBSkinPreset {
-	public class SkinScene {
-		public SkinScene() {
+internal class DBSkinPreset
+{
+	public class SkinScene
+	{
+		public SkinScene()
+		{
 			UpperBackground = null;
 			LowerBackground = null;
 			DancerSet = null;
@@ -31,8 +34,10 @@ internal class DBSkinPreset {
 		[JsonProperty("RUNNER")]
 		public string[] RunnerSet;
 	}
-	public class SkinPreset {
-		public SkinPreset() {
+	public class SkinPreset
+	{
+		public SkinPreset()
+		{
 			Regular = new Dictionary<string, SkinScene>();
 			Dan = new Dictionary<string, SkinScene>();
 			Tower = new Dictionary<string, SkinScene>();

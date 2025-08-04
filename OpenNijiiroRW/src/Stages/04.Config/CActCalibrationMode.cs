@@ -3,16 +3,19 @@ using FDK;
 
 namespace OpenNijiiroRW;
 
-internal class CActCalibrationMode : CActivity {
+internal class CActCalibrationMode : CActivity
+{
 	public CActCalibrationMode() { }
 
-	public override void Activate() {
+	public override void Activate()
+	{
 		//hitSound = TJAPlayer3.SoundManager.tCreateSound($@"Global{Path.DirectorySeparatorChar}HitSounds{Path.DirectorySeparatorChar}" + TJAPlayer3.Skin.hsHitSoundsInformations.don[0], ESoundGroup.SoundEffect);
 		font = HPrivateFastFont.tInstantiateMainFont(OpenNijiiroRW.Skin.Config_Calibration_Font_Scale);
 		base.Activate();
 	}
 
-	public override void DeActivate() {
+	public override void DeActivate()
+	{
 		Stop();
 		Offsets.Clear();
 		font?.Dispose();
@@ -22,19 +25,22 @@ internal class CActCalibrationMode : CActivity {
 		base.DeActivate();
 	}
 
-	public void Start() {
+	public void Start()
+	{
 		CalibrateTick = new CCounter(0, 500, 1, OpenNijiiroRW.Timer);
 		UpdateText();
 	}
 
-	public void Stop() {
+	public void Stop()
+	{
 		CalibrateTick = new CCounter();
 		Offsets.Clear();
 		LastOffset = 0;
 		buttonIndex = 1;
 	}
 
-	public int Update() {
+	public int Update()
+	{
 		if (IsDeActivated || CalibrateTick.IsStoped)
 			return 1;
 
@@ -45,31 +51,38 @@ internal class CActCalibrationMode : CActivity {
 					  OpenNijiiroRW.Pad.bPressed(EInstrumentPad.Drums, EPad.LRed) ||
 					  OpenNijiiroRW.InputManager.Keyboard.KeyPressed((int)SlimDXKeys.Key.Return);
 
-		if (CalibrateTick.IsEnded) {
+		if (CalibrateTick.IsEnded)
+		{
 			OpenNijiiroRW.Skin.calibrationTick.tPlay();
 			CalibrateTick.Start(0, 500, 1, OpenNijiiroRW.Timer);
 		}
 
 		if (OpenNijiiroRW.Pad.bPressed(EInstrumentPad.Drums, EPad.LeftChange) ||
 			OpenNijiiroRW.Pad.bPressed(EInstrumentPad.Drums, EPad.LBlue) ||
-			OpenNijiiroRW.InputManager.Keyboard.KeyPressed((int)SlimDXKeys.Key.LeftArrow)) {
+			OpenNijiiroRW.InputManager.Keyboard.KeyPressed((int)SlimDXKeys.Key.LeftArrow))
+		{
 			buttonIndex = Math.Max(buttonIndex - 1, 0);
 			OpenNijiiroRW.Skin.soundChangeSFX.tPlay();
-		} else if (OpenNijiiroRW.Pad.bPressed(EInstrumentPad.Drums, EPad.RightChange) ||
+		}
+		else if (OpenNijiiroRW.Pad.bPressed(EInstrumentPad.Drums, EPad.RightChange) ||
 				   OpenNijiiroRW.Pad.bPressed(EInstrumentPad.Drums, EPad.RBlue) ||
-				   OpenNijiiroRW.InputManager.Keyboard.KeyPressed((int)SlimDXKeys.Key.RightArrow)) {
+				   OpenNijiiroRW.InputManager.Keyboard.KeyPressed((int)SlimDXKeys.Key.RightArrow))
+		{
 			buttonIndex = Math.Min(buttonIndex + 1, 2);
 			OpenNijiiroRW.Skin.soundChangeSFX.tPlay();
-		} else if (buttonIndex == 0 && decide) // Cancel
+		}
+		else if (buttonIndex == 0 && decide) // Cancel
 		{
 			OpenNijiiroRW.Skin.soundCancelSFX.tPlay();
 			Stop();
-		} else if (buttonIndex == 1 && decide) // Hit!
+		}
+		else if (buttonIndex == 1 && decide) // Hit!
 		{
 			//hitSound?.PlayStart();
 			AddOffset();
 			UpdateText();
-		} else if (buttonIndex == 2 && decide) // Save
+		}
+		else if (buttonIndex == 2 && decide) // Save
 		{
 			OpenNijiiroRW.ConfigIni.nGlobalOffsetMs = GetMedianOffset();
 			OpenNijiiroRW.stageConfig.actList.iGlobalOffsetMs.n現在の値 = GetMedianOffset();
@@ -77,8 +90,10 @@ internal class CActCalibrationMode : CActivity {
 			Stop();
 
 			return 0;
-		} else if (OpenNijiiroRW.ConfigIni.KeyAssign.KeyIsPressed(OpenNijiiroRW.ConfigIni.KeyAssign.System.Cancel) ||
-				   OpenNijiiroRW.InputManager.Keyboard.KeyPressed((int)SlimDXKeys.Key.Escape)) {
+		}
+		else if (OpenNijiiroRW.ConfigIni.KeyAssign.KeyIsPressed(OpenNijiiroRW.ConfigIni.KeyAssign.System.Cancel) ||
+				   OpenNijiiroRW.InputManager.Keyboard.KeyPressed((int)SlimDXKeys.Key.Escape))
+		{
 			OpenNijiiroRW.Skin.soundCancelSFX.tPlay();
 			Stop();
 
@@ -88,14 +103,18 @@ internal class CActCalibrationMode : CActivity {
 		return 0;
 	}
 
-	public override int Draw() {
+	public override int Draw()
+	{
 		if (IsDeActivated || CalibrateTick.IsStoped)
 			return 1;
 
-		if (OpenNijiiroRW.Tx.Tile_Black != null) {
+		if (OpenNijiiroRW.Tx.Tile_Black != null)
+		{
 			OpenNijiiroRW.Tx.Tile_Black.Opacity = 128;
-			for (int i = 0; i <= RenderSurfaceSize.Width; i += OpenNijiiroRW.Tx.Tile_Black.szTextureSize.Width) {
-				for (int j = 0; j <= RenderSurfaceSize.Height; j += OpenNijiiroRW.Tx.Tile_Black.szTextureSize.Height) {
+			for (int i = 0; i <= RenderSurfaceSize.Width; i += OpenNijiiroRW.Tx.Tile_Black.szTextureSize.Width)
+			{
+				for (int j = 0; j <= RenderSurfaceSize.Height; j += OpenNijiiroRW.Tx.Tile_Black.szTextureSize.Height)
+				{
 					OpenNijiiroRW.Tx.Tile_Black.t2D描画(i, j);
 				}
 			}
@@ -113,7 +132,8 @@ internal class CActCalibrationMode : CActivity {
 
 		OpenNijiiroRW.Tx.Notes[0]?.t2D描画(OpenNijiiroRW.Skin.nScrollFieldX[0], OpenNijiiroRW.Skin.nScrollFieldY[0], new RectangleF(0, 0, OpenNijiiroRW.Skin.Game_Notes_Size[0], OpenNijiiroRW.Skin.Game_Notes_Size[1]));
 
-		for (int x = OpenNijiiroRW.Skin.nScrollFieldX[0]; x < RenderSurfaceSize.Width + 500; x += 500) {
+		for (int x = OpenNijiiroRW.Skin.nScrollFieldX[0]; x < RenderSurfaceSize.Width + 500; x += 500)
+		{
 			OpenNijiiroRW.Tx.Bar?.t2D描画(
 				(x - CalibrateTick.CurrentValue) + ((OpenNijiiroRW.Skin.Game_Notes_Size[0] - OpenNijiiroRW.Tx.Bar.szTextureSize.Width) / 2),
 				OpenNijiiroRW.Skin.nScrollFieldY[0],
@@ -154,29 +174,35 @@ internal class CActCalibrationMode : CActivity {
 
 	public void AddOffset() { Offsets.Add(CurrentOffset()); LastOffset = CurrentOffset(); }
 
-	public int GetMedianOffset() {
+	public int GetMedianOffset()
+	{
 		if (Offsets != null)
-			if (Offsets.Count > 0) {
+			if (Offsets.Count > 0)
+			{
 				Offsets.Sort();
 				return Offsets[Offsets.Count / 2];
 			}
 		return 0;
 	}
-	public int GetLowestOffset() {
+	public int GetLowestOffset()
+	{
 		if (Offsets != null)
 			return Offsets.Count > 0 ? Offsets.Min() : 0;
 		return 0;
 	}
-	public int GetHighestOffset() {
+	public int GetHighestOffset()
+	{
 		if (Offsets != null)
 			return Offsets.Count > 0 ? Offsets.Max() : 0;
 		return 0;
 	}
-	public int CurrentOffset() {
+	public int CurrentOffset()
+	{
 		return -(CalibrateTick.CurrentValue > 250 ? CalibrateTick.CurrentValue - 500 : CalibrateTick.CurrentValue);
 	}
 
-	private void UpdateText() {
+	private void UpdateText()
+	{
 		offsettext?.Dispose();
 		offsettext = new CTexture(font.DrawText(CLangManager.LangInstance.GetString("SETTINGS_GAME_CALIBRATION_OFFSET", GetMedianOffset().ToString()), Color.White, Color.Black, null, 32));
 	}

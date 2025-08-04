@@ -5,23 +5,28 @@ using FDK;
 
 namespace OpenNijiiroRW;
 
-internal class CActSelectPopupMenu : CActivity {
+internal class CActSelectPopupMenu : CActivity
+{
 	private static List<CActSelectPopupMenu> Child = new List<CActSelectPopupMenu>();
 
-	public CActSelectPopupMenu() {
+	public CActSelectPopupMenu()
+	{
 		Child.Add(this);
 	}
 
 	// Properties
 
 
-	public int GetIndex(int pos) {
+	public int GetIndex(int pos)
+	{
 		return lciMenuItems[pos].cItem.GetIndex();
 	}
-	public object GetObj現在値(int pos) {
+	public object GetObj現在値(int pos)
+	{
 		return lciMenuItems[pos].cItem.obj現在値();
 	}
-	public bool bGotoDetailConfig {
+	public bool bGotoDetailConfig
+	{
 		get;
 		internal set;
 	}
@@ -29,40 +34,48 @@ internal class CActSelectPopupMenu : CActivity {
 	/// <summary>
 	/// ソートメニュー機能を使用中かどうか。外部からこれをtrueにすると、ソートメニューが出現する。falseにすると消える。
 	/// </summary>
-	public bool bIsActivePopupMenu {
+	public bool bIsActivePopupMenu
+	{
 		get;
 		private set;
 	}
-	public virtual void tActivatePopupMenu(EInstrumentPad einst) {
+	public virtual void tActivatePopupMenu(EInstrumentPad einst)
+	{
 		nItemSelecting = -1;        // #24757 2011.4.1 yyagi: Clear sorting status in each stating menu.
 		this.bIsActivePopupMenu = true;
 		this.bIsSelectingIntItem = false;
 		this.bGotoDetailConfig = false;
 	}
-	public virtual void tDeativatePopupMenu() {
+	public virtual void tDeativatePopupMenu()
+	{
 		this.bIsActivePopupMenu = false;
 	}
 
 
-	protected void Initialize(List<CItemBase> menulist, bool showAllItems, string title) {
+	protected void Initialize(List<CItemBase> menulist, bool showAllItems, string title)
+	{
 		Initialize(menulist, showAllItems, title, 0);
 	}
 
-	protected void Initialize(List<CItemBase> menulist, bool showAllItems, string title, int defaultPos) {
+	protected void Initialize(List<CItemBase> menulist, bool showAllItems, string title, int defaultPos)
+	{
 		InitializePrvFont();
 
 		b選択した = false;
 		stqMenuTitle = new stQuickMenuItem();
 		stqMenuTitle.cItem = new CItemBase();
 		stqMenuTitle.cItem.str項目名 = title;
-		using (var bitmap = prvFont.DrawText(title, Color.White, Color.Black, null, 30)) {
+		using (var bitmap = prvFont.DrawText(title, Color.White, Color.Black, null, 30))
+		{
 			stqMenuTitle.txName = OpenNijiiroRW.tテクスチャの生成(bitmap, false);
 		}
 		lciMenuItems = new stQuickMenuItem[menulist.Count];
-		for (int i = 0; i < menulist.Count; i++) {
+		for (int i = 0; i < menulist.Count; i++)
+		{
 			stQuickMenuItem stqm = new stQuickMenuItem();
 			stqm.cItem = menulist[i];
-			using (var bitmap = prvFont.DrawText(menulist[i].str項目名, Color.White, Color.Black, null, 30)) {
+			using (var bitmap = prvFont.DrawText(menulist[i].str項目名, Color.White, Color.Black, null, 30))
+			{
 				stqm.txName = OpenNijiiroRW.tテクスチャの生成(bitmap, false);
 			}
 			lciMenuItems[i] = stqm;
@@ -72,28 +85,36 @@ internal class CActSelectPopupMenu : CActivity {
 		n現在の選択行 = defaultPos;
 	}
 
-	private void InitializePrvFont() {
+	private void InitializePrvFont()
+	{
 		prvFont?.Dispose();
 		prvFont = HPrivateFastFont.tInstantiateMainFont(OpenNijiiroRW.Skin.PopupMenu_Font_Size);
 	}
 
-	public static void RefleshSkin() {
-		for (int i = 0; i < Child.Count; i++) {
+	public static void RefleshSkin()
+	{
+		for (int i = 0; i < Child.Count; i++)
+		{
 			Child[i]._RefleshSkin();
 		}
 	}
 
-	public void _RefleshSkin() {
+	public void _RefleshSkin()
+	{
 		OpenNijiiroRW.tDisposeSafely(ref prvFont);
 		InitializePrvFont();
 
-		using (var bitmap = prvFont.DrawText(stqMenuTitle.cItem?.str項目名 ?? "", Color.White, Color.Black, null, 30)) {
+		using (var bitmap = prvFont.DrawText(stqMenuTitle.cItem?.str項目名 ?? "", Color.White, Color.Black, null, 30))
+		{
 			OpenNijiiroRW.tDisposeSafely(ref stqMenuTitle.txName);
 			stqMenuTitle.txName = OpenNijiiroRW.tテクスチャの生成(bitmap, false);
 		}
-		if (lciMenuItems != null) {
-			for (int i = 0; i < lciMenuItems.Length; i++) {
-				using (var bitmap = prvFont.DrawText(lciMenuItems[i].cItem?.str項目名 ?? "", Color.White, Color.Black, null, 30)) {
+		if (lciMenuItems != null)
+		{
+			for (int i = 0; i < lciMenuItems.Length; i++)
+			{
+				using (var bitmap = prvFont.DrawText(lciMenuItems[i].cItem?.str項目名 ?? "", Color.White, Color.Black, null, 30))
+				{
 					OpenNijiiroRW.tDisposeSafely(ref lciMenuItems[i].txName);
 					lciMenuItems[i].txName = OpenNijiiroRW.tテクスチャの生成(bitmap, false);
 				}
@@ -101,20 +122,30 @@ internal class CActSelectPopupMenu : CActivity {
 		}
 	}
 
-	public void tEnter押下() {
-		if (this.bキー入力待ち) {
+	public void tEnter押下()
+	{
+		if (this.bキー入力待ち)
+		{
 			OpenNijiiroRW.Skin.soundDecideSFX.tPlay();
 
-			if (this.n現在の選択行 != lciMenuItems.Length - 1) {
+			if (this.n現在の選択行 != lciMenuItems.Length - 1)
+			{
 				if (lciMenuItems[n現在の選択行].cItem.e種別 == CItemBase.E種別.リスト ||
 					lciMenuItems[n現在の選択行].cItem.e種別 == CItemBase.E種別.ONorOFFトグル ||
-					lciMenuItems[n現在の選択行].cItem.e種別 == CItemBase.E種別.ONorOFFor不定スリーステート) {
+					lciMenuItems[n現在の選択行].cItem.e種別 == CItemBase.E種別.ONorOFFor不定スリーステート)
+				{
 					lciMenuItems[n現在の選択行].cItem.t項目値を次へ移動();
-				} else if (lciMenuItems[n現在の選択行].cItem.e種別 == CItemBase.E種別.整数) {
+				}
+				else if (lciMenuItems[n現在の選択行].cItem.e種別 == CItemBase.E種別.整数)
+				{
 					bIsSelectingIntItem = !bIsSelectingIntItem;     // 選択状態/選択解除状態を反転する
-				} else if (lciMenuItems[n現在の選択行].cItem.e種別 == CItemBase.E種別.切替リスト) {
+				}
+				else if (lciMenuItems[n現在の選択行].cItem.e種別 == CItemBase.E種別.切替リスト)
+				{
 					// 特に何もしない
-				} else {
+				}
+				else
+				{
 					throw new ArgumentException();
 				}
 				nItemSelecting = n現在の選択行;
@@ -129,38 +160,53 @@ internal class CActSelectPopupMenu : CActivity {
 	/// Decide押下時の処理を、継承先で記述する。
 	/// </summary>
 	/// <param name="val">CItemBaseの現在の設定値のindex</param>
-	public virtual void tEnter押下Main(int val) {
+	public virtual void tEnter押下Main(int val)
+	{
 	}
 	/// <summary>
 	/// Cancel押下時の追加処理があれば、継承先で記述する。
 	/// </summary>
-	public virtual void tCancel() {
+	public virtual void tCancel()
+	{
 	}
 	/// <summary>
 	/// 追加の描画処理。必要に応じて、継承先で記述する。
 	/// </summary>
-	public virtual void t進行描画sub() {
+	public virtual void t進行描画sub()
+	{
 	}
 
-	public void t次に移動() {
-		if (this.bキー入力待ち) {
+	public void t次に移動()
+	{
+		if (this.bキー入力待ち)
+		{
 			OpenNijiiroRW.Skin.soundカーソル移動音.tPlay();
-			if (bIsSelectingIntItem) {
+			if (bIsSelectingIntItem)
+			{
 				lciMenuItems[n現在の選択行].cItem.t項目値を前へ移動();        // 項目移動と数値上下は方向が逆になるので注意
-			} else {
-				if (++this.n現在の選択行 >= this.lciMenuItems.Length) {
+			}
+			else
+			{
+				if (++this.n現在の選択行 >= this.lciMenuItems.Length)
+				{
 					this.n現在の選択行 = 0;
 				}
 			}
 		}
 	}
-	public void t前に移動() {
-		if (this.bキー入力待ち) {
+	public void t前に移動()
+	{
+		if (this.bキー入力待ち)
+		{
 			OpenNijiiroRW.Skin.soundカーソル移動音.tPlay();
-			if (bIsSelectingIntItem) {
+			if (bIsSelectingIntItem)
+			{
 				lciMenuItems[n現在の選択行].cItem.t項目値を次へ移動();        // 項目移動と数値上下は方向が逆になるので注意
-			} else {
-				if (--this.n現在の選択行 < 0) {
+			}
+			else
+			{
+				if (--this.n現在の選択行 < 0)
+				{
 					this.n現在の選択行 = this.lciMenuItems.Length - 1;
 				}
 			}
@@ -169,10 +215,12 @@ internal class CActSelectPopupMenu : CActivity {
 
 	// CActivity 実装
 
-	public override void Activate() {
+	public override void Activate()
+	{
 		//		this.n現在の選択行 = 0;
 		this.bキー入力待ち = true;
-		for (int i = 0; i < 4; i++) {
+		for (int i = 0; i < 4; i++)
+		{
 			this.ctキー反復用[i] = new CCounter(0, 0, 0, OpenNijiiroRW.Timer);
 		}
 		base.IsDeActivated = true;
@@ -184,40 +232,49 @@ internal class CActSelectPopupMenu : CActivity {
 
 		base.Activate();
 	}
-	public override void DeActivate() {
-		if (!base.IsDeActivated) {
+	public override void DeActivate()
+	{
+		if (!base.IsDeActivated)
+		{
 			base.ChildActivities.Remove(this.font);
 			this.font.DeActivate();
 			this.font = null;
 
 			//CDTXMania.tテクスチャの解放( ref this.txCursor );
 			//CDTXMania.tテクスチャの解放( ref this.txPopupMenuBackground );
-			for (int i = 0; i < 4; i++) {
+			for (int i = 0; i < 4; i++)
+			{
 				this.ctキー反復用[i] = null;
 			}
 			base.DeActivate();
 		}
 	}
 
-	public override void CreateManagedResource() {
+	public override void CreateManagedResource()
+	{
 		base.CreateManagedResource();
 
 		InitializePrvFont();
 	}
 
-	public override void ReleaseManagedResource() {
+	public override void ReleaseManagedResource()
+	{
 		//CDTXMania.tテクスチャの解放( ref this.txPopupMenuBackground );
 		//CDTXMania.tテクスチャの解放( ref this.txCursor );
 		OpenNijiiroRW.tDisposeSafely(ref this.prvFont);
 		base.ReleaseManagedResource();
 	}
 
-	public override int Draw() {
-		if (!base.IsDeActivated && this.bIsActivePopupMenu) {
-			if (this.bキー入力待ち) {
+	public override int Draw()
+	{
+		if (!base.IsDeActivated && this.bIsActivePopupMenu)
+		{
+			if (this.bキー入力待ち)
+			{
 				#region [ Shift-F1: CONFIG画面 ]
 				if ((OpenNijiiroRW.InputManager.Keyboard.KeyPressing((int)SlimDXKeys.Key.RightShift) || OpenNijiiroRW.InputManager.Keyboard.KeyPressing((int)SlimDXKeys.Key.LeftShift)) &&
-					OpenNijiiroRW.InputManager.Keyboard.KeyPressed((int)SlimDXKeys.Key.F1)) {  // [SHIFT] + [F1] CONFIG
+					OpenNijiiroRW.InputManager.Keyboard.KeyPressed((int)SlimDXKeys.Key.F1))
+				{  // [SHIFT] + [F1] CONFIG
 					OpenNijiiroRW.Skin.soundCancelSFX.tPlay();
 					tCancel();
 					this.bGotoDetailConfig = true;
@@ -227,14 +284,16 @@ internal class CActSelectPopupMenu : CActivity {
 				else if ((OpenNijiiroRW.InputManager.Keyboard.KeyPressed((int)SlimDXKeys.Key.Escape)
 						  || OpenNijiiroRW.Pad.bPressed(EInstrumentPad.Drums, EPad.FT)
 						  || OpenNijiiroRW.Pad.bPressedGB(EPad.Cancel))
-						 && this.bEsc有効) {   // キャンセル
+						 && this.bEsc有効)
+				{   // キャンセル
 					OpenNijiiroRW.Skin.soundCancelSFX.tPlay();
 					tCancel();
 					this.bIsActivePopupMenu = false;
 				}
 				#endregion
 
-				if (!b選択した) {
+				if (!b選択した)
+				{
 					#region [ キー入力: 決定 ]
 					// E楽器パート eInst = E楽器パート.UNKNOWN;
 					ESortAction eAction = ESortAction.END;
@@ -244,7 +303,8 @@ internal class CActSelectPopupMenu : CActivity {
 						|| OpenNijiiroRW.Pad.bPressed(EInstrumentPad.Drums, EPad.LC)
 						|| OpenNijiiroRW.Pad.bPressed(EInstrumentPad.Drums, EPad.LRed)
 						|| OpenNijiiroRW.Pad.bPressed(EInstrumentPad.Drums, EPad.RRed)
-						|| (OpenNijiiroRW.ConfigIni.bEnterIsNotUsedInKeyAssignments && OpenNijiiroRW.InputManager.Keyboard.KeyPressed((int)SlimDXKeys.Key.Return))) {
+						|| (OpenNijiiroRW.ConfigIni.bEnterIsNotUsedInKeyAssignments && OpenNijiiroRW.InputManager.Keyboard.KeyPressed((int)SlimDXKeys.Key.Return)))
+					{
 						eAction = ESortAction.Decide;
 					}
 					if (eAction == ESortAction.Decide)  // 決定
@@ -255,21 +315,24 @@ internal class CActSelectPopupMenu : CActivity {
 					#region [ キー入力: 前に移動 ]
 					this.ctキー反復用.Up.KeyIntervalFunc(OpenNijiiroRW.InputManager.Keyboard.KeyPressing((int)SlimDXKeys.Key.UpArrow), new CCounter.KeyProcess(this.t前に移動));
 					this.ctキー反復用.R.KeyIntervalFunc(OpenNijiiroRW.Pad.IsPressingGB(EPad.R), new CCounter.KeyProcess(this.t前に移動));
-					if (OpenNijiiroRW.Pad.bPressed(EInstrumentPad.Drums, EPad.SD) || OpenNijiiroRW.Pad.bPressed(EInstrumentPad.Drums, EPad.LBlue)) {
+					if (OpenNijiiroRW.Pad.bPressed(EInstrumentPad.Drums, EPad.SD) || OpenNijiiroRW.Pad.bPressed(EInstrumentPad.Drums, EPad.LBlue))
+					{
 						this.t前に移動();
 					}
 					#endregion
 					#region [ キー入力: 次に移動 ]
 					this.ctキー反復用.Down.KeyIntervalFunc(OpenNijiiroRW.InputManager.Keyboard.KeyPressing((int)SlimDXKeys.Key.DownArrow), new CCounter.KeyProcess(this.t次に移動));
 					this.ctキー反復用.B.KeyIntervalFunc(OpenNijiiroRW.Pad.IsPressingGB(EPad.B), new CCounter.KeyProcess(this.t次に移動));
-					if (OpenNijiiroRW.Pad.bPressed(EInstrumentPad.Drums, EPad.LT) || OpenNijiiroRW.Pad.bPressed(EInstrumentPad.Drums, EPad.RBlue)) {
+					if (OpenNijiiroRW.Pad.bPressed(EInstrumentPad.Drums, EPad.LT) || OpenNijiiroRW.Pad.bPressed(EInstrumentPad.Drums, EPad.RBlue))
+					{
 						this.t次に移動();
 					}
 					#endregion
 				}
 			}
 			#region [ ポップアップメニュー 背景描画 ]
-			if (OpenNijiiroRW.Tx.Menu_Title != null) {
+			if (OpenNijiiroRW.Tx.Menu_Title != null)
+			{
 				OpenNijiiroRW.Tx.Menu_Title.t2D描画(OpenNijiiroRW.Skin.PopupMenu_Menu_Title[0], OpenNijiiroRW.Skin.PopupMenu_Menu_Title[1]);
 			}
 			#endregion
@@ -277,7 +340,8 @@ internal class CActSelectPopupMenu : CActivity {
 			stqMenuTitle.txName.t2D描画(OpenNijiiroRW.Skin.PopupMenu_Title[0], OpenNijiiroRW.Skin.PopupMenu_Title[1]);
 			#endregion
 			#region [ カーソル描画 ]
-			if (OpenNijiiroRW.Tx.Menu_Highlight != null) {
+			if (OpenNijiiroRW.Tx.Menu_Highlight != null)
+			{
 				int curX = OpenNijiiroRW.Skin.PopupMenu_Menu_Highlight[0] + (OpenNijiiroRW.Skin.PopupMenu_Move[0] * (this.n現在の選択行 + 1));
 				int curY = OpenNijiiroRW.Skin.PopupMenu_Menu_Highlight[1] + (OpenNijiiroRW.Skin.PopupMenu_Move[1] * (this.n現在の選択行 + 1));
 
@@ -287,7 +351,8 @@ internal class CActSelectPopupMenu : CActivity {
 				OpenNijiiroRW.Tx.Menu_Highlight.t2D描画(curX, curY, new Rectangle(0, 0, width, height));
 				curX += width;
 				Rectangle rectangle = new Rectangle(width / 2, 0, width, height);
-				for (int j = 0; j < 16; j++) {
+				for (int j = 0; j < 16; j++)
+				{
 					OpenNijiiroRW.Tx.Menu_Highlight.t2D描画(curX, curY, rectangle);
 					curX += width;
 				}
@@ -295,24 +360,32 @@ internal class CActSelectPopupMenu : CActivity {
 			}
 			#endregion
 			#region [ ソート候補文字列描画 ]
-			for (int i = 0; i < lciMenuItems.Length; i++) {
+			for (int i = 0; i < lciMenuItems.Length; i++)
+			{
 				bool bItemBold = (i == nItemSelecting && !bShowAllItems) ? true : false;
 				//font.t文字列描画( 190, 80 + i * 32, lciMenuItems[ i ].cItem.str項目名, bItemBold, 1.0f );
-				if (lciMenuItems[i].txName != null) {
+				if (lciMenuItems[i].txName != null)
+				{
 					lciMenuItems[i].txName.t2D描画(OpenNijiiroRW.Skin.PopupMenu_MenuItem_Name[0] + i * OpenNijiiroRW.Skin.PopupMenu_Move[0],
 						OpenNijiiroRW.Skin.PopupMenu_MenuItem_Name[1] + i * OpenNijiiroRW.Skin.PopupMenu_Move[1]);
 				}
 
 				bool bValueBold = (bItemBold || (i == nItemSelecting && bIsSelectingIntItem)) ? true : false;
-				if (bItemBold || bShowAllItems) {
+				if (bItemBold || bShowAllItems)
+				{
 					string s;
-					if (lciMenuItems[i].cItem.str項目名 == CLangManager.LangInstance.GetString("MOD_SONGSPEED")) {
+					if (lciMenuItems[i].cItem.str項目名 == CLangManager.LangInstance.GetString("MOD_SONGSPEED"))
+					{
 						double d = (double)((int)lciMenuItems[i].cItem.obj現在値() / 20.0);
 						s = "x" + d.ToString("0.00");
-					} else if (lciMenuItems[i].cItem.str項目名 == CLangManager.LangInstance.GetString("MOD_SPEED")) {
+					}
+					else if (lciMenuItems[i].cItem.str項目名 == CLangManager.LangInstance.GetString("MOD_SPEED"))
+					{
 						double d = (double)((((int)lciMenuItems[i].cItem.obj現在値()) + 1) / 10.0);
 						s = "x" + d.ToString("0.0");
-					} else {
+					}
+					else
+					{
 						s = lciMenuItems[i].cItem.obj現在値().ToString();
 					}
 					//               switch (lciMenuItems[i].cItem.str項目名)
@@ -337,8 +410,10 @@ internal class CActSelectPopupMenu : CActivity {
 					//font.t文字列描画( (int)(340 * Scale.X), (int)(80 + i * 32), s, bValueBold, 1.0f * Scale.Y);
 					using (var bmpStr = bValueBold ?
 							   prvFont.DrawText(s, Color.White, Color.OrangeRed, null, Color.Yellow, Color.OrangeRed, 30) :
-							   prvFont.DrawText(s, Color.White, Color.Black, null, 30)) {
-						using (var ctStr = OpenNijiiroRW.tテクスチャの生成(bmpStr, false)) {
+							   prvFont.DrawText(s, Color.White, Color.Black, null, 30))
+					{
+						using (var ctStr = OpenNijiiroRW.tテクスチャの生成(bmpStr, false))
+						{
 							ctStr.t2D描画(OpenNijiiroRW.Skin.PopupMenu_MenuItem_Value[0] + i * OpenNijiiroRW.Skin.PopupMenu_Move[0],
 								OpenNijiiroRW.Skin.PopupMenu_MenuItem_Value[1] + i * OpenNijiiroRW.Skin.PopupMenu_Move[1]);
 						}
@@ -366,7 +441,8 @@ internal class CActSelectPopupMenu : CActivity {
 	private CActDFPFont font;
 	CCachedFontRenderer prvFont;
 
-	internal struct stQuickMenuItem {
+	internal struct stQuickMenuItem
+	{
 		internal CItemBase cItem;
 		internal CTexture txName;
 	}
@@ -377,14 +453,18 @@ internal class CActSelectPopupMenu : CActivity {
 	private bool bIsSelectingIntItem;
 	public static bool b選択した;
 	[StructLayout(LayoutKind.Sequential)]
-	private struct STキー反復用カウンタ {
+	private struct STキー反復用カウンタ
+	{
 		public CCounter Up;
 		public CCounter Down;
 		public CCounter R;
 		public CCounter B;
-		public CCounter this[int index] {
-			get {
-				switch (index) {
+		public CCounter this[int index]
+		{
+			get
+			{
+				switch (index)
+				{
 					case 0:
 						return this.Up;
 
@@ -399,8 +479,10 @@ internal class CActSelectPopupMenu : CActivity {
 				}
 				throw new IndexOutOfRangeException();
 			}
-			set {
-				switch (index) {
+			set
+			{
+				switch (index)
+				{
 					case 0:
 						this.Up = value;
 						return;
@@ -423,7 +505,8 @@ internal class CActSelectPopupMenu : CActivity {
 	}
 	private STキー反復用カウンタ ctキー反復用;
 
-	private enum ESortAction : int {
+	private enum ESortAction : int
+	{
 		Cancel, Decide, Previous, Next, END
 	}
 	private int nItemSelecting;     // 「n現在の選択行」とは別に設ける。sortでメニュー表示直後にアイテムの中身を表示しないようにするため

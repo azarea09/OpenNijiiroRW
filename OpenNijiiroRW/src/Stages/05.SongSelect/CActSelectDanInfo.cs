@@ -4,12 +4,15 @@ using FDK;
 // Minimalist menu class to use for custom menus
 namespace OpenNijiiroRW;
 
-class CActSelectDanInfo : CStage {
-	public CActSelectDanInfo() {
+class CActSelectDanInfo : CStage
+{
+	public CActSelectDanInfo()
+	{
 		base.IsDeActivated = true;
 	}
 
-	public override void Activate() {
+	public override void Activate()
+	{
 		// On activation
 
 		if (base.IsActivated)
@@ -19,20 +22,23 @@ class CActSelectDanInfo : CStage {
 		ctStepFade = new CCounter(0, 255, 0.5, OpenNijiiroRW.Timer);
 
 		ttkExams = new TitleTextureKey[(int)Exam.Type.Total];
-		for (int i = 0; i < ttkExams.Length; i++) {
+		for (int i = 0; i < ttkExams.Length; i++)
+		{
 			ttkExams[i] = new TitleTextureKey(CLangManager.LangInstance.GetExamName(i), pfExamFont, Color.Black, Color.Transparent, 700);
 		}
 
 		base.Activate();
 	}
 
-	public override void DeActivate() {
+	public override void DeActivate()
+	{
 		// On de-activation
 
 		base.DeActivate();
 	}
 
-	public override void CreateManagedResource() {
+	public override void CreateManagedResource()
+	{
 		// Ressource allocation
 		pfTitleFont = HPrivateFastFont.tInstantiateMainFont(OpenNijiiroRW.Skin.SongSelect_DanInfo_Title_Size);
 		pfExamFont = HPrivateFastFont.tInstantiateMainFont(OpenNijiiroRW.Skin.SongSelect_DanInfo_Exam_Size);
@@ -40,7 +46,8 @@ class CActSelectDanInfo : CStage {
 		base.CreateManagedResource();
 	}
 
-	public override void ReleaseManagedResource() {
+	public override void ReleaseManagedResource()
+	{
 		// Ressource freeing
 		OpenNijiiroRW.tDisposeSafely(ref pfTitleFont);
 		OpenNijiiroRW.tDisposeSafely(ref pfExamFont);
@@ -48,25 +55,35 @@ class CActSelectDanInfo : CStage {
 		base.ReleaseManagedResource();
 	}
 
-	public override int Draw() {
+	public override int Draw()
+	{
 		ctStep.Tick();
 		ctStepFade.Tick();
-		if (ctStep.CurrentValue == ctStep.EndValue) {
+		if (ctStep.CurrentValue == ctStep.EndValue)
+		{
 			ctStep = new CCounter(0, 1000, 2, OpenNijiiroRW.Timer);
 			tNextStep();
 		}
 
-		if (OpenNijiiroRW.Skin.SongSelect_DanInfo_Show) {
-			for (int i = 0; i < OpenNijiiroRW.stageSongSelect.rNowSelectedSong.DanSongs.Count; i++) {
+		if (OpenNijiiroRW.Skin.SongSelect_DanInfo_Show)
+		{
+			for (int i = 0; i < OpenNijiiroRW.stageSongSelect.rNowSelectedSong.DanSongs.Count; i++)
+			{
 				var dan = OpenNijiiroRW.stageSongSelect.rNowSelectedSong.DanSongs[i];
 				int songIndex = i / 3;
 				int opacity = 255;
-				if (OpenNijiiroRW.stageSongSelect.rNowSelectedSong.DanSongs.Count > 3) {
-					if (nNowSongIndex == songIndex) {
+				if (OpenNijiiroRW.stageSongSelect.rNowSelectedSong.DanSongs.Count > 3)
+				{
+					if (nNowSongIndex == songIndex)
+					{
 						opacity = ctStepFade.CurrentValue;
-					} else if (nPrevSongIndex == songIndex) {
+					}
+					else if (nPrevSongIndex == songIndex)
+					{
 						opacity = 255 - ctStepFade.CurrentValue;
-					} else {
+					}
+					else
+					{
 						opacity = 0;
 					}
 				}
@@ -95,30 +112,44 @@ class CActSelectDanInfo : CStage {
 
 			}
 
-			for (int j = 0; j < CExamInfo.cMaxExam; j++) {
+			for (int j = 0; j < CExamInfo.cMaxExam; j++)
+			{
 				int index = j;
 				Dan_C danc0 = OpenNijiiroRW.stageSongSelect.rNowSelectedSong.DanSongs[0].Dan_C[j];
 
-				if (danc0 != null) {
+				if (danc0 != null)
+				{
 					TitleTextureKey.ResolveTitleTexture(this.ttkExams[(int)danc0.ExamType]).t2D中心基準描画(OpenNijiiroRW.Skin.SongSelect_DanInfo_Exam_X[index], OpenNijiiroRW.Skin.SongSelect_DanInfo_Exam_Y[index]);
 				}
 
-				if (OpenNijiiroRW.stageSongSelect.rNowSelectedSong.DanSongs[OpenNijiiroRW.stageSongSelect.rNowSelectedSong.DanSongs.Count - 1].Dan_C[j] == null) {
+				if (OpenNijiiroRW.stageSongSelect.rNowSelectedSong.DanSongs[OpenNijiiroRW.stageSongSelect.rNowSelectedSong.DanSongs.Count - 1].Dan_C[j] == null)
+				{
 					Dan_C danc = OpenNijiiroRW.stageSongSelect.rNowSelectedSong.DanSongs[0].Dan_C[j];
-					if (danc != null) {
+					if (danc != null)
+					{
 						OpenNijiiroRW.stageDanSongSelect.段位リスト.tExamDraw(OpenNijiiroRW.Skin.SongSelect_DanInfo_Exam_Value_X[0], OpenNijiiroRW.Skin.SongSelect_DanInfo_Exam_Value_Y[index], danc.GetValue()[0], danc.ExamRange, OpenNijiiroRW.Skin.SongSelect_DanInfo_Exam_Value_Scale);
 					}
-				} else {
-					for (int i = 0; i < OpenNijiiroRW.stageSongSelect.rNowSelectedSong.DanSongs.Count; i++) {
+				}
+				else
+				{
+					for (int i = 0; i < OpenNijiiroRW.stageSongSelect.rNowSelectedSong.DanSongs.Count; i++)
+					{
 						Dan_C danc = OpenNijiiroRW.stageSongSelect.rNowSelectedSong.DanSongs[i].Dan_C[j];
-						if (danc != null) {
+						if (danc != null)
+						{
 							int opacity = 255;
-							if (OpenNijiiroRW.stageSongSelect.rNowSelectedSong.DanSongs.Count > 3) {
-								if (nNowSongIndex == i / 3) {
+							if (OpenNijiiroRW.stageSongSelect.rNowSelectedSong.DanSongs.Count > 3)
+							{
+								if (nNowSongIndex == i / 3)
+								{
 									opacity = ctStepFade.CurrentValue;
-								} else if (nPrevSongIndex == i / 3) {
+								}
+								else if (nPrevSongIndex == i / 3)
+								{
 									opacity = 255 - ctStepFade.CurrentValue;
-								} else {
+								}
+								else
+								{
 									opacity = 0;
 								}
 							}
@@ -135,11 +166,13 @@ class CActSelectDanInfo : CStage {
 		return 0;
 	}
 
-	public void UpdateSong() {
+	public void UpdateSong()
+	{
 		if (OpenNijiiroRW.stageSongSelect.rNowSelectedSong == null || OpenNijiiroRW.stageSongSelect.rNowSelectedSong.DanSongs == null) return;
 
 		ttkTitles = new TitleTextureKey[OpenNijiiroRW.stageSongSelect.rNowSelectedSong.DanSongs.Count];
-		for (int i = 0; i < OpenNijiiroRW.stageSongSelect.rNowSelectedSong.DanSongs.Count; i++) {
+		for (int i = 0; i < OpenNijiiroRW.stageSongSelect.rNowSelectedSong.DanSongs.Count; i++)
+		{
 			var dan = OpenNijiiroRW.stageSongSelect.rNowSelectedSong.DanSongs[i];
 			ttkTitles[i] = new TitleTextureKey(dan.bTitleShow ? "???" : dan.Title, pfTitleFont, Color.Black, Color.Transparent, 700);
 		}
@@ -158,7 +191,8 @@ class CActSelectDanInfo : CStage {
 	private int nPrevSongIndex;
 	private int nNowSongIndex;
 
-	private void tNextStep() {
+	private void tNextStep()
+	{
 		nPrevSongIndex = nNowSongIndex;
 		nNowSongIndex = (nNowSongIndex + 1) % (int)Math.Ceiling(OpenNijiiroRW.stageSongSelect.rNowSelectedSong.DanSongs.Count / 3.0);
 		ctStepFade = new CCounter(0, 255, 1, OpenNijiiroRW.Timer);

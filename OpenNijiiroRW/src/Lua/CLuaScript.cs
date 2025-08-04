@@ -7,10 +7,13 @@ using NLua;
 
 namespace OpenNijiiroRW;
 
-class CLuaScript : IDisposable {
+class CLuaScript : IDisposable
+{
 	public static List<CLuaScript> listScripts { get; private set; } = new List<CLuaScript>();
-	public static void tReloadLanguage(string lang) {
-		foreach (var item in listScripts) {
+	public static void tReloadLanguage(string lang)
+	{
+		foreach (var item in listScripts)
+		{
 			item.ReloadLanguage(lang);
 		}
 	}
@@ -35,70 +38,87 @@ class CLuaScript : IDisposable {
 
 	public List<IDisposable> listDisposables { get; private set; } = new List<IDisposable>();
 
-	protected bool Available {
-		get {
+	protected bool Available
+	{
+		get
+		{
 			return bLoadedAssets && !bDisposed && !bCrashed;
 		}
 	}
 
-	private double getNum(JsonValue x) {
+	private double getNum(JsonValue x)
+	{
 		return (double)x;
 	}
 
-	private string getText(JsonValue x) {
+	private string getText(JsonValue x)
+	{
 		return (string)x;
 	}
 
-	private List<double> getNumArray(JsonArray x) {
+	private List<double> getNumArray(JsonArray x)
+	{
 		List<double> array = new List<double>();
 
-		foreach (double value in x) {
+		foreach (double value in x)
+		{
 			array.Add(value);
 		}
 		return array;
 	}
 
-	private List<string> getTextArray(JsonArray x) {
+	private List<string> getTextArray(JsonArray x)
+	{
 		List<string> array = new List<string>();
 
-		foreach (string value in x) {
+		foreach (string value in x)
+		{
 			array.Add(value);
 		}
 		return array;
 	}
 
-	protected object[] RunLuaCode(LuaFunction luaFunction, params object[] args) {
-		try {
+	protected object[] RunLuaCode(LuaFunction luaFunction, params object[] args)
+	{
+		try
+		{
 			if (luaFunction == null) return null;
 			var ret = luaFunction.Call(args);
 			LuaScript.State.GarbageCollector(KeraLua.LuaGC.Collect, 0);
 			return ret;
-		} catch (Exception exception) {
+		}
+		catch (Exception exception)
+		{
 			Crash(exception);
 		}
 		return new object[0];
 	}
 
-	private JsonNode LoadConfig(string name) {
+	private JsonNode LoadConfig(string name)
+	{
 		using Stream stream = File.OpenRead($"{strDir}/{name}");
 		JsonNode jsonNode = JsonNode.Parse(stream);
 		return jsonNode;
 	}
 
-	private CTexture LoadTexture(string name) {
+	private CTexture LoadTexture(string name)
+	{
 		CTexture texture = new CTexture($"{strTexturesDir}/{name}", false);
 
 		listDisposables.Add(texture);
 		return texture;
 	}
 
-	private void DebugLog(string message) {
+	private void DebugLog(string message)
+	{
 		Trace.TraceInformation("<Lua Log>: " + message);
 	}
 
-	private CSound LoadSound(string name, string soundGroupName) {
+	private CSound LoadSound(string name, string soundGroupName)
+	{
 		ESoundGroup soundGroup;
-		switch (soundGroupName) {
+		switch (soundGroupName)
+		{
 			case "soundeffect":
 				soundGroup = ESoundGroup.SoundEffect;
 				break;
@@ -121,9 +141,11 @@ class CLuaScript : IDisposable {
 		return sound;
 	}
 
-	private CCachedFontRenderer LoadFontRenderer(int size, string fontStyleName) {
+	private CCachedFontRenderer LoadFontRenderer(int size, string fontStyleName)
+	{
 		CFontRenderer.FontStyle fontStyle;
-		switch (fontStyleName) {
+		switch (fontStyleName)
+		{
 			case "regular":
 				fontStyle = CFontRenderer.FontStyle.Regular;
 				break;
@@ -149,19 +171,23 @@ class CLuaScript : IDisposable {
 		return fontRenderer;
 	}
 
-	private string GetLocalizedString(string key, params object?[] args) {
+	private string GetLocalizedString(string key, params object?[] args)
+	{
 		return CLangManager.LangInstance.GetString(key, args);
 	}
 
-	private TitleTextureKey CreateTitleTextureKey(string title, CCachedFontRenderer fontRenderer, int maxSize, Color? color = null, Color? edgeColor = null) {
+	private TitleTextureKey CreateTitleTextureKey(string title, CCachedFontRenderer fontRenderer, int maxSize, Color? color = null, Color? edgeColor = null)
+	{
 		return new TitleTextureKey(title, fontRenderer, color ?? Color.White, edgeColor ?? Color.Black, maxSize);
 	}
 
-	private CTexture GetTextTex(TitleTextureKey titleTextureKey, bool vertical, bool keepCenter) {
+	private CTexture GetTextTex(TitleTextureKey titleTextureKey, bool vertical, bool keepCenter)
+	{
 		return TitleTextureKey.ResolveTitleTexture(titleTextureKey, vertical, keepCenter);
 	}
 
-	public CLuaScript(string dir, string? texturesDir = null, string? soundsDir = null, bool loadAssets = true) {
+	public CLuaScript(string dir, string? texturesDir = null, string? soundsDir = null, bool loadAssets = true)
+	{
 		strDir = dir;
 		strTexturesDir = texturesDir ?? $"{dir}/Textures";
 		strSounsdDir = soundsDir ?? $"{dir}/Sounds";
@@ -172,7 +198,8 @@ class CLuaScript : IDisposable {
 		LuaScript.State.Encoding = Encoding.UTF8;
 		LuaSecurity.Secure(LuaScript);
 
-		try {
+		try
+		{
 			LuaScript.DoFile($"{strDir}/Script.lua");
 
 			LuaScript["info"] = luaInfo = new CLuaInfo(strDir);
@@ -200,12 +227,15 @@ class CLuaScript : IDisposable {
 			if (loadAssets) LoadAssets();
 
 			listScripts.Add(this);
-		} catch (Exception e) {
+		}
+		catch (Exception e)
+		{
 			Crash(e);
 		}
 	}
 
-	public void LoadAssets(params object[] args) {
+	public void LoadAssets(params object[] args)
+	{
 		if (bLoadedAssets) return;
 
 		RunLuaCode(lfLoadAssets, args);
@@ -214,14 +244,17 @@ class CLuaScript : IDisposable {
 		bDisposed = false;
 	}
 
-	public void ReloadLanguage(params object[] args) {
+	public void ReloadLanguage(params object[] args)
+	{
 		RunLuaCode(lfReloadLanguage, args);
 	}
 
-	public void Dispose() {
+	public void Dispose()
+	{
 		if (bDisposed) return;
 
-		foreach (IDisposable disposable in listDisposables) {
+		foreach (IDisposable disposable in listDisposables)
+		{
 			disposable.Dispose();
 		}
 		listDisposables.Clear();
@@ -234,7 +267,8 @@ class CLuaScript : IDisposable {
 		listScripts.Remove(this);
 	}
 
-	private void Crash(Exception exception) {
+	private void Crash(Exception exception)
+	{
 		bCrashed = true;
 
 		LogNotification.PopError($"Lua Script Error: {exception.ToString()}");

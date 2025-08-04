@@ -1,6 +1,7 @@
 ﻿namespace SlimDXKeys;
 
-public enum Key {
+public enum Key
+{
 	D0 = 0,
 	D1 = 1,
 	D2 = 2,
@@ -147,7 +148,8 @@ public enum Key {
 	Yen = 143,
 	Unknown = 144
 }
-public enum MouseObject {
+public enum MouseObject
+{
 	Button1 = 0,
 	Button2 = 1,
 	Button3 = 2,

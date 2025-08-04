@@ -5,30 +5,41 @@ using FDK;
 
 namespace OpenNijiiroRW;
 
-internal class CActImplRunner : CActivity {
+internal class CActImplRunner : CActivity
+{
 	/// <summary>
 	/// ランナー
 	/// </summary>
-	public CActImplRunner() {
+	public CActImplRunner()
+	{
 		base.IsDeActivated = true;
 	}
 
-	public void Start(int Player, bool IsMiss, CChip pChip) {
-		if (Runner != null && !OpenNijiiroRW.ConfigIni.SimpleMode) {
-			while (stRunners[Index].b使用中) {
+	public void Start(int Player, bool IsMiss, CChip pChip)
+	{
+		if (Runner != null && !OpenNijiiroRW.ConfigIni.SimpleMode)
+		{
+			while (stRunners[Index].b使用中)
+			{
 				Index += 1;
-				if (Index >= 128) {
+				if (Index >= 128)
+				{
 					Index = 0;
 					break; // 2018.6.15 IMARER 無限ループが発生するので修正
 				}
 			}
-			if (pChip.nChannelNo < 0x15 || (pChip.nChannelNo >= 0x1A)) {
-				if (!stRunners[Index].b使用中) {
+			if (pChip.nChannelNo < 0x15 || (pChip.nChannelNo >= 0x1A))
+			{
+				if (!stRunners[Index].b使用中)
+				{
 					stRunners[Index].b使用中 = true;
 					stRunners[Index].nPlayer = Player;
-					if (IsMiss == true) {
+					if (IsMiss == true)
+					{
 						stRunners[Index].nType = 0;
-					} else {
+					}
+					else
+					{
 						stRunners[Index].nType = random.Next(1, Type + 1);
 					}
 					stRunners[Index].ct進行 = new CCounter(0, OpenNijiiroRW.Skin.Resolution[0], Timer, OpenNijiiroRW.Timer);
@@ -41,13 +52,16 @@ internal class CActImplRunner : CActivity {
 		}
 	}
 
-	public override void Activate() {
-		if (OpenNijiiroRW.ConfigIni.SimpleMode) {
+	public override void Activate()
+	{
+		if (OpenNijiiroRW.ConfigIni.SimpleMode)
+		{
 			base.Activate();
 			return;
 		}
 
-		for (int i = 0; i < 128; i++) {
+		for (int i = 0; i < 128; i++)
+		{
 			stRunners[i] = new STRunner();
 			stRunners[i].b使用中 = false;
 			stRunners[i].ct進行 = new CCounter();
@@ -60,9 +74,11 @@ internal class CActImplRunner : CActivity {
 		Random random = new Random();
 
 		var dancerOrigindir = CSkin.Path($"{TextureLoader.BASE}{TextureLoader.GAME}{TextureLoader.RUNNER}");
-		if (Directory.Exists($@"{dancerOrigindir}")) {
+		if (Directory.Exists($@"{dancerOrigindir}"))
+		{
 			var dirs = Directory.GetDirectories($@"{dancerOrigindir}");
-			if (preset.RunnerSet?.Length > 0) {
+			if (preset.RunnerSet?.Length > 0)
+			{
 				var _presetPath = (preset.RunnerSet.Length > 0) ? $@"{dancerOrigindir}" + preset.RunnerSet[random.Next(0, preset.RunnerSet.Length)] : "";
 				var path = (Directory.Exists(_presetPath))
 					? _presetPath
@@ -77,13 +93,16 @@ internal class CActImplRunner : CActivity {
 		base.Activate();
 	}
 
-	public override void DeActivate() {
-		if (OpenNijiiroRW.ConfigIni.SimpleMode) {
+	public override void DeActivate()
+	{
+		if (OpenNijiiroRW.ConfigIni.SimpleMode)
+		{
 			base.DeActivate();
 			return;
 		}
 
-		for (int i = 0; i < 128; i++) {
+		for (int i = 0; i < 128; i++)
+		{
 			stRunners[i].ct進行 = null;
 		}
 
@@ -92,36 +111,48 @@ internal class CActImplRunner : CActivity {
 		base.DeActivate();
 	}
 
-	public override void CreateManagedResource() {
+	public override void CreateManagedResource()
+	{
 		base.CreateManagedResource();
 	}
 
-	public override void ReleaseManagedResource() {
+	public override void ReleaseManagedResource()
+	{
 		base.ReleaseManagedResource();
 	}
 
-	public override int Draw() {
-		if (OpenNijiiroRW.ConfigIni.SimpleMode) {
+	public override int Draw()
+	{
+		if (OpenNijiiroRW.ConfigIni.SimpleMode)
+		{
 			return base.Draw();
 		}
 
-		for (int i = 0; i < 128; i++) {
-			if (stRunners[i].b使用中) {
+		for (int i = 0; i < 128; i++)
+		{
+			if (stRunners[i].b使用中)
+			{
 				stRunners[i].nOldValue = stRunners[i].ct進行.CurrentValue;
 				stRunners[i].ct進行.Tick();
-				if (stRunners[i].ct進行.IsEnded || stRunners[i].fX > OpenNijiiroRW.Skin.Resolution[0]) {
+				if (stRunners[i].ct進行.IsEnded || stRunners[i].fX > OpenNijiiroRW.Skin.Resolution[0])
+				{
 					stRunners[i].ct進行.Stop();
 					stRunners[i].b使用中 = false;
 				}
-				for (int n = stRunners[i].nOldValue; n < stRunners[i].ct進行.CurrentValue; n++) {
+				for (int n = stRunners[i].nOldValue; n < stRunners[i].ct進行.CurrentValue; n++)
+				{
 					stRunners[i].fX += (float)OpenNijiiroRW.stageGameScreen.actPlayInfo.dbBPM[stRunners[i].nPlayer] / 18;
 					int Width = OpenNijiiroRW.Skin.Resolution[0] / Ptn;
 					stRunners[i].nNowPtn = (int)stRunners[i].fX / Width;
 				}
-				if (Runner != null) {
-					if (stRunners[i].nPlayer == 0) {
+				if (Runner != null)
+				{
+					if (stRunners[i].nPlayer == 0)
+					{
 						Runner.t2D描画((int)(StartPoint_X[0] + stRunners[i].fX), StartPoint_Y[0], new Rectangle(stRunners[i].nNowPtn * Size[0], stRunners[i].nType * Size[1], Size[0], Size[1]));
-					} else {
+					}
+					else
+					{
 						Runner.t2D描画((int)(StartPoint_X[1] + stRunners[i].fX), StartPoint_Y[1], new Rectangle(stRunners[i].nNowPtn * Size[0], stRunners[i].nType * Size[1], Size[0], Size[1]));
 					}
 				}
@@ -133,7 +164,8 @@ internal class CActImplRunner : CActivity {
 	#region[ private ]
 	//-----------------
 	[StructLayout(LayoutKind.Sequential)]
-	private struct STRunner {
+	private struct STRunner
+	{
 		public bool b使用中;
 		public int nPlayer;
 		public int nType;
@@ -148,7 +180,8 @@ internal class CActImplRunner : CActivity {
 
 	private CTexture Runner;
 
-	private void LoadRunnerConifg(string dancerPath) {
+	private void LoadRunnerConifg(string dancerPath)
+	{
 		var _str = "";
 		OpenNijiiroRW.Skin.LoadSkinConfigFromFile(dancerPath + @"\RunnerConfig.txt", ref _str);
 
@@ -162,44 +195,64 @@ internal class CActImplRunner : CActivity {
 		StartPoint_Y = new int[2] { 40, 560 };
 		Timer = 16;
 
-		foreach (string s in strSingleLine) {
+		foreach (string s in strSingleLine)
+		{
 			string str = s.Replace('\t', ' ').TrimStart(new char[] { '\t', ' ' });
-			if ((str.Length != 0) && (str[0] != ';')) {
-				try {
+			if ((str.Length != 0) && (str[0] != ';'))
+			{
+				try
+				{
 					string strCommand;
 					string strParam;
 					string[] strArray = str.Split(new char[] { '=' });
 
-					if (strArray.Length == 2) {
+					if (strArray.Length == 2)
+					{
 						strCommand = strArray[0].Trim();
 						strParam = strArray[1].Trim();
 
-						if (strCommand == "Game_Runner_Size") {
+						if (strCommand == "Game_Runner_Size")
+						{
 							string[] strSplit = strParam.Split(',');
-							for (int i = 0; i < 2; i++) {
+							for (int i = 0; i < 2; i++)
+							{
 								Size[i] = int.Parse(strSplit[i]);
 							}
-						} else if (strCommand == "Game_Runner_Ptn") {
+						}
+						else if (strCommand == "Game_Runner_Ptn")
+						{
 							Ptn = int.Parse(strParam);
-						} else if (strCommand == "Game_Runner_Type") {
+						}
+						else if (strCommand == "Game_Runner_Type")
+						{
 							Type = int.Parse(strParam);
-						} else if (strCommand == "Game_Runner_Timer") {
+						}
+						else if (strCommand == "Game_Runner_Timer")
+						{
 							Timer = int.Parse(strParam);
-						} else if (strCommand == "Game_Runner_StartPoint_X") {
+						}
+						else if (strCommand == "Game_Runner_StartPoint_X")
+						{
 							string[] strSplit = strParam.Split(',');
-							for (int i = 0; i < 2; i++) {
+							for (int i = 0; i < 2; i++)
+							{
 								StartPoint_X[i] = int.Parse(strSplit[i]);
 							}
-						} else if (strCommand == "Game_Runner_StartPoint_Y") {
+						}
+						else if (strCommand == "Game_Runner_StartPoint_Y")
+						{
 							string[] strSplit = strParam.Split(',');
-							for (int i = 0; i < 2; i++) {
+							for (int i = 0; i < 2; i++)
+							{
 								StartPoint_Y[i] = int.Parse(strSplit[i]);
 							}
 						}
 
 					}
 					continue;
-				} catch (Exception exception) {
+				}
+				catch (Exception exception)
+				{
 					Trace.TraceError(exception.ToString());
 					Trace.TraceError("例外が発生しましたが処理を継続します。 (6a32cc37-1527-412e-968a-512c1f0135cd)");
 					continue;

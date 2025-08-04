@@ -1,33 +1,41 @@
 ﻿namespace OpenNijiiroRW;
 
-internal interface ILang {
+internal interface ILang
+{
 	string GetString(int idx);
 }
 
-static internal class CLangManager {
+static internal class CLangManager
+{
 	// Cheap factory-like design pattern
 
 	public static CLang LangInstance { get; private set; } = new CLang("en");
-	public static void langAttach(string lang) {
+	public static void langAttach(string lang)
+	{
 		LangInstance = CLang.GetCLang(lang);
 		CLuaScript.tReloadLanguage(lang);
 	}
 
-	public static int langToInt(string lang) {
+	public static int langToInt(string lang)
+	{
 		return Array.IndexOf(Langcodes, lang);
 	}
 
-	public static string fetchLang() {
+	public static string fetchLang()
+	{
 		return LangInstance.Id;
 	}
 
-	public static string intToLang(int idx) {
+	public static string intToLang(int idx)
+	{
 		return Langcodes[idx];
 	}
 
 	// temporary garbage code
-	public static string[] Langcodes {
-		get {
+	public static string[] Langcodes
+	{
+		get
+		{
 			if (_langCodes == null)
 				_langCodes = Directory.GetDirectories(Path.Combine(OpenNijiiroRW.strEXEのあるフォルダ, "Lang"), "*", SearchOption.TopDirectoryOnly)
 					.Select(result => Path.GetRelativePath(Path.Combine(OpenNijiiroRW.strEXEのあるフォルダ, "Lang"), result))
@@ -36,8 +44,10 @@ static internal class CLangManager {
 			return _langCodes;
 		}
 	}
-	public static string[] Languages {
-		get {
+	public static string[] Languages
+	{
+		get
+		{
 			if (_languages == null)
 				_languages = Langcodes.Select(result => CLang.GetLanguage(result)).ToArray();
 
@@ -45,13 +55,15 @@ static internal class CLangManager {
 		}
 	}
 
-	public static CLocalizationData GetAllStringsAsLocalizationData(string key) {
+	public static CLocalizationData GetAllStringsAsLocalizationData(string key)
+	{
 		if (_cachedLocs.ContainsKey(key)) return _cachedLocs[key];
 
 		CLocalizationData loc = new CLocalizationData();
 		loc.SetString("default", "?");
 
-		foreach (string lang in Langcodes) {
+		foreach (string lang in Langcodes)
+		{
 			CLang _inst = CLang.GetCLang(lang);
 
 			loc.SetString(lang, _inst.GetString(key));
@@ -61,13 +73,15 @@ static internal class CLangManager {
 		return loc;
 	}
 
-	public static CLocalizationData GetAllStringsAsLocalizationDataWithArgs(string key, string keySalt, params object?[] values) {
+	public static CLocalizationData GetAllStringsAsLocalizationDataWithArgs(string key, string keySalt, params object?[] values)
+	{
 		if (_cachedLocs.ContainsKey(key + keySalt)) return _cachedLocs[key + keySalt];
 
 		CLocalizationData loc = new CLocalizationData();
 		loc.SetString("default", "?");
 
-		foreach (string lang in Langcodes) {
+		foreach (string lang in Langcodes)
+		{
 			CLang _inst = CLang.GetCLang(lang);
 
 			loc.SetString(lang, _inst.GetString(key, values));

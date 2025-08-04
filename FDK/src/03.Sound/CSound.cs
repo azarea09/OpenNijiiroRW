@@ -12,7 +12,8 @@ namespace FDK;
 // CSound は、サウンドデバイスが変更されたときも、インスタンスを再作成することなく、新しいデバイスで作り直せる必要がある。
 // そのため、デバイスごとに別のクラスに分割するのではなく、１つのクラスに集約するものとする。
 
-public class CSound : IDisposable {
+public class CSound : IDisposable
+{
 	public const int MinimumSongVol = 0;
 	public const int MaximumSongVol = 200; // support an approximate doubling in volume.
 	public const int DefaultSongVol = 100;
@@ -40,7 +41,8 @@ public class CSound : IDisposable {
 
 	#region [ DTXMania用拡張 ]
 
-	public int TotalPlayTime {
+	public int TotalPlayTime
+	{
 		get;
 		private set;
 	}
@@ -53,40 +55,55 @@ public class CSound : IDisposable {
 	{
 		get { return false; }
 	}
-	public double Frequency {
-		get {
+	public double Frequency
+	{
+		get
+		{
 			return _Frequency;
 		}
-		set {
-			if (_Frequency != value) {
+		set
+		{
+			if (_Frequency != value)
+			{
 				_Frequency = value;
-				if (IsBassSound) {
+				if (IsBassSound)
+				{
 					Bass.ChannelSetAttribute(this.hBassStream, ChannelAttribute.Frequency, (float)(_Frequency * _PlaySpeed * nオリジナルの周波数));
 				}
 			}
 		}
 	}
-	public double PlaySpeed {
-		get {
+	public double PlaySpeed
+	{
+		get
+		{
 			return _PlaySpeed;
 		}
-		set {
-			if (_PlaySpeed != value) {
+		set
+		{
+			if (_PlaySpeed != value)
+			{
 				_PlaySpeed = value;
 				IsNormalSpeed = (_PlaySpeed == 1.000f);
-				if (IsBassSound) {
+				if (IsBassSound)
+				{
 					if (_hTempoStream != 0 && !this.IsNormalSpeed)  // 再生速度がx1.000のときは、TempoStreamを用いないようにして高速化する
 					{
 						this.hBassStream = _hTempoStream;
-					} else {
+					}
+					else
+					{
 						this.hBassStream = _hBassStream;
 					}
 
-					if (SoundManager.bIsTimeStretch) {
+					if (SoundManager.bIsTimeStretch)
+					{
 						Bass.ChannelSetAttribute(this.hBassStream, ChannelAttribute.Tempo, (float)(PlaySpeed * 100 - 100));
 						//double seconds = Bass.BASS_ChannelBytes2Seconds( this.hTempoStream, nBytes );
 						//this.n総演奏時間ms = (int) ( seconds * 1000 );
-					} else {
+					}
+					else
+					{
 						Bass.ChannelSetAttribute(this.hBassStream, ChannelAttribute.Frequency, (float)(_Frequency * _PlaySpeed * nオリジナルの周波数));
 					}
 				}
@@ -110,11 +127,13 @@ public class CSound : IDisposable {
 	/// for mixing in the SONGVOL value, when available. It is also used for
 	/// DTXViewer preview mode.
 	/// </summary>
-	public void SetGain(int songVol) {
+	public void SetGain(int songVol)
+	{
 		SetGain(LinearIntegerPercentToLufs(songVol), null);
 	}
 
-	private static Lufs LinearIntegerPercentToLufs(int percent) {
+	private static Lufs LinearIntegerPercentToLufs(int percent)
+	{
 		// 2018-08-27 twopointzero: We'll use the standard conversion until an appropriate curve can be selected
 		return new Lufs(20.0 * Math.Log10(percent / 100.0));
 	}
@@ -128,15 +147,18 @@ public class CSound : IDisposable {
 	/// This method, taking a LUFS gain value and a LUFS true audio peak value,
 	/// is used for mixing in the loudness-metadata-base gain value, when available.
 	/// </summary>
-	public void SetGain(Lufs gain, Lufs? truePeak) {
-		if (Equals(_gain, gain)) {
+	public void SetGain(Lufs gain, Lufs? truePeak)
+	{
+		if (Equals(_gain, gain))
+		{
 			return;
 		}
 
 		_gain = gain;
 		_truePeak = truePeak;
 
-		if (SoundGroup == ESoundGroup.SongPlayback) {
+		if (SoundGroup == ESoundGroup.SongPlayback)
+		{
 			Trace.TraceInformation($"{nameof(CSound)}.{nameof(SetGain)}: Gain: {_gain}. True Peak: {_truePeak}");
 		}
 
@@ -152,16 +174,20 @@ public class CSound : IDisposable {
 	/// case right now for the song selection screen background music fade
 	/// in and fade out.
 	/// </summary>
-	public int AutomationLevel {
+	public int AutomationLevel
+	{
 		get => _automationLevel;
-		set {
-			if (_automationLevel == value) {
+		set
+		{
+			if (_automationLevel == value)
+			{
 				return;
 			}
 
 			_automationLevel = value;
 
-			if (SoundGroup == ESoundGroup.SongPlayback) {
+			if (SoundGroup == ESoundGroup.SongPlayback)
+			{
 				Trace.TraceInformation($"{nameof(CSound)}.{nameof(AutomationLevel)} set: {AutomationLevel}");
 			}
 
@@ -182,16 +208,20 @@ public class CSound : IDisposable {
 	///
 	/// See the SoundGroupLevelController and related classes for more.
 	/// </summary>
-	public int GroupLevel {
+	public int GroupLevel
+	{
 		private get => _groupLevel;
-		set {
-			if (_groupLevel == value) {
+		set
+		{
+			if (_groupLevel == value)
+			{
 				return;
 			}
 
 			_groupLevel = value;
 
-			if (SoundGroup == ESoundGroup.SongPlayback) {
+			if (SoundGroup == ESoundGroup.SongPlayback)
+			{
 				Trace.TraceInformation($"{nameof(CSound)}.{nameof(GroupLevel)} set: {GroupLevel}");
 			}
 
@@ -199,7 +229,8 @@ public class CSound : IDisposable {
 		}
 	}
 
-	private void SetVolume() {
+	private void SetVolume()
+	{
 		var automationLevel = LinearIntegerPercentToLufs(AutomationLevel);
 		var groupLevel = LinearIntegerPercentToLufs(GroupLevel);
 
@@ -211,7 +242,8 @@ public class CSound : IDisposable {
 		var safeTruePeakGain = _truePeak?.Negate() ?? new Lufs(0);
 		var finalGain = gain.Min(safeTruePeakGain);
 
-		if (SoundGroup == ESoundGroup.SongPlayback) {
+		if (SoundGroup == ESoundGroup.SongPlayback)
+		{
 			Trace.TraceInformation(
 				$"{nameof(CSound)}.{nameof(SetVolume)}: Gain:{_gain}. Automation Level: {automationLevel}. Group Level: {groupLevel}. Summed Gain: {gain}. Safe True Peak Gain: {safeTruePeakGain}. Final Gain: {finalGain}.");
 		}
@@ -219,9 +251,12 @@ public class CSound : IDisposable {
 		lufs音量 = finalGain;
 	}
 
-	private Lufs lufs音量 {
-		set {
-			if (this.IsBassSound) {
+	private Lufs lufs音量
+	{
+		set
+		{
+			if (this.IsBassSound)
+			{
 				var db音量 = ((value.ToDouble() / 100.0) + 1.0).Clamp(0, 1);
 				Bass.ChannelSetAttribute(this._hBassStream, ChannelAttribute.Volume, (float)db音量);
 				Bass.ChannelSetAttribute(this._hTempoStream, ChannelAttribute.Volume, (float)db音量);
@@ -232,9 +267,12 @@ public class CSound : IDisposable {
 	/// <summary>
 	/// <para>左:-100～中央:0～100:右。set のみ。</para>
 	/// </summary>
-	public int SoundPosition {
-		get {
-			if (this.IsBassSound) {
+	public int SoundPosition
+	{
+		get
+		{
+			if (this.IsBassSound)
+			{
 				float f位置 = 0.0f;
 				if (!Bass.ChannelGetAttribute(this.hBassStream, ChannelAttribute.Pan, out f位置))
 					//if( BassMix.BASS_Mixer_ChannelGetEnvelopePos( this.hBassStream, BASSMIXEnvelope.BASS_MIXER_ENV_PAN, ref f位置 ) == -1 )
@@ -243,8 +281,10 @@ public class CSound : IDisposable {
 			}
 			return -9999;
 		}
-		set {
-			if (this.IsBassSound) {
+		set
+		{
+			if (this.IsBassSound)
+			{
 				float f位置 = Math.Min(Math.Max(value, -100), 100) / 100.0f;  // -100～100 → -1.0～1.0
 																			//var nodes = new BASS_MIXER_NODE[ 1 ] { new BASS_MIXER_NODE( 0, f位置 ) };
 																			//BassMix.BASS_Mixer_ChannelSetEnvelope( this.hBassStream, BASSMIXEnvelope.BASS_MIXER_ENV_PAN, nodes );
@@ -253,7 +293,8 @@ public class CSound : IDisposable {
 		}
 	}
 
-	public void SetPanning(int pan) {
+	public void SetPanning(int pan)
+	{
 		if (SoundPosition == pan) return;
 
 		SoundPosition = pan;
@@ -265,14 +306,17 @@ public class CSound : IDisposable {
 	/// </summary>
 	public static readonly ObservableCollection<CSound> SoundInstances = new ObservableCollection<CSound>();
 
-	public static void ShowAllCSoundFiles() {
+	public static void ShowAllCSoundFiles()
+	{
 		int i = 0;
-		foreach (CSound cs in SoundInstances) {
+		foreach (CSound cs in SoundInstances)
+		{
 			Debug.WriteLine(i++.ToString("d3") + ": " + Path.GetFileName(cs.FileName));
 		}
 	}
 
-	public CSound(ESoundGroup soundGroup) {
+	public CSound(ESoundGroup soundGroup)
+	{
 		SoundGroup = soundGroup;
 		this.SoundPosition = 0;
 		this._Frequency = 1.0;
@@ -282,45 +326,57 @@ public class CSound : IDisposable {
 		this._hTempoStream = 0;
 	}
 
-	public void CreateBassSound(string fileName, int hMixer) {
+	public void CreateBassSound(string fileName, int hMixer)
+	{
 		this.CurrentSoundDeviceType = ESoundDeviceType.Bass;        // 作成後に設定する。（作成に失敗してると例外発出されてここは実行されない）
 		this.CreateBassSound(fileName, hMixer, BassFlags.Decode);
 	}
-	public void CreateASIOSound(string fileName, int hMixer) {
+	public void CreateASIOSound(string fileName, int hMixer)
+	{
 		this.CurrentSoundDeviceType = ESoundDeviceType.ASIO;        // 作成後に設定する。（作成に失敗してると例外発出されてここは実行されない）
 		this.CreateBassSound(fileName, hMixer, BassFlags.Decode);
 	}
-	public void CreateWASAPISound(string fileName, int hMixer, ESoundDeviceType deviceType) {
+	public void CreateWASAPISound(string fileName, int hMixer, ESoundDeviceType deviceType)
+	{
 		this.CurrentSoundDeviceType = deviceType;       // 作成後に設定する。（作成に失敗してると例外発出されてここは実行されない）
 		this.CreateBassSound(fileName, hMixer, BassFlags.Decode | BassFlags.Float);
 	}
 
 	#region [ DTXMania用の変換 ]
 
-	public void DisposeSound(CSound cs) {
+	public void DisposeSound(CSound cs)
+	{
 		cs.tDispose();
 	}
-	public void PlayStart() {
+	public void PlayStart()
+	{
 		tSetPositonToBegin();
 		if (!b速度上げすぎ問題)
 			tPlaySound(false);
 	}
-	public void PlayStart(bool looped) {
-		if (IsBassSound) {
-			if (looped) {
+	public void PlayStart(bool looped)
+	{
+		if (IsBassSound)
+		{
+			if (looped)
+			{
 				Bass.ChannelFlags(this.hBassStream, BassFlags.Loop, BassFlags.Loop);
-			} else {
+			}
+			else
+			{
 				Bass.ChannelFlags(this.hBassStream, BassFlags.Default, BassFlags.Default);
 			}
 		}
 		tSetPositonToBegin();
 		tPlaySound(looped);
 	}
-	public void Stop() {
+	public void Stop()
+	{
 		tStopSound();
 		tSetPositonToBegin();
 	}
-	public void Pause() {
+	public void Pause()
+	{
 		tStopSound(true);
 		this.PauseCount++;
 	}
@@ -331,23 +387,31 @@ public class CSound : IDisposable {
 		tPlaySound();
 		this.PauseCount--;
 	}
-	public bool IsPaused {
-		get {
-			if (this.IsBassSound) {
+	public bool IsPaused
+	{
+		get
+		{
+			if (this.IsBassSound)
+			{
 				bool ret = (!BassMixExtensions.ChannelIsPlaying(this.hBassStream)) &
 						   (BassMix.ChannelGetPosition(this.hBassStream) > 0);
 				return ret;
-			} else {
+			}
+			else
+			{
 				return (this.PauseCount > 0);
 			}
 		}
 	}
-	public bool IsPlaying {
-		get {
+	public bool IsPlaying
+	{
+		get
+		{
 			// 基本的にはBASS_ACTIVE_PLAYINGなら再生中だが、最後まで再生しきったchannelも
 			// BASS_ACTIVE_PLAYINGのままになっているので、小細工が必要。
 			bool ret = (BassMixExtensions.ChannelIsPlaying(this.hBassStream));
-			if (BassMix.ChannelGetPosition(this.hBassStream) >= nBytes) {
+			if (BassMix.ChannelGetPosition(this.hBassStream) >= nBytes)
+			{
 				ret = false;
 			}
 			return ret;
@@ -361,11 +425,13 @@ public class CSound : IDisposable {
 	#endregion
 
 
-	public void tDispose() {
+	public void tDispose()
+	{
 		tDispose(false);
 	}
 
-	public void tDispose(bool deleteInstance) {
+	public void tDispose(bool deleteInstance)
+	{
 		if (this.IsBassSound)       // stream数の削減用
 		{
 			tRemoveSoundFromMixer();
@@ -376,72 +442,99 @@ public class CSound : IDisposable {
 		this.Dispose(disposeWithManaged, deleteInstance);
 		//Debug.WriteLine( "Disposed: " + _bインスタンス削除 + " : " + Path.GetFileName( this.strファイル名 ) );
 	}
-	public void tPlaySound() {
+	public void tPlaySound()
+	{
 		tPlaySound(false);
 	}
-	private void tPlaySound(bool bループする) {
+	private void tPlaySound(bool bループする)
+	{
 		if (this.IsBassSound)           // BASSサウンド時のループ処理は、t再生を開始する()側に実装。ここでは「bループする」は未使用。
 		{
 			//Debug.WriteLine( "再生中?: " +  System.IO.Path.GetFileName(this.strファイル名) + " status=" + BassMix.BASS_Mixer_ChannelIsActive( this.hBassStream ) + " current=" + BassMix.BASS_Mixer_ChannelGetPosition( this.hBassStream ) + " nBytes=" + nBytes );
 			bool b = BassMixExtensions.ChannelPlay(this.hBassStream);
-			if (!b) {
+			if (!b)
+			{
 				//Debug.WriteLine( "再生しようとしたが、Mixerに登録されていなかった: " + Path.GetFileName( this.strファイル名 ) + ", stream#=" + this.hBassStream + ", ErrCode=" + Bass.BASS_ErrorGetCode() );
 
 				bool bb = AddBassSoundFromMixer();
-				if (!bb) {
+				if (!bb)
+				{
 					Debug.WriteLine("Mixerへの登録に失敗: " + Path.GetFileName(this.FileName) + ", ErrCode=" + Bass.LastError);
-				} else {
+				}
+				else
+				{
 					//Debug.WriteLine( "Mixerへの登録に成功: " + Path.GetFileName( this.strファイル名 ) + ": " + Bass.BASS_ErrorGetCode() );
 				}
 				//this.t再生位置を先頭に戻す();
 
 				bool bbb = BassMixExtensions.ChannelPlay(this.hBassStream);
-				if (!bbb) {
+				if (!bbb)
+				{
 					Debug.WriteLine("更に再生に失敗: " + Path.GetFileName(this.FileName) + ", ErrCode=" + Bass.LastError);
-				} else {
+				}
+				else
+				{
 					//						Debug.WriteLine("再生成功(ミキサー追加後)                       : " + Path.GetFileName(this.strファイル名));
 				}
-			} else {
+			}
+			else
+			{
 				//Debug.WriteLine( "再生成功: " + Path.GetFileName( this.strファイル名 ) + " (" + hBassStream + ")" );
 			}
 		}
 	}
-	public void tStopSoundAndRemoveSoundFromMixer() {
+	public void tStopSoundAndRemoveSoundFromMixer()
+	{
 		tStopSound(false);
-		if (IsBassSound) {
+		if (IsBassSound)
+		{
 			tRemoveSoundFromMixer();
 		}
 	}
-	public void tStopSound() {
+	public void tStopSound()
+	{
 		tStopSound(false);
 	}
-	public void tStopSound(bool pause) {
-		if (this.IsBassSound) {
+	public void tStopSound(bool pause)
+	{
+		if (this.IsBassSound)
+		{
 			//Debug.WriteLine( "停止: " + System.IO.Path.GetFileName( this.strファイル名 ) + " status=" + BassMix.BASS_Mixer_ChannelIsActive( this.hBassStream ) + " current=" + BassMix.BASS_Mixer_ChannelGetPosition( this.hBassStream ) + " nBytes=" + nBytes );
 			BassMixExtensions.ChannelPause(this.hBassStream);
-			if (!pause) {
+			if (!pause)
+			{
 				//		tBASSサウンドをミキサーから削除する();		// PAUSEと再生停止を区別できるようにすること!!
 			}
 		}
 		this.PauseCount = 0;
 	}
 
-	public void tSetPositonToBegin() {
-		if (this.IsBassSound) {
+	public void tSetPositonToBegin()
+	{
+		if (this.IsBassSound)
+		{
 			BassMix.ChannelSetPosition(this.hBassStream, 0);
 			//pos = 0;
 		}
 	}
-	public void tSetPositonToBegin(long positionMs) {
-		if (this.IsBassSound) {
+	public void tSetPositonToBegin(long positionMs)
+	{
+		if (this.IsBassSound)
+		{
 			bool b = true;
-			try {
+			try
+			{
 				b = BassMix.ChannelSetPosition(this.hBassStream, Bass.ChannelSeconds2Bytes(this.hBassStream, positionMs * this.Frequency * this.PlaySpeed / 1000.0), PositionFlags.Bytes);
-			} catch (Exception e) {
+			}
+			catch (Exception e)
+			{
 				Trace.TraceError(e.ToString());
 				Trace.TraceInformation(Path.GetFileName(this.FileName) + ": Seek error: " + e.ToString() + ": " + positionMs + "ms");
-			} finally {
-				if (!b) {
+			}
+			finally
+			{
+				if (!b)
+				{
 					Errors be = Bass.LastError;
 					Trace.TraceInformation(Path.GetFileName(this.FileName) + ": Seek error: " + be.ToString() + ": " + positionMs + "MS");
 				}
@@ -457,23 +550,30 @@ public class CSound : IDisposable {
 	/// </summary>
 	/// <param name="positionByte"></param>
 	/// <param name="positionMs"></param>
-	public void tGetPlayPositon(out long positionByte, out double positionMs) {
-		if (this.IsBassSound) {
+	public void tGetPlayPositon(out long positionByte, out double positionMs)
+	{
+		if (this.IsBassSound)
+		{
 			positionByte = BassMix.ChannelGetPosition(this.hBassStream);
 			positionMs = Bass.ChannelBytes2Seconds(this.hBassStream, positionByte);
-		} else {
+		}
+		else
+		{
 			positionByte = 0;
 			positionMs = 0.0;
 		}
 	}
 
 
-	public static void tResetAllSound() {
-		foreach (var sound in CSound.SoundInstances) {
+	public static void tResetAllSound()
+	{
+		foreach (var sound in CSound.SoundInstances)
+		{
 			sound.tDispose(false);
 		}
 	}
-	internal static void tReloadSound(ISoundDevice device) {
+	internal static void tReloadSound(ISoundDevice device)
+	{
 		if (CSound.SoundInstances.Count == 0)
 			return;
 
@@ -486,8 +586,10 @@ public class CSound : IDisposable {
 
 		// 配列に基づいて個々のサウンドを作成する。
 
-		for (int i = 0; i < sounds.Length; i++) {
-			switch (sounds[i].CurrnetCreateType) {
+		for (int i = 0; i < sounds.Length; i++)
+		{
+			switch (sounds[i].CurrnetCreateType)
+			{
 				#region [ ファイルから ]
 				case CreateType.FromFile:
 					string strファイル名 = sounds[i].FileName;
@@ -501,15 +603,19 @@ public class CSound : IDisposable {
 
 	#region [ Dispose-Finalizeパターン実装 ]
 	//-----------------
-	public void Dispose() {
+	public void Dispose()
+	{
 		this.Dispose(true, true);
 		GC.SuppressFinalize(this);
 	}
-	private void Dispose(bool deleteWithManaged, bool deleteInstance) {
-		if (this.IsBassSound) {
+	private void Dispose(bool deleteWithManaged, bool deleteInstance)
+	{
+		if (this.IsBassSound)
+		{
 			#region [ ASIO, WASAPI の解放 ]
 			//-----------------
-			if (_hTempoStream != 0) {
+			if (_hTempoStream != 0)
+			{
 				BassMix.MixerRemoveChannel(this._hTempoStream);
 				Bass.StreamFree(this._hTempoStream);
 			}
@@ -522,7 +628,8 @@ public class CSound : IDisposable {
 			#endregion
 		}
 
-		if (deleteWithManaged) {
+		if (deleteWithManaged)
+		{
 			//int freeIndex = -1;
 
 			//if ( CSound.listインスタンス != null )
@@ -536,7 +643,8 @@ public class CSound : IDisposable {
 
 			this.CurrentSoundDeviceType = ESoundDeviceType.Unknown;
 
-			if (deleteInstance) {
+			if (deleteInstance)
+			{
 				//try
 				//{
 				//    CSound.listインスタンス.RemoveAt( freeIndex );
@@ -546,14 +654,16 @@ public class CSound : IDisposable {
 				//    Debug.WriteLine( "FAILED to remove CSound.listインスタンス: Count=" + CSound.listインスタンス.Count + ", filename=" + Path.GetFileName( this.strファイル名 ) );
 				//}
 				bool b = CSound.SoundInstances.Remove(this);    // これだと、Clone()したサウンドのremoveに失敗する
-				if (!b) {
+				if (!b)
+				{
 					Debug.WriteLine("FAILED to remove CSound.listインスタンス: Count=" + CSound.SoundInstances.Count + ", filename=" + Path.GetFileName(this.FileName));
 				}
 
 			}
 		}
 	}
-	~CSound() {
+	~CSound()
+	{
 		this.Dispose(false, true);
 	}
 	//-----------------
@@ -595,8 +705,10 @@ public class CSound : IDisposable {
 
 	#region [ private ]
 	//-----------------
-	private bool IsBassSound {
-		get {
+	private bool IsBassSound
+	{
+		get
+		{
 			return (
 				this.CurrentSoundDeviceType == ESoundDeviceType.Bass ||
 				this.CurrentSoundDeviceType == ESoundDeviceType.ASIO ||
@@ -617,7 +729,8 @@ public class CSound : IDisposable {
 	private double _PlaySpeed = 1.0;
 	private bool IsNormalSpeed = true;
 
-	public void CreateBassSound(string strファイル名, int hMixer, BassFlags flags) {
+	public void CreateBassSound(string strファイル名, int hMixer, BassFlags flags)
+	{
 		this.CurrnetCreateType = CreateType.FromFile;
 		this.FileName = strファイル名;
 
@@ -633,7 +746,8 @@ public class CSound : IDisposable {
 		tBASSサウンドを作成する_ストリーム生成後の共通処理(hMixer);
 	}
 
-	private void tBASSサウンドを作成する_ストリーム生成後の共通処理(int hMixer) {
+	private void tBASSサウンドを作成する_ストリーム生成後の共通処理(int hMixer)
+	{
 		SoundManager.nStreams++;
 
 		// 個々のストリームの出力をテンポ変更のストリームに入力する。テンポ変更ストリームの出力を、Mixerに出力する。
@@ -641,10 +755,13 @@ public class CSound : IDisposable {
 		//			if ( CSound管理.bIsTimeStretch )	// TimeStretchのON/OFFに関わりなく、テンポ変更のストリームを生成する。後からON/OFF切り替え可能とするため。
 		{
 			this._hTempoStream = BassFx.TempoCreate(this._hBassStream, BassFlags.Decode | BassFlags.FxFreeSource);
-			if (this._hTempoStream == 0) {
+			if (this._hTempoStream == 0)
+			{
 				hGC.Free();
 				throw new Exception(string.Format("サウンドストリームの生成に失敗しました。(BASS_FX_TempoCreate)[{0}]", Bass.LastError.ToString()));
-			} else {
+			}
+			else
+			{
 				Bass.ChannelSetAttribute(this._hTempoStream, ChannelAttribute.TempoUseQuickAlgorithm, 1f);  // 高速化(音の品質は少し落ちる)
 			}
 		}
@@ -652,7 +769,9 @@ public class CSound : IDisposable {
 		if (_hTempoStream != 0 && !this.IsNormalSpeed)  // 再生速度がx1.000のときは、TempoStreamを用いないようにして高速化する
 		{
 			this.hBassStream = _hTempoStream;
-		} else {
+		}
+		else
+		{
 			this.hBassStream = _hBassStream;
 		}
 
@@ -666,7 +785,8 @@ public class CSound : IDisposable {
 		//this.pos = 0;
 		this.hMixer = hMixer;
 		float freq = 0.0f;
-		if (!Bass.ChannelGetAttribute(this._hBassStream, ChannelAttribute.Frequency, out freq)) {
+		if (!Bass.ChannelGetAttribute(this._hBassStream, ChannelAttribute.Frequency, out freq))
+		{
 			hGC.Free();
 			throw new Exception(string.Format("サウンドストリームの周波数取得に失敗しました。(BASS_ChannelGetAttribute)[{0}]", Bass.LastError.ToString()));
 		}
@@ -710,12 +830,15 @@ public class CSound : IDisposable {
 
 	// mixerからの削除
 
-	public bool tRemoveSoundFromMixer() {
+	public bool tRemoveSoundFromMixer()
+	{
 		return RemoveBassSoundFromMixer(this.hBassStream);
 	}
-	public bool RemoveBassSoundFromMixer(int channel) {
+	public bool RemoveBassSoundFromMixer(int channel)
+	{
 		bool b = BassMix.MixerRemoveChannel(channel);
-		if (b) {
+		if (b)
+		{
 			Interlocked.Decrement(ref SoundManager.nMixing);
 			//				Debug.WriteLine( "Removed: " + Path.GetFileName( this.strファイル名 ) + " (" + channel + ")" + " MixedStreams=" + CSound管理.nMixing );
 		}
@@ -725,8 +848,10 @@ public class CSound : IDisposable {
 
 	// mixer への追加
 
-	public bool AddBassSoundFromMixer() {
-		if (BassMix.ChannelGetMixer(hBassStream) == 0) {
+	public bool AddBassSoundFromMixer()
+	{
+		if (BassMix.ChannelGetMixer(hBassStream) == 0)
+		{
 			BassFlags bf = BassFlags.SpeakerFront | BassFlags.MixerChanNoRampin | BassFlags.MixerChanPause;
 			Interlocked.Increment(ref SoundManager.nMixing);
 

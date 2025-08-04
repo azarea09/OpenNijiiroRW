@@ -2,7 +2,8 @@
 
 namespace OpenNijiiroRW;
 
-internal class CSongDict {
+internal class CSongDict
+{
 	private static Dictionary<string, CSongListNode> nodes = new Dictionary<string, CSongListNode>();
 	private static HashSet<string> urls = new HashSet<string>();
 
@@ -15,54 +16,64 @@ internal class CSongDict {
 		new CActSelect曲リスト.CScorePad[(int)Difficulty.Edit + 2] { new CActSelect曲リスト.CScorePad(), new CActSelect曲リスト.CScorePad(), new CActSelect曲リスト.CScorePad(), new CActSelect曲リスト.CScorePad(), new CActSelect曲リスト.CScorePad(), new CActSelect曲リスト.CScorePad() }
 	};
 
-	public static int tGetNodesCount() {
+	public static int tGetNodesCount()
+	{
 		return nodes.Count();
 	}
 
-	public static string[] tGetNodesByGenreName(string genreName) {
+	public static string[] tGetNodesByGenreName(string genreName)
+	{
 		return nodes.Where(_nd => _nd.Value.songGenre == genreName).Select(_nd => _nd.Key).ToArray();
 	}
 
 	#region [General song dict methods]
 
-	public static CSongListNode tGetNodeFromID(string id) {
+	public static CSongListNode tGetNodeFromID(string id)
+	{
 		if (nodes.ContainsKey(id))
 			return nodes[id].Clone();
 		return null;
 	}
 
-	public static void tAddSongNode(CSongUniqueID sid, CSongListNode node) {
+	public static void tAddSongNode(CSongUniqueID sid, CSongListNode node)
+	{
 		if (sid != null && sid.data.id != null && sid.data.id != "" && !nodes.ContainsKey(sid.data.id))
 			nodes.Add(sid.data.id, node.Clone());
 		tAddSongUrl(sid);
 	}
 
-	public static bool tContainsSongUrl(string url) {
+	public static bool tContainsSongUrl(string url)
+	{
 		return urls.Contains(url);
 	}
 
-	public static void tAddSongUrl(CSongUniqueID sid) {
+	public static void tAddSongUrl(CSongUniqueID sid)
+	{
 		var url = sid.data.url;
 
 		if (url != null && url != "" && !urls.Contains(url))
 			urls.Add(url);
 	}
 
-	public static void tRemoveSongUrl(CSongUniqueID sid) {
+	public static void tRemoveSongUrl(CSongUniqueID sid)
+	{
 		var url = sid.data.url;
 
 		if (url != null && url != "" && urls.Contains(url))
 			urls.Remove(url);
 	}
 
-	public static void tRemoveSongNode(CSongUniqueID sid) {
-		if (sid != null && nodes.ContainsKey(sid.data.id)) {
+	public static void tRemoveSongNode(CSongUniqueID sid)
+	{
+		if (sid != null && nodes.ContainsKey(sid.data.id))
+		{
 			tRemoveSongUrl(sid);
 			nodes.Remove(sid.data.id);
 		}
 	}
 
-	public static void tClearSongNodes() {
+	public static void tClearSongNodes()
+	{
 		nodes.Clear();
 		urls.Clear();
 	}
@@ -72,7 +83,8 @@ internal class CSongDict {
 	#region [Extra methods]
 
 	// Generate a back button
-	public static CSongListNode tGenerateBackButton(CSongListNode parent, string path = "/", List<string> listStrBoxDef = null) {
+	public static CSongListNode tGenerateBackButton(CSongListNode parent, string path = "/", List<string> listStrBoxDef = null)
+	{
 		CSongListNode itemBack = new CSongListNode();
 		itemBack.nodeType = CSongListNode.ENodeType.BACKBOX;
 
@@ -96,7 +108,8 @@ internal class CSongDict {
 			"" : parent.rParentNode.strSkinPath;
 
 		// I guess this is used to count the number of box.def instances and only at startup, which makes using it here pretty weird
-		if (listStrBoxDef != null && itemBack.strSkinPath != "" && !listStrBoxDef.Contains(itemBack.strSkinPath)) {
+		if (listStrBoxDef != null && itemBack.strSkinPath != "" && !listStrBoxDef.Contains(itemBack.strSkinPath))
+		{
 			listStrBoxDef.Add(itemBack.strSkinPath);
 		}
 
@@ -111,7 +124,8 @@ internal class CSongDict {
 		return (itemBack);
 	}
 
-	public static CSongListNode tGenerateRandomButton(CSongListNode parent, string path = "/") {
+	public static CSongListNode tGenerateRandomButton(CSongListNode parent, string path = "/")
+	{
 		CSongListNode itemRandom = new CSongListNode();
 		itemRandom.nodeType = CSongListNode.ENodeType.RANDOM;
 
@@ -129,13 +143,15 @@ internal class CSongDict {
 	}
 
 	// Reset the position of all back buttons, also adds a random button at the end
-	public static List<CSongListNode> tReinsertBackButtons(CSongListNode parent, List<CSongListNode> songList, string path = "/", List<string> listStrBoxDef = null) {
+	public static List<CSongListNode> tReinsertBackButtons(CSongListNode parent, List<CSongListNode> songList, string path = "/", List<string> listStrBoxDef = null)
+	{
 		// Remove all the existing back boxes currently existing
 		songList.RemoveAll(e => e.nodeType == CSongListNode.ENodeType.BACKBOX || e.nodeType == CSongListNode.ENodeType.RANDOM);
 
 		int songCount = songList.Count;
 
-		for (int index = 0; index < (songCount / 7) + 1; index++) {
+		for (int index = 0; index < (songCount / 7) + 1; index++)
+		{
 			var backBox = tGenerateBackButton(parent, path, listStrBoxDef);
 			songList.Insert(Math.Min(index * (7 + 1), songList.Count), backBox);
 		}
@@ -148,8 +164,10 @@ internal class CSongDict {
 	}
 
 
-	private static CSongListNode tReadaptChildNote(CSongListNode parent, CSongListNode node) {
-		if (node != null) {
+	private static CSongListNode tReadaptChildNote(CSongListNode parent, CSongListNode node)
+	{
+		if (node != null)
+		{
 			node.rParentNode = parent;
 			node.isChangedBgType = parent.isChangedBgType;
 			node.isChangedBgColor = parent.isChangedBgColor;
@@ -169,12 +187,15 @@ internal class CSongDict {
 	}
 
 	// Generate the favorite folder content
-	public static List<CSongListNode> tFetchFavoriteFolder(CSongListNode parent) {
+	public static List<CSongListNode> tFetchFavoriteFolder(CSongListNode parent)
+	{
 		List<CSongListNode> childList = new List<CSongListNode>();
 
-		foreach (string id in OpenNijiiroRW.Favorites.data.favorites[OpenNijiiroRW.SaveFile]) {
+		foreach (string id in OpenNijiiroRW.Favorites.data.favorites[OpenNijiiroRW.SaveFile])
+		{
 			var node = tReadaptChildNote(parent, tGetNodeFromID(id));
-			if (node != null) {
+			if (node != null)
+			{
 				childList.Add(node);
 			}
 
@@ -190,12 +211,15 @@ internal class CSongDict {
 	}
 
 	// Generate recently played songs folder
-	public static List<CSongListNode> tFetchRecentlyPlayedSongsFolder(CSongListNode parent) {
+	public static List<CSongListNode> tFetchRecentlyPlayedSongsFolder(CSongListNode parent)
+	{
 		List<CSongListNode> childList = new List<CSongListNode>();
 
-		foreach (string id in OpenNijiiroRW.RecentlyPlayedSongs.data.recentlyplayedsongs[OpenNijiiroRW.SaveFile].Reverse()) {
+		foreach (string id in OpenNijiiroRW.RecentlyPlayedSongs.data.recentlyplayedsongs[OpenNijiiroRW.SaveFile].Reverse())
+		{
 			var node = tReadaptChildNote(parent, tGetNodeFromID(id));
-			if (node != null) {
+			if (node != null)
+			{
 				childList.Add(node);
 			}
 
@@ -211,17 +235,20 @@ internal class CSongDict {
 	}
 
 	// 13 includes any higher difficulty
-	private static bool tLevelMatches(int check, int level) {
+	private static bool tLevelMatches(int check, int level)
+	{
 		if (level == 13)
 			return check >= level;
 		return check == level;
 	}
 
 	// Generate search by difficulty folder
-	public static List<CSongListNode> tFetchSongsByDifficulty(CSongListNode parent, int difficulty = (int)Difficulty.Oni, int level = 8) {
+	public static List<CSongListNode> tFetchSongsByDifficulty(CSongListNode parent, int difficulty = (int)Difficulty.Oni, int level = 8)
+	{
 		List<CSongListNode> childList = new List<CSongListNode>();
 
-		foreach (CSongListNode nodeT in nodes.Values) {
+		foreach (CSongListNode nodeT in nodes.Values)
+		{
 			var score = nodeT.nLevel;
 			if (tLevelMatches(score[difficulty], level)
 				|| (difficulty == (int)Difficulty.Oni && tLevelMatches(score[(int)Difficulty.Edit], level))) // Oni includes Ura
@@ -240,24 +267,31 @@ internal class CSongDict {
 		return childList;
 	}
 
-	public static List<CSongListNode> tFetchSongsByTitle(CSongListNode parent, ETitleType type, string text) {
+	public static List<CSongListNode> tFetchSongsByTitle(CSongListNode parent, ETitleType type, string text)
+	{
 		List<CSongListNode> childList = new List<CSongListNode>();
 
-		foreach (CSongListNode nodeT in nodes.Values) {
-			string[] name = type switch {
+		foreach (CSongListNode nodeT in nodes.Values)
+		{
+			string[] name = type switch
+			{
 				ETitleType.Title => nodeT.ldTitle.GetAllStrings(),
 				ETitleType.Subtitle => nodeT.ldSubtitle.GetAllStrings(),
 				ETitleType.Charter => [nodeT.strMaker],
 				_ => nodeT.ldTitle.GetAllStrings()
 			};
-			if (name.Any(item => item.Contains(text, StringComparison.InvariantCultureIgnoreCase))) {
+			if (name.Any(item => item.Contains(text, StringComparison.InvariantCultureIgnoreCase)))
+			{
 				var node = tReadaptChildNote(parent, nodeT);
 				if (node != null) childList.Add(node);
 			}
 			// Check if Charter is listed in NOTESDESIGNER(x) command instead
-			else if (type == ETitleType.Charter) { 
-				foreach (string charter in nodeT.strNotesDesigner) {
-					if (charter.Contains(text, StringComparison.InvariantCultureIgnoreCase)) {
+			else if (type == ETitleType.Charter)
+			{
+				foreach (string charter in nodeT.strNotesDesigner)
+				{
+					if (charter.Contains(text, StringComparison.InvariantCultureIgnoreCase))
+					{
 						var node = tReadaptChildNote(parent, nodeT);
 						if (node != null) childList.Add(node);
 						break;
@@ -275,12 +309,15 @@ internal class CSongDict {
 		return childList;
 	}
 
-	public static List<CSongListNode> tFetchSongsByIds(CSongListNode parent) {
+	public static List<CSongListNode> tFetchSongsByIds(CSongListNode parent)
+	{
 		if (parent.shortcutIds.Count == 0) return new();
 		List<CSongListNode> childList = new List<CSongListNode>();
 
-		foreach (CSongListNode nodeT in nodes.Values) {
-			if (parent.shortcutIds.Contains(nodeT.tGetUniqueId())) {
+		foreach (CSongListNode nodeT in nodes.Values)
+		{
+			if (parent.shortcutIds.Contains(nodeT.tGetUniqueId()))
+			{
 				var node = tReadaptChildNote(parent, nodeT);
 				if (node != null) childList.Add(node);
 			}
@@ -299,18 +336,24 @@ internal class CSongDict {
 
 	#region [Score tables methods]
 
-	public static void tRefreshScoreTables() {
-		for (int pl = 0; pl < 5; pl++) {
+	public static void tRefreshScoreTables()
+	{
+		for (int pl = 0; pl < 5; pl++)
+		{
 			CActSelect曲リスト.CScorePad[] SPArrRef = ScorePads[pl];
 			var BestPlayStats = OpenNijiiroRW.SaveFileInstances[OpenNijiiroRW.GetActualPlayer(pl)].data.bestPlaysStats;
 
-			for (int s = 0; s <= (int)Difficulty.Edit + 1; s++) {
+			for (int s = 0; s <= (int)Difficulty.Edit + 1; s++)
+			{
 				CActSelect曲リスト.CScorePad SPRef = SPArrRef[s];
 
-				if (s <= (int)Difficulty.Edit) {
+				if (s <= (int)Difficulty.Edit)
+				{
 					SPRef.ScoreRankCount = BestPlayStats.ScoreRanks[s].Skip(1).ToArray(); ;
 					SPRef.CrownCount = BestPlayStats.ClearStatuses[s].Skip(1).ToArray(); ;
-				} else {
+				}
+				else
+				{
 					SPRef.ScoreRankCount = BestPlayStats.ScoreRanks[(int)Difficulty.Oni].Skip(1).Zip(BestPlayStats.ScoreRanks[(int)Difficulty.Edit].Skip(1).ToArray(), (x, y) => x + y).ToArray();
 					SPRef.CrownCount = BestPlayStats.ClearStatuses[(int)Difficulty.Oni].Skip(1).Zip(BestPlayStats.ClearStatuses[(int)Difficulty.Edit].Skip(1).ToArray(), (x, y) => x + y).ToArray();
 				}

@@ -1,6 +1,7 @@
 ﻿namespace OpenNijiiroRW;
 
-public class CCourse {
+public class CCourse
+{
 	//2016.11.07 kairera0467
 	//とりあえずメモ代わりに
 	//
@@ -31,7 +32,8 @@ public class CCourse {
 	//            指定されたデータは上にあるものから順に演奏されます。
 
 
-	public void t入力(string strファイル名) {
+	public void t入力(string strファイル名)
+	{
 		StreamReader reader = new StreamReader(strファイル名);
 		string str = reader.ReadToEnd();
 		reader.Close();

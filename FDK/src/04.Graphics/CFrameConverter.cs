@@ -5,10 +5,13 @@ using FFmpeg.AutoGen;
 
 namespace FDK;
 
-public unsafe class CFrameConverter : IDisposable {
-	public CFrameConverter(Size FrameSize, AVPixelFormat pix_fmt) {
+public unsafe class CFrameConverter : IDisposable
+{
+	public CFrameConverter(Size FrameSize, AVPixelFormat pix_fmt)
+	{
 		this.FrameSize = FrameSize;
-		if (pix_fmt != CVPxfmt) {
+		if (pix_fmt != CVPxfmt)
+		{
 			convert_context = ffmpeg.sws_getContext(
 				FrameSize.Width,
 				FrameSize.Height,
@@ -27,8 +30,10 @@ public unsafe class CFrameConverter : IDisposable {
 		ffmpeg.av_image_fill_arrays(ref _dstData, ref _dstLinesize, (byte*)_convertedFrameBufferPtr, CVPxfmt, FrameSize.Width, FrameSize.Height, 1);
 	}
 
-	public AVFrame* Convert(AVFrame* framep) {
-		if (this.IsConvert) {
+	public AVFrame* Convert(AVFrame* framep)
+	{
+		if (this.IsConvert)
+		{
 			ffmpeg.sws_scale(convert_context, framep->data, framep->linesize, 0, framep->height, _dstData, _dstLinesize);
 
 			AVFrame* tmp = ffmpeg.av_frame_alloc();
@@ -43,17 +48,22 @@ public unsafe class CFrameConverter : IDisposable {
 
 			ffmpeg.av_frame_unref(framep);
 			return tmp;
-		} else {
+		}
+		else
+		{
 			return framep;
 		}
 	}
 
-	public void Dispose() {
-		if (_convertedFrameBufferPtr != 0) {
+	public void Dispose()
+	{
+		if (_convertedFrameBufferPtr != 0)
+		{
 			Marshal.FreeHGlobal(_convertedFrameBufferPtr);
 			_convertedFrameBufferPtr = 0;
 		}
-		if (convert_context != null) {
+		if (convert_context != null)
+		{
 			ffmpeg.sws_freeContext(convert_context);
 			this.convert_context = null;
 		}

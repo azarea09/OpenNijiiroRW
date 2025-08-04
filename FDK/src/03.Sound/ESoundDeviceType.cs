@@ -1,6 +1,7 @@
 ﻿namespace FDK;
 
-public enum ESoundDeviceType {
+public enum ESoundDeviceType
+{
 	Bass,
 	ExclusiveWASAPI,
 	SharedWASAPI,

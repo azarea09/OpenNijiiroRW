@@ -2,8 +2,10 @@ using Silk.NET.OpenGLES;
 
 namespace FDK;
 
-public static class ShaderHelper {
-	public static uint CreateShader(string code, ShaderType shaderType) {
+public static class ShaderHelper
+{
+	public static uint CreateShader(string code, ShaderType shaderType)
+	{
 		uint vertexShader = Game.Gl.CreateShader(shaderType);
 
 		Game.Gl.ShaderSource(vertexShader, code);
@@ -18,7 +20,8 @@ public static class ShaderHelper {
 		return vertexShader;
 	}
 
-	public static uint CreateShaderProgram(uint vertexShader, uint fragmentShader) {
+	public static uint CreateShaderProgram(uint vertexShader, uint fragmentShader)
+	{
 		uint program = Game.Gl.CreateProgram();
 
 		Game.Gl.AttachShader(program, vertexShader);
@@ -37,7 +40,8 @@ public static class ShaderHelper {
 		return program;
 	}
 
-	public static uint CreateShaderProgramFromSource(string vertexCode, string fragmentCode) {
+	public static uint CreateShaderProgramFromSource(string vertexCode, string fragmentCode)
+	{
 		uint vertexShader = CreateShader(vertexCode, ShaderType.VertexShader);
 		uint fragmentShader = CreateShader(fragmentCode, ShaderType.FragmentShader);
 

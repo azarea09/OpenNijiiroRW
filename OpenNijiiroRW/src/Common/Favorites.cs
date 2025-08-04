@@ -1,7 +1,9 @@
 ﻿namespace OpenNijiiroRW;
 
-internal class Favorites {
-	public void tFavorites() {
+internal class Favorites
+{
+	public void tFavorites()
+	{
 		if (!File.Exists("Favorite.json"))
 			tSaveFile();
 
@@ -10,7 +12,8 @@ internal class Favorites {
 
 	#region [Auxiliary methods]
 
-	public void tToggleFavorite(string chartID) {
+	public void tToggleFavorite(string chartID)
+	{
 		if (tIsFavorite(chartID))
 			data.favorites[OpenNijiiroRW.SaveFile].Remove(chartID);
 		else
@@ -19,14 +22,16 @@ internal class Favorites {
 		tSaveFile();
 	}
 
-	public bool tIsFavorite(string chartID) {
+	public bool tIsFavorite(string chartID)
+	{
 		return (data.favorites[OpenNijiiroRW.SaveFile].Contains(chartID));
 	}
 
 
 	#endregion
 
-	public class Data {
+	public class Data
+	{
 		public HashSet<string>[] favorites = new HashSet<string>[2] { new HashSet<string>(), new HashSet<string>() };
 	}
 
@@ -34,11 +39,13 @@ internal class Favorites {
 
 	#region [private]
 
-	private void tSaveFile() {
+	private void tSaveFile()
+	{
 		ConfigManager.SaveConfig(data, "Favorite.json");
 	}
 
-	private void tLoadFile() {
+	private void tLoadFile()
+	{
 		data = ConfigManager.GetConfig<Data>(@"Favorite.json");
 	}
 

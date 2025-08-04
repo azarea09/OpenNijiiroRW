@@ -1,8 +1,10 @@
 ﻿using System.Runtime.InteropServices;
 using Microsoft.Win32;
 
-namespace FDK {
-	internal static class Win32Api {
+namespace FDK
+{
+	internal static class Win32Api
+	{
 		[DllImport("dwmapi.dll")]
 		private static extern int DwmSetWindowAttribute(nint hwnd, int attr, ref int attrValue, int attrSize);
 
@@ -55,14 +57,18 @@ namespace FDK {
 		private const int DWMWA_USE_IMMERSIVE_DARK_MODE_BEFORE_20H1 = 19;
 		private const int DWMWA_USE_IMMERSIVE_DARK_MODE = 20;
 
-		public static bool IsDarkModeEnabled() {
+		public static bool IsDarkModeEnabled()
+		{
 			const string registryKey = @"Software\Microsoft\Windows\CurrentVersion\Themes\Personalize";
 			const string valueName = "AppsUseLightTheme";
 
-			using (RegistryKey key = Registry.CurrentUser.OpenSubKey(registryKey)) {
-				if (key != null) {
+			using (RegistryKey key = Registry.CurrentUser.OpenSubKey(registryKey))
+			{
+				if (key != null)
+				{
 					object registryValueObject = key.GetValue(valueName);
-					if (registryValueObject != null && registryValueObject is int registryValue) {
+					if (registryValueObject != null && registryValueObject is int registryValue)
+					{
 						// 0 = ダークモード, 1 = ライトモード
 						return registryValue == 0;
 					}
@@ -72,10 +78,13 @@ namespace FDK {
 			// 取得できなかった場合はライトモードとみなす
 			return false;
 		}
-		public static void SetDarkModeTitleBar(nint handle, bool enabled) {
-			if (IsWindows10OrGreater(17763)) {
+		public static void SetDarkModeTitleBar(nint handle, bool enabled)
+		{
+			if (IsWindows10OrGreater(17763))
+			{
 				var attribute = DWMWA_USE_IMMERSIVE_DARK_MODE_BEFORE_20H1;
-				if (IsWindows10OrGreater(18985)) {
+				if (IsWindows10OrGreater(18985))
+				{
 					attribute = DWMWA_USE_IMMERSIVE_DARK_MODE;
 				}
 
@@ -84,14 +93,18 @@ namespace FDK {
 			}
 		}
 
-		public static void RefreshWindowLayout(nint hwnd) {
-			if (IsWindowVisible(hwnd) && !IsIconic(hwnd)) {
+		public static void RefreshWindowLayout(nint hwnd)
+		{
+			if (IsWindowVisible(hwnd) && !IsIconic(hwnd))
+			{
 				if (!GetWindowRect(hwnd, out RECT rect))
 					return;
 
-				if (IsZoomed(hwnd)) {
+				if (IsZoomed(hwnd))
+				{
 					WINDOWPLACEMENT placement = WINDOWPLACEMENT.Default;
-					if (GetWindowPlacement(hwnd, ref placement)) {
+					if (GetWindowPlacement(hwnd, ref placement))
+					{
 						RECT oldRect = placement.rcNormalPosition;
 						placement.rcNormalPosition = rect;
 						placement.rcNormalPosition.Right -= 1;
@@ -105,7 +118,9 @@ namespace FDK {
 						placement.rcNormalPosition = oldRect;
 						SetWindowPlacement(hwnd, ref placement);
 					}
-				} else {
+				}
+				else
+				{
 					int width = rect.Right - rect.Left;
 					int height = rect.Bottom - rect.Top;
 
@@ -121,7 +136,8 @@ namespace FDK {
 		}
 
 
-		private static bool IsWindows10OrGreater(int build = -1) {
+		private static bool IsWindows10OrGreater(int build = -1)
+		{
 			Version version = Environment.OSVersion.Version;
 			return version.Major >= 10 && version.Build >= build;
 		}
@@ -130,13 +146,15 @@ namespace FDK {
 		private const uint SWP_NOSIZE = 0x0001;
 		private const uint SWP_SHOWWINDOW = 0x0040;
 
-		public static void RemoveTopMost(nint hwnd) {
+		public static void RemoveTopMost(nint hwnd)
+		{
 			SetWindowPos(hwnd, HWND_NOTOPMOST, 0, 0, 0, 0,
 				SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE | SWP_SHOWWINDOW);
 		}
 
 		[StructLayout(LayoutKind.Sequential)]
-		private struct RECT {
+		private struct RECT
+		{
 			public int Left;
 			public int Top;
 			public int Right;
@@ -144,7 +162,8 @@ namespace FDK {
 		}
 
 		[StructLayout(LayoutKind.Sequential)]
-		private struct WINDOWPLACEMENT {
+		private struct WINDOWPLACEMENT
+		{
 			public int length;
 			public int flags;
 			public int showCmd;
@@ -152,8 +171,10 @@ namespace FDK {
 			public POINT ptMaxPosition;
 			public RECT rcNormalPosition;
 
-			public static WINDOWPLACEMENT Default {
-				get {
+			public static WINDOWPLACEMENT Default
+			{
+				get
+				{
 					WINDOWPLACEMENT result = new WINDOWPLACEMENT();
 					result.length = Marshal.SizeOf(typeof(WINDOWPLACEMENT));
 					return result;
@@ -162,7 +183,8 @@ namespace FDK {
 		}
 
 		[StructLayout(LayoutKind.Sequential)]
-		private struct POINT {
+		private struct POINT
+		{
 			public int X;
 			public int Y;
 		}

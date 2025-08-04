@@ -5,12 +5,14 @@ using Rectangle = System.Drawing.Rectangle;
 
 namespace OpenNijiiroRW;
 
-internal class CAct演奏Drumsゲームモード : CActivity {
+internal class CAct演奏Drumsゲームモード : CActivity
+{
 	/// <summary>
 	/// 現時点では「完走!叩ききりまショー!」のみ。
 	///
 	/// </summary>
-	public CAct演奏Drumsゲームモード() {
+	public CAct演奏Drumsゲームモード()
+	{
 		this.IsDeActivated = true;
 	}
 
@@ -30,7 +32,8 @@ internal class CAct演奏Drumsゲームモード : CActivity {
 
 	private long n叩ききりまショー_残り時間タイマー;
 	public ST叩ききりまショー st叩ききりまショー;
-	public struct ST叩ききりまショー {
+	public struct ST叩ききりまショー
+	{
 		public bool b最初のチップが叩かれた;
 		public bool bタイマー使用中;
 		public bool b超激辛;
@@ -64,10 +67,12 @@ internal class CAct演奏Drumsゲームモード : CActivity {
 	//private CTexture txタイマー針;
 
 	[StructLayout(LayoutKind.Sequential)]
-	private struct STボーナス {
+	private struct STボーナス
+	{
 		public double ret;
 		public double point;
-		public STボーナス(double ret, double point) {
+		public STボーナス(double ret, double point)
+		{
 			this.ret = ret;
 			this.point = point;
 		}
@@ -85,7 +90,8 @@ internal class CAct演奏Drumsゲームモード : CActivity {
 	private STボーナス[] n全体ミス率ボーナス;
 	private int n加算時間;
 
-	public void t叩ききりまショー_初期化() {
+	public void t叩ききりまショー_初期化()
+	{
 		this.st叩ききりまショー = new ST叩ききりまショー();
 		this.n演奏時間 = (OpenNijiiroRW.TJA.listChip.Count > 0) ? OpenNijiiroRW.TJA.listChip[OpenNijiiroRW.TJA.listChip.Count - 1].n発声時刻ms : 0;
 		this.st叩ききりまショー.ct残り時間 = new CCounter(0, 25000, 1, OpenNijiiroRW.Timer);
@@ -118,9 +124,11 @@ internal class CAct演奏Drumsゲームモード : CActivity {
 		this.t叩ききりまショー_判定項目と難易度を決める();
 	}
 
-	public void t叩ききりまショー_判定項目と難易度を決める() {
+	public void t叩ききりまショー_判定項目と難易度を決める()
+	{
 		//まず通常、激辛時でわける。
-		if (OpenNijiiroRW.ConfigIni.eGameMode == EGame.Survival) {
+		if (OpenNijiiroRW.ConfigIni.eGameMode == EGame.Survival)
+		{
 			#region[ 通常 ]
 			//通常の査定
 			// 精度 > 最小ズレ > コンボ > 最大ズレ > ミス
@@ -183,7 +191,9 @@ internal class CAct演奏Drumsゲームモード : CActivity {
 				new STボーナス( 70.0, -0.5 )
 			};
 			#endregion
-		} else if (OpenNijiiroRW.ConfigIni.eGameMode == EGame.SurvivalHard) {
+		}
+		else if (OpenNijiiroRW.ConfigIni.eGameMode == EGame.SurvivalHard)
+		{
 			#region[ 激辛 ]
 			//激ムズの査定
 			// 最大ズレ > 精度 > コンボ > 最小ズレ > ミス
@@ -248,7 +258,8 @@ internal class CAct演奏Drumsゲームモード : CActivity {
 			};
 
 			//★10の場合超激辛モードになる。
-			if (OpenNijiiroRW.TJA.LEVELtaiko[OpenNijiiroRW.stageSongSelect.nChoosenSongDifficulty[0]] >= 10) {
+			if (OpenNijiiroRW.TJA.LEVELtaiko[OpenNijiiroRW.stageSongSelect.nChoosenSongDifficulty[0]] >= 10)
+			{
 				#region[ 超激辛 ]
 				this.st叩ききりまショー.b超激辛 = true;
 
@@ -294,7 +305,8 @@ internal class CAct演奏Drumsゲームモード : CActivity {
 				#endregion
 			}
 
-			if (OpenNijiiroRW.ConfigIni.bSuperHard) {
+			if (OpenNijiiroRW.ConfigIni.bSuperHard)
+			{
 				#region[ 超激辛 ]
 				this.st叩ききりまショー.b超激辛 = true;
 
@@ -355,7 +367,8 @@ internal class CAct演奏Drumsゲームモード : CActivity {
 		}
 	}
 
-	public override void CreateManagedResource() {
+	public override void CreateManagedResource()
+	{
 		//this.tx残り時間数字 = CDTXMania.tテクスチャの生成( CSkin.Path( @"Graphics\7_combo taiko.png" ) );
 		//this.tx加算時間数字 = CDTXMania.tテクスチャの生成( CSkin.Path( @"Graphics\7_Score_number_1P.png" ) );
 		//this.txタイマー枠 = CDTXMania.tテクスチャの生成( CSkin.Path( @"Graphics\7_TimerPanel.png" ) );
@@ -364,7 +377,8 @@ internal class CAct演奏Drumsゲームモード : CActivity {
 		base.CreateManagedResource();
 	}
 
-	public override void ReleaseManagedResource() {
+	public override void ReleaseManagedResource()
+	{
 		//CDTXMania.tテクスチャの解放( ref this.tx残り時間数字 );
 		//CDTXMania.tテクスチャの解放( ref this.tx加算時間数字 );
 		//CDTXMania.tテクスチャの解放( ref this.txタイマー枠 );
@@ -373,31 +387,38 @@ internal class CAct演奏Drumsゲームモード : CActivity {
 		base.ReleaseManagedResource();
 	}
 
-	public override int Draw() {
-		if (OpenNijiiroRW.ConfigIni.eGameMode == EGame.Survival || OpenNijiiroRW.ConfigIni.eGameMode == EGame.SurvivalHard) {
+	public override int Draw()
+	{
+		if (OpenNijiiroRW.ConfigIni.eGameMode == EGame.Survival || OpenNijiiroRW.ConfigIni.eGameMode == EGame.SurvivalHard)
+		{
 			CTja tja = OpenNijiiroRW.TJA!; // 1P-only mode (?)
-			//if( this.st叩ききりまショー.b最初のチップが叩かれた == true )//&&
-			//CDTXMania.stage演奏ドラム画面.r検索範囲内にチップがあるか調べる( CSound管理.rc演奏用タイマ.n現在時刻ms, 0, 3000 ) )
-			//this.st叩ききりまショー.ct残り時間.t進行();
-			//else
-			//{
-			//    this.st叩ききりまショー.ct残り時間.n現在の値 = this.st叩ききりまショー.ct残り時間.n現在の値;
-			//}
+										   //if( this.st叩ききりまショー.b最初のチップが叩かれた == true )//&&
+										   //CDTXMania.stage演奏ドラム画面.r検索範囲内にチップがあるか調べる( CSound管理.rc演奏用タイマ.n現在時刻ms, 0, 3000 ) )
+										   //this.st叩ききりまショー.ct残り時間.t進行();
+										   //else
+										   //{
+										   //    this.st叩ききりまショー.ct残り時間.n現在の値 = this.st叩ききりまショー.ct残り時間.n現在の値;
+										   //}
 
 
 			//if( !this.st叩ききりまショー.ct残り時間.b停止中 )
-			if (this.st叩ききりまショー.bタイマー使用中) {
-				if (!this.st叩ききりまショー.ct残り時間.IsStoped || this.st叩ききりまショー.b加算アニメ中 == true) {
+			if (this.st叩ききりまショー.bタイマー使用中)
+			{
+				if (!this.st叩ききりまショー.ct残り時間.IsStoped || this.st叩ききりまショー.b加算アニメ中 == true)
+				{
 					this.st叩ききりまショー.ct残り時間.Tick();
-					if (!OpenNijiiroRW.stageGameScreen.r検索範囲内にチップがあるか調べる((long)tja.GameTimeToTjaTime(SoundManager.PlayTimer.NowTimeMs), 5000, 0) || this.st叩ききりまショー.b加算アニメ中 == true) {
+					if (!OpenNijiiroRW.stageGameScreen.r検索範囲内にチップがあるか調べる((long)tja.GameTimeToTjaTime(SoundManager.PlayTimer.NowTimeMs), 5000, 0) || this.st叩ききりまショー.b加算アニメ中 == true)
+					{
 						this.st叩ききりまショー.bタイマー使用中 = false;
 						this.st叩ききりまショー.ct残り時間.Stop();
 					}
 				}
 			}
 
-			if (!this.st叩ききりまショー.bタイマー使用中 && this.st叩ききりまショー.b加算アニメ中 == false) {
-				if ((this.st叩ききりまショー.b最初のチップが叩かれた == true && (OpenNijiiroRW.stageGameScreen.r検索範囲内にチップがあるか調べる(SoundManager.PlayTimer.NowTimeMs, 2000, 0)))) {
+			if (!this.st叩ききりまショー.bタイマー使用中 && this.st叩ききりまショー.b加算アニメ中 == false)
+			{
+				if ((this.st叩ききりまショー.b最初のチップが叩かれた == true && (OpenNijiiroRW.stageGameScreen.r検索範囲内にチップがあるか調べる(SoundManager.PlayTimer.NowTimeMs, 2000, 0))))
+				{
 					this.st叩ききりまショー.bタイマー使用中 = true;
 					int nCount = this.st叩ききりまショー.ct残り時間.CurrentValue;
 					this.st叩ききりまショー.ct残り時間 = new CCounter(0, 25000, 1, OpenNijiiroRW.Timer);
@@ -411,7 +432,8 @@ internal class CAct演奏Drumsゲームモード : CActivity {
 			if ((this.st叩ききりまショー.ct残り時間.CurrentValue >= 20000) && this.st叩ききりまショー.ct残り時間.CurrentValue != 25000)
 				this.t叩ききりまショー_評価をして残り時間を延長する();
 
-			if (OpenNijiiroRW.Tx.Tile_Black != null) {
+			if (OpenNijiiroRW.Tx.Tile_Black != null)
+			{
 				if (this.st叩ききりまショー.ct残り時間.CurrentValue >= 22000 && this.st叩ききりまショー.ct残り時間.CurrentValue < 23000)
 					OpenNijiiroRW.Tx.Tile_Black.Opacity = 64;
 				else if (this.st叩ききりまショー.ct残り時間.CurrentValue >= 23000 && this.st叩ききりまショー.ct残り時間.CurrentValue < 24000)
@@ -421,8 +443,10 @@ internal class CAct演奏Drumsゲームモード : CActivity {
 				else
 					OpenNijiiroRW.Tx.Tile_Black.Opacity = 0;
 
-				for (int i = 0; i <= (RenderSurfaceSize.Width / 64); i++) {
-					for (int j = 0; j <= (RenderSurfaceSize.Height / 64); j++) {
+				for (int i = 0; i <= (RenderSurfaceSize.Width / 64); i++)
+				{
+					for (int j = 0; j <= (RenderSurfaceSize.Height / 64); j++)
+					{
 						OpenNijiiroRW.Tx.Tile_Black.t2D描画(i * 64, j * 64);
 					}
 				}
@@ -439,7 +463,8 @@ internal class CAct演奏Drumsゲームモード : CActivity {
 			//CDTXMania.act文字コンソール.tPrint( 100, 16 * 7, C文字コンソール.Eフォント種別.白, this.st叩ききりまショー.ct加算審査中.n現在の値.ToString() );
 
 			#region[ 残り時間描画 ]
-			if (OpenNijiiroRW.Tx.Taiko_Combo != null) {
+			if (OpenNijiiroRW.Tx.Taiko_Combo != null)
+			{
 				if (OpenNijiiroRW.Tx.GameMode_Timer_Frame != null)
 					OpenNijiiroRW.Tx.GameMode_Timer_Frame.t2D描画(230, 84);
 				this.st叩ききりまショー.ct針アニメ.TickLoop();
@@ -471,20 +496,26 @@ internal class CAct演奏Drumsゲームモード : CActivity {
 					this.t小文字表示(230 + (str表示する残り時間.Length * OpenNijiiroRW.Skin.Game_Taiko_Combo_Size[0] / 4), 84 + OpenNijiiroRW.Tx.GameMode_Timer_Frame.szTextureSize.Height / 2, string.Format("{0,2:#0}", str表示する残り時間));
 			}
 
-			if (!this.st叩ききりまショー.ct加算審査中.IsStoped) {
-				if (!this.st叩ききりまショー.ct加算審査中.IsStoped) {
+			if (!this.st叩ききりまショー.ct加算審査中.IsStoped)
+			{
+				if (!this.st叩ききりまショー.ct加算審査中.IsStoped)
+				{
 					this.st叩ききりまショー.ct加算審査中.Tick();
-					if (this.st叩ききりまショー.ct加算審査中.IsEnded) {
+					if (this.st叩ききりまショー.ct加算審査中.IsEnded)
+					{
 						this.st叩ききりまショー.ct加算審査中.Stop();
 						this.st叩ききりまショー.b加算アニメ中 = false;
 						this.t加算時間描画_Start();
 					}
 				}
 			}
-			if (!this.st叩ききりまショー.ct加算時間表示.IsStoped) {
-				if (!this.st叩ききりまショー.ct加算時間表示.IsStoped) {
+			if (!this.st叩ききりまショー.ct加算時間表示.IsStoped)
+			{
+				if (!this.st叩ききりまショー.ct加算時間表示.IsStoped)
+				{
 					this.st叩ききりまショー.ct加算時間表示.Tick();
-					if (this.st叩ききりまショー.ct加算時間表示.IsEnded) {
+					if (this.st叩ききりまショー.ct加算時間表示.IsEnded)
+					{
 						this.st叩ききりまショー.ct加算時間表示.Stop();
 					}
 				}
@@ -495,19 +526,24 @@ internal class CAct演奏Drumsゲームモード : CActivity {
 		return 0;
 	}
 
-	private void t叩ききりまショー_評価をして残り時間を延長する() {
+	private void t叩ききりまショー_評価をして残り時間を延長する()
+	{
 		double n延長する時間 = 0;
 
 		CTja tja = OpenNijiiroRW.TJA!; // 1P-only mode (?)
 
 		//最後に延長した時刻から11秒経過していなければ延長を行わない。
-		if (this.n最後に時間延長した時刻 + 11000 <= tja.GameTimeToTjaTime(SoundManager.PlayTimer.NowTimeMs)) {
+		if (this.n最後に時間延長した時刻 + 11000 <= tja.GameTimeToTjaTime(SoundManager.PlayTimer.NowTimeMs))
+		{
 			//1項目につき5秒
 			//-精度
-			if (this.st叩ききりまショー.nヒット数_PERFECT != 0 || this.st叩ききりまショー.nヒット数_GREAT != 0) {
+			if (this.st叩ききりまショー.nヒット数_PERFECT != 0 || this.st叩ききりまショー.nヒット数_GREAT != 0)
+			{
 				double db区間内精度 = ((double)(this.st叩ききりまショー.nヒット数_PERFECT + this.st叩ききりまショー.nヒット数_GREAT) / this.st叩ききりまショー.n区間ノート数) * 100.0;
-				for (int i = 0; i < this.n精度ボーナス.Length; i++) {
-					if (db区間内精度 >= this.n精度ボーナス[i].ret) {
+				for (int i = 0; i < this.n精度ボーナス.Length; i++)
+				{
+					if (db区間内精度 >= this.n精度ボーナス[i].ret)
+					{
 						n延長する時間 += this.n精度ボーナス[i].point;
 						break;
 					}
@@ -516,28 +552,37 @@ internal class CAct演奏Drumsゲームモード : CActivity {
 
 			//-ラグ時間
 			#region[ ラグ時間による判定 ]
-			if (this.st叩ききりまショー.n最小ズレ時間 != -1) {
-				for (int i = 0; i < this.n最小ズレ時間ボーナス.Length; i++) {
-					if (this.st叩ききりまショー.n最小ズレ時間 >= this.n最小ズレ時間ボーナス[i].ret) {
+			if (this.st叩ききりまショー.n最小ズレ時間 != -1)
+			{
+				for (int i = 0; i < this.n最小ズレ時間ボーナス.Length; i++)
+				{
+					if (this.st叩ききりまショー.n最小ズレ時間 >= this.n最小ズレ時間ボーナス[i].ret)
+					{
 						n延長する時間 += this.n最小ズレ時間ボーナス[i].point;
 						break;
 					}
 				}
 			}
 
-			if (this.st叩ききりまショー.n最大ズレ時間 != -1) {
-				for (int i = 0; i < this.n最大ズレ時間ボーナス.Length; i++) {
-					if (this.st叩ききりまショー.n最大ズレ時間 <= this.n最大ズレ時間ボーナス[i].ret) {
+			if (this.st叩ききりまショー.n最大ズレ時間 != -1)
+			{
+				for (int i = 0; i < this.n最大ズレ時間ボーナス.Length; i++)
+				{
+					if (this.st叩ききりまショー.n最大ズレ時間 <= this.n最大ズレ時間ボーナス[i].ret)
+					{
 						n延長する時間 += this.n最大ズレ時間ボーナス[i].point;
 						break;
 					}
 				}
 			}
 			#endregion
-			if (this.st叩ききりまショー.n最大コンボ != 0) {
+			if (this.st叩ききりまショー.n最大コンボ != 0)
+			{
 				double db区間内コンボ精度 = ((double)this.st叩ききりまショー.n最大コンボ / this.st叩ききりまショー.n区間ノート数) * 100.0;
-				for (int i = 0; i < this.nコンボ率ボーナス.Length; i++) {
-					if (db区間内コンボ精度 >= this.nコンボ率ボーナス[i].ret) {
+				for (int i = 0; i < this.nコンボ率ボーナス.Length; i++)
+				{
+					if (db区間内コンボ精度 >= this.nコンボ率ボーナス[i].ret)
+					{
 						n延長する時間 += this.nコンボ率ボーナス[i].point;
 						break;
 					}
@@ -545,17 +590,22 @@ internal class CAct演奏Drumsゲームモード : CActivity {
 			}
 
 			double db区間内ミス率 = (((double)this.st叩ききりまショー.nヒット数_POOR + this.st叩ききりまショー.nヒット数_MISS) / this.st叩ききりまショー.n区間ノート数) * 100.0;
-			for (int i = 0; i < this.nミス率ボーナス.Length; i++) {
-				if (db区間内ミス率 >= this.nミス率ボーナス[i].ret) {
+			for (int i = 0; i < this.nミス率ボーナス.Length; i++)
+			{
+				if (db区間内ミス率 >= this.nミス率ボーナス[i].ret)
+				{
 					n延長する時間 += this.nミス率ボーナス[i].point;
 					break;
 				}
 			}
 			#region[ 全体 ]
-			if (OpenNijiiroRW.stageGameScreen.nHitCount_ExclAuto.Drums.Perfect != 0 || OpenNijiiroRW.stageGameScreen.nHitCount_ExclAuto.Drums.Great != 0) {
+			if (OpenNijiiroRW.stageGameScreen.nHitCount_ExclAuto.Drums.Perfect != 0 || OpenNijiiroRW.stageGameScreen.nHitCount_ExclAuto.Drums.Great != 0)
+			{
 				double db全体精度 = ((double)(OpenNijiiroRW.stageGameScreen.nHitCount_ExclAuto.Drums.Perfect + OpenNijiiroRW.stageGameScreen.nHitCount_ExclAuto.Drums.Great) / this.st叩ききりまショー.n区間ノート数) * 100.0;
-				for (int i = 0; i < this.n全体精度ボーナス.Length; i++) {
-					if (db全体精度 >= this.n全体精度ボーナス[i].ret) {
+				for (int i = 0; i < this.n全体精度ボーナス.Length; i++)
+				{
+					if (db全体精度 >= this.n全体精度ボーナス[i].ret)
+					{
 						n延長する時間 += this.n全体精度ボーナス[i].point;
 						break;
 					}
@@ -564,19 +614,25 @@ internal class CAct演奏Drumsゲームモード : CActivity {
 
 			//-ラグ時間
 			#region[ ラグ時間による判定 ]
-			if (this.st叩ききりまショー.n全体最大ズレ時間 != -1) {
-				for (int i = 0; i < this.n全体最大ズレ時間ボーナス.Length; i++) {
-					if (this.st叩ききりまショー.n全体最大ズレ時間 <= this.n全体最大ズレ時間ボーナス[i].ret) {
+			if (this.st叩ききりまショー.n全体最大ズレ時間 != -1)
+			{
+				for (int i = 0; i < this.n全体最大ズレ時間ボーナス.Length; i++)
+				{
+					if (this.st叩ききりまショー.n全体最大ズレ時間 <= this.n全体最大ズレ時間ボーナス[i].ret)
+					{
 						n延長する時間 += this.n全体最大ズレ時間ボーナス[i].point;
 						break;
 					}
 				}
 			}
 			#endregion
-			if (OpenNijiiroRW.stageGameScreen.actCombo.nCurrentCombo.最高値[0] != 0) {
+			if (OpenNijiiroRW.stageGameScreen.actCombo.nCurrentCombo.最高値[0] != 0)
+			{
 				double db全体コンボ率 = ((double)OpenNijiiroRW.stageGameScreen.actCombo.nCurrentCombo.最高値[0] / this.st叩ききりまショー.n現在通過したノート数) * 100.0;
-				for (int i = 0; i < this.n全体コンボ率ボーナス.Length; i++) {
-					if (db全体コンボ率 >= this.n全体コンボ率ボーナス[i].ret) {
+				for (int i = 0; i < this.n全体コンボ率ボーナス.Length; i++)
+				{
+					if (db全体コンボ率 >= this.n全体コンボ率ボーナス[i].ret)
+					{
 						n延長する時間 += this.n全体コンボ率ボーナス[i].point;
 						break;
 					}
@@ -584,8 +640,10 @@ internal class CAct演奏Drumsゲームモード : CActivity {
 			}
 
 			double db全体ミス率 = (((double)OpenNijiiroRW.stageGameScreen.nHitCount_ExclAuto.Drums.Poor + OpenNijiiroRW.stageGameScreen.nHitCount_ExclAuto.Drums.Miss) / this.st叩ききりまショー.n現在通過したノート数) * 100.0;
-			for (int i = 0; i < this.n全体ミス率ボーナス.Length; i++) {
-				if (db全体ミス率 >= this.n全体ミス率ボーナス[i].ret) {
+			for (int i = 0; i < this.n全体ミス率ボーナス.Length; i++)
+			{
+				if (db全体ミス率 >= this.n全体ミス率ボーナス[i].ret)
+				{
 					n延長する時間 += this.n全体ミス率ボーナス[i].point;
 					break;
 				}
@@ -612,13 +670,16 @@ internal class CAct演奏Drumsゲームモード : CActivity {
 
 			this.n前回の延長時間 = (int)n延長する時間;
 			n延長する時間 = n延長する時間 * 1000;
-			if (n延長する時間 > 0) {
+			if (n延長する時間 > 0)
+			{
 				this.t加算審査アニメ_Start();
 				if (this.st叩ききりまショー.b加算アニメ中 == false)
 					this.t加算時間描画_Start();
 			}
 			this.st叩ききりまショー.ct残り時間.CurrentValue -= (int)n延長する時間;
-		} else if (this.st叩ききりまショー.ct残り時間.CurrentValue >= 24000) {
+		}
+		else if (this.st叩ききりまショー.ct残り時間.CurrentValue >= 24000)
+		{
 			if (this.st叩ききりまショー.nおまけ加算が発生した回数 > 3)
 				return;
 			if (this.st叩ききりまショー.b超激辛 && (((double)this.st叩ききりまショー.nヒット数_POOR + this.st叩ききりまショー.nヒット数_MISS) > 0))
@@ -629,27 +690,34 @@ internal class CAct演奏Drumsゲームモード : CActivity {
 
 			this.st叩ききりまショー.nおまけ加算が発生した回数++;
 
-			if (this.st叩ききりまショー.nヒット数_PERFECT != 0 || this.st叩ききりまショー.nヒット数_GREAT != 0) {
+			if (this.st叩ききりまショー.nヒット数_PERFECT != 0 || this.st叩ききりまショー.nヒット数_GREAT != 0)
+			{
 				double db区間内精度 = ((double)(this.st叩ききりまショー.nヒット数_PERFECT + this.st叩ききりまショー.nヒット数_GREAT) / this.st叩ききりまショー.n区間ノート数) * 100.0;
-				if (this.st叩ききりまショー.b超激辛 ? (db区間内精度 >= 95.0) : (db区間内精度 >= 98.0)) {
+				if (this.st叩ききりまショー.b超激辛 ? (db区間内精度 >= 95.0) : (db区間内精度 >= 98.0))
+				{
 					n延長する時間 += 6;
 				}
 			}
 			#region[ ラグ時間による判定 ]
-			if (this.st叩ききりまショー.n最小ズレ時間 != -1) {
-				if (this.st叩ききりまショー.n最小ズレ時間 >= 0) {
+			if (this.st叩ききりまショー.n最小ズレ時間 != -1)
+			{
+				if (this.st叩ききりまショー.n最小ズレ時間 >= 0)
+				{
 					n延長する時間 += 6;
 				}
 			}
 
-			if (this.st叩ききりまショー.n最大ズレ時間 != -1) {
-				if (this.st叩ききりまショー.n最大ズレ時間 <= 30) {
+			if (this.st叩ききりまショー.n最大ズレ時間 != -1)
+			{
+				if (this.st叩ききりまショー.n最大ズレ時間 <= 30)
+				{
 					n延長する時間 += 6;
 				}
 			}
 			#endregion
 			double db区間内ミス率 = (((double)this.st叩ききりまショー.nヒット数_POOR + this.st叩ききりまショー.nヒット数_MISS) / this.st叩ききりまショー.n区間ノート数) * 100.0;
-			if (db区間内ミス率 >= 5.0) {
+			if (db区間内ミス率 >= 5.0)
+			{
 				n延長する時間 -= 2;
 			}
 
@@ -671,7 +739,8 @@ internal class CAct演奏Drumsゲームモード : CActivity {
 
 			this.n前回の延長時間 = (int)n延長する時間;
 			n延長する時間 = n延長する時間 * 1000;
-			if (n延長する時間 > 0) {
+			if (n延長する時間 > 0)
+			{
 				this.t加算審査アニメ_Start();
 				if (this.st叩ききりまショー.b加算アニメ中 == false)
 					this.t加算時間描画_Start();
@@ -688,11 +757,13 @@ internal class CAct演奏Drumsゲームモード : CActivity {
 			this.st叩ききりまショー.n延長アニメ速度 = 500;
 	}
 
-	public void t叩ききりまショー_判定から各数値を増加させる(ENoteJudge eJudge, int nLagTime) {
+	public void t叩ききりまショー_判定から各数値を増加させる(ENoteJudge eJudge, int nLagTime)
+	{
 		this.st叩ききりまショー.b最初のチップが叩かれた = true;
 		this.st叩ききりまショー.n区間ノート数++;
 		this.st叩ききりまショー.n現在通過したノート数++;
-		switch (eJudge) {
+		switch (eJudge)
+		{
 			case ENoteJudge.Perfect:
 				this.st叩ききりまショー.nヒット数_PERFECT++;
 				break;
@@ -709,22 +780,26 @@ internal class CAct演奏Drumsゲームモード : CActivity {
 				this.st叩ききりまショー.nヒット数_MISS++;
 				break;
 		}
-		switch (eJudge) {
+		switch (eJudge)
+		{
 			case ENoteJudge.Perfect:
 			case ENoteJudge.Great:
 			case ENoteJudge.Good:
 				this.st叩ききりまショー.n現在のコンボ++;
 				if (this.st叩ききりまショー.n現在のコンボ >= this.st叩ききりまショー.n最大コンボ)
 					this.st叩ききりまショー.n最大コンボ = this.st叩ききりまショー.n現在のコンボ;
-				if (Math.Abs(nLagTime) > this.st叩ききりまショー.n最大ズレ時間) {
+				if (Math.Abs(nLagTime) > this.st叩ききりまショー.n最大ズレ時間)
+				{
 					this.st叩ききりまショー.n最大ズレ時間 = Math.Abs(nLagTime);
 				}
-				if (Math.Abs(nLagTime) > this.st叩ききりまショー.n全体最大ズレ時間) {
+				if (Math.Abs(nLagTime) > this.st叩ききりまショー.n全体最大ズレ時間)
+				{
 					this.st叩ききりまショー.n全体最大ズレ時間 = Math.Abs(nLagTime);
 				}
 				if (this.st叩ききりまショー.n最小ズレ時間 == -1)
 					this.st叩ききりまショー.n最小ズレ時間 = Math.Abs(nLagTime);
-				if (Math.Abs(nLagTime) < this.st叩ききりまショー.n最小ズレ時間) {
+				if (Math.Abs(nLagTime) < this.st叩ききりまショー.n最小ズレ時間)
+				{
 					this.st叩ききりまショー.n最小ズレ時間 = Math.Abs(nLagTime);
 				}
 				break;
@@ -734,23 +809,28 @@ internal class CAct演奏Drumsゲームモード : CActivity {
 		}
 	}
 
-	private void t加算審査アニメ_Start() {
+	private void t加算審査アニメ_Start()
+	{
 		this.st叩ききりまショー.ct加算審査中 = new CCounter(0, 2000, 1, OpenNijiiroRW.Timer);
 		this.st叩ききりまショー.b加算アニメ中 = true;
 	}
-	private void t加算時間描画_Start() {
+	private void t加算時間描画_Start()
+	{
 		this.st叩ききりまショー.ct加算時間表示 = new CCounter(0, 1, 1000, OpenNijiiroRW.Timer);
 	}
 
-	private void t加算時間描画(int addtime) {
+	private void t加算時間描画(int addtime)
+	{
 		this.t加算文字表示(258, 150, string.Format("{0,2:#0}", addtime.ToString()));
 		//CDTXMania.act文字コンソール.tPrint( 236, 80, C文字コンソール.Eフォント種別.赤, "+" + string.Format( "{0,2:#0}", addtime.ToString() ) );
 	}
 
-	private struct ST文字位置 {
+	private struct ST文字位置
+	{
 		public char ch;
 		public Point pt;
-		public ST文字位置(char ch, Point pt) {
+		public ST文字位置(char ch, Point pt)
+		{
 			this.ch = ch;
 			this.pt = pt;
 		}
@@ -769,12 +849,17 @@ internal class CAct演奏Drumsゲームモード : CActivity {
 		new ST文字位置( '9', new Point( 396, 0 ) )
 	};
 
-	private void t小文字表示(int x, int y, string str) {
-		foreach (char ch in str) {
-			for (int i = 0; i < this.st小文字位置.Length; i++) {
-				if (this.st小文字位置[i].ch == ch) {
+	private void t小文字表示(int x, int y, string str)
+	{
+		foreach (char ch in str)
+		{
+			for (int i = 0; i < this.st小文字位置.Length; i++)
+			{
+				if (this.st小文字位置[i].ch == ch)
+				{
 					Rectangle rectangle = new Rectangle(OpenNijiiroRW.Skin.Game_Taiko_Combo_Size[0] * i, 0, OpenNijiiroRW.Skin.Game_Taiko_Combo_Size[0], OpenNijiiroRW.Skin.Game_Taiko_Combo_Size[1]);
-					if (OpenNijiiroRW.Tx.Taiko_Combo[0] != null) {
+					if (OpenNijiiroRW.Tx.Taiko_Combo[0] != null)
+					{
 						if (this.st叩ききりまショー.bタイマー使用中)
 							OpenNijiiroRW.Tx.Taiko_Combo[0].Opacity = 255;
 						else if (this.st叩ききりまショー.b最初のチップが叩かれた && !this.st叩ききりまショー.bタイマー使用中)
@@ -791,13 +876,18 @@ internal class CAct演奏Drumsゲームモード : CActivity {
 			x += OpenNijiiroRW.Skin.Game_Taiko_Combo_Padding[0] * 2;
 		}
 	}
-	protected void t加算文字表示(int x, int y, string str) {
+	protected void t加算文字表示(int x, int y, string str)
+	{
 		char[] cFont = new char[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
-		foreach (char ch in str) {
-			for (int i = 0; i < cFont.Length; i++) {
-				if (cFont[i] == ch) {
+		foreach (char ch in str)
+		{
+			for (int i = 0; i < cFont.Length; i++)
+			{
+				if (cFont[i] == ch)
+				{
 					Rectangle rectangle = new Rectangle(OpenNijiiroRW.Skin.Game_Score_Size[0] * i, 0, OpenNijiiroRW.Skin.Game_Score_Size[0], OpenNijiiroRW.Skin.Game_Score_Size[1]);
-					if (OpenNijiiroRW.Tx.Taiko_Score[0] != null) {
+					if (OpenNijiiroRW.Tx.Taiko_Score[0] != null)
+					{
 						OpenNijiiroRW.Tx.Taiko_Score[0].Scale.Y = 1f;
 						OpenNijiiroRW.Tx.Taiko_Score[0].t2D描画(x, y, rectangle);
 					}

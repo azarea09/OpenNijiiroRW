@@ -4,22 +4,26 @@ using static OpenNijiiroRW.DBSongUnlockables;
 
 namespace OpenNijiiroRW;
 
-internal class DBSongUnlockables : CSavableT<Dictionary<string, SongUnlockable>> {
+internal class DBSongUnlockables : CSavableT<Dictionary<string, SongUnlockable>>
+{
 	/* DISPLAYED : Song displayed in song select, only a lock appearing on the side, audio preview plays
 	 * GRAYED : Box grayed, song preview does not play
 	 * BLURED : Like grayed, but with a glitch effect on the song title and preimage making it unreadable
 	 * HIDDEN : Song not appears on the song select list until being unlocked
 	 */
-	public enum EHiddenIndex {
+	public enum EHiddenIndex
+	{
 		DISPLAYED = 0,
 		GRAYED = 1,
 		BLURED = 2,
 		HIDDEN = 3
 	}
 
-	public DBSongUnlockables() {
+	public DBSongUnlockables()
+	{
 		_fn = @$"{OpenNijiiroRW.strEXEのあるフォルダ}Databases{Path.DirectorySeparatorChar}SongUnlockables.db3";
-		using (var connection = new SqliteConnection(@$"Data Source={_fn}")) {
+		using (var connection = new SqliteConnection(@$"Data Source={_fn}"))
+		{
 			connection.Open();
 
 			// Get songs info
@@ -31,7 +35,8 @@ internal class DBSongUnlockables : CSavableT<Dictionary<string, SongUnlockable>>
                 ";
 
 			var reader = command.ExecuteReader();
-			while (reader.Read()) {
+			while (reader.Read())
+			{
 				SongUnlockable su = new SongUnlockable();
 				su.hiddenIndex = (EHiddenIndex)(Int64)reader["HiddenIndex"];
 				su.rarity = (string)reader["Rarity"];
@@ -57,7 +62,8 @@ internal class DBSongUnlockables : CSavableT<Dictionary<string, SongUnlockable>>
 		}
 
 	}
-	public class SongUnlockable {
+	public class SongUnlockable
+	{
 		[JsonProperty("HiddenIndex")]
 		public EHiddenIndex hiddenIndex;
 
@@ -70,24 +76,29 @@ internal class DBSongUnlockables : CSavableT<Dictionary<string, SongUnlockable>>
 		[JsonProperty("CustomUnlockText")]
 		public CLocalizationData customUnlockText;
 
-		public string GetUnlockMessage() {
+		public string GetUnlockMessage()
+		{
 			return customUnlockText.GetString(unlockConditions.tConditionMessage(CUnlockCondition.EScreen.SongSelect));
 		}
 	}
 
-	public void tGetUnlockedItems(int _player, ModalQueue mq) {
+	public void tGetUnlockedItems(int _player, ModalQueue mq)
+	{
 		int player = OpenNijiiroRW.GetActualPlayer(_player);
 		var _sf = OpenNijiiroRW.SaveFileInstances[player].data.UnlockedSongs;
 		bool _edited = false;
 
-		foreach (KeyValuePair<string, SongUnlockable> item in data) {
+		foreach (KeyValuePair<string, SongUnlockable> item in data)
+		{
 			string _npvKey = item.Key;
 			CSongListNode? _node = CSongDict.tGetNodeFromID(_npvKey);
 
-			if (!_sf.Contains(_npvKey)) {
+			if (!_sf.Contains(_npvKey))
+			{
 				var _fulfilled = item.Value.unlockConditions.tConditionMet(player, CUnlockCondition.EScreen.Internal).Item1;
 
-				if (_fulfilled) {
+				if (_fulfilled)
+				{
 					_sf.Add(_npvKey);
 					_edited = true;
 
@@ -111,18 +122,21 @@ internal class DBSongUnlockables : CSavableT<Dictionary<string, SongUnlockable>>
 			OpenNijiiroRW.SaveFileInstances[player].tApplyHeyaChanges();
 	}
 
-	public bool tIsSongLocked(CSongListNode? song) {
+	public bool tIsSongLocked(CSongListNode? song)
+	{
 		if (song == null || OpenNijiiroRW.ConfigIni.bIgnoreSongUnlockables) return false;
 		return !OpenNijiiroRW.SaveFileInstances[OpenNijiiroRW.SaveFile].data.UnlockedSongs.Contains(song.tGetUniqueId())
 			   && data.ContainsKey(song.tGetUniqueId());
 	}
 
-	public EHiddenIndex tGetSongHiddenIndex(CSongListNode? song) {
+	public EHiddenIndex tGetSongHiddenIndex(CSongListNode? song)
+	{
 		if (song == null || !tIsSongLocked(song)) return EHiddenIndex.DISPLAYED;
 		return data[song.tGetUniqueId()].hiddenIndex;
 	}
 
-	public SongUnlockable? tGetUnlockableByUniqueId(CSongListNode? song) {
+	public SongUnlockable? tGetUnlockableByUniqueId(CSongListNode? song)
+	{
 		if (song == null) return null;
 		if (!data.ContainsKey(song.tGetUniqueId())) return null;
 		return data[song.tGetUniqueId()];

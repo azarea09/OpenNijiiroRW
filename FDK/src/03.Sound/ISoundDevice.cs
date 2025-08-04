@@ -1,6 +1,7 @@
 ﻿namespace FDK;
 
-internal interface ISoundDevice : IDisposable {
+internal interface ISoundDevice : IDisposable
+{
 	ESoundDeviceType SoundDeviceType { get; }
 	int nMasterVolume { get; set; }
 	long OutputDelay { get; }

@@ -4,12 +4,15 @@ using FDK;
 // Minimalist menu class to use for custom menus
 namespace OpenNijiiroRW;
 
-class AIBattle : CStage {
-	public AIBattle() {
+class AIBattle : CStage
+{
+	public AIBattle()
+	{
 		base.IsDeActivated = true;
 	}
 
-	public override void Activate() {
+	public override void Activate()
+	{
 		// On activation
 
 		BarFlashCounter = new CCounter(0, 1000.0, 0.00035, SoundManager.PlayTimer);
@@ -19,25 +22,29 @@ class AIBattle : CStage {
 		base.Activate();
 	}
 
-	public override void DeActivate() {
+	public override void DeActivate()
+	{
 		// On de-activation
 
 		base.DeActivate();
 	}
 
-	public override void CreateManagedResource() {
+	public override void CreateManagedResource()
+	{
 		// Ressource allocation
 
 		base.CreateManagedResource();
 	}
 
-	public override void ReleaseManagedResource() {
+	public override void ReleaseManagedResource()
+	{
 		// Ressource freeing
 
 		base.ReleaseManagedResource();
 	}
 
-	public override int Draw() {
+	public override int Draw()
+	{
 		BarFlashCounter.TickLoopDB();
 		BatchAnimeCounter.TickDB();
 
@@ -46,7 +53,8 @@ class AIBattle : CStage {
 		OpenNijiiroRW.Tx.AIBattle_SectionTime_Bar_Base?.t2D描画(OpenNijiiroRW.Skin.Game_AIBattle_SectionTime_Bar[0], OpenNijiiroRW.Skin.Game_AIBattle_SectionTime_Bar[1],
 			new System.Drawing.RectangleF(0, 0, OpenNijiiroRW.Tx.AIBattle_SectionTime_Bar_Base.szTextureSize.Width, OpenNijiiroRW.Tx.AIBattle_SectionTime_Bar_Base.szTextureSize.Height));
 
-		void drawBar(CTexture barTex, float length) {
+		void drawBar(CTexture barTex, float length)
+		{
 			barTex?.t2D描画(OpenNijiiroRW.Skin.Game_AIBattle_SectionTime_Bar[0], OpenNijiiroRW.Skin.Game_AIBattle_SectionTime_Bar[1],
 				new System.Drawing.RectangleF(0, 0, barTex.szTextureSize.Width * length, barTex.szTextureSize.Height));
 		}
@@ -56,14 +64,18 @@ class AIBattle : CStage {
 		float nowLength = OpenNijiiroRW.stageGameScreen.NowAIBattleSectionTime / (float)nowSection.Length;
 		nowLength = Math.Min(nowLength, 1.0f);
 
-		if (nowLength < 0.75) {
+		if (nowLength < 0.75)
+		{
 			drawBar(OpenNijiiroRW.Tx.AIBattle_SectionTime_Bar_Normal, nowLength);
-		} else {
+		}
+		else
+		{
 			OpenNijiiroRW.Tx.AIBattle_SectionTime_Bar_Finish.Opacity = (int)(Math.Sin((BarFlashCounter.CurrentValue / 1000.0) * Math.PI) * 255);
 			drawBar(OpenNijiiroRW.Tx.AIBattle_SectionTime_Bar_Finish, nowLength);
 		}
 
-		for (int i = 0; i < OpenNijiiroRW.stageGameScreen.AIBattleSections.Count; i++) {
+		for (int i = 0; i < OpenNijiiroRW.stageGameScreen.AIBattleSections.Count; i++)
+		{
 			int upDown = (i % 2);
 
 			int base_width = OpenNijiiroRW.Tx.AIBattle_Batch_Base.szTextureSize.Width / 6;
@@ -74,18 +86,24 @@ class AIBattle : CStage {
 
 			int nowBatchBaseRectX;
 
-			if (i == 0) {
+			if (i == 0)
+			{
 				nowBatchBaseRectX = 2 + (upDown == 0 ? 0 : 1);
-			} else if (i == OpenNijiiroRW.stageGameScreen.AIBattleSections.Count - 1) {
+			}
+			else if (i == OpenNijiiroRW.stageGameScreen.AIBattleSections.Count - 1)
+			{
 				nowBatchBaseRectX = 4 + (upDown == 0 ? 0 : 1);
-			} else {
+			}
+			else
+			{
 				nowBatchBaseRectX = (upDown == 0 ? 0 : 1);
 			}
 
 			OpenNijiiroRW.Tx.AIBattle_Batch_Base?.t2D描画(base_x, base_y, new System.Drawing.RectangleF(base_width * nowBatchBaseRectX, 0, base_width, base_height));
 		}
 
-		for (int i = 0; i < OpenNijiiroRW.stageGameScreen.NowAIBattleSectionCount; i++) {
+		for (int i = 0; i < OpenNijiiroRW.stageGameScreen.NowAIBattleSectionCount; i++)
+		{
 
 			var section = OpenNijiiroRW.stageGameScreen.AIBattleSections[i];
 
@@ -100,16 +118,26 @@ class AIBattle : CStage {
 
 			int drawFrame = 5;
 
-			if (section.IsAnimated) {
+			if (section.IsAnimated)
+			{
 				value = 1.0f;
-			} else {
-				if (BatchAnimeCounter.CurrentValue < 100) {
+			}
+			else
+			{
+				if (BatchAnimeCounter.CurrentValue < 100)
+				{
 					inScale = 1.0f - (BatchAnimeCounter.CurrentValue / 100.0f);
-				} else if (BatchAnimeCounter.CurrentValue >= 700 && BatchAnimeCounter.CurrentValue < 1000) {
+				}
+				else if (BatchAnimeCounter.CurrentValue >= 700 && BatchAnimeCounter.CurrentValue < 1000)
+				{
 					drawFrame = (int)(((BatchAnimeCounter.CurrentValue - 700) / 300.0) * 4.0);
-				} else if (BatchAnimeCounter.CurrentValue >= 1400 && BatchAnimeCounter.CurrentValue <= 1500) {
+				}
+				else if (BatchAnimeCounter.CurrentValue >= 1400 && BatchAnimeCounter.CurrentValue <= 1500)
+				{
 					value = Math.Min((BatchAnimeCounter.CurrentValue - 1400) / 100.0f, 1.0f);
-				} else if (BatchAnimeCounter.CurrentValue >= 1500) {
+				}
+				else if (BatchAnimeCounter.CurrentValue >= 1500)
+				{
 					value = 1.0f;
 					section.IsAnimated = true;
 				}
@@ -131,7 +159,8 @@ class AIBattle : CStage {
 			OpenNijiiroRW.Tx.AIBattle_Batch.Scale.X = (size_x / (float)width) + inScale;
 			OpenNijiiroRW.Tx.AIBattle_Batch.Scale.Y = (size_y / (float)height) + inScale;
 
-			switch (section.End) {
+			switch (section.End)
+			{
 				case CStage演奏画面共通.AIBattleSection.EndType.Clear:
 					OpenNijiiroRW.Tx.AIBattle_Batch?.t2D拡大率考慮中央基準描画(_x, _y, new System.Drawing.RectangleF(width * drawFrame, 0, width, height));
 					break;
@@ -141,7 +170,8 @@ class AIBattle : CStage {
 			}
 		}
 
-		for (int player = 0; player < 2; player++) {
+		for (int player = 0; player < 2; player++)
+		{
 			OpenNijiiroRW.Tx.AIBattle_Judge_Meter[player]?.t2D描画(OpenNijiiroRW.Skin.Game_AIBattle_Judge_Meter_X[player], OpenNijiiroRW.Skin.Game_AIBattle_Judge_Meter_Y[player]);
 
 
@@ -169,7 +199,8 @@ class AIBattle : CStage {
 				OpenNijiiroRW.Skin.Game_AIBattle_Judge_Number_Roll_Y[player]
 			};
 
-			for (int i = 0; i < 4; i++) {
+			for (int i = 0; i < 4; i++)
+			{
 				DrawJudgeNumber(num_x[i], num_y[i], numArr[i]);
 			}
 		}
@@ -183,9 +214,11 @@ class AIBattle : CStage {
 	private CCounter BarFlashCounter;
 	public CCounter BatchAnimeCounter;
 
-	private void DrawJudgeNumber(int x, int y, int num) {
+	private void DrawJudgeNumber(int x, int y, int num)
+	{
 		int[] nums = CConversion.SeparateDigits(num);
-		for (int j = 0; j < nums.Length; j++) {
+		for (int j = 0; j < nums.Length; j++)
+		{
 			float offset = j - (nums.Length / 2.0f);
 
 			float width = OpenNijiiroRW.Tx.AIBattle_Judge_Number.sz画像サイズ.Width / 10.0f;

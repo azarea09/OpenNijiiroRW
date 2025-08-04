@@ -6,47 +6,60 @@ using Silk.NET.Windowing;
 
 namespace FDK;
 
-public class AngleContext : IGLContext {
+public class AngleContext : IGLContext
+{
 	private nint Display;
 	private nint Context;
 	private nint Surface;
 
-	public AngleContext(AnglePlatformType anglePlatformType, IWindow window) {
+	public AngleContext(AnglePlatformType anglePlatformType, IWindow window)
+	{
 		nint windowHandle;
 		nint display;
 		NativeWindowFlags selectedflag; // For logging
 
-		if (window.Native.Kind.HasFlag(NativeWindowFlags.Win32)) {
+		if (window.Native.Kind.HasFlag(NativeWindowFlags.Win32))
+		{
 			selectedflag = NativeWindowFlags.Win32;
 			windowHandle = window.Native.Win32.Value.Hwnd;
 			display = window.Native.Win32.Value.HDC;
 			// ダークモード適応
-			if (Win32Api.IsDarkModeEnabled()) {
+			if (Win32Api.IsDarkModeEnabled())
+			{
 				Win32Api.SetDarkModeTitleBar(windowHandle, true);
 				Win32Api.RefreshWindowLayout(windowHandle);
 			}
-		} else if (window.Native.Kind.HasFlag(NativeWindowFlags.X11)) {
+		}
+		else if (window.Native.Kind.HasFlag(NativeWindowFlags.X11))
+		{
 			selectedflag = NativeWindowFlags.X11;
 			windowHandle = (nint)window.Native.X11.Value.Window;
 			// Temporary fix for the segfaults
 			// Note than X11 Display number is NOT always 0, it can be 1, 2 and so on for example in cases of user switching
 			display = 0;// Egl.GetDisplay(window.Native.X11.Value.Display);
-		} else if (window.Native.Kind.HasFlag(NativeWindowFlags.Cocoa)) {
+		}
+		else if (window.Native.Kind.HasFlag(NativeWindowFlags.Cocoa))
+		{
 			selectedflag = NativeWindowFlags.Cocoa;
 			windowHandle = window.Native.Cocoa.Value;
 			display = 0;
-		} else if (window.Native.Kind.HasFlag(NativeWindowFlags.Wayland)) {
+		}
+		else if (window.Native.Kind.HasFlag(NativeWindowFlags.Wayland))
+		{
 			selectedflag = NativeWindowFlags.Wayland;
 			windowHandle = window.Native.Wayland.Value.Surface;
 			display = window.Native.Wayland.Value.Display;
-		} else {
+		}
+		else
+		{
 			throw new Exception("Window not found");
 		}
 
 		Source = window;
 
 		int platform = 0;
-		switch (anglePlatformType) {
+		switch (anglePlatformType)
+		{
 			case AnglePlatformType.OpenGL:
 				platform = Egl.PLATFORM_ANGLE_TYPE_OPENGL_ANGLE;
 				break;
@@ -85,7 +98,8 @@ public class AngleContext : IGLContext {
 			Egl.BUFFER_SIZE, 0,
 			Egl.NONE
 		};
-		unsafe {
+		unsafe
+		{
 			Egl.ChooseConfig(Display, configAttributes, configs, configs.Length, out int num_config);
 		}
 
@@ -107,7 +121,8 @@ public class AngleContext : IGLContext {
 		Surface = Egl.CreateWindowSurface(Display, configs[0], windowHandle, 0);
 
 		var error = Egl.GetError();
-		if (error != OpenTK.Graphics.Egl.ErrorCode.SUCCESS) {
+		if (error != OpenTK.Graphics.Egl.ErrorCode.SUCCESS)
+		{
 			Trace.TraceError("Ran into an error while setting up the window surface. OpenTaiko might be broken... :^(" +
 				$"\nEgl Error: {error}" +
 				$"\nWindow Flags: {window.Native.Kind} (Selected {selectedflag})" +
@@ -124,32 +139,39 @@ public class AngleContext : IGLContext {
 
 	public bool IsCurrent { get; set; } = true;
 
-	public nint GetProcAddress(string proc, int? slot = null) {
+	public nint GetProcAddress(string proc, int? slot = null)
+	{
 		nint addr = Egl.GetProcAddress(proc);
 		return addr;
 	}
 
-	public bool TryGetProcAddress(string proc, out nint addr, int? slot = null) {
+	public bool TryGetProcAddress(string proc, out nint addr, int? slot = null)
+	{
 		addr = Egl.GetProcAddress(proc);
 		return addr != 0;
 	}
 
-	public void SwapInterval(int interval) {
+	public void SwapInterval(int interval)
+	{
 		Egl.SwapInterval(Display, interval);
 	}
 
-	public void SwapBuffers() {
+	public void SwapBuffers()
+	{
 		Egl.SwapBuffers(Display, Surface);
 	}
 
-	public void MakeCurrent() {
+	public void MakeCurrent()
+	{
 		Egl.MakeCurrent(Display, Surface, Surface, Context);
 	}
 
-	public void Clear() {
+	public void Clear()
+	{
 	}
 
-	public void Dispose() {
+	public void Dispose()
+	{
 		Egl.DestroyContext(Display, Context);
 		Egl.DestroySurface(Display, Surface);
 		Egl.Terminate(Display);

@@ -2,9 +2,11 @@
 
 namespace OpenNijiiroRW;
 
-public class CStage : CActivity {
+public class CStage : CActivity
+{
 	internal EStage eStageID;
-	public enum EStage {
+	public enum EStage
+	{
 		None,
 		StartUp,
 		Title,  // Title screen
@@ -34,7 +36,8 @@ public class CStage : CActivity {
 	}
 
 	internal EPhase ePhaseID;
-	public enum EPhase {
+	public enum EPhase
+	{
 		Common_NORMAL,
 		Common_FADEIN,
 		Common_FADEOUT,

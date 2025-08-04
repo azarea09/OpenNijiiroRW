@@ -1,13 +1,15 @@
 ﻿namespace OpenNijiiroRW;
 
-class CCharacter {
+class CCharacter
+{
 	public DBCharacter.CharacterData metadata;
 	public DBCharacter.CharacterEffect effect;
 	public CUnlockCondition? unlock;
 	public string _path;
 	public int _idx;
 
-	public float GetEffectCoinMultiplier() {
+	public float GetEffectCoinMultiplier()
+	{
 		float mult = 1f;
 
 		mult *= HRarity.tRarityToRarityToCoinMultiplier(metadata.Rarity);
@@ -16,17 +18,20 @@ class CCharacter {
 		return mult;
 	}
 
-	public void tGetUnlockedItems(int _player, ModalQueue mq) {
+	public void tGetUnlockedItems(int _player, ModalQueue mq)
+	{
 		int player = OpenNijiiroRW.GetActualPlayer(_player);
 		var _sf = OpenNijiiroRW.SaveFileInstances[player].data.UnlockedCharacters;
 		bool _edited = false;
 
 		var _npvKey = Path.GetFileName(_path);
 
-		if (!_sf.Contains(_npvKey)) {
+		if (!_sf.Contains(_npvKey))
+		{
 			var _fulfilled = unlock?.tConditionMet(player, CUnlockCondition.EScreen.Internal).Item1 ?? false;
 
-			if (_fulfilled) {
+			if (_fulfilled)
+			{
 				_sf.Add(_npvKey);
 				_edited = true;
 				mq.tAddModal(
@@ -46,7 +51,8 @@ class CCharacter {
 			OpenNijiiroRW.SaveFileInstances[player].tApplyHeyaChanges();
 	}
 
-	public CCharacter(string path, int i) {
+	public CCharacter(string path, int i)
+	{
 		_path = path;
 		_idx = i;
 

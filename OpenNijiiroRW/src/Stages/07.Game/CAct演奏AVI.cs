@@ -2,10 +2,12 @@
 
 namespace OpenNijiiroRW;
 
-internal class CAct演奏AVI : CActivity {
+internal class CAct演奏AVI : CActivity
+{
 	// コンストラクタ
 
-	public CAct演奏AVI() {
+	public CAct演奏AVI()
+	{
 		base.IsDeActivated = true;
 		this.isCutScene = false;
 	}
@@ -13,14 +15,18 @@ internal class CAct演奏AVI : CActivity {
 
 	// メソッド
 
-	public void Start(CVideoDecoder rVD) {
+	public void Start(CVideoDecoder rVD)
+	{
 		this.Start(rVD, false);
 	}
-	public void Start(CVideoDecoder rVD, bool isCutScene) {
+	public void Start(CVideoDecoder rVD, bool isCutScene)
+	{
 		this.isCutScene = isCutScene;
-		if (this.isCutScene || OpenNijiiroRW.ConfigIni.bEnableAVI) {
+		if (this.isCutScene || OpenNijiiroRW.ConfigIni.bEnableAVI)
+		{
 			this.rVD = rVD;
-			if (this.rVD != null) {
+			if (this.rVD != null)
+			{
 				this.ratio1 = Math.Min((float)RenderSurfaceSize.Height / ((float)this.rVD.FrameSize.Height), (float)RenderSurfaceSize.Width / ((float)this.rVD.FrameSize.Height));
 
 				if (!rVD.bPlaying) this.rVD.Start();
@@ -35,8 +41,10 @@ internal class CAct演奏AVI : CActivity {
 	public void Resume() => this.rVD?.Resume();
 	public void TogglePause() => this.rVD?.TogglePause();
 
-	public override unsafe int Draw() {
-		if (!base.IsDeActivated) {
+	public override unsafe int Draw()
+	{
+		if (!base.IsDeActivated)
+		{
 			if (this.rVD == null || !(this.isCutScene || this.rVD.bDrawing))
 				return 0;
 
@@ -45,14 +53,16 @@ internal class CAct演奏AVI : CActivity {
 			this.tx描画用.Scale.X = this.ratio1;
 			this.tx描画用.Scale.Y = this.ratio1;
 
-			if (this.isCutScene || OpenNijiiroRW.ConfigIni.eClipDispType.HasFlag(EClipDispType.BackgroundOnly)) {
+			if (this.isCutScene || OpenNijiiroRW.ConfigIni.eClipDispType.HasFlag(EClipDispType.BackgroundOnly))
+			{
 				this.tx描画用.t2D拡大率考慮描画(CTexture.RefPnt.Center, RenderSurfaceSize.Width / 2, RenderSurfaceSize.Height / 2);
 			}
 		}
 		return 0;
 	}
 
-	public void t窓表示() {
+	public void t窓表示()
+	{
 		if (this.rVD == null || this.tx描画用 == null || !OpenNijiiroRW.ConfigIni.eClipDispType.HasFlag(EClipDispType.WindowOnly))
 			return;
 
@@ -67,20 +77,25 @@ internal class CAct演奏AVI : CActivity {
 
 	// CActivity 実装
 
-	public override void Activate() {
+	public override void Activate()
+	{
 		base.Activate();
 	}
-	public override void DeActivate() {
-		if (this.tx描画用 != null) {
+	public override void DeActivate()
+	{
+		if (this.tx描画用 != null)
+		{
 			this.tx描画用.Dispose();
 			this.tx描画用 = null;
 		}
 		base.DeActivate();
 	}
-	public override void CreateManagedResource() {
+	public override void CreateManagedResource()
+	{
 		base.CreateManagedResource();
 	}
-	public override void ReleaseManagedResource() {
+	public override void ReleaseManagedResource()
+	{
 		base.ReleaseManagedResource();
 	}
 

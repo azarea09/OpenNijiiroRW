@@ -18,12 +18,14 @@ namespace OpenNijiiroRW;
 /// configuration is updated. See ConfigIniToSoundGroupLevelControllerBinder
 /// for more details on the latter.
 /// </summary>
-internal static class KeyboardSoundGroupLevelControlHandler {
+internal static class KeyboardSoundGroupLevelControlHandler
+{
 	internal static void Handle(
 		IInputDevice keyboard,
 		SoundGroupLevelController soundGroupLevelController,
 		CSkin skin,
-		bool isSongPreview) {
+		bool isSongPreview)
+	{
 		bool isAdjustmentPositive = OpenNijiiroRW.ConfigIni.KeyAssign.KeyIsPressed(OpenNijiiroRW.ConfigIni.KeyAssign.System.SongVolIncrease);
 		bool isAdjustmentNegative = OpenNijiiroRW.ConfigIni.KeyAssign.KeyIsPressed(OpenNijiiroRW.ConfigIni.KeyAssign.System.SongVolDecrease);
 
@@ -33,14 +35,19 @@ internal static class KeyboardSoundGroupLevelControlHandler {
 		CSkin.CSystemSound システムサウンド = null;
 
 		if (keyboard.KeyPressing((int)SlimDXKeys.Key.LeftControl) ||
-			keyboard.KeyPressing((int)SlimDXKeys.Key.RightControl)) {
+			keyboard.KeyPressing((int)SlimDXKeys.Key.RightControl))
+		{
 			soundGroup = ESoundGroup.SoundEffect;
 			システムサウンド = skin.soundDecideSFX;
-		} else if (keyboard.KeyPressing((int)SlimDXKeys.Key.LeftShift) ||
-				   keyboard.KeyPressing((int)SlimDXKeys.Key.RightShift)) {
+		}
+		else if (keyboard.KeyPressing((int)SlimDXKeys.Key.LeftShift) ||
+				   keyboard.KeyPressing((int)SlimDXKeys.Key.RightShift))
+		{
 			soundGroup = ESoundGroup.Voice;
 			システムサウンド = skin.soundゲーム開始音;
-		} else {
+		}
+		else
+		{
 			soundGroup = ESoundGroup.SongPlayback;
 		}
 

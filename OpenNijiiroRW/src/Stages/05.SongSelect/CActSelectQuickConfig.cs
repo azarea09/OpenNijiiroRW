@@ -2,14 +2,17 @@
 
 namespace OpenNijiiroRW;
 
-internal class CActSelectQuickConfig : CActSelectPopupMenu {
+internal class CActSelectQuickConfig : CActSelectPopupMenu
+{
 	// Constructor
 
-	public CActSelectQuickConfig() {
+	public CActSelectQuickConfig()
+	{
 		CActSelectQuickConfigMain();
 	}
 
-	private void CActSelectQuickConfigMain() {
+	private void CActSelectQuickConfigMain()
+	{
 		/*
 		•Target: Drums/Guitar/Bass
 		•Auto Mode: All ON/All OFF/CUSTOM
@@ -23,9 +26,11 @@ internal class CActSelectQuickConfig : CActSelectPopupMenu {
 		•EXIT
 		*/
 		lci = new List<List<List<CItemBase>>>();                                    // この画面に来る度に、メニューを作り直す。
-		for (int nConfSet = 0; nConfSet < 3; nConfSet++) {
+		for (int nConfSet = 0; nConfSet < 3; nConfSet++)
+		{
 			lci.Add(new List<List<CItemBase>>());                                   // ConfSet用の3つ分の枠。
-			for (int nInst = 0; nInst < 3; nInst++) {
+			for (int nInst = 0; nInst < 3; nInst++)
+			{
 				lci[nConfSet].Add(null);                                        // Drum/Guitar/Bassで3つ分、枠を作っておく
 				lci[nConfSet][nInst] = MakeListCItemBase(nConfSet, nInst);
 			}
@@ -33,7 +38,8 @@ internal class CActSelectQuickConfig : CActSelectPopupMenu {
 		base.Initialize(lci[nCurrentConfigSet][0], true, CLangManager.LangInstance.GetString("SONGSELECT_QUICKCONFIG"), 0); // ConfSet=0, nInst=Drums
 	}
 
-	private List<CItemBase> MakeListCItemBase(int nConfigSet, int nInst) {
+	private List<CItemBase> MakeListCItemBase(int nConfigSet, int nInst)
+	{
 		List<CItemBase> l = new List<CItemBase>();
 
 		#region [ 共通 Target/AutoMode/AutoLane ]
@@ -70,7 +76,8 @@ internal class CActSelectQuickConfig : CActSelectPopupMenu {
 	}
 
 	// メソッド
-	public override void tActivatePopupMenu(EInstrumentPad einst) {
+	public override void tActivatePopupMenu(EInstrumentPad einst)
+	{
 		this.CActSelectQuickConfigMain();
 		base.tActivatePopupMenu(einst);
 	}
@@ -79,12 +86,15 @@ internal class CActSelectQuickConfig : CActSelectPopupMenu {
 	//	base.tDeativatePopupMenu();
 	//}
 
-	public override void t進行描画sub() {
+	public override void t進行描画sub()
+	{
 
 	}
 
-	public override void tEnter押下Main(int nSortOrder) {
-		switch (n現在の選択行) {
+	public override void tEnter押下Main(int nSortOrder)
+	{
+		switch (n現在の選択行)
+		{
 			case (int)EOrder.ScrollSpeed:
 				OpenNijiiroRW.ConfigIni.nScrollSpeed[OpenNijiiroRW.SaveFile] = (int)GetObj現在値((int)EOrder.ScrollSpeed);
 				break;
@@ -100,7 +110,8 @@ internal class CActSelectQuickConfig : CActSelectPopupMenu {
 				break;
 			case (int)EOrder.GameMode:
 				EGame game = EGame.Off;
-				switch ((int)GetIndex((int)EOrder.GameMode)) {
+				switch ((int)GetIndex((int)EOrder.GameMode))
+				{
 					case 0: game = EGame.Off; break;
 					case 1: game = EGame.Survival; break;
 					case 2: game = EGame.SurvivalHard; break;
@@ -128,7 +139,8 @@ internal class CActSelectQuickConfig : CActSelectPopupMenu {
 		}
 	}
 
-	public override void tCancel() {
+	public override void tCancel()
+	{
 		SetAutoParameters();
 		// Autoの設定値保持のロジックを書くこと！
 		// (Autoのパラメータ切り替え時は実際に値設定していないため、キャンセルまたはRetern, More...時に値設定する必要有り)
@@ -138,20 +150,24 @@ internal class CActSelectQuickConfig : CActSelectPopupMenu {
 	/// <summary>
 	/// ConfigIni.bAutoPlayに簡易CONFIGの状態を反映する
 	/// </summary>
-	private void SetAutoParameters() {
+	private void SetAutoParameters()
+	{
 
 	}
 
 	// CActivity 実装
 
-	public override void Activate() {
+	public override void Activate()
+	{
 		base.Activate();
 		this.bGotoDetailConfig = false;
 	}
-	public override void DeActivate() {
+	public override void DeActivate()
+	{
 		base.DeActivate();
 	}
-	public override void CreateManagedResource() {
+	public override void CreateManagedResource()
+	{
 		this.ft表示用フォント = new CCachedFontRenderer("Arial", 26, CFontRenderer.FontStyle.Bold);
 		//string pathパネル本体 = CSkin.Path( @"Graphics\ScreenSelect popup auto settings.png" );
 		//if ( File.Exists( pathパネル本体 ) )
@@ -161,8 +177,10 @@ internal class CActSelectQuickConfig : CActSelectPopupMenu {
 
 		base.CreateManagedResource();
 	}
-	public override void ReleaseManagedResource() {
-		if (this.ft表示用フォント != null) {
+	public override void ReleaseManagedResource()
+	{
+		if (this.ft表示用フォント != null)
+		{
 			this.ft表示用フォント.Dispose();
 			this.ft表示用フォント = null;
 		}
@@ -176,7 +194,8 @@ internal class CActSelectQuickConfig : CActSelectPopupMenu {
 	private int nCurrentTarget = 0;
 	private int nCurrentConfigSet = 0;
 	private List<List<List<CItemBase>>> lci;        // DrGtBs, ConfSet, 選択肢一覧。都合、3次のListとなる。
-	private enum EOrder : int {
+	private enum EOrder : int
+	{
 		ScrollSpeed = 0,
 		PlaySpeed,
 		Random,

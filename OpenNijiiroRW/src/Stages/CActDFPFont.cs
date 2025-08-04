@@ -5,26 +5,34 @@ using Rectangle = System.Drawing.Rectangle;
 
 namespace OpenNijiiroRW;
 
-internal class CActDFPFont : CActivity {
+internal class CActDFPFont : CActivity
+{
 	// コンストラクタ
 
-	public CActDFPFont() {
+	public CActDFPFont()
+	{
 	}
 
 
 	// メソッド
 
-	public int n文字列長dot(string str) {
+	public int n文字列長dot(string str)
+	{
 		return this.n文字列長dot(str, 1f);
 	}
-	public int n文字列長dot(string str, float fScale) {
-		if (string.IsNullOrEmpty(str)) {
+	public int n文字列長dot(string str, float fScale)
+	{
+		if (string.IsNullOrEmpty(str))
+		{
 			return 0;
 		}
 		int num = 0;
-		foreach (char ch in str) {
-			foreach (ST文字領域 st文字領域 in this.st文字領域) {
-				if (st文字領域.ch == ch) {
+		foreach (char ch in str)
+		{
+			foreach (ST文字領域 st文字領域 in this.st文字領域)
+			{
+				if (st文字領域.ch == ch)
+				{
 					num += (int)((st文字領域.rc.Width - 5) * fScale);
 					break;
 				}
@@ -32,20 +40,28 @@ internal class CActDFPFont : CActivity {
 		}
 		return num;
 	}
-	public void t文字列描画(int x, int y, string str) {
+	public void t文字列描画(int x, int y, string str)
+	{
 		this.t文字列描画(x, y, str, false, 1f);
 	}
-	public void t文字列描画(int x, int y, string str, bool b強調) {
+	public void t文字列描画(int x, int y, string str, bool b強調)
+	{
 		this.t文字列描画(x, y, str, b強調, 1f);
 	}
-	public void t文字列描画(int x, int y, string str, bool b強調, float fScale) {
-		if (!base.IsDeActivated && !string.IsNullOrEmpty(str)) {
+	public void t文字列描画(int x, int y, string str, bool b強調, float fScale)
+	{
+		if (!base.IsDeActivated && !string.IsNullOrEmpty(str))
+		{
 			CTexture texture = b強調 ? OpenNijiiroRW.Tx.Config_Font_Bold : OpenNijiiroRW.Tx.Config_Font;
-			if (texture != null) {
+			if (texture != null)
+			{
 				texture.Scale = new Vector3D<float>(fScale, fScale, 1f);
-				foreach (char ch in str) {
-					foreach (ST文字領域 st文字領域 in this.st文字領域) {
-						if (st文字領域.ch == ch) {
+				foreach (char ch in str)
+				{
+					foreach (ST文字領域 st文字領域 in this.st文字領域)
+					{
+						if (st文字領域.ch == ch)
+						{
 							texture.t2D描画(x, y, st文字領域.rc);
 							x += (int)((st文字領域.rc.Width - 5) * fScale);
 							break;
@@ -59,7 +75,8 @@ internal class CActDFPFont : CActivity {
 
 	// CActivity 実装
 
-	public override void CreateManagedResource() {
+	public override void CreateManagedResource()
+	{
 		//this.tx通常文字 = CDTXMania.tテクスチャの生成( CSkin.Path( @"Graphics\Screen font dfp.png" ), false );
 		//this.tx強調文字 = CDTXMania.tテクスチャの生成( CSkin.Path( @"Graphics\Screen font dfp em.png" ), false );
 
@@ -540,7 +557,8 @@ internal class CActDFPFont : CActivity {
 		float scaleX = OpenNijiiroRW.Tx.Config_Font.szTextureSize.Width / 256.0f;
 		float scaleY = OpenNijiiroRW.Tx.Config_Font.szTextureSize.Height / 256.0f;
 
-		for (int i = 0; i < st文字領域Array.Length; i++) {
+		for (int i = 0; i < st文字領域Array.Length; i++)
+		{
 			st文字領域Array[i].rc = new Rectangle((int)(st文字領域Array[i].rc.X * scaleX), (int)(st文字領域Array[i].rc.Y * scaleY),
 				(int)(st文字領域Array[i].rc.Width * scaleX), (int)(st文字領域Array[i].rc.Height * scaleY));
 		}
@@ -548,7 +566,8 @@ internal class CActDFPFont : CActivity {
 		this.st文字領域 = st文字領域Array;
 		base.CreateManagedResource();
 	}
-	public override void ReleaseManagedResource() {
+	public override void ReleaseManagedResource()
+	{
 		//if( !base.b活性化してない )
 		//{
 		//	if( this.tx強調文字 != null )
@@ -571,7 +590,8 @@ internal class CActDFPFont : CActivity {
 	#region [ private ]
 	//-----------------
 	[StructLayout(LayoutKind.Sequential)]
-	private struct ST文字領域 {
+	private struct ST文字領域
+	{
 		public char ch;
 		public Rectangle rc;
 	}

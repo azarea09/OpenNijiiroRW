@@ -2,16 +2,20 @@
 
 namespace OpenNijiiroRW;
 
-class DBPuchichara {
-	public class PuchicharaEffect {
-		public PuchicharaEffect() {
+class DBPuchichara
+{
+	public class PuchicharaEffect
+	{
+		public PuchicharaEffect()
+		{
 			AllPurple = false;
 			Autoroll = 0;
 			ShowAdlib = false;
 			SplitLane = false;
 		}
 
-		public float GetCoinMultiplier() {
+		public float GetCoinMultiplier()
+		{
 			float mult = 1f;
 			if (Autoroll > 0) mult *= 0f;
 			if (ShowAdlib == true) mult *= 0.9f;
@@ -31,32 +35,38 @@ class DBPuchichara {
 		public bool SplitLane;
 	}
 
-	public class PuchicharaData {
-		public PuchicharaData() {
+	public class PuchicharaData
+	{
+		public PuchicharaData()
+		{
 			Name = "(None)";
 			Rarity = "Common";
 			Author = "(None)";
 		}
 
-		public PuchicharaData(string pcn, string pcr, string pca) {
+		public PuchicharaData(string pcn, string pcr, string pca)
+		{
 			Name = pcn;
 			Rarity = pcr;
 			Author = pca;
 		}
 
-		public string tGetName() {
+		public string tGetName()
+		{
 			if (Name is string) return (string)Name;
 			else if (Name is CLocalizationData) return ((CLocalizationData)Name).GetString("");
 			return "";
 		}
 
-		public string tGetAuthor() {
+		public string tGetAuthor()
+		{
 			if (Author is string) return (string)Author;
 			else if (Author is CLocalizationData) return ((CLocalizationData)Author).GetString("");
 			return "";
 		}
 
-		public string tGetDescription() {
+		public string tGetDescription()
+		{
 			if (Description is string) return (string)Description;
 			else if (Description is CLocalizationData) return ((CLocalizationData)Description).GetString("");
 			return "";

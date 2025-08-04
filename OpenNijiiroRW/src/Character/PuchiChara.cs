@@ -4,26 +4,31 @@ using Rectangle = System.Drawing.Rectangle;
 
 namespace OpenNijiiroRW;
 
-class PuchiChara : CActivity {
-	public PuchiChara() {
+class PuchiChara : CActivity
+{
+	public PuchiChara()
+	{
 		base.IsDeActivated = true;
 	}
 
-	public override void Activate() {
+	public override void Activate()
+	{
 		Counter = new CCounter(0, OpenNijiiroRW.Skin.Game_PuchiChara[2] - 1, OpenNijiiroRW.Skin.Game_PuchiChara_Timer * 0.5f, OpenNijiiroRW.Timer);
 		SineCounter = new CCounter(0, 360, OpenNijiiroRW.Skin.Game_PuchiChara_SineTimer, SoundManager.PlayTimer);
 		SineCounterIdle = new CCounter(1, 360, (float)OpenNijiiroRW.Skin.Game_PuchiChara_SineTimer * 2f, OpenNijiiroRW.Timer);
 		this.inGame = false;
 		base.Activate();
 	}
-	public override void DeActivate() {
+	public override void DeActivate()
+	{
 		Counter = null;
 		SineCounter = null;
 		SineCounterIdle = null;
 		base.DeActivate();
 	}
 
-	public static int tGetPuchiCharaIndexByName(int p) {
+	public static int tGetPuchiCharaIndexByName(int p)
+	{
 		var _pc = OpenNijiiroRW.SaveFileInstances[p].data.PuchiChara;
 		var _pcs = OpenNijiiroRW.Skin.Puchicharas_Name;
 		int puriChar = 0;
@@ -33,13 +38,15 @@ class PuchiChara : CActivity {
 		return puriChar;
 	}
 
-	public void ChangeBPM(double secPerBeat) {
+	public void ChangeBPM(double secPerBeat)
+	{
 		Counter = new CCounter(0, OpenNijiiroRW.Skin.Game_PuchiChara[2] - 1, (int)(OpenNijiiroRW.Skin.Game_PuchiChara_Timer * secPerBeat / OpenNijiiroRW.Skin.Game_PuchiChara[2]), OpenNijiiroRW.Timer);
 		SineCounter = new CCounter(1, 360, OpenNijiiroRW.Skin.Game_PuchiChara_SineTimer * secPerBeat / 180, SoundManager.PlayTimer);
 		this.inGame = true;
 	}
 
-	public void IdleAnimation() {
+	public void IdleAnimation()
+	{
 		this.inGame = false;
 	}
 
@@ -50,7 +57,8 @@ class PuchiChara : CActivity {
 	/// <param name="y">Y coordinate (center)</param>
 	/// <param name="alpha">Opacity (0-255)</param>
 	/// <returns></returns>
-	public int On進行描画(int x, int y, bool isGrowing, int alpha = 255, bool isBalloon = false, int player = 0, float scale = 1.0f) {
+	public int On進行描画(int x, int y, bool isGrowing, int alpha = 255, bool isBalloon = false, int player = 0, float scale = 1.0f)
+	{
 		if (!OpenNijiiroRW.ConfigIni.ShowPuchiChara) return base.Draw();
 		if (Counter == null || SineCounter == null || OpenNijiiroRW.Tx.Puchichara == null) return base.Draw();
 		Counter.TickLoop();
@@ -69,7 +77,8 @@ class PuchiChara : CActivity {
 		int puriChar = PuchiChara.tGetPuchiCharaIndexByName(p);
 		var chara = OpenNijiiroRW.Tx.Puchichara[puriChar].tx;
 
-		if (chara != null) {
+		if (chara != null)
+		{
 			float puchiScale = OpenNijiiroRW.Skin.Resolution[1] / 720.0f;
 
 			chara.Scale = new Vector3D<float>((isBalloon ? OpenNijiiroRW.Skin.Game_PuchiChara_Scale[1] * puchiScale : OpenNijiiroRW.Skin.Game_PuchiChara_Scale[0] * puchiScale));
@@ -91,10 +100,12 @@ class PuchiChara : CActivity {
 		return base.Draw();
 	}
 
-	public void DrawPuchichara(int index, int x, int y, float scale = 1.0f, int alpha = 255, bool useSine = true) {
+	public void DrawPuchichara(int index, int x, int y, float scale = 1.0f, int alpha = 255, bool useSine = true)
+	{
 		DrawPuchichara(index, x, y, Counter.CurrentValue % OpenNijiiroRW.Skin.Game_PuchiChara[2], scale, alpha, useSine);
 	}
-	public void DrawPuchichara(int index, int x, int y, int sprite, float scale = 1.0f, int alpha = 255, bool useSine = true) {
+	public void DrawPuchichara(int index, int x, int y, int sprite, float scale = 1.0f, int alpha = 255, bool useSine = true)
+	{
 		if (OpenNijiiroRW.Tx.Puchichara.Length <= index || index < 0) return;
 		if (OpenNijiiroRW.Tx.Puchichara[index].tx == null) return;
 

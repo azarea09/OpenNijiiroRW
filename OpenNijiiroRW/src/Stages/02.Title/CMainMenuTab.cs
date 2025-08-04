@@ -3,7 +3,8 @@ using FDK;
 
 namespace OpenNijiiroRW;
 
-class CMainMenuTab {
+class CMainMenuTab
+{
 	public static int __MenuCount = 14; // Number of existing menus
 	public static CMainMenuTab[] __Menus;
 	public static bool __BoxesProcessed = false;
@@ -16,7 +17,8 @@ class CMainMenuTab {
 	public CTexture barChara;
 	public CStageTitle.EReturnValue rp;
 
-	public CMainMenuTab(int boxId, Color col, CCachedFontRenderer tpf, CCachedFontRenderer boxpf, CStageTitle.EReturnValue returnPoint, bool _1Ponly, bool impl, CTexture[] modeSelect_Bar, CTexture[] modeSelect_Bar_Chara) {
+	public CMainMenuTab(int boxId, Color col, CCachedFontRenderer tpf, CCachedFontRenderer boxpf, CStageTitle.EReturnValue returnPoint, bool _1Ponly, bool impl, CTexture[] modeSelect_Bar, CTexture[] modeSelect_Bar_Chara)
+	{
 		string title = GetBoxText(boxId);
 
 		ttkTitle = new TitleTextureKey(title, tpf, Color.White, col, 1280, Color.Black);
@@ -33,9 +35,11 @@ class CMainMenuTab {
 		barChara = (modeSelect_Bar_Chara.Length > boxId) ? modeSelect_Bar_Chara[boxId] : null;
 	}
 
-	private static string GetBoxText(int boxid, bool isTitle = true) {
+	private static string GetBoxText(int boxid, bool isTitle = true)
+	{
 		string append = isTitle ? "" : "_DESC";
-		switch (boxid) {
+		switch (boxid)
+		{
 			case 0:
 			default:
 				return CLangManager.LangInstance.GetString($"TITLE_MODE_TAIKO{append}");
@@ -68,10 +72,12 @@ class CMainMenuTab {
 		}
 	}
 
-	public static void tInitMenus(CCachedFontRenderer tpf, CCachedFontRenderer boxpf, CTexture[] modeSelect_Bar, CTexture[] modeSelect_Bar_Chara) {
+	public static void tInitMenus(CCachedFontRenderer tpf, CCachedFontRenderer boxpf, CTexture[] modeSelect_Bar, CTexture[] modeSelect_Bar_Chara)
+	{
 		// Proceed the boxes only once
 
-		if (__BoxesProcessed == false) {
+		if (__BoxesProcessed == false)
+		{
 			__Menus = new CMainMenuTab[__MenuCount];
 
 			// Removed to avoid having to reload the game when changing language
@@ -162,7 +168,8 @@ class CMainMenuTab {
 
 			#endregion
 
-			for (int i = 0; i < __MenuCount; i++) {
+			for (int i = 0; i < __MenuCount; i++)
+			{
 				CStageTitle.EReturnValue _rp = (i >= __rps.Length) ? CStageTitle.EReturnValue.GAMESTART : __rps[i];
 				Color _mc = (i >= __MenuColors.Length) ? Color.White : __MenuColors[i];
 				bool _1pr = (i >= _1PRestricts.Length) ? false : _1PRestricts[i];

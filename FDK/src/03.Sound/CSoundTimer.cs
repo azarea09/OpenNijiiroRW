@@ -1,14 +1,16 @@
-﻿using System.Diagnostics;
+﻿namespace FDK;
 
-namespace FDK;
-
-public class CSoundTimer : CTimerBase {
-	public override long SystemTimeMs {
-		get {
+public class CSoundTimer : CTimerBase
+{
+	public override long SystemTimeMs
+	{
+		get
+		{
 			if (this.Device.SoundDeviceType == ESoundDeviceType.Bass ||
 				this.Device.SoundDeviceType == ESoundDeviceType.ExclusiveWASAPI ||
 				this.Device.SoundDeviceType == ESoundDeviceType.SharedWASAPI ||
-				this.Device.SoundDeviceType == ESoundDeviceType.ASIO) {
+				this.Device.SoundDeviceType == ESoundDeviceType.ASIO)
+			{
 				// BASS 系の ISoundDevice.n経過時間ms はオーディオバッファの更新間隔ずつでしか更新されないため、単にこれを返すだけではとびとびの値になる。
 				// そこで、更新間隔の最中に呼ばれた場合は、システムタイマを使って補間する。
 				// この場合の経過時間との誤差は更新間隔以内に収まるので問題ないと判断する。
@@ -30,11 +32,15 @@ public class CSoundTimer : CTimerBase {
 					// 補正部分をゼロにして、n経過時間msだけを返すようにする。
 					// こうすることで、演奏タイマが動作を始めても、破綻しなくなる。
 					return this.Device.ElapsedTimeMs;
-				} else {
+				}
+				else
+				{
 					if (FDK.SoundManager.bUseOSTimer)
 					{
 						return Game.TimeMs; // match TimerType.MultiMedia behavior
-					} else {
+					}
+					else
+					{
 						return this.Device.ElapsedTimeMs
 							   + (this.Device.SystemTimer.SystemTimeMs - this.Device.UpdateSystemTimeMs);
 					}
@@ -44,15 +50,18 @@ public class CSoundTimer : CTimerBase {
 		}
 	}
 
-	internal CSoundTimer(ISoundDevice device) {
+	internal CSoundTimer(ISoundDevice device)
+	{
 		this.Device = device;
 		ctDInputTimer = new CTimer(CTimer.TimerType.PerformanceCounter);
 	}
 
-	public override void Update() {
+	public override void Update()
+	{
 		base.Update();
 		// snap timers regularly, at integer frame
-		if (this.UpdateSystemTime - this.msSoundTimerOffset >= msSnapTimersInternal) {
+		if (this.UpdateSystemTime - this.msSoundTimerOffset >= msSnapTimersInternal)
+		{
 			this.SnapTimers();
 		}
 	}
@@ -60,17 +69,20 @@ public class CSoundTimer : CTimerBase {
 
 	const int msSnapTimersInternal = 1000;
 
-	private void SnapTimers() {
+	private void SnapTimers()
+	{
 		this.msDInputTimerOffset = this.ctDInputTimer.SystemTimeMs;
 		this.msSoundTimerOffset = this.SystemTimeMs;
 	}
 	public long msGetPreciseNowSoundTimerTime()
 		=> this.msDInputTimeToSoundTimerTime(this.ctDInputTimer.SystemTimeMs);
-	private long msDInputTimeToSoundTimerTime(long msDInputTime) {
+	private long msDInputTimeToSoundTimerTime(long msDInputTime)
+	{
 		return msDInputTime - this.msDInputTimerOffset + this.msSoundTimerOffset;    // Timer違いによる時差を補正する
 	}
 
-	public override void Dispose() {
+	public override void Dispose()
+	{
 		this.ctDInputTimer?.Dispose();
 	}
 

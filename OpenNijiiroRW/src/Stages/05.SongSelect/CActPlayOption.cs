@@ -3,12 +3,15 @@ using FDK;
 
 namespace OpenNijiiroRW;
 
-internal class CActPlayOption : CActivity {
-	public CActPlayOption() {
+internal class CActPlayOption : CActivity
+{
+	public CActPlayOption()
+	{
 		base.IsDeActivated = true;
 	}
 
-	public override void Activate() {
+	public override void Activate()
+	{
 		if (this.IsActivated)
 			return;
 
@@ -39,7 +42,8 @@ internal class CActPlayOption : CActivity {
 
 		#endregion
 
-		for (int i = 0; i < txSongSpeed.Length; i++) {
+		for (int i = 0; i < txSongSpeed.Length; i++)
+		{
 			Color _c = Color.White;
 
 			if (i < 5)
@@ -81,11 +85,15 @@ internal class CActPlayOption : CActivity {
 
 		txOtoiro = new CTexture[hsInfo.names.Length];
 
-		if (txOtoiro.Length > 0) {
-			for (int i = 0; i < txOtoiro.Length; i++) {
+		if (txOtoiro.Length > 0)
+		{
+			for (int i = 0; i < txOtoiro.Length; i++)
+			{
 				txOtoiro[i] = OptionTypeTx(hsInfo.names[i].GetString("???"), Color.White, Color.Black);
 			}
-		} else {
+		}
+		else
+		{
 			txOtoiro = new CTexture[1];
 			txOtoiro[0] = OptionTypeTx(CLangManager.LangInstance.GetString("MOD_BLANK"), Color.White, Color.Black);
 		}
@@ -104,7 +112,8 @@ internal class CActPlayOption : CActivity {
 		OptionType[11] = OptionTypeTx(CLangManager.LangInstance.GetString("MOD_FUN"), Color.White, Color.Black);
 
 		var _timingColors = new Color[] { Color.LimeGreen, Color.YellowGreen, Color.White, Color.Orange, Color.Red };
-		for (int i = 0; i < 5; i++) {
+		for (int i = 0; i < 5; i++)
+		{
 			txTiming[i] = OptionTypeTx(CLangManager.LangInstance.GetString($"MOD_TIMING{i + 1}"), _timingColors[i], Color.Black);
 		}
 
@@ -114,22 +123,26 @@ internal class CActPlayOption : CActivity {
 		base.Activate();
 	}
 
-	public void tFetchMults(int player) {
+	public void tFetchMults(int player)
+	{
 		var scoreMult = tGetModMultiplier(EBalancingType.SCORE, true, player);
 		var coinMult = tGetModMultiplier(EBalancingType.COINS, true, player);
 		txModMults[0] = OptionTypeTx(CLangManager.LangInstance.GetString("MOD_SCOREMULTIPLY", scoreMult.ToString("n2")), Color.White, Color.Black);
 		txModMults[1] = OptionTypeTx(CLangManager.LangInstance.GetString("MOD_COINMULTIPLY", coinMult.ToString("n2")), Color.White, Color.Black);
 	}
 
-	public override void DeActivate() {
+	public override void DeActivate()
+	{
 		base.DeActivate();
 	}
-	public override void CreateManagedResource() {
+	public override void CreateManagedResource()
+	{
 		OptionFont = HPrivateFastFont.tInstantiateMainFont(OpenNijiiroRW.Skin.SongSelect_Option_Font_Scale);
 
 		base.CreateManagedResource();
 	}
-	public override void ReleaseManagedResource() {
+	public override void ReleaseManagedResource()
+	{
 		OptionFont.Dispose();
 
 
@@ -138,7 +151,8 @@ internal class CActPlayOption : CActivity {
 
 
 
-	public int On進行描画(int nPlayers, ReadOnlySpan<bool> bOptions) {
+	public int On進行描画(int nPlayers, ReadOnlySpan<bool> bOptions)
+	{
 		if (this.IsDeActivated)
 			return 0;
 
@@ -170,8 +184,10 @@ internal class CActPlayOption : CActivity {
 		bool downMenu = (OpenNijiiroRW.InputManager.Keyboard.KeyPressed((int)SlimDXKeys.Key.DownArrow));
 		bool cancelMenu = (OpenNijiiroRW.Pad.bPressedDGB(EPad.Cancel) || OpenNijiiroRW.InputManager.Keyboard.KeyPressed((int)SlimDXKeys.Key.Escape));
 
-		for (int player = 0; player < nPlayers; ++player) {
-			if (!bOptions[player]) {
+		for (int player = 0; player < nPlayers; ++player)
+		{
+			if (!bOptions[player])
+			{
 				continue;
 			}
 
@@ -206,7 +222,8 @@ internal class CActPlayOption : CActivity {
 			OpenNijiiroRW.Tx.Difficulty_Option_Select.t2D描画(_shift + OpenNijiiroRW.Skin.SongSelect_Option_Select_Offset[0] + NowCount * OpenNijiiroRW.Skin.SongSelect_Option_Interval[0],
 				OpenNijiiroRW.Skin.SongSelect_Option_Select_Offset[1] + y + NowCount * OpenNijiiroRW.Skin.SongSelect_Option_Interval[1], _rect);
 
-			for (int i = 0; i < OptionType.Length; i++) {
+			for (int i = 0; i < OptionType.Length; i++)
+			{
 				OptionType[i].t2D描画(OpenNijiiroRW.Skin.SongSelect_Option_OptionType_X[pos] + i * OpenNijiiroRW.Skin.SongSelect_Option_Interval[0],
 					OpenNijiiroRW.Skin.SongSelect_Option_OptionType_Y[pos] + y + i * OpenNijiiroRW.Skin.SongSelect_Option_Interval[1]);
 			}
@@ -214,12 +231,14 @@ internal class CActPlayOption : CActivity {
 			txModMults[0]?.t2D拡大率考慮描画(CTexture.RefPnt.Up, OpenNijiiroRW.Skin.SongSelect_Option_ModMults1_X[pos], OpenNijiiroRW.Skin.SongSelect_Option_ModMults1_Y[pos] + y);
 			txModMults[1]?.t2D拡大率考慮描画(CTexture.RefPnt.Up, OpenNijiiroRW.Skin.SongSelect_Option_ModMults2_X[pos], OpenNijiiroRW.Skin.SongSelect_Option_ModMults2_Y[pos] + y);
 
-			for (int i = 0; i < _textures.Length; i++) {
+			for (int i = 0; i < _textures.Length; i++)
+			{
 				_textures[i]?.t2D拡大率考慮描画(CTexture.RefPnt.Up, OpenNijiiroRW.Skin.SongSelect_Option_Value_X[pos] + i * OpenNijiiroRW.Skin.SongSelect_Option_Interval[0],
 					OpenNijiiroRW.Skin.SongSelect_Option_Value_Y[pos] + y + i * OpenNijiiroRW.Skin.SongSelect_Option_Interval[1]);
 			}
 
-			if (ctClose.CurrentValue >= 50) {
+			if (ctClose.CurrentValue >= 50)
+			{
 				Decision(player);
 				NowCount = 0;
 				ctOpen.Stop();
@@ -233,7 +252,8 @@ internal class CActPlayOption : CActivity {
 
 			#region [ Inputs ]
 
-			if (!ctClose.IsTicked) {
+			if (!ctClose.IsTicked)
+			{
 				// per-player key input
 				bool _leftDrum = leftMenu;
 				bool _rightDrum = rightMenu;
@@ -249,7 +269,8 @@ internal class CActPlayOption : CActivity {
 				downMenu = false;
 				cancelMenu = false;
 
-				switch (player) {
+				switch (player)
+				{
 					case 0:
 						_rightDrum = _rightDrum || (OpenNijiiroRW.Pad.bPressed(EInstrumentPad.Drums, EPad.RBlue));
 						_leftDrum = _leftDrum || (OpenNijiiroRW.Pad.bPressed(EInstrumentPad.Drums, EPad.LBlue));
@@ -263,7 +284,7 @@ internal class CActPlayOption : CActivity {
 					case 2:
 						_rightDrum = _rightDrum || (OpenNijiiroRW.Pad.bPressed(EInstrumentPad.Drums, EPad.RBlue3P));
 						_leftDrum = _leftDrum || (OpenNijiiroRW.Pad.bPressed(EInstrumentPad.Drums, EPad.LBlue3P));
-						_centerDrum = _centerDrum ||(OpenNijiiroRW.Pad.bPressed(EInstrumentPad.Drums, EPad.LRed3P) || OpenNijiiroRW.Pad.bPressed(EInstrumentPad.Drums, EPad.RRed3P));
+						_centerDrum = _centerDrum || (OpenNijiiroRW.Pad.bPressed(EInstrumentPad.Drums, EPad.LRed3P) || OpenNijiiroRW.Pad.bPressed(EInstrumentPad.Drums, EPad.RRed3P));
 						break;
 					case 3:
 						_rightDrum = _rightDrum || (OpenNijiiroRW.Pad.bPressed(EInstrumentPad.Drums, EPad.RBlue4P));
@@ -278,23 +299,29 @@ internal class CActPlayOption : CActivity {
 				}
 
 
-				if (_leftDrum) {
+				if (_leftDrum)
+				{
 					OptionSelect(true);
 					tFetchMults(player);
 					OpenNijiiroRW.Skin.soundChangeSFX.tPlay();
 				}
 
-				if (_rightDrum) {
+				if (_rightDrum)
+				{
 					OptionSelect(false);
 					tFetchMults(player);
 					OpenNijiiroRW.Skin.soundChangeSFX.tPlay();
 				}
 
-				if (_centerDrum && ctOpen.CurrentValue >= ctOpen.EndValue) {
+				if (_centerDrum && ctOpen.CurrentValue >= ctOpen.EndValue)
+				{
 					OpenNijiiroRW.Skin.soundDecideSFX.tPlay();
-					if (NowCount < nOptionCount) {
+					if (NowCount < nOptionCount)
+					{
 						NowCount++;
-					} else if (NowCount >= nOptionCount && !bEnd) {
+					}
+					else if (NowCount >= nOptionCount && !bEnd)
+					{
 						bEnd = true;
 						ctClose.Start(0, 50, 6, OpenNijiiroRW.Timer);
 					}
@@ -302,17 +329,20 @@ internal class CActPlayOption : CActivity {
 
 				int cp1 = nOptionCount + 1;
 
-				if (_up) {
+				if (_up)
+				{
 					OpenNijiiroRW.Skin.soundChangeSFX.tPlay();
 					NowCount = (NowCount + cp1 - 1) % cp1;
 				}
 
-				if (_down) {
+				if (_down)
+				{
 					OpenNijiiroRW.Skin.soundChangeSFX.tPlay();
 					NowCount = (NowCount + 1) % cp1;
 				}
 
-				if (_cancel) {
+				if (_cancel)
+				{
 					OpenNijiiroRW.Skin.soundDecideSFX.tPlay();
 					bEnd = true;
 					ctClose.Start(0, 50, 6, OpenNijiiroRW.Timer);
@@ -378,24 +408,32 @@ internal class CActPlayOption : CActivity {
 
 	public CTexture[] txModMults = new CTexture[2];
 
-	public CTexture OptionTypeTx(string str文字, Color forecolor, Color backcolor) {
-		using (var bmp = OptionFont.DrawText(str文字, forecolor, backcolor, null, 30)) {
+	public CTexture OptionTypeTx(string str文字, Color forecolor, Color backcolor)
+	{
+		using (var bmp = OptionFont.DrawText(str文字, forecolor, backcolor, null, 30))
+		{
 			return OpenNijiiroRW.tテクスチャの生成(bmp);
 		}
 	}
 
-	private void ShiftVal(bool left, ref int value, int capUp, int capDown) {
-		if (left) {
+	private void ShiftVal(bool left, ref int value, int capUp, int capDown)
+	{
+		if (left)
+		{
 			if (value > capDown) value--;
 			else value = capUp;
-		} else {
+		}
+		else
+		{
 			if (value < capUp) value++;
 			else value = capDown;
 		}
 	}
 
-	public void OptionSelect(bool left) {
-		switch (NowCount) {
+	public void OptionSelect(bool left)
+	{
+		switch (NowCount)
+		{
 			case 0:
 				ShiftVal(left, ref nSpeedCount, 15, 0);
 				break;
@@ -438,7 +476,8 @@ internal class CActPlayOption : CActivity {
 		}
 	}
 
-	public void Init(int player) {
+	public void Init(int player)
+	{
 		int actual = OpenNijiiroRW.GetActualPlayer(player);
 
 		#region [ Speed ]
@@ -470,19 +509,28 @@ internal class CActPlayOption : CActivity {
 
 		var rand_ = OpenNijiiroRW.ConfigIni.eRandom[actual];
 
-		if (rand_ == ERandomMode.MirrorRandom) {
+		if (rand_ == ERandomMode.MirrorRandom)
+		{
 			nRandom = 2;
 			nAbekobe = 1;
-		} else if (rand_ == ERandomMode.SuperRandom) {
+		}
+		else if (rand_ == ERandomMode.SuperRandom)
+		{
 			nRandom = 2;
 			nAbekobe = 0;
-		} else if (rand_ == ERandomMode.Random) {
+		}
+		else if (rand_ == ERandomMode.Random)
+		{
 			nRandom = 1;
 			nAbekobe = 0;
-		} else if (rand_ == ERandomMode.Mirror) {
+		}
+		else if (rand_ == ERandomMode.Mirror)
+		{
 			nRandom = 0;
 			nAbekobe = 1;
-		} else if (rand_ == ERandomMode.Off) {
+		}
+		else if (rand_ == ERandomMode.Off)
+		{
 			nRandom = 0;
 			nAbekobe = 0;
 		}
@@ -549,22 +597,34 @@ internal class CActPlayOption : CActivity {
 
 	}
 
-	public void Decision(int player) {
+	public void Decision(int player)
+	{
 		int actual = OpenNijiiroRW.GetActualPlayer(player);
 
 		#region [ Speed ]
 
-		if (nSpeedCount == 0) {
+		if (nSpeedCount == 0)
+		{
 			OpenNijiiroRW.ConfigIni.nScrollSpeed[actual] = 4;
-		} else if (nSpeedCount > 0 && nSpeedCount <= 11) {
+		}
+		else if (nSpeedCount > 0 && nSpeedCount <= 11)
+		{
 			OpenNijiiroRW.ConfigIni.nScrollSpeed[actual] = nSpeedCount + 8;
-		} else if (nSpeedCount == 12) {
+		}
+		else if (nSpeedCount == 12)
+		{
 			OpenNijiiroRW.ConfigIni.nScrollSpeed[actual] = 24;
-		} else if (nSpeedCount == 13) {
+		}
+		else if (nSpeedCount == 13)
+		{
 			OpenNijiiroRW.ConfigIni.nScrollSpeed[actual] = 29;
-		} else if (nSpeedCount == 14) {
+		}
+		else if (nSpeedCount == 14)
+		{
 			OpenNijiiroRW.ConfigIni.nScrollSpeed[actual] = 34;
-		} else if (nSpeedCount == 15) {
+		}
+		else if (nSpeedCount == 15)
+		{
 			OpenNijiiroRW.ConfigIni.nScrollSpeed[actual] = 39;
 		}
 
@@ -578,17 +638,28 @@ internal class CActPlayOption : CActivity {
 
 		#region [ Random ]
 
-		if (nRandom == 2 && nAbekobe == 1) {
+		if (nRandom == 2 && nAbekobe == 1)
+		{
 			OpenNijiiroRW.ConfigIni.eRandom[actual] = ERandomMode.MirrorRandom;
-		} else if (nRandom == 2 && nAbekobe == 0) {
+		}
+		else if (nRandom == 2 && nAbekobe == 0)
+		{
 			OpenNijiiroRW.ConfigIni.eRandom[actual] = ERandomMode.SuperRandom;
-		} else if (nRandom == 1 && nAbekobe == 1) {
+		}
+		else if (nRandom == 1 && nAbekobe == 1)
+		{
 			OpenNijiiroRW.ConfigIni.eRandom[actual] = ERandomMode.Random;
-		} else if (nRandom == 1 && nAbekobe == 0) {
+		}
+		else if (nRandom == 1 && nAbekobe == 0)
+		{
 			OpenNijiiroRW.ConfigIni.eRandom[actual] = ERandomMode.Random;
-		} else if (nRandom == 0 && nAbekobe == 1) {
+		}
+		else if (nRandom == 0 && nAbekobe == 1)
+		{
 			OpenNijiiroRW.ConfigIni.eRandom[actual] = ERandomMode.Mirror;
-		} else if (nRandom == 0 && nAbekobe == 0) {
+		}
+		else if (nRandom == 0 && nAbekobe == 0)
+		{
 			OpenNijiiroRW.ConfigIni.eRandom[actual] = ERandomMode.Off;
 		}
 
@@ -620,9 +691,12 @@ internal class CActPlayOption : CActivity {
 
 		#region [ GameMode ]
 
-		if (nGameMode == 0) {
+		if (nGameMode == 0)
+		{
 			OpenNijiiroRW.ConfigIni.bTokkunMode = false;
-		} else {
+		}
+		else
+		{
 			OpenNijiiroRW.ConfigIni.bTokkunMode = true;
 		}
 
@@ -630,9 +704,12 @@ internal class CActPlayOption : CActivity {
 
 		#region [ AutoMode ]
 
-		if (nAutoMode == 1) {
+		if (nAutoMode == 1)
+		{
 			OpenNijiiroRW.ConfigIni.bAutoPlay[player] = true;
-		} else {
+		}
+		else
+		{
 			OpenNijiiroRW.ConfigIni.bAutoPlay[player] = false;
 		}
 
@@ -654,7 +731,8 @@ internal class CActPlayOption : CActivity {
 
 	#region [ Balancing functions ]
 
-	public float tGetScrollSpeedFactor(EBalancingType ebt = EBalancingType.SCORE, bool isMenu = false, int actual = 0) {
+	public float tGetScrollSpeedFactor(EBalancingType ebt = EBalancingType.SCORE, bool isMenu = false, int actual = 0)
+	{
 		var _compare = (isMenu) ? nSpeedCount != 1 : OpenNijiiroRW.ConfigIni.nScrollSpeed[actual] != 9;
 
 		if (ebt == EBalancingType.SCORE)
@@ -662,7 +740,8 @@ internal class CActPlayOption : CActivity {
 		return 1f;
 	}
 
-	public float tGetSongSpeedFactor(EBalancingType ebt = EBalancingType.SCORE, bool isMenu = false, int actual = 0) {
+	public float tGetSongSpeedFactor(EBalancingType ebt = EBalancingType.SCORE, bool isMenu = false, int actual = 0)
+	{
 		var _compare = ((isMenu) ? (nSongSpeed + 5) * 2 : OpenNijiiroRW.ConfigIni.nSongSpeed) / 20f;
 
 		if (ebt == EBalancingType.SCORE || _compare <= 1f)
@@ -670,7 +749,8 @@ internal class CActPlayOption : CActivity {
 		return Math.Max(1f, (float)Math.Pow(_compare, 0.7));
 	}
 
-	public float tGetJustFactor(EBalancingType ebt = EBalancingType.SCORE, bool isMenu = false, int actual = 0) {
+	public float tGetJustFactor(EBalancingType ebt = EBalancingType.SCORE, bool isMenu = false, int actual = 0)
+	{
 		var _compare = (isMenu) ? nJust : OpenNijiiroRW.ConfigIni.bJust[actual];
 
 		if (ebt == EBalancingType.SCORE)
@@ -679,7 +759,8 @@ internal class CActPlayOption : CActivity {
 		return (_compare > 0) ? ((_compare > 1) ? 0.5f : 1.3f) : 1f;
 	}
 
-	public float tGetTimingFactor(EBalancingType ebt = EBalancingType.SCORE, bool isMenu = false, int actual = 0) {
+	public float tGetTimingFactor(EBalancingType ebt = EBalancingType.SCORE, bool isMenu = false, int actual = 0)
+	{
 		var _compare = (isMenu) ? nTiming - 2 : OpenNijiiroRW.ConfigIni.nTimingZones[actual] - 2;
 
 		if (ebt == EBalancingType.SCORE)
@@ -688,7 +769,8 @@ internal class CActPlayOption : CActivity {
 		return 1f + 0.2f * _compare;
 	}
 
-	public float tGetDoronFactor(EBalancingType ebt = EBalancingType.SCORE, bool isMenu = false, int actual = 0) {
+	public float tGetDoronFactor(EBalancingType ebt = EBalancingType.SCORE, bool isMenu = false, int actual = 0)
+	{
 		var _compare = (isMenu) ? nStealth : (int)OpenNijiiroRW.ConfigIni.eSTEALTH[actual];
 
 		if (ebt == EBalancingType.SCORE || _compare == 0)
@@ -698,7 +780,8 @@ internal class CActPlayOption : CActivity {
 		return 1f + 0.1f * (float)Math.Pow(_compare, 2);
 	}
 
-	public float tGetModMultiplier(EBalancingType ebt = EBalancingType.SCORE, bool isMenu = false, int player = 0) {
+	public float tGetModMultiplier(EBalancingType ebt = EBalancingType.SCORE, bool isMenu = false, int player = 0)
+	{
 		float factor = 1f;
 		int actual = OpenNijiiroRW.GetActualPlayer(player);
 
@@ -711,7 +794,8 @@ internal class CActPlayOption : CActivity {
 		return ebt == EBalancingType.SCORE ? Math.Min(factor, 1f) : factor;
 	}
 
-	public enum EBalancingType {
+	public enum EBalancingType
+	{
 		SCORE,
 		COINS
 	}

@@ -5,11 +5,14 @@ using static OpenNijiiroRW.DBNameplateUnlockables;
 
 namespace OpenNijiiroRW;
 
-internal class DBNameplateUnlockables : CSavableT<Dictionary<Int64, NameplateUnlockable>> {
-	public DBNameplateUnlockables() {
+internal class DBNameplateUnlockables : CSavableT<Dictionary<Int64, NameplateUnlockable>>
+{
+	public DBNameplateUnlockables()
+	{
 		_fn = @$"{OpenNijiiroRW.strEXEのあるフォルダ}Databases{Path.DirectorySeparatorChar}NameplateUnlockables.db3";
 
-		using (var connection = new SqliteConnection(@$"Data Source={_fn}")) {
+		using (var connection = new SqliteConnection(@$"Data Source={_fn}"))
+		{
 			connection.Open();
 
 			// Get existing languages
@@ -25,7 +28,8 @@ internal class DBNameplateUnlockables : CSavableT<Dictionary<Int64, NameplateUnl
                 ";
 
 			var reader = command.ExecuteReader();
-			while (reader.Read()) {
+			while (reader.Read())
+			{
 				NameplateUnlockable nu = new NameplateUnlockable();
 				nu.rarity = (string)reader["Rarity"];
 
@@ -45,7 +49,8 @@ internal class DBNameplateUnlockables : CSavableT<Dictionary<Int64, NameplateUnl
 				nu.nameplateInfo = new SaveFile.CNamePlateTitle((int)((Int64)reader["NameplateType"]));
 
 				nu.nameplateInfo.cld.SetString("default", (string)reader["DefaultString"]);
-				foreach (string tr in _translations) {
+				foreach (string tr in _translations)
+				{
 					if (reader[@$"{tr}_String"] != DBNull.Value)
 						nu.nameplateInfo.cld.SetString(tr, (string)reader[@$"{tr}_String"]);
 				}
@@ -55,7 +60,8 @@ internal class DBNameplateUnlockables : CSavableT<Dictionary<Int64, NameplateUnl
 			reader.Close();
 		}
 	}
-	public class NameplateUnlockable {
+	public class NameplateUnlockable
+	{
 		[JsonProperty("NameplateInfo")]
 		public SaveFile.CNamePlateTitle nameplateInfo;
 
@@ -66,18 +72,21 @@ internal class DBNameplateUnlockables : CSavableT<Dictionary<Int64, NameplateUnl
 		public CUnlockCondition unlockConditions;
 	}
 
-	public void tGetUnlockedItems(int _player, ModalQueue mq) {
+	public void tGetUnlockedItems(int _player, ModalQueue mq)
+	{
 		int player = OpenNijiiroRW.GetActualPlayer(_player);
 		var _sf = OpenNijiiroRW.SaveFileInstances[player].data.UnlockedNameplateIds;
 		bool _edited = false;
 
-		foreach (KeyValuePair<Int64, NameplateUnlockable> item in data) {
+		foreach (KeyValuePair<Int64, NameplateUnlockable> item in data)
+		{
 			var _npvKey = (int)item.Key;
 			if (!_sf.Contains(_npvKey))// !_sf.ContainsKey(_npvKey))
 			{
 				var _fulfilled = item.Value.unlockConditions.tConditionMet(player, CUnlockCondition.EScreen.Internal).Item1;
 
-				if (_fulfilled) {
+				if (_fulfilled)
+				{
 					_sf.Add(_npvKey);
 					_edited = true;
 					mq.tAddModal(
@@ -98,24 +107,29 @@ internal class DBNameplateUnlockables : CSavableT<Dictionary<Int64, NameplateUnl
 			OpenNijiiroRW.SaveFileInstances[player].tApplyHeyaChanges();
 	}
 
-	public bool AddToDatabase(string title, int type, string rarity, string unlock_condition, string unlock_type, string unlock_values, string unlock_references, Dictionary<string, string> translations) {
+	public bool AddToDatabase(string title, int type, string rarity, string unlock_condition, string unlock_type, string unlock_values, string unlock_references, Dictionary<string, string> translations)
+	{
 		Trace.TraceInformation("Requested a new entry into NameplateUnlockables.db3.");
 		_fn = @$"{OpenNijiiroRW.strEXEのあるフォルダ}Databases{Path.DirectorySeparatorChar}NameplateUnlockables.db3";
 
-		using (var connection = new SqliteConnection($"Data Source={_fn}")) {
+		using (var connection = new SqliteConnection($"Data Source={_fn}"))
+		{
 			connection.Open();
 
 			// Fetch the highest unique ID, and add 1 onto it to use for our new nameplate
 			Int64 id = 0;
-			using (var id_command = connection.CreateCommand()) {
+			using (var id_command = connection.CreateCommand())
+			{
 				Trace.TraceInformation("Fetching available nameplate ID.");
 
 				id_command.CommandText = $"""
 					SELECT * FROM nameplates ORDER BY NameplateId DESC LIMIT 1;
 					""";
 
-				using (var id_reader = id_command.ExecuteReader()) {
-					while (id_reader.Read()) {
+				using (var id_reader = id_command.ExecuteReader())
+				{
+					while (id_reader.Read())
+					{
 						id = (Int64)id_reader["NameplateId"] + 1;
 					}
 					id_reader.Close();
@@ -139,11 +153,13 @@ internal class DBNameplateUnlockables : CSavableT<Dictionary<Int64, NameplateUnl
 				'{unlock_references.EscapeSingleQuotes()}');
 				""";
 
-			if (command.ExecuteNonQuery() < 1) {
+			if (command.ExecuteNonQuery() < 1)
+			{
 				Trace.TraceInformation("INSERT was executed, but nothing was inserted. Terminating connection.");
 				return false;
 			}
-			if (translations.Count == 0) {
+			if (translations.Count == 0)
+			{
 				Trace.TraceInformation("Inserted a new nameplate into the database with the following details:\n" +
 					$"ID: {id}\n" +
 					$"Title: {title}\n" +
@@ -159,32 +175,39 @@ internal class DBNameplateUnlockables : CSavableT<Dictionary<Int64, NameplateUnl
 
 			// Fetch table names so that we can get translation tables (future-proofing for new languages)
 			List<string> table_names = [];
-			using (var table_command = connection.CreateCommand()) {
+			using (var table_command = connection.CreateCommand())
+			{
 				table_command.CommandText = $"""
 					SELECT name FROM sqlite_schema WHERE type='table';
 					""";
 
-				using (var table_reader = table_command.ExecuteReader()) {
-					while (table_reader.Read()) {
+				using (var table_reader = table_command.ExecuteReader())
+				{
+					while (table_reader.Read())
+					{
 						table_names.Add((string)table_reader["name"]);
 					}
 					table_reader.Close();
 				}
 			}
 
-			foreach (var entry in translations) {
+			foreach (var entry in translations)
+			{
 				string table_name = $"translation_{entry.Key.ToLower()}";
 				if (!table_names.Contains(table_name)) continue;
 
 				// Fetch the highest unique ID, and add 1 onto it
 				Int64 trans_id = 0;
-				using (var transid_command = connection.CreateCommand()) {
+				using (var transid_command = connection.CreateCommand())
+				{
 					transid_command.CommandText = $"""
 					SELECT * FROM {table_name} ORDER BY TranslationId DESC LIMIT 1;
 					""";
 
-					using (var transid_reader = transid_command.ExecuteReader()) {
-						while (transid_reader.Read()) {
+					using (var transid_reader = transid_command.ExecuteReader())
+					{
+						while (transid_reader.Read())
+						{
 							trans_id = (Int64)transid_reader["TranslationId"] + 1;
 						}
 						transid_reader.Close();

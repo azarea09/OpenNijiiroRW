@@ -2,39 +2,51 @@
 
 namespace OpenNijiiroRW;
 
-internal class CActImplScore : CAct演奏スコア共通 {
+internal class CActImplScore : CAct演奏スコア共通
+{
 	// CActivity 実装（共通クラスからの差分のみ）
 
-	public unsafe override int Draw() {
-		if (!base.IsDeActivated) {
-			if (base.IsFirstDraw) {
+	public unsafe override int Draw()
+	{
+		if (!base.IsDeActivated)
+		{
+			if (base.IsFirstDraw)
+			{
 				base.IsFirstDraw = false;
 			}
 			long num = FDK.SoundManager.PlayTimer.NowTimeMs;
 
 
-			if (!this.ctTimer.IsStoped) {
+			if (!this.ctTimer.IsStoped)
+			{
 				this.ctTimer.Tick();
-				if (this.ctTimer.IsEnded) {
+				if (this.ctTimer.IsEnded)
+				{
 					this.ctTimer.Stop();
 				}
 
 				//base.t小文字表示( 20, 150, string.Format( "{0,7:######0}", this.nスコアの増分.Guitar ) );
 			}
 
-			for (int i = 0; i < 5; i++) {
-				if (!this.ct点数アニメタイマ[i].IsStoped) {
+			for (int i = 0; i < 5; i++)
+			{
+				if (!this.ct点数アニメタイマ[i].IsStoped)
+				{
 					this.ct点数アニメタイマ[i].Tick();
-					if (this.ct点数アニメタイマ[i].IsEnded) {
+					if (this.ct点数アニメタイマ[i].IsEnded)
+					{
 						this.ct点数アニメタイマ[i].Stop();
 					}
 				}
 			}
 
-			for (int i = 0; i < 5; i++) {
-				if (!this.ctBonusAddTimer[i].IsStoped) {
+			for (int i = 0; i < 5; i++)
+			{
+				if (!this.ctBonusAddTimer[i].IsStoped)
+				{
 					this.ctBonusAddTimer[i].Tick();
-					if (this.ctBonusAddTimer[i].IsEnded) {
+					if (this.ctBonusAddTimer[i].IsEnded)
+					{
 						OpenNijiiroRW.stageGameScreen.actScore.BonusAdd(i);
 						this.ctBonusAddTimer[i].Stop();
 					}
@@ -48,22 +60,28 @@ internal class CActImplScore : CAct演奏スコア共通 {
 			int[] addBonus_x = new int[5];
 			int[] addBonus_y = new int[5];
 
-			for (int i = 0; i < OpenNijiiroRW.ConfigIni.nPlayerCount; i++) {
-				if (OpenNijiiroRW.ConfigIni.nPlayerCount == 5) {
+			for (int i = 0; i < OpenNijiiroRW.ConfigIni.nPlayerCount; i++)
+			{
+				if (OpenNijiiroRW.ConfigIni.nPlayerCount == 5)
+				{
 					x[i] = OpenNijiiroRW.Skin.Game_Score_5P[0] + (OpenNijiiroRW.Skin.Game_UIMove_5P[0] * i);
 					y[i] = OpenNijiiroRW.Skin.Game_Score_5P[1] + (OpenNijiiroRW.Skin.Game_UIMove_5P[1] * i);
 					add_x[i] = OpenNijiiroRW.Skin.Game_Score_Add_5P[0] + (OpenNijiiroRW.Skin.Game_UIMove_5P[0] * i);
 					add_y[i] = OpenNijiiroRW.Skin.Game_Score_Add_5P[1] + (OpenNijiiroRW.Skin.Game_UIMove_5P[1] * i);
 					addBonus_x[i] = OpenNijiiroRW.Skin.Game_Score_AddBonus_5P[0] + (OpenNijiiroRW.Skin.Game_UIMove_5P[0] * i);
 					addBonus_y[i] = OpenNijiiroRW.Skin.Game_Score_AddBonus_5P[1] + (OpenNijiiroRW.Skin.Game_UIMove_5P[1] * i);
-				} else if (OpenNijiiroRW.ConfigIni.nPlayerCount == 4 || OpenNijiiroRW.ConfigIni.nPlayerCount == 3) {
+				}
+				else if (OpenNijiiroRW.ConfigIni.nPlayerCount == 4 || OpenNijiiroRW.ConfigIni.nPlayerCount == 3)
+				{
 					x[i] = OpenNijiiroRW.Skin.Game_Score_4P[0] + (OpenNijiiroRW.Skin.Game_UIMove_4P[0] * i);
 					y[i] = OpenNijiiroRW.Skin.Game_Score_4P[1] + (OpenNijiiroRW.Skin.Game_UIMove_4P[1] * i);
 					add_x[i] = OpenNijiiroRW.Skin.Game_Score_Add_4P[0] + (OpenNijiiroRW.Skin.Game_UIMove_4P[0] * i);
 					add_y[i] = OpenNijiiroRW.Skin.Game_Score_Add_4P[1] + (OpenNijiiroRW.Skin.Game_UIMove_4P[1] * i);
 					addBonus_x[i] = OpenNijiiroRW.Skin.Game_Score_AddBonus_4P[0] + (OpenNijiiroRW.Skin.Game_UIMove_4P[0] * i);
 					addBonus_y[i] = OpenNijiiroRW.Skin.Game_Score_AddBonus_4P[1] + (OpenNijiiroRW.Skin.Game_UIMove_4P[1] * i);
-				} else {
+				}
+				else
+				{
 					x[i] = OpenNijiiroRW.Skin.Game_Score_X[i];
 					y[i] = OpenNijiiroRW.Skin.Game_Score_Y[i];
 					add_x[i] = OpenNijiiroRW.Skin.Game_Score_Add_X[i];
@@ -75,17 +93,22 @@ internal class CActImplScore : CAct演奏スコア共通 {
 
 			//CDTXMania.act文字コンソール.tPrint(0, 0, C文字コンソール.Eフォント種別.白, this.ctボーナス加算タイマ[0].n現在の値.ToString());
 
-			for (int i = 0; i < OpenNijiiroRW.ConfigIni.nPlayerCount; i++) {
+			for (int i = 0; i < OpenNijiiroRW.ConfigIni.nPlayerCount; i++)
+			{
 				if (i == 1 && OpenNijiiroRW.ConfigIni.bAIBattleMode) break;
 
 				base.t小文字表示(x[i], y[i], string.Format("{0,7:######0}", this.nCurrentlyDisplayedScore[i]), 0, 256, i);
 			}
 
-			for (int i = 0; i < 256; i++) {
-				if (this.stScore[i].b使用中) {
-					if (!this.stScore[i].ctTimer.IsStoped) {
+			for (int i = 0; i < 256; i++)
+			{
+				if (this.stScore[i].b使用中)
+				{
+					if (!this.stScore[i].ctTimer.IsStoped)
+					{
 						this.stScore[i].ctTimer.Tick();
-						if (this.stScore[i].ctTimer.IsEnded) {
+						if (this.stScore[i].ctTimer.IsEnded)
+						{
 							if (this.stScore[i].b表示中 == true)
 								this.nNowDisplayedAddScore--;
 							this.stScore[i].ctTimer.Stop();
@@ -93,13 +116,17 @@ internal class CActImplScore : CAct演奏スコア共通 {
 							OpenNijiiroRW.stageGameScreen.actDan.Update();
 						}
 
-						if (!stScore[i].bAddEnd) {
+						if (!stScore[i].bAddEnd)
+						{
 							this.nCurrentlyDisplayedScore[this.stScore[i].nPlayer] += (long)this.stScore[i].nAddScore;
 							stScore[i].bAddEnd = true;
-							if (ct点数アニメタイマ[stScore[i].nPlayer].IsUnEnded) {
+							if (ct点数アニメタイマ[stScore[i].nPlayer].IsUnEnded)
+							{
 								this.ct点数アニメタイマ[stScore[i].nPlayer] = new CCounter(0, 11, 13, OpenNijiiroRW.Timer);
 								this.ct点数アニメタイマ[stScore[i].nPlayer].CurrentValue = 1;
-							} else {
+							}
+							else
+							{
 								this.ct点数アニメタイマ[stScore[i].nPlayer] = new CCounter(0, 11, 13, OpenNijiiroRW.Timer);
 							}
 						}
@@ -108,70 +135,97 @@ internal class CActImplScore : CAct演奏スコア共通 {
 						int yAdd = 0;
 						int alpha = 0;
 
-						if (this.stScore[i].ctTimer.CurrentValue < 10) {
+						if (this.stScore[i].ctTimer.CurrentValue < 10)
+						{
 							xAdd = 25;
 							alpha = 150;
-						} else if (this.stScore[i].ctTimer.CurrentValue < 20) {
+						}
+						else if (this.stScore[i].ctTimer.CurrentValue < 20)
+						{
 							xAdd = 10;
 							alpha = 200;
-						} else if (this.stScore[i].ctTimer.CurrentValue < 30) {
+						}
+						else if (this.stScore[i].ctTimer.CurrentValue < 30)
+						{
 							xAdd = -5;
 							alpha = 250;
-						} else if (this.stScore[i].ctTimer.CurrentValue < 40) {
+						}
+						else if (this.stScore[i].ctTimer.CurrentValue < 40)
+						{
 							xAdd = -9;
 							alpha = 256;
-						} else if (this.stScore[i].ctTimer.CurrentValue < 50) {
+						}
+						else if (this.stScore[i].ctTimer.CurrentValue < 50)
+						{
 							xAdd = -10;
 							alpha = 256;
-						} else if (this.stScore[i].ctTimer.CurrentValue < 60) {
+						}
+						else if (this.stScore[i].ctTimer.CurrentValue < 60)
+						{
 							xAdd = -9;
 							alpha = 256;
-						} else if (this.stScore[i].ctTimer.CurrentValue < 70) {
+						}
+						else if (this.stScore[i].ctTimer.CurrentValue < 70)
+						{
 							xAdd = -5;
 							alpha = 256;
-						} else if (this.stScore[i].ctTimer.CurrentValue < 80) {
+						}
+						else if (this.stScore[i].ctTimer.CurrentValue < 80)
+						{
 							xAdd = -3;
 							alpha = 256;
-						} else {
+						}
+						else
+						{
 							xAdd = 0;
 							alpha = 256;
 						}
 
 
 
-						if (this.stScore[i].ctTimer.CurrentValue > 120) {
+						if (this.stScore[i].ctTimer.CurrentValue > 120)
+						{
 							yAdd = -1;
 						}
-						if (this.stScore[i].ctTimer.CurrentValue > 130) {
+						if (this.stScore[i].ctTimer.CurrentValue > 130)
+						{
 							yAdd = -5;
 						}
-						if (this.stScore[i].ctTimer.CurrentValue > 140) {
+						if (this.stScore[i].ctTimer.CurrentValue > 140)
+						{
 							yAdd = -7;
 						}
-						if (this.stScore[i].ctTimer.CurrentValue > 150) {
+						if (this.stScore[i].ctTimer.CurrentValue > 150)
+						{
 							yAdd = -8;
 						}
-						if (this.stScore[i].ctTimer.CurrentValue > 160) {
+						if (this.stScore[i].ctTimer.CurrentValue > 160)
+						{
 							yAdd = -8;
 							alpha = 256;
 						}
-						if (this.stScore[i].ctTimer.CurrentValue > 170) {
+						if (this.stScore[i].ctTimer.CurrentValue > 170)
+						{
 							yAdd = -6;
 							alpha = 256;
 						}
-						if (this.stScore[i].ctTimer.CurrentValue > 180) {
+						if (this.stScore[i].ctTimer.CurrentValue > 180)
+						{
 							yAdd = 0;
 							alpha = 256;
 						}
-						if (this.stScore[i].ctTimer.CurrentValue > 190) {
+						if (this.stScore[i].ctTimer.CurrentValue > 190)
+						{
 							yAdd = 5;
 							alpha = 200;
 						}
-						if (this.stScore[i].ctTimer.CurrentValue > 200) {
+						if (this.stScore[i].ctTimer.CurrentValue > 200)
+						{
 							yAdd = 12;
 							alpha = 150;
 						}
-						if (this.stScore[i].ctTimer.CurrentValue > 210) {
+						if (this.stScore[i].ctTimer.CurrentValue > 210)
+						{
 							yAdd = 20;
 							alpha = 0;
 						}
@@ -184,7 +238,8 @@ internal class CActImplScore : CAct演奏スコア共通 {
 							base.t小文字表示(add_x[this.stScore[i].nPlayer] + xAdd, this.stScore[i].nPlayer == 0 && OpenNijiiroRW.ConfigIni.nPlayerCount <= 2 ? add_y[this.stScore[i].nPlayer] + yAdd : add_y[this.stScore[i].nPlayer] - yAdd, string.Format("{0,7:######0}", this.stScore[i].nAddScore), pl + 1, alpha, stScore[i].nPlayer);
 						if (this.nNowDisplayedAddScore < 10 && this.stScore[i].bBonusScore == true && !OpenNijiiroRW.ConfigIni.SimpleMode)
 							base.t小文字表示(addBonus_x[this.stScore[i].nPlayer] + xAdd, addBonus_y[this.stScore[i].nPlayer], string.Format("{0,7:######0}", this.stScore[i].nAddScore), pl + 1, alpha, stScore[i].nPlayer);
-						else {
+						else
+						{
 							this.nNowDisplayedAddScore--;
 							this.stScore[i].b表示中 = false;
 						}

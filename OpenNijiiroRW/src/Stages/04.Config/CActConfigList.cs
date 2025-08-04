@@ -4,45 +4,60 @@ using SkiaSharp;
 
 namespace OpenNijiiroRW;
 
-internal class CActConfigList : CActivity {
+internal class CActConfigList : CActivity
+{
 	// Properties
 
 	public bool bIsKeyAssignSelected        // #24525 2011.3.15 yyagi
 	{
-		get {
+		get
+		{
 			Eメニュー種別 e = this.eメニュー種別;
-			if (e == Eメニュー種別.KeyAssignDrums || e == Eメニュー種別.KeyAssignSystem || e == Eメニュー種別.KeyAssignTraining) {
+			if (e == Eメニュー種別.KeyAssignDrums || e == Eメニュー種別.KeyAssignSystem || e == Eメニュー種別.KeyAssignTraining)
+			{
 				return true;
-			} else {
+			}
+			else
+			{
 				return false;
 			}
 		}
 	}
 	public bool bIsFocusingParameter        // #32059 2013.9.17 yyagi
 	{
-		get {
+		get
+		{
 			return b要素値にフォーカス中;
 		}
 	}
-	public bool b現在選択されている項目はReturnToMenuである {
-		get {
+	public bool b現在選択されている項目はReturnToMenuである
+	{
+		get
+		{
 			CItemBase currentItem = this.list項目リスト[this.n現在の選択項目];
-			if (currentItem == this.iSystemReturnToMenu || currentItem == this.iDrumsReturnToMenu) {
+			if (currentItem == this.iSystemReturnToMenu || currentItem == this.iDrumsReturnToMenu)
+			{
 				return true;
-			} else {
+			}
+			else
+			{
 				return false;
 			}
 		}
 	}
-	public CItemBase ib現在の選択項目 {
-		get {
+	public CItemBase ib現在の選択項目
+	{
+		get
+		{
 			return this.list項目リスト[this.n現在の選択項目];
 		}
 	}
 	public int n現在の選択項目;
 
-	private static int GraphicsDeviceFromString(string device) {
-		switch (device) {
+	private static int GraphicsDeviceFromString(string device)
+	{
+		switch (device)
+		{
 			case "OpenGL": return 0;
 			case "DirectX11": return 1;
 			case "Vulkan": return 2;
@@ -50,8 +65,10 @@ internal class CActConfigList : CActivity {
 			default: return 0;
 		}
 	}
-	private static string GraphicsDeviceFromInt(int device) {
-		switch (device) {
+	private static string GraphicsDeviceFromInt(int device)
+	{
+		switch (device)
+		{
 			case 0: return "OpenGL";
 			case 1: return "DirectX11";
 			case 2: return "Vulkan";
@@ -60,7 +77,10 @@ internal class CActConfigList : CActivity {
 		}
 	}
 
-	private static string[] AvailableGraphicsDevices { get {
+	private static string[] AvailableGraphicsDevices
+	{
+		get
+		{
 			if (OperatingSystem.IsWindows()) return ["OpenGL", "DirectX11", "Vulkan"];
 			if (OperatingSystem.IsMacOS()) return ["OpenGL", "Metal"];
 			if (OperatingSystem.IsLinux()) return ["OpenGL", "Vulkan"];
@@ -68,7 +88,8 @@ internal class CActConfigList : CActivity {
 		}
 	}
 
-	private static int GraphicsDeviceIntFromConfigInt() {
+	private static int GraphicsDeviceIntFromConfigInt()
+	{
 		return Math.Max(0, Array.IndexOf(AvailableGraphicsDevices, GraphicsDeviceFromInt(OpenNijiiroRW.ConfigIni.nGraphicsDeviceType)));
 	}
 
@@ -76,7 +97,8 @@ internal class CActConfigList : CActivity {
 	// General system options
 	#region [ t項目リストの設定_System() ]
 
-	public void t項目リストの設定_System(bool refresh = true) {
+	public void t項目リストの設定_System(bool refresh = true)
+	{
 		this.tConfigIniへ記録する();
 		this.list項目リスト.Clear();
 
@@ -221,7 +243,8 @@ internal class CActConfigList : CActivity {
 		// #24820 2013.1.3 yyagi
 
 		// Hide this option for non-Windows users since all other sound device options are Windows-exclusive.
-		if (OperatingSystem.IsWindows()) {
+		if (OperatingSystem.IsWindows())
+		{
 			this.iSystemSoundType = new CItemList(CLangManager.LangInstance.GetString("SETTINGS_SYSTEM_AUDIOPLAYBACK"), CItemList.EPanelType.Normal, OpenNijiiroRW.ConfigIni.nSoundDeviceType,
 			CLangManager.LangInstance.GetString("SETTINGS_SYSTEM_AUDIOPLAYBACK_DESC"),
 			new string[] { "Bass", "ASIO", "WASAPI Exclusive", "WASAPI Shared" });
@@ -233,7 +256,8 @@ internal class CActConfigList : CActivity {
 			CLangManager.LangInstance.GetString("SETTINGS_SYSTEM_BASSBUFFER_DESC"));
 		this.list項目リスト.Add(this.iSystemBassBufferSizeMs);
 
-		if (OperatingSystem.IsWindows()) {
+		if (OperatingSystem.IsWindows())
+		{
 			// #24820 2013.1.15 yyagi
 			this.iSystemWASAPIBufferSizeMs = new CItemInteger(CLangManager.LangInstance.GetString("SETTINGS_SYSTEM_WASAPIBUFFER"), 0, 99999, OpenNijiiroRW.ConfigIni.nWASAPIBufferSizeMs,
 				CLangManager.LangInstance.GetString("SETTINGS_SYSTEM_WASAPIBUFFER_DESC"));
@@ -302,7 +326,8 @@ internal class CActConfigList : CActivity {
 #endif
 
 		OnListMenuの初期化();
-		if (refresh) {
+		if (refresh)
+		{
 			this.n現在の選択項目 = 0;
 			this.eメニュー種別 = Eメニュー種別.System;
 		}
@@ -314,7 +339,8 @@ internal class CActConfigList : CActivity {
 	// Gameplay options
 	#region [ t項目リストの設定_Drums() ]
 
-	public void t項目リストの設定_Drums() {
+	public void t項目リストの設定_Drums()
+	{
 		this.tConfigIniへ記録する();
 		this.list項目リスト.Clear();
 
@@ -442,13 +468,15 @@ internal class CActConfigList : CActivity {
 	/// <summary>
 	/// ESC押下時の右メニュー描画
 	/// </summary>
-	public void tEsc押下() {
+	public void tEsc押下()
+	{
 		if (this.b要素値にフォーカス中)       // #32059 2013.9.17 add yyagi
 		{
 			this.b要素値にフォーカス中 = false;
 		}
 
-		switch (eメニュー種別) {
+		switch (eメニュー種別)
+		{
 			case Eメニュー種別.KeyAssignSystem:
 				t項目リストの設定_System();
 				break;
@@ -460,160 +488,271 @@ internal class CActConfigList : CActivity {
 
 		// これ以外なら何もしない
 	}
-	public void tEnter押下() {
+	public void tEnter押下()
+	{
 		OpenNijiiroRW.Skin.soundDecideSFX.tPlay();
-		if (this.b要素値にフォーカス中) {
+		if (this.b要素値にフォーカス中)
+		{
 			this.b要素値にフォーカス中 = false;
-		} else if (this.list項目リスト[this.n現在の選択項目].e種別 == CItemBase.E種別.整数) {
+		}
+		else if (this.list項目リスト[this.n現在の選択項目].e種別 == CItemBase.E種別.整数)
+		{
 			this.b要素値にフォーカス中 = true;
 		}
 		#region [ 個々のキーアサイン ]
 		//太鼓のキー設定。
-		else if (this.list項目リスト[this.n現在の選択項目] == this.iKeyAssignTaikoLRed) {
+		else if (this.list項目リスト[this.n現在の選択項目] == this.iKeyAssignTaikoLRed)
+		{
 			OpenNijiiroRW.stageConfig.tパッド選択通知(EKeyConfigPart.Drums, EKeyConfigPad.LRed);
-		} else if (this.list項目リスト[this.n現在の選択項目] == this.iKeyAssignTaikoRRed) {
+		}
+		else if (this.list項目リスト[this.n現在の選択項目] == this.iKeyAssignTaikoRRed)
+		{
 			OpenNijiiroRW.stageConfig.tパッド選択通知(EKeyConfigPart.Drums, EKeyConfigPad.RRed);
-		} else if (this.list項目リスト[this.n現在の選択項目] == this.iKeyAssignTaikoLBlue) {
+		}
+		else if (this.list項目リスト[this.n現在の選択項目] == this.iKeyAssignTaikoLBlue)
+		{
 			OpenNijiiroRW.stageConfig.tパッド選択通知(EKeyConfigPart.Drums, EKeyConfigPad.LBlue);
-		} else if (this.list項目リスト[this.n現在の選択項目] == this.iKeyAssignTaikoRBlue) {
+		}
+		else if (this.list項目リスト[this.n現在の選択項目] == this.iKeyAssignTaikoRBlue)
+		{
 			OpenNijiiroRW.stageConfig.tパッド選択通知(EKeyConfigPart.Drums, EKeyConfigPad.RBlue);
 		}
 
 		//太鼓のキー設定。2P
-		else if (this.list項目リスト[this.n現在の選択項目] == this.iKeyAssignTaikoLRed2P) {
+		else if (this.list項目リスト[this.n現在の選択項目] == this.iKeyAssignTaikoLRed2P)
+		{
 			OpenNijiiroRW.stageConfig.tパッド選択通知(EKeyConfigPart.Drums, EKeyConfigPad.LRed2P);
-		} else if (this.list項目リスト[this.n現在の選択項目] == this.iKeyAssignTaikoRRed2P) {
+		}
+		else if (this.list項目リスト[this.n現在の選択項目] == this.iKeyAssignTaikoRRed2P)
+		{
 			OpenNijiiroRW.stageConfig.tパッド選択通知(EKeyConfigPart.Drums, EKeyConfigPad.RRed2P);
-		} else if (this.list項目リスト[this.n現在の選択項目] == this.iKeyAssignTaikoLBlue2P) {
+		}
+		else if (this.list項目リスト[this.n現在の選択項目] == this.iKeyAssignTaikoLBlue2P)
+		{
 			OpenNijiiroRW.stageConfig.tパッド選択通知(EKeyConfigPart.Drums, EKeyConfigPad.LBlue2P);
-		} else if (this.list項目リスト[this.n現在の選択項目] == this.iKeyAssignTaikoRBlue2P) {
+		}
+		else if (this.list項目リスト[this.n現在の選択項目] == this.iKeyAssignTaikoRBlue2P)
+		{
 			OpenNijiiroRW.stageConfig.tパッド選択通知(EKeyConfigPart.Drums, EKeyConfigPad.RBlue2P);
 		}
 
 		//太鼓のキー設定。3P
-		else if (this.list項目リスト[this.n現在の選択項目] == this.iKeyAssignTaikoLRed3P) {
+		else if (this.list項目リスト[this.n現在の選択項目] == this.iKeyAssignTaikoLRed3P)
+		{
 			OpenNijiiroRW.stageConfig.tパッド選択通知(EKeyConfigPart.Drums, EKeyConfigPad.LRed3P);
-		} else if (this.list項目リスト[this.n現在の選択項目] == this.iKeyAssignTaikoRRed3P) {
+		}
+		else if (this.list項目リスト[this.n現在の選択項目] == this.iKeyAssignTaikoRRed3P)
+		{
 			OpenNijiiroRW.stageConfig.tパッド選択通知(EKeyConfigPart.Drums, EKeyConfigPad.RRed3P);
-		} else if (this.list項目リスト[this.n現在の選択項目] == this.iKeyAssignTaikoLBlue3P) {
+		}
+		else if (this.list項目リスト[this.n現在の選択項目] == this.iKeyAssignTaikoLBlue3P)
+		{
 			OpenNijiiroRW.stageConfig.tパッド選択通知(EKeyConfigPart.Drums, EKeyConfigPad.LBlue3P);
-		} else if (this.list項目リスト[this.n現在の選択項目] == this.iKeyAssignTaikoRBlue3P) {
+		}
+		else if (this.list項目リスト[this.n現在の選択項目] == this.iKeyAssignTaikoRBlue3P)
+		{
 			OpenNijiiroRW.stageConfig.tパッド選択通知(EKeyConfigPart.Drums, EKeyConfigPad.RBlue3P);
 		}
 
 		//太鼓のキー設定。4P
-		else if (this.list項目リスト[this.n現在の選択項目] == this.iKeyAssignTaikoLRed4P) {
+		else if (this.list項目リスト[this.n現在の選択項目] == this.iKeyAssignTaikoLRed4P)
+		{
 			OpenNijiiroRW.stageConfig.tパッド選択通知(EKeyConfigPart.Drums, EKeyConfigPad.LRed4P);
-		} else if (this.list項目リスト[this.n現在の選択項目] == this.iKeyAssignTaikoRRed4P) {
+		}
+		else if (this.list項目リスト[this.n現在の選択項目] == this.iKeyAssignTaikoRRed4P)
+		{
 			OpenNijiiroRW.stageConfig.tパッド選択通知(EKeyConfigPart.Drums, EKeyConfigPad.RRed4P);
-		} else if (this.list項目リスト[this.n現在の選択項目] == this.iKeyAssignTaikoLBlue4P) {
+		}
+		else if (this.list項目リスト[this.n現在の選択項目] == this.iKeyAssignTaikoLBlue4P)
+		{
 			OpenNijiiroRW.stageConfig.tパッド選択通知(EKeyConfigPart.Drums, EKeyConfigPad.LBlue4P);
-		} else if (this.list項目リスト[this.n現在の選択項目] == this.iKeyAssignTaikoRBlue4P) {
+		}
+		else if (this.list項目リスト[this.n現在の選択項目] == this.iKeyAssignTaikoRBlue4P)
+		{
 			OpenNijiiroRW.stageConfig.tパッド選択通知(EKeyConfigPart.Drums, EKeyConfigPad.RBlue4P);
 		}
 
 		//太鼓のキー設定。5P
-		else if (this.list項目リスト[this.n現在の選択項目] == this.iKeyAssignTaikoLRed5P) {
+		else if (this.list項目リスト[this.n現在の選択項目] == this.iKeyAssignTaikoLRed5P)
+		{
 			OpenNijiiroRW.stageConfig.tパッド選択通知(EKeyConfigPart.Drums, EKeyConfigPad.LRed5P);
-		} else if (this.list項目リスト[this.n現在の選択項目] == this.iKeyAssignTaikoRRed5P) {
+		}
+		else if (this.list項目リスト[this.n現在の選択項目] == this.iKeyAssignTaikoRRed5P)
+		{
 			OpenNijiiroRW.stageConfig.tパッド選択通知(EKeyConfigPart.Drums, EKeyConfigPad.RRed5P);
-		} else if (this.list項目リスト[this.n現在の選択項目] == this.iKeyAssignTaikoLBlue5P) {
+		}
+		else if (this.list項目リスト[this.n現在の選択項目] == this.iKeyAssignTaikoLBlue5P)
+		{
 			OpenNijiiroRW.stageConfig.tパッド選択通知(EKeyConfigPart.Drums, EKeyConfigPad.LBlue5P);
-		} else if (this.list項目リスト[this.n現在の選択項目] == this.iKeyAssignTaikoRBlue5P) {
+		}
+		else if (this.list項目リスト[this.n現在の選択項目] == this.iKeyAssignTaikoRBlue5P)
+		{
 			OpenNijiiroRW.stageConfig.tパッド選択通知(EKeyConfigPart.Drums, EKeyConfigPad.RBlue5P);
 		}
 
 		// Konga claps
-		else if (this.list項目リスト[this.n現在の選択項目] == this.iKeyAssignKongaClap) {
+		else if (this.list項目リスト[this.n現在の選択項目] == this.iKeyAssignKongaClap)
+		{
 			OpenNijiiroRW.stageConfig.tパッド選択通知(EKeyConfigPart.Drums, EKeyConfigPad.Clap);
-		} else if (this.list項目リスト[this.n現在の選択項目] == this.iKeyAssignKongaClap2P) {
+		}
+		else if (this.list項目リスト[this.n現在の選択項目] == this.iKeyAssignKongaClap2P)
+		{
 			OpenNijiiroRW.stageConfig.tパッド選択通知(EKeyConfigPart.Drums, EKeyConfigPad.Clap2P);
-		} else if (this.list項目リスト[this.n現在の選択項目] == this.iKeyAssignKongaClap3P) {
+		}
+		else if (this.list項目リスト[this.n現在の選択項目] == this.iKeyAssignKongaClap3P)
+		{
 			OpenNijiiroRW.stageConfig.tパッド選択通知(EKeyConfigPart.Drums, EKeyConfigPad.Clap3P);
-		} else if (this.list項目リスト[this.n現在の選択項目] == this.iKeyAssignKongaClap4P) {
+		}
+		else if (this.list項目リスト[this.n現在の選択項目] == this.iKeyAssignKongaClap4P)
+		{
 			OpenNijiiroRW.stageConfig.tパッド選択通知(EKeyConfigPart.Drums, EKeyConfigPad.Clap4P);
-		} else if (this.list項目リスト[this.n現在の選択項目] == this.iKeyAssignKongaClap5P) {
+		}
+		else if (this.list項目リスト[this.n現在の選択項目] == this.iKeyAssignKongaClap5P)
+		{
 			OpenNijiiroRW.stageConfig.tパッド選択通知(EKeyConfigPart.Drums, EKeyConfigPad.Clap5P);
 		}
 
 		// Menu controls
-		else if (this.list項目リスト[this.n現在の選択項目] == this.iKeyAssignDecide) {
+		else if (this.list項目リスト[this.n現在の選択項目] == this.iKeyAssignDecide)
+		{
 			OpenNijiiroRW.stageConfig.tパッド選択通知(EKeyConfigPart.Drums, EKeyConfigPad.Decide);
-		} else if (this.list項目リスト[this.n現在の選択項目] == this.iKeyAssignCancel) {
+		}
+		else if (this.list項目リスト[this.n現在の選択項目] == this.iKeyAssignCancel)
+		{
 			OpenNijiiroRW.stageConfig.tパッド選択通知(EKeyConfigPart.Drums, EKeyConfigPad.Cancel);
-		} else if (this.list項目リスト[this.n現在の選択項目] == this.iKeyAssignLeftChange) {
+		}
+		else if (this.list項目リスト[this.n現在の選択項目] == this.iKeyAssignLeftChange)
+		{
 			OpenNijiiroRW.stageConfig.tパッド選択通知(EKeyConfigPart.Drums, EKeyConfigPad.LeftChange);
-		} else if (this.list項目リスト[this.n現在の選択項目] == this.iKeyAssignRightChange) {
+		}
+		else if (this.list項目リスト[this.n現在の選択項目] == this.iKeyAssignRightChange)
+		{
 			OpenNijiiroRW.stageConfig.tパッド選択通知(EKeyConfigPart.Drums, EKeyConfigPad.RightChange);
 		}
 
 		// System controls
-		else if (this.list項目リスト[this.n現在の選択項目] == this.iKeyAssignSystemCapture) {
+		else if (this.list項目リスト[this.n現在の選択項目] == this.iKeyAssignSystemCapture)
+		{
 			OpenNijiiroRW.stageConfig.tパッド選択通知(EKeyConfigPart.System, EKeyConfigPad.Capture);
-		} else if (this.list項目リスト[this.n現在の選択項目] == this.iKeyAssignSystemSongVolIncrease) {
+		}
+		else if (this.list項目リスト[this.n現在の選択項目] == this.iKeyAssignSystemSongVolIncrease)
+		{
 			OpenNijiiroRW.stageConfig.tパッド選択通知(EKeyConfigPart.System, EKeyConfigPad.SongVolumeIncrease);
-		} else if (this.list項目リスト[this.n現在の選択項目] == this.iKeyAssignSystemSongVolDecrease) {
+		}
+		else if (this.list項目リスト[this.n現在の選択項目] == this.iKeyAssignSystemSongVolDecrease)
+		{
 			OpenNijiiroRW.stageConfig.tパッド選択通知(EKeyConfigPart.System, EKeyConfigPad.SongVolumeDecrease);
-		} else if (this.list項目リスト[this.n現在の選択項目] == this.iKeyAssignSystemDisplayHit) {
+		}
+		else if (this.list項目リスト[this.n現在の選択項目] == this.iKeyAssignSystemDisplayHit)
+		{
 			OpenNijiiroRW.stageConfig.tパッド選択通知(EKeyConfigPart.System, EKeyConfigPad.DisplayHits);
-		} else if (this.list項目リスト[this.n現在の選択項目] == this.iKeyAssignSystemDisplayDebug) {
+		}
+		else if (this.list項目リスト[this.n現在の選択項目] == this.iKeyAssignSystemDisplayDebug)
+		{
 			OpenNijiiroRW.stageConfig.tパッド選択通知(EKeyConfigPart.System, EKeyConfigPad.DisplayDebug);
-		} else if (this.list項目リスト[this.n現在の選択項目] == this.iKeyAssignSystemQuickConfig) {
+		}
+		else if (this.list項目リスト[this.n現在の選択項目] == this.iKeyAssignSystemQuickConfig)
+		{
 			OpenNijiiroRW.stageConfig.tパッド選択通知(EKeyConfigPart.System, EKeyConfigPad.QuickConfig);
-		} else if (this.list項目リスト[this.n現在の選択項目] == this.iKeyAssignSystemNewHeya) {
+		}
+		else if (this.list項目リスト[this.n現在の選択項目] == this.iKeyAssignSystemNewHeya)
+		{
 			OpenNijiiroRW.stageConfig.tパッド選択通知(EKeyConfigPart.System, EKeyConfigPad.NewHeya);
-		} else if (this.list項目リスト[this.n現在の選択項目] == this.iKeyAssignSystemSortSongs) {
+		}
+		else if (this.list項目リスト[this.n現在の選択項目] == this.iKeyAssignSystemSortSongs)
+		{
 			OpenNijiiroRW.stageConfig.tパッド選択通知(EKeyConfigPart.System, EKeyConfigPad.SortSongs);
-		} else if (this.list項目リスト[this.n現在の選択項目] == this.iKeyAssignSystemToggleAutoP1) {
+		}
+		else if (this.list項目リスト[this.n現在の選択項目] == this.iKeyAssignSystemToggleAutoP1)
+		{
 			OpenNijiiroRW.stageConfig.tパッド選択通知(EKeyConfigPart.System, EKeyConfigPad.ToggleAutoP1);
-		} else if (this.list項目リスト[this.n現在の選択項目] == this.iKeyAssignSystemToggleAutoP2) {
+		}
+		else if (this.list項目リスト[this.n現在の選択項目] == this.iKeyAssignSystemToggleAutoP2)
+		{
 			OpenNijiiroRW.stageConfig.tパッド選択通知(EKeyConfigPart.System, EKeyConfigPad.ToggleAutoP2);
-		} else if (this.list項目リスト[this.n現在の選択項目] == this.iKeyAssignSystemToggleTrainingMode) {
+		}
+		else if (this.list項目リスト[this.n現在の選択項目] == this.iKeyAssignSystemToggleTrainingMode)
+		{
 			OpenNijiiroRW.stageConfig.tパッド選択通知(EKeyConfigPart.System, EKeyConfigPad.ToggleTrainingMode);
-		} else if (this.list項目リスト[this.n現在の選択項目] == this.iKeyAssignSystemCycleVideoDisplayMode) {
+		}
+		else if (this.list項目リスト[this.n現在の選択項目] == this.iKeyAssignSystemCycleVideoDisplayMode)
+		{
 			OpenNijiiroRW.stageConfig.tパッド選択通知(EKeyConfigPart.System, EKeyConfigPad.CycleVideoDisplayMode);
 		}
 
 		// Training controls
-		else if (this.list項目リスト[this.n現在の選択項目] == this.iKeyAssignTrainingPause) {
+		else if (this.list項目リスト[this.n現在の選択項目] == this.iKeyAssignTrainingPause)
+		{
 			OpenNijiiroRW.stageConfig.tパッド選択通知(EKeyConfigPart.Drums, EKeyConfigPad.TrainingPause);
-		} else if (this.list項目リスト[this.n現在の選択項目] == this.iKeyAssignTrainingToggleAuto) {
+		}
+		else if (this.list項目リスト[this.n現在の選択項目] == this.iKeyAssignTrainingToggleAuto)
+		{
 			OpenNijiiroRW.stageConfig.tパッド選択通知(EKeyConfigPart.Drums, EKeyConfigPad.TrainingToggleAuto);
-		} else if (this.list項目リスト[this.n現在の選択項目] == this.iKeyAssignTrainingBookmark) {
+		}
+		else if (this.list項目リスト[this.n現在の選択項目] == this.iKeyAssignTrainingBookmark)
+		{
 			OpenNijiiroRW.stageConfig.tパッド選択通知(EKeyConfigPart.Drums, EKeyConfigPad.TrainingBookmark);
-		} else if (this.list項目リスト[this.n現在の選択項目] == this.iKeyAssignTrainingIncreaseScrollSpeed) {
+		}
+		else if (this.list項目リスト[this.n現在の選択項目] == this.iKeyAssignTrainingIncreaseScrollSpeed)
+		{
 			OpenNijiiroRW.stageConfig.tパッド選択通知(EKeyConfigPart.Drums, EKeyConfigPad.TrainingIncreaseScrollSpeed);
-		} else if (this.list項目リスト[this.n現在の選択項目] == this.iKeyAssignTrainingDecreaseScrollSpeed) {
+		}
+		else if (this.list項目リスト[this.n現在の選択項目] == this.iKeyAssignTrainingDecreaseScrollSpeed)
+		{
 			OpenNijiiroRW.stageConfig.tパッド選択通知(EKeyConfigPart.Drums, EKeyConfigPad.TrainingDecreaseScrollSpeed);
-		} else if (this.list項目リスト[this.n現在の選択項目] == this.iKeyAssignTrainingIncreaseSongSpeed) {
+		}
+		else if (this.list項目リスト[this.n現在の選択項目] == this.iKeyAssignTrainingIncreaseSongSpeed)
+		{
 			OpenNijiiroRW.stageConfig.tパッド選択通知(EKeyConfigPart.Drums, EKeyConfigPad.TrainingIncreaseSongSpeed);
-		} else if (this.list項目リスト[this.n現在の選択項目] == this.iKeyAssignTrainingDecreaseSongSpeed) {
+		}
+		else if (this.list項目リスト[this.n現在の選択項目] == this.iKeyAssignTrainingDecreaseSongSpeed)
+		{
 			OpenNijiiroRW.stageConfig.tパッド選択通知(EKeyConfigPart.Drums, EKeyConfigPad.TrainingDecreaseSongSpeed);
-		} else if (this.list項目リスト[this.n現在の選択項目] == this.iKeyAssignTrainingBranchNormal) {
+		}
+		else if (this.list項目リスト[this.n現在の選択項目] == this.iKeyAssignTrainingBranchNormal)
+		{
 			OpenNijiiroRW.stageConfig.tパッド選択通知(EKeyConfigPart.Drums, EKeyConfigPad.TrainingBranchNormal);
-		} else if (this.list項目リスト[this.n現在の選択項目] == this.iKeyAssignTrainingBranchExpert) {
+		}
+		else if (this.list項目リスト[this.n現在の選択項目] == this.iKeyAssignTrainingBranchExpert)
+		{
 			OpenNijiiroRW.stageConfig.tパッド選択通知(EKeyConfigPart.Drums, EKeyConfigPad.TrainingBranchExpert);
-		} else if (this.list項目リスト[this.n現在の選択項目] == this.iKeyAssignTrainingBranchMaster) {
+		}
+		else if (this.list項目リスト[this.n現在の選択項目] == this.iKeyAssignTrainingBranchMaster)
+		{
 			OpenNijiiroRW.stageConfig.tパッド選択通知(EKeyConfigPart.Drums, EKeyConfigPad.TrainingBranchMaster);
-		} else if (this.list項目リスト[this.n現在の選択項目] == this.iKeyAssignTrainingMoveForwardMeasure) {
+		}
+		else if (this.list項目リスト[this.n現在の選択項目] == this.iKeyAssignTrainingMoveForwardMeasure)
+		{
 			OpenNijiiroRW.stageConfig.tパッド選択通知(EKeyConfigPart.Drums, EKeyConfigPad.TrainingMoveForwardMeasure);
-		} else if (this.list項目リスト[this.n現在の選択項目] == this.iKeyAssignTrainingMoveBackMeasure) {
+		}
+		else if (this.list項目リスト[this.n現在の選択項目] == this.iKeyAssignTrainingMoveBackMeasure)
+		{
 			OpenNijiiroRW.stageConfig.tパッド選択通知(EKeyConfigPart.Drums, EKeyConfigPad.TrainingMoveBackMeasure);
-		} else if (this.list項目リスト[this.n現在の選択項目] == this.iKeyAssignTrainingSkipForwardMeasure) {
+		}
+		else if (this.list項目リスト[this.n現在の選択項目] == this.iKeyAssignTrainingSkipForwardMeasure)
+		{
 			OpenNijiiroRW.stageConfig.tパッド選択通知(EKeyConfigPart.Drums, EKeyConfigPad.TrainingSkipForwardMeasure);
-		} else if (this.list項目リスト[this.n現在の選択項目] == this.iKeyAssignTrainingSkipBackMeasure) {
+		}
+		else if (this.list項目リスト[this.n現在の選択項目] == this.iKeyAssignTrainingSkipBackMeasure)
+		{
 			OpenNijiiroRW.stageConfig.tパッド選択通知(EKeyConfigPart.Drums, EKeyConfigPad.TrainingSkipBackMeasure);
-		} else if (this.list項目リスト[this.n現在の選択項目] == this.iKeyAssignTrainingJumpToFirstMeasure) {
+		}
+		else if (this.list項目リスト[this.n現在の選択項目] == this.iKeyAssignTrainingJumpToFirstMeasure)
+		{
 			OpenNijiiroRW.stageConfig.tパッド選択通知(EKeyConfigPart.Drums, EKeyConfigPad.TrainingJumpToFirstMeasure);
-		} else if (this.list項目リスト[this.n現在の選択項目] == this.iKeyAssignTrainingJumpToLastMeasure) {
+		}
+		else if (this.list項目リスト[this.n現在の選択項目] == this.iKeyAssignTrainingJumpToLastMeasure)
+		{
 			OpenNijiiroRW.stageConfig.tパッド選択通知(EKeyConfigPart.Drums, EKeyConfigPad.TrainingJumpToLastMeasure);
 		}
 		#endregion
-		else {
+		else
+		{
 			// #27029 2012.1.5 from
 			this.list項目リスト[this.n現在の選択項目].tEnter押下();
 
-			if (this.list項目リスト[this.n現在の選択項目] == this.iSystemLanguage) {
+			if (this.list項目リスト[this.n現在の選択項目] == this.iSystemLanguage)
+			{
 				OpenNijiiroRW.ConfigIni.sLang = CLangManager.intToLang(this.iSystemLanguage.n現在選択されている項目番号);
 				CLangManager.langAttach(OpenNijiiroRW.ConfigIni.sLang);
 
@@ -632,9 +771,12 @@ internal class CActConfigList : CActivity {
 			}
 			// Enter押下後の後処理
 
-			if (this.list項目リスト[this.n現在の選択項目] == this.iSystemFullscreen) {
+			if (this.list項目リスト[this.n現在の選択項目] == this.iSystemFullscreen)
+			{
 				OpenNijiiroRW.app.bSwitchFullScreenAtNextFrame = true;
-			} else if (this.list項目リスト[this.n現在の選択項目] == this.iSystemVSyncWait) {
+			}
+			else if (this.list項目リスト[this.n現在の選択項目] == this.iSystemVSyncWait)
+			{
 				OpenNijiiroRW.ConfigIni.bEnableVSync = this.iSystemVSyncWait.bON;
 				OpenNijiiroRW.app.bSwitchVSyncAtTheNextFrame = true;
 			}
@@ -642,20 +784,27 @@ internal class CActConfigList : CActivity {
 			else if (this.list項目リスト[this.n現在の選択項目] == this.iSystemGoToKeyAssign)          // #24609 2011.4.12 yyagi
 			{
 				t項目リストの設定_KeyAssignSystem();
-			} else if (this.list項目リスト[this.n現在の選択項目] == this.iKeyAssignSystemReturnToMenu)    // #24609 2011.4.12 yyagi
+			}
+			else if (this.list項目リスト[this.n現在の選択項目] == this.iKeyAssignSystemReturnToMenu)    // #24609 2011.4.12 yyagi
 			{
 				tConfigIniへ記録する();
 				t項目リストの設定_System();
-			} else if (this.list項目リスト[this.n現在の選択項目] == this.iDrumsGoToKeyAssign)               // #24525 2011.3.15 yyagi
+			}
+			else if (this.list項目リスト[this.n現在の選択項目] == this.iDrumsGoToKeyAssign)               // #24525 2011.3.15 yyagi
 			{
 				tConfigIniへ記録する();
 				t項目リストの設定_KeyAssignDrums();
-			} else if (this.list項目リスト[this.n現在の選択項目] == this.iDrumsGoToTrainingKeyAssign) {
+			}
+			else if (this.list項目リスト[this.n現在の選択項目] == this.iDrumsGoToTrainingKeyAssign)
+			{
 				tConfigIniへ記録する();
 				t項目リストの設定_KeyAssignTraining();
-			} else if (this.list項目リスト[this.n現在の選択項目] == this.iDrumsGoToCalibration) {
+			}
+			else if (this.list項目リスト[this.n現在の選択項目] == this.iDrumsGoToCalibration)
+			{
 				OpenNijiiroRW.stageConfig.actCalibrationMode.Start();
-			} else if (this.list項目リスト[this.n現在の選択項目] == this.iKeyAssignDrumsReturnToMenu ||
+			}
+			else if (this.list項目リスト[this.n現在の選択項目] == this.iKeyAssignDrumsReturnToMenu ||
 					   this.list項目リスト[this.n現在の選択項目] == this.iKeyAssignTrainingReturnToMenu)     // #24525 2011.3.15 yyagi
 			{
 				t項目リストの設定_Drums();
@@ -670,7 +819,8 @@ internal class CActConfigList : CActivity {
 			#region [ 曲データ一覧の再読み込み ]
 			else if (this.list項目リスト[this.n現在の選択項目] == this.iSystemReloadDTX)              // #32081 2013.10.21 yyagi
 			{
-				if (OpenNijiiroRW.EnumSongs.IsEnumerating) {
+				if (OpenNijiiroRW.EnumSongs.IsEnumerating)
+				{
 					// Debug.WriteLine( "バックグラウンドでEnumeratingSongs中だったので、一旦中断します。" );
 					OpenNijiiroRW.EnumSongs.Abort();
 					OpenNijiiroRW.actEnumSongs.DeActivate();
@@ -681,9 +831,11 @@ internal class CActConfigList : CActivity {
 				OpenNijiiroRW.actEnumSongs.bコマンドでの曲データ取得 = true;
 				OpenNijiiroRW.actEnumSongs.Activate();
 				OpenNijiiroRW.stageSongSelect.actSongList.ResetSongIndex();
-			} else if (this.list項目リスト[this.n現在の選択項目] == this.iSystemHardReloadDTX)              // #32081 2013.10.21 yyagi
+			}
+			else if (this.list項目リスト[this.n現在の選択項目] == this.iSystemHardReloadDTX)              // #32081 2013.10.21 yyagi
 			{
-				if (OpenNijiiroRW.EnumSongs.IsEnumerating) {
+				if (OpenNijiiroRW.EnumSongs.IsEnumerating)
+				{
 					OpenNijiiroRW.EnumSongs.Abort();
 					OpenNijiiroRW.actEnumSongs.DeActivate();
 				}
@@ -693,7 +845,9 @@ internal class CActConfigList : CActivity {
 				OpenNijiiroRW.actEnumSongs.bコマンドでの曲データ取得 = true;
 				OpenNijiiroRW.actEnumSongs.Activate();
 				OpenNijiiroRW.stageSongSelect.actSongList.ResetSongIndex();
-			} else if (this.list項目リスト[this.n現在の選択項目] == this.isSystemImportingScore) {
+			}
+			else if (this.list項目リスト[this.n現在の選択項目] == this.isSystemImportingScore)
+			{
 				// Running in a separate thread so the game doesn't freeze
 				ScoreIniImportThread = new Thread(CScoreIni_Importer.ImportScoreInisToSavesDb3);
 				ScoreIniImportThread.Start();
@@ -702,10 +856,12 @@ internal class CActConfigList : CActivity {
 		}
 	}
 
-	private void tGenerateSkinSample() {
+	private void tGenerateSkinSample()
+	{
 
 		nSkinIndex = ((CItemList)this.list項目リスト[this.n現在の選択項目]).n現在選択されている項目番号;
-		if (nSkinSampleIndex != nSkinIndex) {
+		if (nSkinSampleIndex != nSkinIndex)
+		{
 			string path = skinSubFolders[nSkinIndex];
 			path = System.IO.Path.Combine(path, @$"Graphics{Path.DirectorySeparatorChar}1_Title{Path.DirectorySeparatorChar}Background.png");
 			SKBitmap bmSrc = SKBitmap.Decode(path);
@@ -713,7 +869,8 @@ internal class CActConfigList : CActivity {
 			int _w = OpenNijiiroRW.Skin.Resolution[0] / 4;
 			int _h = OpenNijiiroRW.Skin.Resolution[1] / 4;
 
-			if (txSkinSample1 != null) {
+			if (txSkinSample1 != null)
+			{
 				OpenNijiiroRW.tDisposeSafely(ref txSkinSample1);
 			}
 			txSkinSample1 = OpenNijiiroRW.tテクスチャの生成(bmSrc, false);
@@ -726,11 +883,13 @@ internal class CActConfigList : CActivity {
 	}
 
 	#region [ 項目リストの設定 ( Exit, KeyAssignSystem/Drums) ]
-	public void t項目リストの設定_Exit() {
+	public void t項目リストの設定_Exit()
+	{
 		this.tConfigIniへ記録する();
 		this.eメニュー種別 = Eメニュー種別.Unknown;
 	}
-	public void t項目リストの設定_KeyAssignSystem() {
+	public void t項目リストの設定_KeyAssignSystem()
+	{
 		this.list項目リスト.Clear();
 		// #27029 2012.1.5 from: 説明文は最大9行→13行に変更。
 
@@ -779,7 +938,8 @@ internal class CActConfigList : CActivity {
 		this.n現在の選択項目 = 0;
 		this.eメニュー種別 = Eメニュー種別.KeyAssignSystem;
 	}
-	public void t項目リストの設定_KeyAssignDrums() {
+	public void t項目リストの設定_KeyAssignDrums()
+	{
 		this.list項目リスト.Clear();
 		// #27029 2012.1.5 from: 説明文は最大9行→13行に変更。
 
@@ -885,7 +1045,8 @@ internal class CActConfigList : CActivity {
 		this.n現在の選択項目 = 0;
 		this.eメニュー種別 = Eメニュー種別.KeyAssignDrums;
 	}
-	public void t項目リストの設定_KeyAssignTraining() {
+	public void t項目リストの設定_KeyAssignTraining()
+	{
 		this.list項目リスト.Clear();
 
 		this.iKeyAssignTrainingReturnToMenu = new CItemBase(CLangManager.LangInstance.GetString("SETTINGS_MENU_RETURN"), CItemBase.EPanelType.Other,
@@ -962,26 +1123,35 @@ internal class CActConfigList : CActivity {
 		this.eメニュー種別 = Eメニュー種別.KeyAssignTraining;
 	}
 	#endregion
-	public void t次に移動() {
+	public void t次に移動()
+	{
 		OpenNijiiroRW.Skin.soundカーソル移動音.tPlay();
-		if (this.b要素値にフォーカス中) {
+		if (this.b要素値にフォーカス中)
+		{
 			this.list項目リスト[this.n現在の選択項目].t項目値を前へ移動();
-		} else {
+		}
+		else
+		{
 			this.n目標のスクロールカウンタ += 100;
 		}
 	}
-	public void t前に移動() {
+	public void t前に移動()
+	{
 		OpenNijiiroRW.Skin.soundカーソル移動音.tPlay();
-		if (this.b要素値にフォーカス中) {
+		if (this.b要素値にフォーカス中)
+		{
 			this.list項目リスト[this.n現在の選択項目].t項目値を次へ移動();
-		} else {
+		}
+		else
+		{
 			this.n目標のスクロールカウンタ -= 100;
 		}
 	}
 
 	// CActivity 実装
 
-	public override void Activate() {
+	public override void Activate()
+	{
 		if (this.IsActivated)
 			return;
 
@@ -992,10 +1162,12 @@ internal class CActConfigList : CActivity {
 		int ns = (OpenNijiiroRW.Skin.strSystemSkinSubfolders == null) ? 0 : OpenNijiiroRW.Skin.strSystemSkinSubfolders.Length;
 		int nb = (OpenNijiiroRW.Skin.strBoxDefSkinSubfolders == null) ? 0 : OpenNijiiroRW.Skin.strBoxDefSkinSubfolders.Length;
 		skinSubFolders = new string[ns + nb];
-		for (int i = 0; i < ns; i++) {
+		for (int i = 0; i < ns; i++)
+		{
 			skinSubFolders[i] = OpenNijiiroRW.Skin.strSystemSkinSubfolders[i];
 		}
-		for (int i = 0; i < nb; i++) {
+		for (int i = 0; i < nb; i++)
+		{
 			skinSubFolders[ns + i] = OpenNijiiroRW.Skin.strBoxDefSkinSubfolders[i];
 		}
 		skinSubFolder_org = OpenNijiiroRW.Skin.GetCurrentSkinSubfolderFullName(true);
@@ -1018,7 +1190,8 @@ internal class CActConfigList : CActivity {
 		this.ct三角矢印アニメ = new CCounter();
 
 		this.iSystemBassBufferSizeMs_initial = this.iSystemBassBufferSizeMs.n現在の値;              // CONFIG脱出時にこの値から変更されているようなら
-		if (OperatingSystem.IsWindows()) {
+		if (OperatingSystem.IsWindows())
+		{
 			this.iSystemSoundType_initial = this.iSystemSoundType.n現在選択されている項目番号;   // CONFIGに入ったときの値を保持しておく
 			this.iSystemWASAPIBufferSizeMs_initial = this.iSystemWASAPIBufferSizeMs.n現在の値;              // CONFIG脱出時にこの値から変更されているようなら
 			this.iSystemASIODevice_initial = this.iSystemASIODevice.n現在選択されている項目番号;
@@ -1026,7 +1199,8 @@ internal class CActConfigList : CActivity {
 		this.iSystemSoundTimerType_initial = this.iSystemSoundTimerType.GetIndex();
 		base.Activate();
 	}
-	public override void DeActivate() {
+	public override void DeActivate()
+	{
 		if (this.IsDeActivated)
 			return;
 
@@ -1036,14 +1210,17 @@ internal class CActConfigList : CActivity {
 
 		base.DeActivate();
 		#region [ Skin変更 ]
-		if (OpenNijiiroRW.Skin.GetCurrentSkinSubfolderFullName(true) != this.skinSubFolder_org) {
+		if (OpenNijiiroRW.Skin.GetCurrentSkinSubfolderFullName(true) != this.skinSubFolder_org)
+		{
 			OpenNijiiroRW.app.RefreshSkin();
 		}
 		#endregion
 
-		for (int i = 0; i < OpenNijiiroRW.MAX_PLAYERS; i++) {
+		for (int i = 0; i < OpenNijiiroRW.MAX_PLAYERS; i++)
+		{
 			int id = OpenNijiiroRW.SaveFileInstances[OpenNijiiroRW.GetActualPlayer(i)].data.TitleId;
-			if (id > 0) {
+			if (id > 0)
+			{
 				var title = OpenNijiiroRW.Databases.DBNameplateUnlockables.data[id];
 				OpenNijiiroRW.SaveFileInstances[OpenNijiiroRW.GetActualPlayer(i)].data.Title = title.nameplateInfo.cld.GetString("");
 			}
@@ -1052,14 +1229,17 @@ internal class CActConfigList : CActivity {
 		// #24820 2013.1.22 yyagi CONFIGでWASAPI/ASIO/DirectSound関連の設定を変更した場合、サウンドデバイスを再構築する。
 		// #33689 2014.6.17 yyagi CONFIGでSoundTimerTypeの設定を変更した場合も、サウンドデバイスを再構築する。
 		#region [ サウンドデバイス変更 ]
-		if (OperatingSystem.IsWindows()) {
+		if (OperatingSystem.IsWindows())
+		{
 			if (this.iSystemSoundType_initial != this.iSystemSoundType.n現在選択されている項目番号 ||
 			this.iSystemBassBufferSizeMs_initial != this.iSystemBassBufferSizeMs.n現在の値 ||
 			this.iSystemWASAPIBufferSizeMs_initial != this.iSystemWASAPIBufferSizeMs.n現在の値 ||
 			this.iSystemASIODevice_initial != this.iSystemASIODevice.n現在選択されている項目番号 ||
-			this.iSystemSoundTimerType_initial != this.iSystemSoundTimerType.GetIndex()) {
+			this.iSystemSoundTimerType_initial != this.iSystemSoundTimerType.GetIndex())
+			{
 				ESoundDeviceType soundDeviceType;
-				switch (this.iSystemSoundType.n現在選択されている項目番号) {
+				switch (this.iSystemSoundType.n現在選択されている項目番号)
+				{
 					case 0:
 						soundDeviceType = ESoundDeviceType.Bass;
 						break;
@@ -1086,9 +1266,11 @@ internal class CActConfigList : CActivity {
 				OpenNijiiroRW.Skin.ReloadSkin();// 音声の再読み込みをすることによって、音量の初期化を防ぐ
 			}
 		}
-		else {
+		else
+		{
 			if (this.iSystemBassBufferSizeMs_initial != this.iSystemBassBufferSizeMs.n現在の値 ||
-				this.iSystemSoundTimerType_initial != this.iSystemSoundTimerType.GetIndex()) {
+				this.iSystemSoundTimerType_initial != this.iSystemSoundTimerType.GetIndex())
+			{
 				OpenNijiiroRW.SoundManager.tInitialize(ESoundDeviceType.Bass,
 					this.iSystemBassBufferSizeMs.n現在の値,
 					0,
@@ -1102,17 +1284,20 @@ internal class CActConfigList : CActivity {
 		FDK.SoundManager.bIsTimeStretch = this.iSystemTimeStretch.bON;
 		#endregion
 	}
-	public override void CreateManagedResource() {
+	public override void CreateManagedResource()
+	{
 		this.prvFont = HPrivateFastFont.tInstantiateMainFont(OpenNijiiroRW.Skin.Config_Font_Scale);    // t項目リストの設定 の前に必要
 		this.txSkinSample1 = null;      // スキン選択時に動的に設定するため、ここでは初期化しない
 		base.CreateManagedResource();
 	}
-	public override void ReleaseManagedResource() {
+	public override void ReleaseManagedResource()
+	{
 		prvFont.Dispose();
 		OpenNijiiroRW.tテクスチャの解放(ref this.txSkinSample1);
 		base.ReleaseManagedResource();
 	}
-	private void OnListMenuの初期化() {
+	private void OnListMenuの初期化()
+	{
 		OnListMenuの解放();
 		this.listMenu = new stMenuItemRight[this.list項目リスト.Count];
 	}
@@ -1120,23 +1305,30 @@ internal class CActConfigList : CActivity {
 	/// <summary>
 	/// 事前にレンダリングしておいたテクスチャを解放する。
 	/// </summary>
-	private void OnListMenuの解放() {
-		if (listMenu != null) {
-			for (int i = 0; i < listMenu.Length; i++) {
-				if (listMenu[i].txParam != null) {
+	private void OnListMenuの解放()
+	{
+		if (listMenu != null)
+		{
+			for (int i = 0; i < listMenu.Length; i++)
+			{
+				if (listMenu[i].txParam != null)
+				{
 					listMenu[i].txParam.Dispose();
 				}
-				if (listMenu[i].txMenuItemRight != null) {
+				if (listMenu[i].txMenuItemRight != null)
+				{
 					listMenu[i].txMenuItemRight.Dispose();
 				}
 			}
 			this.listMenu = null;
 		}
 	}
-	public override int Draw() {
+	public override int Draw()
+	{
 		throw new InvalidOperationException("Draw(bool)のほうを使用してください。");
 	}
-	public int Draw(bool b項目リスト側にフォーカスがある) {
+	public int Draw(bool b項目リスト側にフォーカスがある)
+	{
 		if (this.IsDeActivated)
 			return 0;
 
@@ -1144,7 +1336,8 @@ internal class CActConfigList : CActivity {
 
 		#region [ 初めての進行描画 ]
 		//-----------------
-		if (base.IsFirstDraw) {
+		if (base.IsFirstDraw)
+		{
 			this.nスクロール用タイマ値 = OpenNijiiroRW.Timer.NowTimeMs;
 			this.ct三角矢印アニメ.Start(0, 9, 50, OpenNijiiroRW.Timer);
 			base.IsFirstDraw = false;
@@ -1160,34 +1353,47 @@ internal class CActConfigList : CActivity {
 		if (n現在時刻 < this.nスクロール用タイマ値) this.nスクロール用タイマ値 = n現在時刻;
 
 		const int INTERVAL = 2; // [ms]
-		while ((n現在時刻 - this.nスクロール用タイマ値) >= INTERVAL) {
+		while ((n現在時刻 - this.nスクロール用タイマ値) >= INTERVAL)
+		{
 			int n目標項目までのスクロール量 = Math.Abs((int)(this.n目標のスクロールカウンタ - this.n現在のスクロールカウンタ));
 			int n加速度 = 0;
 
 			#region [ n加速度の決定；目標まで遠いほど加速する。]
 			//-----------------
-			if (n目標項目までのスクロール量 <= 100) {
+			if (n目標項目までのスクロール量 <= 100)
+			{
 				n加速度 = 2;
-			} else if (n目標項目までのスクロール量 <= 300) {
+			}
+			else if (n目標項目までのスクロール量 <= 300)
+			{
 				n加速度 = 3;
-			} else if (n目標項目までのスクロール量 <= 500) {
+			}
+			else if (n目標項目までのスクロール量 <= 500)
+			{
 				n加速度 = 4;
-			} else {
+			}
+			else
+			{
 				n加速度 = 8;
 			}
 			//-----------------
 			#endregion
 			#region [ this.n現在のスクロールカウンタに n加速度 を加減算。]
 			//-----------------
-			if (this.n現在のスクロールカウンタ < this.n目標のスクロールカウンタ) {
+			if (this.n現在のスクロールカウンタ < this.n目標のスクロールカウンタ)
+			{
 				this.n現在のスクロールカウンタ += n加速度;
-				if (this.n現在のスクロールカウンタ > this.n目標のスクロールカウンタ) {
+				if (this.n現在のスクロールカウンタ > this.n目標のスクロールカウンタ)
+				{
 					// 目標を超えたら目標値で停止。
 					this.n現在のスクロールカウンタ = this.n目標のスクロールカウンタ;
 				}
-			} else if (this.n現在のスクロールカウンタ > this.n目標のスクロールカウンタ) {
+			}
+			else if (this.n現在のスクロールカウンタ > this.n目標のスクロールカウンタ)
+			{
 				this.n現在のスクロールカウンタ -= n加速度;
-				if (this.n現在のスクロールカウンタ < this.n目標のスクロールカウンタ) {
+				if (this.n現在のスクロールカウンタ < this.n目標のスクロールカウンタ)
+				{
 					// 目標を超えたら目標値で停止。
 					this.n現在のスクロールカウンタ = this.n目標のスクロールカウンタ;
 				}
@@ -1196,18 +1402,23 @@ internal class CActConfigList : CActivity {
 			#endregion
 			#region [ 行超え処理、ならびに目標位置に到達したらスクロールを停止して項目変更通知を発行。]
 			//-----------------
-			if (this.n現在のスクロールカウンタ >= 100) {
+			if (this.n現在のスクロールカウンタ >= 100)
+			{
 				this.n現在の選択項目 = this.t次の項目(this.n現在の選択項目);
 				this.n現在のスクロールカウンタ -= 100;
 				this.n目標のスクロールカウンタ -= 100;
-				if (this.n目標のスクロールカウンタ == 0) {
+				if (this.n目標のスクロールカウンタ == 0)
+				{
 					OpenNijiiroRW.stageConfig.t項目変更通知();
 				}
-			} else if (this.n現在のスクロールカウンタ <= -100) {
+			}
+			else if (this.n現在のスクロールカウンタ <= -100)
+			{
 				this.n現在の選択項目 = this.t前の項目(this.n現在の選択項目);
 				this.n現在のスクロールカウンタ += 100;
 				this.n目標のスクロールカウンタ += 100;
-				if (this.n目標のスクロールカウンタ == 0) {
+				if (this.n目標のスクロールカウンタ == 0)
+				{
 					OpenNijiiroRW.stageConfig.t項目変更通知();
 				}
 			}
@@ -1254,7 +1465,8 @@ internal class CActConfigList : CActivity {
 
 			#region [ 現在の行の項目パネル枠を描画。]
 			//-----------------
-			switch (this.list項目リスト[nItem].eパネル種別) {
+			switch (this.list項目リスト[nItem].eパネル種別)
+			{
 				case CItemBase.EPanelType.Normal:
 				case CItemBase.EPanelType.Other:
 					if (OpenNijiiroRW.Tx.Config_ItemBox != null)
@@ -1268,8 +1480,11 @@ internal class CActConfigList : CActivity {
 			if (listMenu[nItem].txMenuItemRight != null)    // 自前のキャッシュに含まれているようなら、再レンダリングせずキャッシュを使用
 			{
 				listMenu[nItem].txMenuItemRight.t2D描画(x + OpenNijiiroRW.Skin.Config_ItemBox_Font_Offset[0], y + OpenNijiiroRW.Skin.Config_ItemBox_Font_Offset[1]);
-			} else {
-				using (var bmpItem = prvFont.DrawText(this.list項目リスト[nItem].str項目名, Color.White, Color.Black, null, 30)) {
+			}
+			else
+			{
+				using (var bmpItem = prvFont.DrawText(this.list項目リスト[nItem].str項目名, Color.White, Color.Black, null, 30))
+				{
 					listMenu[nItem].txMenuItemRight = OpenNijiiroRW.tテクスチャの生成(bmpItem);
 				}
 			}
@@ -1279,7 +1494,8 @@ internal class CActConfigList : CActivity {
 			//-----------------
 			string strParam = null;
 			bool b強調 = false;
-			switch (this.list項目リスト[nItem].e種別) {
+			switch (this.list項目リスト[nItem].e種別)
+			{
 				case CItemBase.E種別.ONorOFFトグル:
 					#region [ *** ]
 					//-----------------
@@ -1291,7 +1507,8 @@ internal class CActConfigList : CActivity {
 				case CItemBase.E種別.ONorOFFor不定スリーステート:
 					#region [ *** ]
 					//-----------------
-					switch (((CItemThreeState)this.list項目リスト[nItem]).e現在の状態) {
+					switch (((CItemThreeState)this.list項目リスト[nItem]).e現在の状態)
+					{
 						case CItemThreeState.E状態.ON:
 							strParam = "ON";
 							break;
@@ -1311,10 +1528,13 @@ internal class CActConfigList : CActivity {
 				case CItemBase.E種別.整数:      // #24789 2011.4.8 yyagi: add PlaySpeed supports (copied them from OPTION)
 					#region [ *** ]
 					//-----------------
-					if (this.list項目リスト[nItem] == this.iCommonPlaySpeed) {
+					if (this.list項目リスト[nItem] == this.iCommonPlaySpeed)
+					{
 						double d = ((double)((CItemInteger)this.list項目リスト[nItem]).n現在の値) / 20.0;
 						strParam = d.ToString("0.000");
-					} else {
+					}
+					else
+					{
 						strParam = ((CItemInteger)this.list項目リスト[nItem]).n現在の値.ToString();
 					}
 					b強調 = centerFlag && this.b要素値にフォーカス中;
@@ -1324,15 +1544,17 @@ internal class CActConfigList : CActivity {
 
 				case CItemBase.E種別.リスト: // #28195 2012.5.2 yyagi: add Skin supports
 					#region [ *** ]
-				//-----------------
-				{
+					//-----------------
+					{
 						CItemList list = (CItemList)this.list項目リスト[nItem];
 						strParam = list.list項目値[list.n現在選択されている項目番号];
 
 						#region [ 必要な場合に、Skinのサンプルを生成・描画する。#28195 2012.5.2 yyagi ]
-						if (this.list項目リスト[this.n現在の選択項目] == this.iSystemSkinSubfolder) {
+						if (this.list項目リスト[this.n現在の選択項目] == this.iSystemSkinSubfolder)
+						{
 							tGenerateSkinSample();      // 最初にSkinの選択肢にきたとき(Enterを押す前)に限り、サンプル生成が発生する。
-							if (txSkinSample1 != null) {
+							if (txSkinSample1 != null)
+							{
 								txSkinSample1.t2D描画(OpenNijiiroRW.Skin.Config_SkinSample1[0], OpenNijiiroRW.Skin.Config_SkinSample1[1]);
 							}
 						}
@@ -1342,27 +1564,34 @@ internal class CActConfigList : CActivity {
 					//-----------------
 					#endregion
 			}
-			if (b強調) {
+			if (b強調)
+			{
 				using (var bmpStr = prvFont.DrawText(strParam,
 						   Color.Black,
 						   Color.White,
 						   null,
 						   OpenNijiiroRW.Skin.Config_Selected_Menu_Text_Grad_Color_1,
 						   OpenNijiiroRW.Skin.Config_Selected_Menu_Text_Grad_Color_2,
-						   30)) {
-					using (var txStr = OpenNijiiroRW.tテクスチャの生成(bmpStr, false)) {
+						   30))
+				{
+					using (var txStr = OpenNijiiroRW.tテクスチャの生成(bmpStr, false))
+					{
 						txStr.t2D描画(x + OpenNijiiroRW.Skin.Config_ItemBox_ItemValue_Font_Offset[0], y + OpenNijiiroRW.Skin.Config_ItemBox_ItemValue_Font_Offset[1]);
 					}
 				}
-			} else {
+			}
+			else
+			{
 				int nIndex = this.list項目リスト[nItem].GetIndex();
-				if (listMenu[nItem].nParam != nIndex || listMenu[nItem].txParam == null) {
+				if (listMenu[nItem].nParam != nIndex || listMenu[nItem].txParam == null)
+				{
 					stMenuItemRight stm = listMenu[nItem];
 					stm.nParam = nIndex;
 					object o = this.list項目リスト[nItem].obj現在値();
 					stm.strParam = (o == null) ? "" : o.ToString();
 
-					using (var bmpStr = prvFont.DrawText(strParam, Color.White, Color.Black, null, 30)) {
+					using (var bmpStr = prvFont.DrawText(strParam, Color.White, Color.Black, null, 30))
+					{
 						stm.txParam = OpenNijiiroRW.tテクスチャの生成(bmpStr, false);
 					}
 
@@ -1380,7 +1609,8 @@ internal class CActConfigList : CActivity {
 
 		#region [ 項目リストにフォーカスがあって、かつスクロールが停止しているなら、パネルの上下に▲印を描画する。]
 		//-----------------
-		if (this.b項目リスト側にフォーカスがある && (this.n目標のスクロールカウンタ == 0)) {
+		if (this.b項目リスト側にフォーカスがある && (this.n目標のスクロールカウンタ == 0))
+		{
 			int x_upper;
 			int x_lower;
 			int y_upper;
@@ -1388,12 +1618,15 @@ internal class CActConfigList : CActivity {
 
 			// 位置決定。
 
-			if (this.b要素値にフォーカス中) {
+			if (this.b要素値にフォーカス中)
+			{
 				x_upper = OpenNijiiroRW.Skin.Config_Arrow_Focus_X[0];  // 要素値の上下あたり。
 				x_lower = OpenNijiiroRW.Skin.Config_Arrow_Focus_X[1];  // 要素値の上下あたり。
 				y_upper = OpenNijiiroRW.Skin.Config_Arrow_Focus_Y[0] - this.ct三角矢印アニメ.CurrentValue;
 				y_lower = OpenNijiiroRW.Skin.Config_Arrow_Focus_Y[1] + this.ct三角矢印アニメ.CurrentValue;
-			} else {
+			}
+			else
+			{
 				x_upper = OpenNijiiroRW.Skin.Config_Arrow_X[0];  // 要素値の上下あたり。
 				x_lower = OpenNijiiroRW.Skin.Config_Arrow_X[1];  // 要素値の上下あたり。
 				y_upper = OpenNijiiroRW.Skin.Config_Arrow_Y[0] - this.ct三角矢印アニメ.CurrentValue;
@@ -1402,7 +1635,8 @@ internal class CActConfigList : CActivity {
 
 			// 描画。
 
-			if (OpenNijiiroRW.Tx.Config_Arrow != null) {
+			if (OpenNijiiroRW.Tx.Config_Arrow != null)
+			{
 				OpenNijiiroRW.Tx.Config_Arrow.t2D描画(x_upper, y_upper, new Rectangle(0, 0, OpenNijiiroRW.Tx.Config_Arrow.sz画像サイズ.Width, OpenNijiiroRW.Tx.Config_Arrow.sz画像サイズ.Height / 2));
 				OpenNijiiroRW.Tx.Config_Arrow.t2D描画(x_lower, y_lower, new Rectangle(0, OpenNijiiroRW.Tx.Config_Arrow.sz画像サイズ.Height / 2, OpenNijiiroRW.Tx.Config_Arrow.sz画像サイズ.Width, OpenNijiiroRW.Tx.Config_Arrow.sz画像サイズ.Height / 2));
 			}
@@ -1417,7 +1651,8 @@ internal class CActConfigList : CActivity {
 
 	#region [ private ]
 	//-----------------
-	private enum Eメニュー種別 {
+	private enum Eメニュー種別
+	{
 		System,
 		Drums,
 		KeyAssignSystem,        // #24609 2011.4.12 yyagi: 画面キャプチャキーのアサイン
@@ -1561,7 +1796,8 @@ internal class CActConfigList : CActivity {
 	private int n目標のスクロールカウンタ;
 
 	private CCachedFontRenderer prvFont;
-	private struct stMenuItemRight {
+	private struct stMenuItemRight
+	{
 		public CTexture txMenuItemRight;
 		public int nParam;
 		public string strParam;
@@ -1637,27 +1873,35 @@ internal class CActConfigList : CActivity {
 	#endregion
 
 	public Thread ScoreIniImportThread { get; private set; }
-	public bool ScoreIniImportThreadIsActive {
-		get {
+	public bool ScoreIniImportThreadIsActive
+	{
+		get
+		{
 			if (ScoreIniImportThread == null) return false;
 			return ScoreIniImportThread.IsAlive;
 		}
 	}
 
-	private int t前の項目(int nItem) {
-		if (--nItem < 0) {
+	private int t前の項目(int nItem)
+	{
+		if (--nItem < 0)
+		{
 			nItem = this.list項目リスト.Count - 1;
 		}
 		return nItem;
 	}
-	private int t次の項目(int nItem) {
-		if (++nItem >= this.list項目リスト.Count) {
+	private int t次の項目(int nItem)
+	{
+		if (++nItem >= this.list項目リスト.Count)
+		{
 			nItem = 0;
 		}
 		return nItem;
 	}
-	private void tConfigIniへ記録する() {
-		switch (this.eメニュー種別) {
+	private void tConfigIniへ記録する()
+	{
+		switch (this.eメニュー種別)
+		{
 			case Eメニュー種別.System:
 				this.tConfigIniへ記録する_System();
 				return;
@@ -1667,7 +1911,8 @@ internal class CActConfigList : CActivity {
 				return;
 		}
 	}
-	private void tConfigIniへ記録する_System() {
+	private void tConfigIniへ記録する_System()
+	{
 		OpenNijiiroRW.ConfigIni.nSongSpeed = this.iCommonPlaySpeed.n現在の値;
 
 		OpenNijiiroRW.ConfigIni.nGraphicsDeviceType = GraphicsDeviceFromString(AvailableGraphicsDevices[this.iSystemGraphicsType.n現在選択されている項目番号]);
@@ -1705,7 +1950,8 @@ internal class CActConfigList : CActivity {
 		OpenNijiiroRW.Skin.SetCurrentSkinSubfolderFullName(OpenNijiiroRW.ConfigIni.strSystemSkinSubfolderFullName, true);
 
 		OpenNijiiroRW.ConfigIni.nBassBufferSizeMs = this.iSystemBassBufferSizeMs.n現在の値;                // #24820 2013.1.15 yyagi
-		if (OperatingSystem.IsWindows()) {
+		if (OperatingSystem.IsWindows())
+		{
 			OpenNijiiroRW.ConfigIni.nSoundDeviceType = this.iSystemSoundType.n現在選択されている項目番号;       // #24820 2013.1.3 yyagi
 			OpenNijiiroRW.ConfigIni.nWASAPIBufferSizeMs = this.iSystemWASAPIBufferSizeMs.n現在の値;                // #24820 2013.1.15 yyagi
 			OpenNijiiroRW.ConfigIni.nASIODevice = this.iSystemASIODevice.n現在選択されている項目番号;           // #24820 2013.1.17 yyagi
@@ -1733,7 +1979,8 @@ internal class CActConfigList : CActivity {
 		OpenNijiiroRW.ConfigIni.DEBUG_bShowImgui = this.debugImGui.bON;
 #endif
 	}
-	private void tConfigIniへ記録する_Drums() {
+	private void tConfigIniへ記録する_Drums()
+	{
 		OpenNijiiroRW.ConfigIni.nRollsPerSec = this.iRollsPerSec.n現在の値;
 
 		OpenNijiiroRW.ConfigIni.nDefaultAILevel = this.iAILevel.n現在の値;

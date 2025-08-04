@@ -5,29 +5,37 @@ using System.Text;
 
 namespace OpenNijiiroRW;
 
-internal class Program {
+internal class Program
+{
 	#region [ 二重起動チェック、DLL存在チェック ]
 	//-----------------------------
 	private static Mutex mutex二重起動防止用;
 
-	private static bool tDLLの存在チェック(string strDll名, string str存在しないときに表示するエラー文字列jp, string str存在しないときに表示するエラー文字列en, bool bLoadDllCheck) {
+	private static bool tDLLの存在チェック(string strDll名, string str存在しないときに表示するエラー文字列jp, string str存在しないときに表示するエラー文字列en, bool bLoadDllCheck)
+	{
 		string str存在しないときに表示するエラー文字列 = (CultureInfo.CurrentUICulture.TwoLetterISOLanguageName == "ja") ?
 			str存在しないときに表示するエラー文字列jp : str存在しないときに表示するエラー文字列en;
-		if (bLoadDllCheck) {
+		if (bLoadDllCheck)
+		{
 			IntPtr hModule = LoadLibrary(strDll名);      // 実際にLoadDll()してチェックする
-			if (hModule == IntPtr.Zero) {
+			if (hModule == IntPtr.Zero)
+			{
 				return false;
 			}
 			FreeLibrary(hModule);
-		} else {                                                    // 単純にファイルの存在有無をチェックするだけ (プロジェクトで「参照」していたり、アンマネージドなDLLが暗黙リンクされるものはこちら)
+		}
+		else
+		{                                                    // 単純にファイルの存在有無をチェックするだけ (プロジェクトで「参照」していたり、アンマネージドなDLLが暗黙リンクされるものはこちら)
 			string path = Path.Combine(System.IO.Directory.GetCurrentDirectory(), strDll名);
-			if (!File.Exists(path)) {
+			if (!File.Exists(path))
+			{
 				return false;
 			}
 		}
 		return true;
 	}
-	private static bool tDLLの存在チェック(string strDll名, string str存在しないときに表示するエラー文字列jp, string str存在しないときに表示するエラー文字列en) {
+	private static bool tDLLの存在チェック(string strDll名, string str存在しないときに表示するエラー文字列jp, string str存在しないときに表示するエラー文字列en)
+	{
 		return true;
 	}
 
@@ -42,12 +50,14 @@ internal class Program {
 	#endregion
 
 	[STAThread]
-	static void Main() {
+	static void Main()
+	{
 		Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
 
 		mutex二重起動防止用 = new Mutex(false, "OpenNijiiroRW");
 
-		if (mutex二重起動防止用.WaitOne(0, false)) {
+		if (mutex二重起動防止用.WaitOne(0, false))
+		{
 			string newLine = Environment.NewLine;
 			bool bDLLnotfound = false;
 
@@ -74,7 +84,8 @@ internal class Program {
 
 					string platform = "";
 
-					switch (RuntimeInformation.ProcessArchitecture) {
+					switch (RuntimeInformation.ProcessArchitecture)
+					{
 						case Architecture.X64:
 							platform = "x64";
 							break;
@@ -95,7 +106,8 @@ internal class Program {
 					DirectoryInfo info = new DirectoryInfo(AppContext.BaseDirectory + @"Libs/" + osplatform + "-" + platform + "/");
 
 					//実行ファイルの階層にライブラリをコピー
-					foreach (FileInfo fileinfo in info.GetFiles()) {
+					foreach (FileInfo fileinfo in info.GetFiles())
+					{
 						fileinfo.CopyTo(AppContext.BaseDirectory + fileinfo.Name, true);
 					}
 
@@ -127,7 +139,8 @@ internal class Program {
 			mutex二重起動防止用 = null;
 
 			// END #24615 2011.03.09 from
-		} else      // DTXManiaが既に起動中
+		}
+		else      // DTXManiaが既に起動中
 		{
 
 			// → 引数が0個の時はそのまま終了
@@ -143,10 +156,12 @@ internal class Program {
 				Process current = Process.GetCurrentProcess();
 				Process[] running = Process.GetProcessesByName(current.ProcessName);
 				Process target = null;
-				foreach (Process p in running) {
+				foreach (Process p in running)
+				{
 					if (p.Id != current.Id) // プロセス名は同じでかつ、プロセスIDが自分自身とは異なるものを探す
 					{
-						if (p.MainModule.FileName == current.MainModule.FileName && p.MainWindowHandle != IntPtr.Zero) {
+						if (p.MainModule.FileName == current.MainModule.FileName && p.MainWindowHandle != IntPtr.Zero)
+						{
 							target = p;
 							break;
 						}
@@ -155,14 +170,20 @@ internal class Program {
 				#endregion
 
 				#region [ 起動中のDTXManiaがいれば、そのプロセスにコマンドラインを投げる ]
-				if (target != null) {
+				if (target != null)
+				{
 					string[] commandLineArgs = Environment.GetCommandLineArgs();
-					if (commandLineArgs != null && commandLineArgs.Length > 1) {
+					if (commandLineArgs != null && commandLineArgs.Length > 1)
+					{
 						string arg = null;
-						for (int j = 1; j < commandLineArgs.Length; j++) {
-							if (j == 1) {
+						for (int j = 1; j < commandLineArgs.Length; j++)
+						{
+							if (j == 1)
+							{
 								arg += commandLineArgs[j];
-							} else {
+							}
+							else
+							{
 								arg += " " + "\"" + commandLineArgs[j] + "\"";
 							}
 						}
@@ -170,7 +191,8 @@ internal class Program {
 					break;
 				}
 				#endregion
-				else {
+				else
+				{
 					Trace.TraceInformation("メッセージ送信先のプロセスが見つからず。5回リトライします。");
 					Thread.Sleep(200);
 				}

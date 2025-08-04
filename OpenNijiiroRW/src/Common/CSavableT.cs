@@ -1,11 +1,14 @@
 ﻿namespace OpenNijiiroRW;
 
-class CSavableT<T> where T : new() {
-	public virtual string _fn {
+class CSavableT<T> where T : new()
+{
+	public virtual string _fn
+	{
 		get;
 		protected set;
 	}
-	public void tDBInitSavable() {
+	public void tDBInitSavable()
+	{
 		if (!File.Exists(_fn))
 			tSaveFile();
 
@@ -16,11 +19,13 @@ class CSavableT<T> where T : new() {
 
 	#region [private]
 
-	private void tSaveFile() {
+	private void tSaveFile()
+	{
 		ConfigManager.SaveConfig(data, _fn);
 	}
 
-	private void tLoadFile() {
+	private void tLoadFile()
+	{
 		data = ConfigManager.GetConfig<T>(_fn);
 	}
 

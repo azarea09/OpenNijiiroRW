@@ -8,7 +8,8 @@ using RectangleF = System.Drawing.RectangleF;
 
 namespace FDK;
 
-public class CTexture : IDisposable {
+public class CTexture : IDisposable
+{
 	/// <summary>
 	/// バッファの集まり
 	/// </summary>
@@ -62,7 +63,8 @@ public class CTexture : IDisposable {
 	/// <summary>
 	/// 描画に使用する共通のバッファを作成
 	/// </summary>
-	public static void Init() {
+	public static void Init()
+	{
 		//シェーダーを作成、実際のコードはCreateShaderProgramWithShaderを見てください
 		ShaderProgram = ShaderHelper.CreateShaderProgramFromSource(
 			@"#version 100
@@ -138,15 +140,18 @@ public class CTexture : IDisposable {
 		};
 		VBO = Game.Gl.GenBuffer(); //頂点バッファを作る
 		Game.Gl.BindBuffer(BufferTargetARB.ArrayBuffer, VBO); //頂点バッファをバインドをする
-		unsafe {
-			fixed (float* data = vertices) {
+		unsafe
+		{
+			fixed (float* data = vertices)
+			{
 				Game.Gl.BufferData(BufferTargetARB.ArrayBuffer, (nuint)(vertices.Length * sizeof(float)), data, BufferUsageARB.StaticDraw); //VRAMに頂点データを送る
 			}
 		}
 
 		uint locationPosition = (uint)Game.Gl.GetAttribLocation(ShaderProgram, "aPosition");
 		Game.Gl.EnableVertexAttribArray(locationPosition); //layout (location = 0)を使用可能に
-		unsafe {
+		unsafe
+		{
 			Game.Gl.VertexAttribPointer(locationPosition, 3, VertexAttribPointerType.Float, false, 3 * sizeof(float), (void*)0); //float3個で一つのxyzの塊として頂点を作る
 		}
 		//-----
@@ -165,8 +170,10 @@ public class CTexture : IDisposable {
 			2, 1, 3
 		};
 		IndicesCount = (uint)indices.Length; //数を登録する
-		unsafe {
-			fixed (uint* data = indices) {
+		unsafe
+		{
+			fixed (uint* data = indices)
+			{
 				Game.Gl.BufferData(BufferTargetARB.ElementArrayBuffer, (nuint)(indices.Length * sizeof(uint)), data, BufferUsageARB.StaticDraw); //VRAMに送る
 			}
 		}
@@ -183,15 +190,18 @@ public class CTexture : IDisposable {
 			0.0f, 1.0f,
 			1.0f, 1.0f,
 		};
-		unsafe {
-			fixed (float* data = uvs) {
+		unsafe
+		{
+			fixed (float* data = uvs)
+			{
 				Game.Gl.BufferData(BufferTargetARB.ArrayBuffer, (nuint)(uvs.Length * sizeof(float)), data, BufferUsageARB.StaticDraw);
 			}
 		}
 
 		uint locationUV = (uint)Game.Gl.GetAttribLocation(ShaderProgram, "aUV");
 		Game.Gl.EnableVertexAttribArray(locationUV);
-		unsafe {
+		unsafe
+		{
 			Game.Gl.VertexAttribPointer(locationUV, 2, VertexAttribPointerType.Float, false, 2 * sizeof(float), (void*)0);
 		}
 		//-----
@@ -209,7 +219,8 @@ public class CTexture : IDisposable {
 	/// <summary>
 	/// 描画に使用する共通のバッファを解放
 	/// </summary>
-	public static void Terminate() {
+	public static void Terminate()
+	{
 		//ちゃんとバッファは解放すること
 		Game.Gl.DeleteVertexArray(VAO);
 		Game.Gl.DeleteBuffer(VBO);
@@ -220,54 +231,71 @@ public class CTexture : IDisposable {
 
 	// Properties
 
-	public bool bUseNoiseEffect {
+	public bool bUseNoiseEffect
+	{
 		get;
 		set;
 	}
 
-	public bool b加算合成 {
+	public bool b加算合成
+	{
 		get;
 		set;
 	}
-	public bool b乗算合成 {
+	public bool b乗算合成
+	{
 		get;
 		set;
 	}
-	public bool b減算合成 {
+	public bool b減算合成
+	{
 		get;
 		set;
 	}
-	public bool bスクリーン合成 {
+	public bool bスクリーン合成
+	{
 		get;
 		set;
 	}
-	public float Rotation {
+	public float Rotation
+	{
 		get;
 		set;
 	}
-	public float fZRotation {
+	public float fZRotation
+	{
 		get => Rotation;
 		set { Rotation = value; }
 	}
-	public int Opacity {
-		get {
+	public int Opacity
+	{
+		get
+		{
 			return this._opacity;
 		}
-		set {
-			if (value < 0) {
+		set
+		{
+			if (value < 0)
+			{
 				this._opacity = 0;
-			} else if (value > 0xff) {
+			}
+			else if (value > 0xff)
+			{
 				this._opacity = 0xff;
-			} else {
+			}
+			else
+			{
 				this._opacity = value;
 			}
 		}
 	}
-	public Size szTextureSize {
+	public Size szTextureSize
+	{
 		get;
 		private set;
 	}
-	public Size sz画像サイズ {
+	public Size sz画像サイズ
+	{
 		get;
 		protected set;
 	}
@@ -288,7 +316,8 @@ public class CTexture : IDisposable {
 
 	// Constructor
 
-	public CTexture() {
+	public CTexture()
+	{
 		this.sz画像サイズ = new Size(0, 0);
 		this.szTextureSize = new Size(0, 0);
 		this._opacity = 0xff;
@@ -298,7 +327,8 @@ public class CTexture : IDisposable {
 		//			this._txData = null;
 	}
 
-	public CTexture(CTexture tx) {
+	public CTexture(CTexture tx)
+	{
 		this.sz画像サイズ = tx.sz画像サイズ;
 		this.szTextureSize = tx.szTextureSize;
 		this._opacity = tx._opacity;
@@ -309,15 +339,18 @@ public class CTexture : IDisposable {
 		//			this._txData = null;
 	}
 
-	public void UpdateTexture(CTexture texture, int n幅, int n高さ) {
+	public void UpdateTexture(CTexture texture, int n幅, int n高さ)
+	{
 		Pointer = texture.Pointer;
 		this.sz画像サイズ = new Size(n幅, n高さ);
 		this.szTextureSize = this.t指定されたサイズを超えない最適なテクスチャサイズを返す(this.sz画像サイズ);
 		this.rc全画像 = new Rectangle(0, 0, this.sz画像サイズ.Width, this.sz画像サイズ.Height);
 	}
 
-	public void UpdateTexture(IntPtr texture, int width, int height, PixelFormat rgbaType) {
-		unsafe {
+	public void UpdateTexture(IntPtr texture, int width, int height, PixelFormat rgbaType)
+	{
+		unsafe
+		{
 			Game.Gl.DeleteTexture(Pointer); //解放
 			void* data = texture.ToPointer();
 			Pointer = GenTexture(data, (uint)width, (uint)height, rgbaType);
@@ -339,22 +372,30 @@ public class CTexture : IDisposable {
 	/// <param name="format">テクスチャのフォーマット。</param>
 	/// <exception cref="CTextureCreateFailedException">テクスチャの作成に失敗しました。</exception>
 	public CTexture(SKBitmap bitmap)
-		: this() {
-		try {
+		: this()
+	{
+		try
+		{
 			MakeTexture(bitmap, false);
-		} catch (Exception e) {
+		}
+		catch (Exception e)
+		{
 			this.Dispose();
 			throw new CTextureCreateFailedException("ビットマップからのテクスチャの生成に失敗しました。", e);
 		}
 	}
 
 	public CTexture(int n幅, int n高さ)
-		: this() {
-		try {
+		: this()
+	{
+		try
+		{
 			this.sz画像サイズ = new Size(n幅, n高さ);
 			this.szTextureSize = this.t指定されたサイズを超えない最適なテクスチャサイズを返す(this.sz画像サイズ);
 			this.rc全画像 = new Rectangle(0, 0, this.sz画像サイズ.Width, this.sz画像サイズ.Height);
-		} catch {
+		}
+		catch
+		{
 			this.Dispose();
 			throw new CTextureCreateFailedException(string.Format("テクスチャの生成に失敗しました。\n({0}x{1}, {2})", n幅, n高さ));
 		}
@@ -374,10 +415,12 @@ public class CTexture : IDisposable {
 	/// <param name="pool">テクスチャの管理方法。</param>
 	/// <exception cref="CTextureCreateFailedException">テクスチャの作成に失敗しました。</exception>
 	public CTexture(string strファイル名, bool b黒を透過する)
-		: this() {
+		: this()
+	{
 		MakeTexture(strファイル名, b黒を透過する);
 	}
-	public void MakeTexture(string strファイル名, bool b黒を透過する) {
+	public void MakeTexture(string strファイル名, bool b黒を透過する)
+	{
 		if (!File.Exists(strファイル名))     // #27122 2012.1.13 from: ImageInformation では FileNotFound 例外は返ってこないので、ここで自分でチェックする。わかりやすいログのために。
 			throw new FileNotFoundException(string.Format("ファイルが存在しません。\n[{0}]", strファイル名));
 
@@ -387,28 +430,34 @@ public class CTexture : IDisposable {
 	}
 
 	public CTexture(SKBitmap bitmap, bool b黒を透過する)
-		: this() {
+		: this()
+	{
 		MakeTexture(bitmap, b黒を透過する);
 	}
 
-	private unsafe uint GenTexture(void* data, uint width, uint height, PixelFormat pixelFormat) {
+	private unsafe uint GenTexture(void* data, uint width, uint height, PixelFormat pixelFormat)
+	{
 		//テクスチャハンドルの作成-----
 		uint handle = Game.Gl.GenTexture();
 		Game.Gl.BindTexture(TextureTarget.Texture2D, handle);
 		//-----
 
 		//テクスチャのデータをVramに送る
-		if (OperatingSystem.IsMacOS()) {
+		if (OperatingSystem.IsMacOS())
+		{
 			// Desktop OpenGL requires sized internal formats
-			int internalFormat = pixelFormat switch {
+			int internalFormat = pixelFormat switch
+			{
 				PixelFormat.Bgra => (int)InternalFormat.Rgba8,
 				PixelFormat.Rgba => (int)InternalFormat.Rgba8,
 				PixelFormat.Rgb => (int)InternalFormat.Rgb8,
 				_ => (int)InternalFormat.Rgba8
 			};
-			
+
 			Game.Gl.TexImage2D(TextureTarget.Texture2D, 0, internalFormat, width, height, 0, pixelFormat, GLEnum.UnsignedByte, data);
-		} else {
+		}
+		else
+		{
 			// OpenGL ES allows unsized internal formats
 			Game.Gl.TexImage2D(TextureTarget.Texture2D, 0, (int)pixelFormat, width, height, 0, pixelFormat, GLEnum.UnsignedByte, data);
 		}
@@ -424,26 +473,37 @@ public class CTexture : IDisposable {
 		return handle;
 	}
 
-	public void MakeTexture(SKBitmap bitmap, bool b黒を透過する) {
-		try {
-			if (bitmap == null) {
+	public void MakeTexture(SKBitmap bitmap, bool b黒を透過する)
+	{
+		try
+		{
+			if (bitmap == null)
+			{
 				bitmap = new SKBitmap(10, 10);
 			}
 
-			unsafe {
-				fixed (void* data = bitmap.Pixels) {
-					if (Thread.CurrentThread.ManagedThreadId == Game.MainThreadID) {
+			unsafe
+			{
+				fixed (void* data = bitmap.Pixels)
+				{
+					if (Thread.CurrentThread.ManagedThreadId == Game.MainThreadID)
+					{
 						Pointer = GenTexture(data, (uint)bitmap.Width, (uint)bitmap.Height, PixelFormat.Bgra);
-					} else {
+					}
+					else
+					{
 						SKBitmap bm = bitmap.Copy();
-						Action createInstance = () => {
-							fixed (void* data2 = bitmap.Pixels) {
+						Action createInstance = () =>
+						{
+							fixed (void* data2 = bitmap.Pixels)
+							{
 								Pointer = GenTexture(data2, (uint)bitmap.Width, (uint)bitmap.Height, PixelFormat.Bgra);
 							}
 							bm.Dispose();
 						};
 						Game.AsyncActions.Add(createInstance);
-						while (Game.AsyncActions.Contains(createInstance)) {
+						while (Game.AsyncActions.Contains(createInstance))
+						{
 
 						}
 					}
@@ -453,14 +513,17 @@ public class CTexture : IDisposable {
 			this.sz画像サイズ = new Size(bitmap.Width, bitmap.Height);
 			this.rc全画像 = new Rectangle(0, 0, this.sz画像サイズ.Width, this.sz画像サイズ.Height);
 			this.szTextureSize = this.t指定されたサイズを超えない最適なテクスチャサイズを返す(this.sz画像サイズ);
-		} catch {
+		}
+		catch
+		{
 			this.Dispose();
 			// throw new CTextureCreateFailedException( string.Format( "テクスチャの生成に失敗しました。\n{0}", strファイル名 ) );
 			throw new CTextureCreateFailedException(string.Format("テクスチャの生成に失敗しました。\n"));
 		}
 	}
 
-	public void tSetScale(float x, float y) {
+	public void tSetScale(float x, float y)
+	{
 		Scale.X = x;
 		Scale.Y = y;
 	}
@@ -469,112 +532,145 @@ public class CTexture : IDisposable {
 
 	// 2016.11.10 kairera0467 拡張
 	// Rectangleを使う場合、座標調整のためにテクスチャサイズの値をそのまま使うとまずいことになるため、Rectragleから幅を取得して調整をする。
-	public void t2D中心基準描画(int x, int y) {
+	public void t2D中心基準描画(int x, int y)
+	{
 		this.t2D描画(x - (this.szTextureSize.Width / 2), y - (this.szTextureSize.Height / 2), 1f, this.rc全画像);
 	}
 
-	public void t2D中心基準描画Mirrored(int x, int y) {
+	public void t2D中心基準描画Mirrored(int x, int y)
+	{
 		this.t2D左右反転描画(x - (this.szTextureSize.Width / 2), y - (this.szTextureSize.Height / 2), 1f, this.rc全画像);
 	}
 
-	public void t2D中心基準描画Mirrored(float x, float y) {
+	public void t2D中心基準描画Mirrored(float x, float y)
+	{
 		this.t2D左右反転描画(x - (this.szTextureSize.Width / 2), y - (this.szTextureSize.Height / 2), 1f, this.rc全画像);
 	}
 
-	public void t2D中心基準描画(int x, int y, Rectangle rc画像内の描画領域) {
+	public void t2D中心基準描画(int x, int y, Rectangle rc画像内の描画領域)
+	{
 		this.t2D描画(x - (rc画像内の描画領域.Width / 2), y - (rc画像内の描画領域.Height / 2), 1f, rc画像内の描画領域);
 	}
-	public void t2D中心基準描画(float x, float y) {
+	public void t2D中心基準描画(float x, float y)
+	{
 		this.t2D描画((int)x - (this.szTextureSize.Width / 2), (int)y - (this.szTextureSize.Height / 2), 1f, this.rc全画像);
 	}
-	public void t2D中心基準描画(float x, float y, Rectangle rc画像内の描画領域) {
+	public void t2D中心基準描画(float x, float y, Rectangle rc画像内の描画領域)
+	{
 		this.t2D描画((int)x - (rc画像内の描画領域.Width / 2), (int)y - (rc画像内の描画領域.Height / 2), 1.0f, rc画像内の描画領域);
 	}
-	public void t2D中心基準描画(float x, float y, float depth, Rectangle rc画像内の描画領域) {
+	public void t2D中心基準描画(float x, float y, float depth, Rectangle rc画像内の描画領域)
+	{
 		this.t2D描画((int)x - (rc画像内の描画領域.Width / 2), (int)y - (rc画像内の描画領域.Height / 2), depth, rc画像内の描画領域);
 	}
 
 	// 下を基準にして描画する(拡大率考慮)メソッドを追加。 (AioiLight)
-	public void t2D拡大率考慮下基準描画(int x, int y) {
+	public void t2D拡大率考慮下基準描画(int x, int y)
+	{
 		this.t2D描画(x, y - (szTextureSize.Height * this.Scale.Y), 1f, this.rc全画像);
 	}
-	public void t2D拡大率考慮下基準描画(int x, int y, Rectangle rc画像内の描画領域) {
+	public void t2D拡大率考慮下基準描画(int x, int y, Rectangle rc画像内の描画領域)
+	{
 		this.t2D描画(x, y - (rc画像内の描画領域.Height * this.Scale.Y), 1f, rc画像内の描画領域);
 	}
-	public void t2D拡大率考慮下中心基準描画(int x, int y) {
+	public void t2D拡大率考慮下中心基準描画(int x, int y)
+	{
 		this.t2D描画(x - (this.szTextureSize.Width / 2 * this.Scale.X), y - (szTextureSize.Height * this.Scale.Y), 1f, this.rc全画像);
 	}
 
-	public void t2D拡大率考慮下中心基準描画Mirrored(int x, int y) {
+	public void t2D拡大率考慮下中心基準描画Mirrored(int x, int y)
+	{
 		this.t2D左右反転描画(x - (this.szTextureSize.Width / 2 * this.Scale.X), y - (szTextureSize.Height * this.Scale.Y), 1f, this.rc全画像);
 	}
-	public void t2D拡大率考慮下中心基準描画Mirrored(float x, float y) {
+	public void t2D拡大率考慮下中心基準描画Mirrored(float x, float y)
+	{
 		this.t2D左右反転描画(x - (this.szTextureSize.Width / 2 * this.Scale.X), y - (szTextureSize.Height * this.Scale.Y), 1f, this.rc全画像);
 	}
 
-	public void t2D拡大率考慮下基準描画(float x, float y) {
+	public void t2D拡大率考慮下基準描画(float x, float y)
+	{
 		this.t2D描画(x, y - (szTextureSize.Height * this.Scale.Y), 1f, this.rc全画像);
 	}
-	public void t2D拡大率考慮下基準描画(float x, float y, RectangleF rc画像内の描画領域) {
+	public void t2D拡大率考慮下基準描画(float x, float y, RectangleF rc画像内の描画領域)
+	{
 		this.t2D描画(x, y - (rc画像内の描画領域.Height * this.Scale.Y), 1f, rc画像内の描画領域);
 	}
-	public void t2D拡大率考慮下中心基準描画(float x, float y) {
+	public void t2D拡大率考慮下中心基準描画(float x, float y)
+	{
 		this.t2D拡大率考慮下中心基準描画((int)x, (int)y);
 	}
 
-	public void t2D拡大率考慮下中心基準描画(int x, int y, Rectangle rc画像内の描画領域) {
+	public void t2D拡大率考慮下中心基準描画(int x, int y, Rectangle rc画像内の描画領域)
+	{
 		this.t2D描画(x - ((rc画像内の描画領域.Width / 2)), y - (rc画像内の描画領域.Height * this.Scale.Y), 1f, rc画像内の描画領域);
 	}
-	public void t2D拡大率考慮下中心基準描画(float x, float y, Rectangle rc画像内の描画領域) {
+	public void t2D拡大率考慮下中心基準描画(float x, float y, Rectangle rc画像内の描画領域)
+	{
 		this.t2D拡大率考慮下中心基準描画((int)x, (int)y, rc画像内の描画領域);
 	}
-	public void t2D下中央基準描画(int x, int y) {
+	public void t2D下中央基準描画(int x, int y)
+	{
 		this.t2D描画(x - (this.szTextureSize.Width / 2), y - (szTextureSize.Height), this.rc全画像);
 	}
-	public void t2D下中央基準描画(int x, int y, Rectangle rc画像内の描画領域) {
+	public void t2D下中央基準描画(int x, int y, Rectangle rc画像内の描画領域)
+	{
 		this.t2D描画(x - (rc画像内の描画領域.Width / 2), y - (rc画像内の描画領域.Height), rc画像内の描画領域);
 		//this.t2D描画(devicek x, y, rc画像内の描画領域;
 	}
 
-	public void t2D_DisplayImage_RollNote(int x, int y, RectangleF rc) {
+	public void t2D_DisplayImage_RollNote(int x, int y, RectangleF rc)
+	{
 		this.t2D描画(x - (rc.Width / 2 * this.Scale.X), y - (rc.Height / 2 * this.Scale.Y), 1f, rc, true);
 	}
 
-	public void t2D拡大率考慮中央基準描画(int x, int y) {
+	public void t2D拡大率考慮中央基準描画(int x, int y)
+	{
 		this.t2D描画(x - (this.szTextureSize.Width / 2 * this.Scale.X), y - (szTextureSize.Height / 2 * this.Scale.Y), 1f, this.rc全画像);
 	}
-	public void t2D拡大率考慮中央基準描画(int x, int y, RectangleF rc) {
+	public void t2D拡大率考慮中央基準描画(int x, int y, RectangleF rc)
+	{
 		this.t2D描画(x - (rc.Width / 2 * this.Scale.X), y - (rc.Height / 2 * this.Scale.Y), 1f, rc);
 	}
-	public void t2D_DisplayImage_AnchorCenterLeft(int x, int y, RectangleF rc) {
+	public void t2D_DisplayImage_AnchorCenterLeft(int x, int y, RectangleF rc)
+	{
 		this.t2D描画(x, y - (rc.Height / 2 * this.Scale.Y), 1f, rc);
 	}
-	public void t2D拡大率考慮上中央基準描画(int x, int y, RectangleF rc) {
+	public void t2D拡大率考慮上中央基準描画(int x, int y, RectangleF rc)
+	{
 		this.t2D描画(x - (rc.Width / 2 * this.Scale.X), y, 1f, rc);
 	}
-	public void t2D_DisplayImage_AnchorUpRight(int x, int y, RectangleF rc) {
+	public void t2D_DisplayImage_AnchorUpRight(int x, int y, RectangleF rc)
+	{
 		this.t2D描画(x - (rc.Width * this.Scale.X), y, 1f, rc);
 	}
-	public void t2D拡大率考慮上中央基準描画(int x, int y) {
+	public void t2D拡大率考慮上中央基準描画(int x, int y)
+	{
 		this.t2D描画(x - (rc全画像.Width / 2 * this.Scale.X), y, 1f, rc全画像);
 	}
-	public void t2D拡大率考慮中央基準描画(float x, float y) {
+	public void t2D拡大率考慮中央基準描画(float x, float y)
+	{
 		this.t2D描画(x - (this.szTextureSize.Width / 2 * this.Scale.X), y - (szTextureSize.Height / 2 * this.Scale.Y), 1f, this.rc全画像);
 	}
-	public void t2D拡大率考慮中央基準描画Mirrored(float x, float y) {
+	public void t2D拡大率考慮中央基準描画Mirrored(float x, float y)
+	{
 		this.t2D左右反転描画(x - (this.szTextureSize.Width / 2 * this.Scale.X), y - (szTextureSize.Height / 2 * this.Scale.Y), 1f, this.rc全画像);
 	}
-	public void t2D拡大率考慮中央基準描画(float x, float y, RectangleF rc) {
+	public void t2D拡大率考慮中央基準描画(float x, float y, RectangleF rc)
+	{
 		this.t2D描画(x - (rc.Width / 2 * this.Scale.X), y - (rc.Height / 2 * this.Scale.Y), 1f, rc);
 	}
-	public void t2D拡大率考慮描画(RefPnt refpnt, float x, float y) {
+	public void t2D拡大率考慮描画(RefPnt refpnt, float x, float y)
+	{
 		this.t2D拡大率考慮描画(refpnt, x, y, rc全画像);
 	}
-	public void t2D拡大率考慮描画(RefPnt refpnt, float x, float y, Rectangle rect) {
+	public void t2D拡大率考慮描画(RefPnt refpnt, float x, float y, Rectangle rect)
+	{
 		this.t2D拡大率考慮描画(refpnt, x, y, 1f, rect);
 	}
-	public void t2D拡大率考慮描画(RefPnt refpnt, float x, float y, float depth, Rectangle rect) {
-		switch (refpnt) {
+	public void t2D拡大率考慮描画(RefPnt refpnt, float x, float y, float depth, Rectangle rect)
+	{
+		switch (refpnt)
+		{
 			case RefPnt.UpLeft:
 				this.t2D描画(x, y, depth, rect);
 				break;
@@ -607,17 +703,21 @@ public class CTexture : IDisposable {
 		}
 
 	}
-	public void t2D_DisplayImage_AnchorCenter(int x, int y) {
+	public void t2D_DisplayImage_AnchorCenter(int x, int y)
+	{
 		this.t2D描画(x - (this.rc全画像.Width / 2 * this.Scale.X), y - (this.rc全画像.Height / 2 * this.Scale.Y), 1f, this.rc全画像);
 	}
-	public void t2D_DisplayImage_AnchorCenter(int x, int y, Rectangle rc) {
+	public void t2D_DisplayImage_AnchorCenter(int x, int y, Rectangle rc)
+	{
 		this.t2D描画(x - (rc.Width / 2 * this.Scale.X), y - (rc.Height / 2 * this.Scale.Y), 1f, rc);
 	}
-	public void t2D_DisplayImage_AnchorCenter(int x, int y, RectangleF rc) {
+	public void t2D_DisplayImage_AnchorCenter(int x, int y, RectangleF rc)
+	{
 		this.t2D描画(x - (rc.Width / 2 * this.Scale.X), y - (rc.Height / 2 * this.Scale.Y), 1f, rc);
 	}
 
-	public enum RefPnt {
+	public enum RefPnt
+	{
 		UpLeft,
 		Up,
 		UpRight,
@@ -629,13 +729,16 @@ public class CTexture : IDisposable {
 		DownRight,
 	}
 
-	public void t2D_DisplayImage(int x, int y) {
+	public void t2D_DisplayImage(int x, int y)
+	{
 		this.t2D描画(x, y, 1f, this.rc全画像);
 	}
-	public void t2D_DisplayImage(int x, int y, Rectangle rc画像内の描画領域) {
+	public void t2D_DisplayImage(int x, int y, Rectangle rc画像内の描画領域)
+	{
 		this.t2D描画(x, y, 1f, rc画像内の描画領域);
 	}
-	public void t2D_DisplayImage(int x, int y, RectangleF rc) {
+	public void t2D_DisplayImage(int x, int y, RectangleF rc)
+	{
 		this.t2D描画(x, y, 1f, rc);
 	}
 
@@ -645,31 +748,45 @@ public class CTexture : IDisposable {
 	/// <param name="device">Direct3D9 デバイス。</param>
 	/// <param name="x">描画位置（テクスチャの左上位置の X 座標[dot]）。</param>
 	/// <param name="y">描画位置（テクスチャの左上位置の Y 座標[dot]）。</param>
-	public void t2D描画(int x, int y) {
+	public void t2D描画(int x, int y)
+	{
 		this.t2D描画(x, y, 1f, this.rc全画像);
 	}
-	public void t2D描画(int x, int y, RectangleF rc画像内の描画領域) {
+	public void t2D描画(int x, int y, RectangleF rc画像内の描画領域)
+	{
 		this.t2D描画(x, y, 1f, rc画像内の描画領域);
 	}
-	public void t2D描画(float x, float y) {
+	public void t2D描画(float x, float y)
+	{
 		this.t2D描画((int)x, (int)y, 1f, this.rc全画像);
 	}
-	public void t2D描画(float x, float y, RectangleF rc画像内の描画領域) {
+	public void t2D描画(float x, float y, RectangleF rc画像内の描画領域)
+	{
 		this.t2D描画((int)x, (int)y, 1f, rc画像内の描画領域);
 	}
-	public void t2D描画(float x, float y, float depth, RectangleF rc画像内の描画領域, bool flipX = false, bool flipY = false, bool rollMode = false) {
+	public void t2D描画(float x, float y, float depth, RectangleF rc画像内の描画領域, bool flipX = false, bool flipY = false, bool rollMode = false)
+	{
 		this.color4.Alpha = this._opacity / 255f;
 
 		BlendType blendType;
-		if (b加算合成) {
+		if (b加算合成)
+		{
 			blendType = BlendType.Add;
-		} else if (b乗算合成) {
+		}
+		else if (b乗算合成)
+		{
 			blendType = BlendType.Multi;
-		} else if (b減算合成) {
+		}
+		else if (b減算合成)
+		{
 			blendType = BlendType.Sub;
-		} else if (bスクリーン合成) {
+		}
+		else if (bスクリーン合成)
+		{
 			blendType = BlendType.Screen;
-		} else {
+		}
+		else
+		{
 			blendType = BlendType.Normal;
 		}
 
@@ -680,7 +797,8 @@ public class CTexture : IDisposable {
 		Game.Gl.BindTexture(TextureTarget.Texture2D, Pointer); //テクスチャをバインド
 
 		//MVPを設定----
-		unsafe {
+		unsafe
+		{
 			Matrix4X4<float> mvp = Matrix4X4<float>.Identity;
 
 			//スケーリング-----
@@ -692,7 +810,7 @@ public class CTexture : IDisposable {
 			mvp *= Matrix4X4.CreateScale(1.0f * RenderSurfaceSize.AspectRatio, 1.0f, 1.0f) * //ここでアスペクト比でスケーリングしないとおかしなことになる
 				   Matrix4X4.CreateRotationZ(Rotation) *
 				   Matrix4X4.CreateScale(1.0f / RenderSurfaceSize.AspectRatio, 1.0f, 1.0f);//回転した後戻してあげる
-																		//-----
+																						   //-----
 
 			//移動----
 			float offsetX = rc画像内の描画領域.Width * Scale.X / RenderSurfaceSize.Width;
@@ -716,57 +834,74 @@ public class CTexture : IDisposable {
 
 		//描画-----
 		Game.Gl.BindVertexArray(VAO);
-		unsafe {
+		unsafe
+		{
 			Game.Gl.DrawElements(PrimitiveType.Triangles, IndicesCount, DrawElementsType.UnsignedInt, (void*)0);//描画!
 		}
 	}
-	public void t2D描画(int x, int y, float depth, Rectangle rc画像内の描画領域) {
+	public void t2D描画(int x, int y, float depth, Rectangle rc画像内の描画領域)
+	{
 		t2D描画((float)x, (float)y, depth, rc画像内の描画領域);
 	}
-	public void t2D上下反転描画(int x, int y) {
+	public void t2D上下反転描画(int x, int y)
+	{
 		this.t2D上下反転描画(x, y, 1f, this.rc全画像);
 	}
-	public void t2D上下反転描画(int x, int y, Rectangle rc画像内の描画領域) {
+	public void t2D上下反転描画(int x, int y, Rectangle rc画像内の描画領域)
+	{
 		this.t2D上下反転描画(x, y, 1f, rc画像内の描画領域);
 	}
-	public void t2D左右反転描画(int x, int y) {
+	public void t2D左右反転描画(int x, int y)
+	{
 		this.t2D左右反転描画(x, y, 1f, this.rc全画像);
 	}
-	public void t2D左右反転描画(float x, float y) {
+	public void t2D左右反転描画(float x, float y)
+	{
 		this.t2D左右反転描画(x, y, 1f, this.rc全画像);
 	}
-	public void t2D左右反転描画(int x, int y, Rectangle rc画像内の描画領域) {
+	public void t2D左右反転描画(int x, int y, Rectangle rc画像内の描画領域)
+	{
 		this.t2D左右反転描画(x, y, 1f, rc画像内の描画領域);
 	}
-	public void t2D左右反転描画(float x, float y, float depth, Rectangle rc画像内の描画領域) {
+	public void t2D左右反転描画(float x, float y, float depth, Rectangle rc画像内の描画領域)
+	{
 		t2D描画(x, y, depth, rc画像内の描画領域, flipX: true);
 	}
-	public void t2D上下反転描画(int x, int y, float depth, Rectangle rc画像内の描画領域) {
+	public void t2D上下反転描画(int x, int y, float depth, Rectangle rc画像内の描画領域)
+	{
 		t2D描画(x, y, depth, rc画像内の描画領域, flipY: true);
 	}
-	public void t2D上下反転描画(Point pt) {
+	public void t2D上下反転描画(Point pt)
+	{
 		this.t2D上下反転描画(pt.X, pt.Y, 1f, this.rc全画像);
 	}
-	public void t2D上下反転描画(Point pt, Rectangle rc画像内の描画領域) {
+	public void t2D上下反転描画(Point pt, Rectangle rc画像内の描画領域)
+	{
 		this.t2D上下反転描画(pt.X, pt.Y, 1f, rc画像内の描画領域);
 	}
-	public void t2D上下反転描画(Point pt, float depth, Rectangle rc画像内の描画領域) {
+	public void t2D上下反転描画(Point pt, float depth, Rectangle rc画像内の描画領域)
+	{
 		this.t2D上下反転描画(pt.X, pt.Y, depth, rc画像内の描画領域);
 	}
 
-	public static Vector3D<float> t論理画面座標をワールド座標へ変換する(int x, int y) {
+	public static Vector3D<float> t論理画面座標をワールド座標へ変換する(int x, int y)
+	{
 		return CTexture.t論理画面座標をワールド座標へ変換する(new Vector3D<float>((float)x, (float)y, 0f));
 	}
-	public static Vector3D<float> t論理画面座標をワールド座標へ変換する(float x, float y) {
+	public static Vector3D<float> t論理画面座標をワールド座標へ変換する(float x, float y)
+	{
 		return CTexture.t論理画面座標をワールド座標へ変換する(new Vector3D<float>(x, y, 0f));
 	}
-	public static Vector3D<float> t論理画面座標をワールド座標へ変換する(Point pt論理画面座標) {
+	public static Vector3D<float> t論理画面座標をワールド座標へ変換する(Point pt論理画面座標)
+	{
 		return CTexture.t論理画面座標をワールド座標へ変換する(new Vector3D<float>(pt論理画面座標.X, pt論理画面座標.Y, 0.0f));
 	}
-	public static Vector3D<float> t論理画面座標をワールド座標へ変換する(Vector2D<float> v2論理画面座標) {
+	public static Vector3D<float> t論理画面座標をワールド座標へ変換する(Vector2D<float> v2論理画面座標)
+	{
 		return CTexture.t論理画面座標をワールド座標へ変換する(new Vector3D<float>(v2論理画面座標, 0f));
 	}
-	public static Vector3D<float> t論理画面座標をワールド座標へ変換する(Vector3D<float> v3論理画面座標) {
+	public static Vector3D<float> t論理画面座標をワールド座標へ変換する(Vector3D<float> v3論理画面座標)
+	{
 		return new Vector3D<float>(
 			(v3論理画面座標.X - (CTexture.sz論理画面.Width / 2.0f)) * CTexture.f画面比率,
 			(-(v3論理画面座標.Y - (CTexture.sz論理画面.Height / 2.0f)) * CTexture.f画面比率),
@@ -776,20 +911,30 @@ public class CTexture : IDisposable {
 
 
 
-	public void t2D描画SongObj(float x, float y, float xScale, float yScale) {
+	public void t2D描画SongObj(float x, float y, float xScale, float yScale)
+	{
 		var rc画像内の描画領域 = rc全画像;
 		this.color4.Alpha = this._opacity / 255f;
 
 		BlendType blendType;
-		if (b加算合成) {
+		if (b加算合成)
+		{
 			blendType = BlendType.Add;
-		} else if (b乗算合成) {
+		}
+		else if (b乗算合成)
+		{
 			blendType = BlendType.Multi;
-		} else if (b減算合成) {
+		}
+		else if (b減算合成)
+		{
 			blendType = BlendType.Sub;
-		} else if (bスクリーン合成) {
+		}
+		else if (bスクリーン合成)
+		{
 			blendType = BlendType.Screen;
-		} else {
+		}
+		else
+		{
 			blendType = BlendType.Normal;
 		}
 
@@ -800,7 +945,8 @@ public class CTexture : IDisposable {
 		Game.Gl.BindTexture(TextureTarget.Texture2D, Pointer); //テクスチャをバインド
 
 		//MVPを設定----
-		unsafe {
+		unsafe
+		{
 			Matrix4X4<float> mvp = Matrix4X4<float>.Identity;
 
 			//スケーリング-----
@@ -812,7 +958,7 @@ public class CTexture : IDisposable {
 			mvp *= Matrix4X4.CreateScale(1.0f * RenderSurfaceSize.AspectRatio, 1.0f, 1.0f) * //ここでアスペクト比でスケーリングしないとおかしなことになる
 				   Matrix4X4.CreateRotationZ(Rotation) *
 				   Matrix4X4.CreateScale(1.0f / RenderSurfaceSize.AspectRatio, 1.0f, 1.0f);//回転した後戻してあげる
-																		//-----
+																						   //-----
 
 			//移動----
 			float offsetX = rc画像内の描画領域.Width * xScale / RenderSurfaceSize.Width;
@@ -836,7 +982,8 @@ public class CTexture : IDisposable {
 
 		//描画-----
 		Game.Gl.BindVertexArray(VAO);
-		unsafe {
+		unsafe
+		{
 			Game.Gl.DrawElements(PrimitiveType.Triangles, IndicesCount, DrawElementsType.UnsignedInt, (void*)0);//描画!
 		}
 
@@ -846,8 +993,10 @@ public class CTexture : IDisposable {
 
 	#region [ IDisposable 実装 ]
 	//-----------------
-	public void Dispose() {
-		if (!this.bDispose完了済み) {
+	public void Dispose()
+	{
+		if (!this.bDispose完了済み)
+		{
 			Game.Gl.DeleteTexture(Pointer); //解放
 
 			this.bDispose完了済み = true;
@@ -864,11 +1013,13 @@ public class CTexture : IDisposable {
 	private int _opacity;
 	private bool bDispose完了済み;
 
-	private Size t指定されたサイズを超えない最適なテクスチャサイズを返す(Size sz指定サイズ) {
+	private Size t指定されたサイズを超えない最適なテクスチャサイズを返す(Size sz指定サイズ)
+	{
 		return sz指定サイズ;
 	}
 
-	private int ToArgb(Color4 col4) {
+	private int ToArgb(Color4 col4)
+	{
 		uint a = (uint)(col4.Alpha * 255.0f) & 255;
 		uint r = (uint)(col4.Red * 255.0f) & 255;
 		uint g = (uint)(col4.Green * 255.0f) & 255;
@@ -888,11 +1039,13 @@ public class CTexture : IDisposable {
 	protected Rectangle rc全画像;                              // テクスチャ作ったらあとは不変
 	public Color4 color4 = new Color4(1f, 1f, 1f, 1f);  // アルファ以外は不変
 
-	public void tUpdateColor4(Color4 c4) {
+	public void tUpdateColor4(Color4 c4)
+	{
 		this.color4 = c4;
 	}
 
-	public void tUpdateOpacity(int o) {
+	public void tUpdateOpacity(int o)
+	{
 		this.Opacity = o;
 	}
 	//-----------------

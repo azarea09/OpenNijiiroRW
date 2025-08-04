@@ -3,7 +3,8 @@ using FDK;
 
 namespace OpenNijiiroRW;
 
-class TextureLoader {
+class TextureLoader
+{
 	public static string BASE = @$"Graphics{Path.DirectorySeparatorChar}";
 	public static string GLOBAL = @$"Global{Path.DirectorySeparatorChar}";
 
@@ -67,11 +68,13 @@ class TextureLoader {
 
 	public Dictionary<string, CTexture> trackedTextures = new Dictionary<string, CTexture>();
 
-	public TextureLoader() {
+	public TextureLoader()
+	{
 		// Constructor
 	}
 
-	internal CTexture TxC(string FileName, bool localize = true) {
+	internal CTexture TxC(string FileName, bool localize = true)
+	{
 		var texpath = (localize) ? HLocalizedPath.GetAvailableLocalizedPath(CSkin.Path(BASE + FileName)) : CSkin.Path(BASE + FileName);
 		var tex = OpenNijiiroRW.tテクスチャの生成(texpath, false);
 
@@ -79,50 +82,60 @@ class TextureLoader {
 		return tex;
 	}
 
-	internal CTexture TxCGlobal(string FileName) {
+	internal CTexture TxCGlobal(string FileName)
+	{
 		var tex = OpenNijiiroRW.tテクスチャの生成(OpenNijiiroRW.strEXEのあるフォルダ + GLOBAL + FileName, false);
 		listTexture.Add(tex);
 		return tex;
 	}
 
-	internal CTexture TxCAbsolute(string FileName) {
+	internal CTexture TxCAbsolute(string FileName)
+	{
 		var tex = OpenNijiiroRW.tテクスチャの生成(FileName, false);
 		listTexture.Add(tex);
 		return tex;
 	}
 
-	internal CTextureAf TxCAf(string FileName) {
+	internal CTextureAf TxCAf(string FileName)
+	{
 		var tex = OpenNijiiroRW.tテクスチャの生成Af(CSkin.Path(BASE + FileName));
 		listTexture.Add(tex);
 		return tex;
 	}
-	internal CTexture TxCGen(string FileName) {
+	internal CTexture TxCGen(string FileName)
+	{
 		return OpenNijiiroRW.tテクスチャの生成(CSkin.Path(BASE + GAME + GENRE + FileName + ".png"), false);
 	}
 
-	internal CTexture TxCSong(string path) {
+	internal CTexture TxCSong(string path)
+	{
 		return TxCUntrackedSong(path);
 	}
 
-	private CTexture[] TxCSong(int count, string format, int start = 0) {
+	private CTexture[] TxCSong(int count, string format, int start = 0)
+	{
 		return TxCSong(format, Enumerable.Range(start, count).Select(o => o.ToString()).ToArray());
 	}
 
-	private CTexture[] TxCSong(string format, params string[] parts) {
+	private CTexture[] TxCSong(string format, params string[] parts)
+	{
 		return parts.Select(o => TxCSong(string.Format(format, o))).ToArray();
 	}
 
-	public CTexture[] TxCSongFolder(string folder) {
+	public CTexture[] TxCSongFolder(string folder)
+	{
 		var count = OpenNijiiroRW.t連番画像の枚数を数える(folder);
 		var texture = count == 0 ? null : TxCSong(count, folder + "{0}.png");
 		return texture;
 	}
 
-	internal CTexture TxCUntrackedSong(string path) {
+	internal CTexture TxCUntrackedSong(string path)
+	{
 		return OpenNijiiroRW.tテクスチャの生成(path, false);
 	}
 
-	public void LoadTexture() {
+	public void LoadTexture()
+	{
 		CalibrateFG = TxC(CONFIG + $@"Calibration{Path.DirectorySeparatorChar}FG.png");
 		CalibrateBG = TxC(CONFIG + $@"Calibration{Path.DirectorySeparatorChar}BG.png");
 
@@ -159,11 +172,13 @@ class TextureLoader {
 		ModeSelect_Bar = new CTexture[CMainMenuTab.__MenuCount + 1];
 		ModeSelect_Bar_Chara = new CTexture[CMainMenuTab.__MenuCount];
 
-		for (int i = 0; i < CMainMenuTab.__MenuCount; i++) {
+		for (int i = 0; i < CMainMenuTab.__MenuCount; i++)
+		{
 			ModeSelect_Bar[i] = TxC(TITLE + @$"ModeSelect_Bar_" + i.ToString() + ".png");
 		}
 
-		for (int i = 0; i < CMainMenuTab.__MenuCount; i++) {
+		for (int i = 0; i < CMainMenuTab.__MenuCount; i++)
+		{
 			ModeSelect_Bar_Chara[i] = TxC(TITLE + @$"ModeSelect_Bar_Chara_" + i.ToString() + ".png");
 		}
 
@@ -241,7 +256,8 @@ class TextureLoader {
 		SongSelect_Search_Arrow_Glow = TxC(SONGSELECT + @$"Search{Path.DirectorySeparatorChar}Search_Arrow_Glow.png");
 		SongSelect_Search_Window = TxC(SONGSELECT + @$"Search{Path.DirectorySeparatorChar}Search_Window.png");
 
-		for (int i = 0; i < (int)Difficulty.Total; i++) {
+		for (int i = 0; i < (int)Difficulty.Total; i++)
+		{
 			SongSelect_ScoreWindow[i] = TxC(SONGSELECT + @$"ScoreWindow_" + i.ToString() + ".png");
 		}
 
@@ -252,7 +268,8 @@ class TextureLoader {
 		{
 			string[] genre_files = Directory.GetFiles(CSkin.Path(BASE + SONGSELECT + @$"Bar_Genre{Path.DirectorySeparatorChar}"), "Bar_Genre_*.png");
 			SongSelect_Bar_Genre = new();
-			for (int i = 0; i < genre_files.Length; i++) {
+			for (int i = 0; i < genre_files.Length; i++)
+			{
 				string name = Path.GetFileNameWithoutExtension(genre_files[i]).Split('_')[2];
 				if (name != "Overlap") SongSelect_Bar_Genre.Add(name, TxC(SONGSELECT + @$"Bar_Genre{Path.DirectorySeparatorChar}Bar_Genre_" + name + ".png"));
 			}
@@ -260,7 +277,8 @@ class TextureLoader {
 		{
 			string[] genre_files = Directory.GetFiles(CSkin.Path(BASE + SONGSELECT + @$"Bar_Genre{Path.DirectorySeparatorChar}"), "Bar_Genre_Overlap_*.png");
 			SongSelect_Bar_Genre_Overlap = new();
-			for (int i = 0; i < genre_files.Length; i++) {
+			for (int i = 0; i < genre_files.Length; i++)
+			{
 				string name = Path.GetFileNameWithoutExtension(genre_files[i]).Split('_')[3];
 				SongSelect_Bar_Genre_Overlap.Add(name, TxC(SONGSELECT + @$"Bar_Genre{Path.DirectorySeparatorChar}Bar_Genre_Overlap_" + name + ".png"));
 			}
@@ -269,7 +287,8 @@ class TextureLoader {
 		{
 			string[] genre_files = Directory.GetFiles(CSkin.Path(BASE + SONGSELECT + @$"Genre_Background{Path.DirectorySeparatorChar}"), "GenreBackground_*.png");
 			SongSelect_GenreBack = new();
-			for (int i = 0; i < genre_files.Length; i++) {
+			for (int i = 0; i < genre_files.Length; i++)
+			{
 				string name = Path.GetFileNameWithoutExtension(genre_files[i]).Split('_')[1];
 				SongSelect_GenreBack.Add(name, TxC(SONGSELECT + @$"Genre_Background{Path.DirectorySeparatorChar}GenreBackground_" + name + ".png"));
 			}
@@ -278,13 +297,15 @@ class TextureLoader {
 		{
 			string[] genre_files = Directory.GetFiles(CSkin.Path(BASE + SONGSELECT + @$"Box_Chara{Path.DirectorySeparatorChar}"), "Box_Chara_*.png");
 			SongSelect_Box_Chara = new();
-			for (int i = 0; i < genre_files.Length; i++) {
+			for (int i = 0; i < genre_files.Length; i++)
+			{
 				string name = Path.GetFileNameWithoutExtension(genre_files[i]).Split('_')[2];
 				SongSelect_Box_Chara.Add(name, TxC(SONGSELECT + @$"Box_Chara{Path.DirectorySeparatorChar}Box_Chara_" + name + ".png"));
 			}
 		}
 
-		for (int i = 0; i < SongSelect_Table.Length; i++) {
+		for (int i = 0; i < SongSelect_Table.Length; i++)
+		{
 			SongSelect_Table[i] = TxC(SONGSELECT + @$"Table{Path.DirectorySeparatorChar}" + i.ToString() + ".png");
 		}
 
@@ -314,7 +335,8 @@ class TextureLoader {
 		{
 			string[] genre_files = Directory.GetFiles(CSkin.Path(BASE + SONGSELECT + @$"Difficulty_Select{Path.DirectorySeparatorChar}Difficulty_Back{Path.DirectorySeparatorChar}"), "Difficulty_Back_*.png");
 			Difficulty_Back = new();
-			for (int i = 0; i < genre_files.Length; i++) {
+			for (int i = 0; i < genre_files.Length; i++)
+			{
 				string name = Path.GetFileNameWithoutExtension(genre_files[i]).Split('_')[2];
 				Difficulty_Back.Add(name, TxC(SONGSELECT + @$"Difficulty_Select{Path.DirectorySeparatorChar}Difficulty_Back{Path.DirectorySeparatorChar}Difficulty_Back_" + name + ".png"));
 			}
@@ -481,7 +503,8 @@ class TextureLoader {
 		Couse_Symbol_Back = new CTexture[(int)Difficulty.Total + 1]; // +1は真打ちモードの分
 		Couse_Symbol_Back_Flash = new CTexture[(int)Difficulty.Total + 1]; // +1は真打ちモードの分
 		string[] Couse_Symbols = new string[(int)Difficulty.Total + 1] { "Easy", "Normal", "Hard", "Oni", "Edit", "Tower", "Dan", "Shin" };
-		for (int i = 0; i < (int)Difficulty.Total + 1; i++) {
+		for (int i = 0; i < (int)Difficulty.Total + 1; i++)
+		{
 			Couse_Symbol[i] = TxC(GAME + COURSESYMBOL + Couse_Symbols[i] + ".png");
 			Couse_Symbol_Back[i] = TxC(GAME + COURSESYMBOL + Couse_Symbols[i] + "_Back.png");
 			Couse_Symbol_Back_Flash[i] = TxC(GAME + COURSESYMBOL + Couse_Symbols[i] + "_Back_Flash.png");
@@ -503,7 +526,8 @@ class TextureLoader {
 		Taiko_Combo_Text = TxC(GAME + TAIKO + @$"Combo_Text.png");
 
 		Taiko_Combo_Guide = new CTexture[3];
-		for (int i = 0; i < Taiko_Combo_Guide.Length; i++) {
+		for (int i = 0; i < Taiko_Combo_Guide.Length; i++)
+		{
 			Taiko_Combo_Guide[i] = TxC(GAME + TAIKO + @$"Combo_Guide" + i.ToString() + ".png");
 		}
 
@@ -551,25 +575,31 @@ class TextureLoader {
 		Gauge_Killzone[2] = TxC(GAME + GAUGE + @$"Killzone_4PGauge.png");
 
 		OpenNijiiroRW.Skin.Game_Gauge_Rainbow_Ptn = OpenNijiiroRW.t連番画像の枚数を数える(CSkin.Path(BASE + GAME + GAUGE + @$"Rainbow{Path.DirectorySeparatorChar}"));
-		if (OpenNijiiroRW.Skin.Game_Gauge_Rainbow_Ptn != 0) {
+		if (OpenNijiiroRW.Skin.Game_Gauge_Rainbow_Ptn != 0)
+		{
 			Gauge_Rainbow = new CTexture[OpenNijiiroRW.Skin.Game_Gauge_Rainbow_Ptn];
-			for (int i = 0; i < OpenNijiiroRW.Skin.Game_Gauge_Rainbow_Ptn; i++) {
+			for (int i = 0; i < OpenNijiiroRW.Skin.Game_Gauge_Rainbow_Ptn; i++)
+			{
 				Gauge_Rainbow[i] = TxC(GAME + GAUGE + @$"Rainbow{Path.DirectorySeparatorChar}" + i.ToString() + ".png");
 			}
 		}
 
 		OpenNijiiroRW.Skin.Game_Gauge_Rainbow_Flat_Ptn = OpenNijiiroRW.t連番画像の枚数を数える(CSkin.Path(BASE + GAME + GAUGE + @$"Rainbow_Flat{Path.DirectorySeparatorChar}"));
-		if (OpenNijiiroRW.Skin.Game_Gauge_Rainbow_Flat_Ptn != 0) {
+		if (OpenNijiiroRW.Skin.Game_Gauge_Rainbow_Flat_Ptn != 0)
+		{
 			Gauge_Rainbow_Flat = new CTexture[OpenNijiiroRW.Skin.Game_Gauge_Rainbow_Flat_Ptn];
-			for (int i = 0; i < OpenNijiiroRW.Skin.Game_Gauge_Rainbow_Flat_Ptn; i++) {
+			for (int i = 0; i < OpenNijiiroRW.Skin.Game_Gauge_Rainbow_Flat_Ptn; i++)
+			{
 				Gauge_Rainbow_Flat[i] = TxC(GAME + GAUGE + @$"Rainbow_Flat{Path.DirectorySeparatorChar}" + i.ToString() + ".png");
 			}
 		}
 
 		OpenNijiiroRW.Skin.Game_Gauge_Rainbow_2PGauge_Ptn = OpenNijiiroRW.t連番画像の枚数を数える(CSkin.Path(BASE + GAME + GAUGE + @$"Rainbow_2PGauge{Path.DirectorySeparatorChar}"));
-		if (OpenNijiiroRW.Skin.Game_Gauge_Rainbow_2PGauge_Ptn != 0) {
+		if (OpenNijiiroRW.Skin.Game_Gauge_Rainbow_2PGauge_Ptn != 0)
+		{
 			Gauge_Rainbow_2PGauge = new CTexture[OpenNijiiroRW.Skin.Game_Gauge_Rainbow_2PGauge_Ptn];
-			for (int i = 0; i < OpenNijiiroRW.Skin.Game_Gauge_Rainbow_2PGauge_Ptn; i++) {
+			for (int i = 0; i < OpenNijiiroRW.Skin.Game_Gauge_Rainbow_2PGauge_Ptn; i++)
+			{
 				Gauge_Rainbow_2PGauge[i] = TxC(GAME + GAUGE + @$"Rainbow_2PGauge{Path.DirectorySeparatorChar}" + i.ToString() + ".png");
 			}
 		}
@@ -577,9 +607,11 @@ class TextureLoader {
 		// Dan
 
 		OpenNijiiroRW.Skin.Game_Gauge_Dan_Rainbow_Ptn = OpenNijiiroRW.t連番画像の枚数を数える(CSkin.Path(BASE + GAME + DANC + @$"Rainbow{Path.DirectorySeparatorChar}"));
-		if (OpenNijiiroRW.Skin.Game_Gauge_Dan_Rainbow_Ptn != 0) {
+		if (OpenNijiiroRW.Skin.Game_Gauge_Dan_Rainbow_Ptn != 0)
+		{
 			Gauge_Dan_Rainbow = new CTexture[OpenNijiiroRW.Skin.Game_Gauge_Dan_Rainbow_Ptn];
-			for (int i = 0; i < OpenNijiiroRW.Skin.Game_Gauge_Dan_Rainbow_Ptn; i++) {
+			for (int i = 0; i < OpenNijiiroRW.Skin.Game_Gauge_Dan_Rainbow_Ptn; i++)
+			{
 				Gauge_Dan_Rainbow[i] = TxC(GAME + DANC + @$"Rainbow{Path.DirectorySeparatorChar}" + i.ToString() + ".png");
 			}
 		}
@@ -612,7 +644,8 @@ class TextureLoader {
 		Balloon_Number_Combo = TxC(GAME + BALLOON + @$"Number_Combo.png");
 
 		Balloon_Breaking = new CTexture[6];
-		for (int i = 0; i < 6; i++) {
+		for (int i = 0; i < 6; i++)
+		{
 			Balloon_Breaking[i] = TxC(GAME + BALLOON + @$"Breaking_" + i.ToString() + ".png");
 		}
 
@@ -646,7 +679,8 @@ class TextureLoader {
 		Effects_Hit_Great_Big = new CTexture[15];
 		Effects_Hit_Good = new CTexture[15];
 		Effects_Hit_Good_Big = new CTexture[15];
-		for (int i = 0; i < 15; i++) {
+		for (int i = 0; i < 15; i++)
+		{
 			Effects_Hit_Great[i] = TxC(GAME + EFFECTS + @$"Hit{Path.DirectorySeparatorChar}" + @$"Great{Path.DirectorySeparatorChar}" + i.ToString() + ".png");
 			Effects_Hit_Great_Big[i] = TxC(GAME + EFFECTS + @$"Hit{Path.DirectorySeparatorChar}" + @$"Great_Big{Path.DirectorySeparatorChar}" + i.ToString() + ".png");
 			Effects_Hit_Good[i] = TxC(GAME + EFFECTS + @$"Hit{Path.DirectorySeparatorChar}" + @$"Good{Path.DirectorySeparatorChar}" + i.ToString() + ".png");
@@ -654,7 +688,8 @@ class TextureLoader {
 		}
 		OpenNijiiroRW.Skin.Game_Effect_Roll_Ptn = OpenNijiiroRW.t連番画像の枚数を数える(CSkin.Path(BASE + GAME + EFFECTS + @$"Roll{Path.DirectorySeparatorChar}"));
 		Effects_Roll = new CTexture[OpenNijiiroRW.Skin.Game_Effect_Roll_Ptn];
-		for (int i = 0; i < OpenNijiiroRW.Skin.Game_Effect_Roll_Ptn; i++) {
+		for (int i = 0; i < OpenNijiiroRW.Skin.Game_Effect_Roll_Ptn; i++)
+		{
 			Effects_Roll[i] = TxC(GAME + EFFECTS + @$"Roll{Path.DirectorySeparatorChar}" + i.ToString() + ".png");
 		}
 
@@ -665,7 +700,8 @@ class TextureLoader {
 		Lane_Base = new CTexture[3];
 		Lane_Text = new CTexture[3];
 		string[] Lanes = new string[3] { "Normal", "Expert", "Master" };
-		for (int i = 0; i < 3; i++) {
+		for (int i = 0; i < 3; i++)
+		{
 			Lane_Base[i] = TxC(GAME + LANE + "Base_" + Lanes[i] + ".png");
 			Lane_Text[i] = TxC(GAME + LANE + "Text_" + Lanes[i] + ".png");
 		}
@@ -676,7 +712,8 @@ class TextureLoader {
 
 		var _suffixes = new string[] { "", "_Konga" };
 
-		for (int i = 0; i < Lane_Red.Length; i++) {
+		for (int i = 0; i < Lane_Red.Length; i++)
+		{
 			Lane_Red[i] = TxC(GAME + LANE + @$"Red" + _suffixes[i] + @$".png");
 			Lane_Blue[i] = TxC(GAME + LANE + @$"Blue" + _suffixes[i] + @$".png");
 			Lane_Clap[i] = TxC(GAME + LANE + @$"Clap" + _suffixes[i] + @$".png");
@@ -703,7 +740,8 @@ class TextureLoader {
 		DanC_Background = TxC(GAME + DANC + @$"Background.png");
 		DanC_Gauge = new CTexture[4];
 		var type = new string[] { "Normal", "Reach", "Clear", "Flush" };
-		for (int i = 0; i < 4; i++) {
+		for (int i = 0; i < 4; i++)
+		{
 			DanC_Gauge[i] = TxC(GAME + DANC + @$"Gauge_" + type[i] + ".png");
 		}
 		DanC_Base = TxC(GAME + DANC + @$"Base.png");
@@ -732,7 +770,8 @@ class TextureLoader {
 		Puchichara = new CPuchichara[OpenNijiiroRW.Skin.Puchichara_Ptn];
 		OpenNijiiroRW.Skin.Puchicharas_Name = new string[OpenNijiiroRW.Skin.Puchichara_Ptn];
 
-		for (int i = 0; i < OpenNijiiroRW.Skin.Puchichara_Ptn; i++) {
+		for (int i = 0; i < OpenNijiiroRW.Skin.Puchichara_Ptn; i++)
+		{
 			Puchichara[i] = new CPuchichara(puchicharaDirs[i]);
 
 			OpenNijiiroRW.Skin.Puchicharas_Name[i] = System.IO.Path.GetFileName(puchicharaDirs[i]);
@@ -775,7 +814,8 @@ class TextureLoader {
 		OpenNijiiroRW.Skin.Game_Tower_Ptn_Base = new int[OpenNijiiroRW.Skin.Game_Tower_Ptn];
 		OpenNijiiroRW.Skin.Game_Tower_Ptn_Deco = new int[OpenNijiiroRW.Skin.Game_Tower_Ptn];
 
-		for (int i = 0; i < OpenNijiiroRW.Skin.Game_Tower_Ptn; i++) {
+		for (int i = 0; i < OpenNijiiroRW.Skin.Game_Tower_Ptn; i++)
+		{
 			OpenNijiiroRW.Skin.Game_Tower_Ptn_Base[i] = OpenNijiiroRW.t連番画像の枚数を数える((towerDirectories[i] + @$"{Path.DirectorySeparatorChar}Base{Path.DirectorySeparatorChar}"), "Base");
 			OpenNijiiroRW.Skin.Game_Tower_Ptn_Deco[i] = OpenNijiiroRW.t連番画像の枚数を数える((towerDirectories[i] + @$"{Path.DirectorySeparatorChar}Deco{Path.DirectorySeparatorChar}"), "Deco");
 
@@ -784,11 +824,13 @@ class TextureLoader {
 			Tower_Base[i] = new CTexture[OpenNijiiroRW.Skin.Game_Tower_Ptn_Base[i]];
 			Tower_Deco[i] = new CTexture[OpenNijiiroRW.Skin.Game_Tower_Ptn_Deco[i]];
 
-			for (int j = 0; j < OpenNijiiroRW.Skin.Game_Tower_Ptn_Base[i]; j++) {
+			for (int j = 0; j < OpenNijiiroRW.Skin.Game_Tower_Ptn_Base[i]; j++)
+			{
 				Tower_Base[i][j] = TxC(GAME + TOWER + TOWERFLOOR + OpenNijiiroRW.Skin.Game_Tower_Names[i] + @$"{Path.DirectorySeparatorChar}Base{Path.DirectorySeparatorChar}Base" + j.ToString() + ".png");
 			}
 
-			for (int j = 0; j < OpenNijiiroRW.Skin.Game_Tower_Ptn_Deco[i]; j++) {
+			for (int j = 0; j < OpenNijiiroRW.Skin.Game_Tower_Ptn_Deco[i]; j++)
+			{
 				Tower_Deco[i][j] = TxC(GAME + TOWER + TOWERFLOOR + OpenNijiiroRW.Skin.Game_Tower_Names[i] + @$"{Path.DirectorySeparatorChar}Deco{Path.DirectorySeparatorChar}Deco" + j.ToString() + ".png");
 			}
 		}
@@ -800,22 +842,26 @@ class TextureLoader {
 		#region [21_ModIcons]
 
 		HiSp = new CTexture[14];
-		for (int i = 0; i < HiSp.Length; i++) {
+		for (int i = 0; i < HiSp.Length; i++)
+		{
 			HiSp[i] = TxC(GAME + MODICONS + @$"HS{Path.DirectorySeparatorChar}" + i.ToString() + @$".png");
 		}
 
 		Mod_Timing = new CTexture[5];
-		for (int i = 0; i < Mod_Timing.Length; i++) {
+		for (int i = 0; i < Mod_Timing.Length; i++)
+		{
 			Mod_Timing[i] = TxC(GAME + MODICONS + @$"Timing{Path.DirectorySeparatorChar}" + i.ToString() + @$".png");
 		}
 
 		Mod_SongSpeed = new CTexture[2];
-		for (int i = 0; i < Mod_SongSpeed.Length; i++) {
+		for (int i = 0; i < Mod_SongSpeed.Length; i++)
+		{
 			Mod_SongSpeed[i] = TxC(GAME + MODICONS + @$"SongSpeed{Path.DirectorySeparatorChar}" + i.ToString() + @$".png");
 		}
 
 		Mod_Fun = new CTexture[3];
-		for (int i = 0; i < Mod_Fun.Length; i++) {
+		for (int i = 0; i < Mod_Fun.Length; i++)
+		{
 			Mod_Fun[i] = TxC(GAME + MODICONS + @$"Fun{Path.DirectorySeparatorChar}" + i.ToString() + @$".png");
 		}
 
@@ -907,9 +953,11 @@ class TextureLoader {
 		//Result_Work[i] = TxC(RESULT + @$"Work{Path.DirectorySeparatorChar}" + i.ToString() + ".png");
 
 		OpenNijiiroRW.Skin.Result_Gauge_Rainbow_Ptn = OpenNijiiroRW.t連番画像の枚数を数える(CSkin.Path(BASE + RESULT + @$"Rainbow{Path.DirectorySeparatorChar}"));
-		if (OpenNijiiroRW.Skin.Result_Gauge_Rainbow_Ptn != 0) {
+		if (OpenNijiiroRW.Skin.Result_Gauge_Rainbow_Ptn != 0)
+		{
 			Result_Rainbow = new CTexture[OpenNijiiroRW.Skin.Result_Gauge_Rainbow_Ptn];
-			for (int i = 0; i < OpenNijiiroRW.Skin.Result_Gauge_Rainbow_Ptn; i++) {
+			for (int i = 0; i < OpenNijiiroRW.Skin.Result_Gauge_Rainbow_Ptn; i++)
+			{
 				Result_Rainbow[i] = TxC(RESULT + @$"Rainbow{Path.DirectorySeparatorChar}" + i.ToString() + ".png");
 			}
 		}
@@ -956,7 +1004,8 @@ class TextureLoader {
 
 		TowerResult_ScoreRankEffect = TxC(TOWERRESULT + @$"ScoreRankEffect.png");
 
-		for (int i = 0; i < OpenNijiiroRW.Skin.Game_Tower_Ptn_Result; i++) {
+		for (int i = 0; i < OpenNijiiroRW.Skin.Game_Tower_Ptn_Result; i++)
+		{
 			TowerResult_Tower[i] = TxC(TOWERRESULT + @$"Tower{Path.DirectorySeparatorChar}" + i.ToString() + ".png");
 		}
 
@@ -1177,19 +1226,22 @@ class TextureLoader {
 		OpenNijiiroRW.Skin.Characters_Result_Failed_In_AnimationDuration = new int[OpenNijiiroRW.Skin.Characters_Ptn];
 		OpenNijiiroRW.Skin.Characters_Result_Failed_AnimationDuration = new int[OpenNijiiroRW.Skin.Characters_Ptn];
 
-		for (int i = 0; i < charaDirs.Length; i++) {
+		for (int i = 0; i < charaDirs.Length; i++)
+		{
 			OpenNijiiroRW.Skin.Characters_DirName[i] = System.IO.Path.GetFileName(charaDirs[i]);
 		}
 
 		#endregion
 
-		for (int i = 0; i < 5; i++) {
+		for (int i = 0; i < 5; i++)
+		{
 			OpenNijiiroRW.SaveFileInstances[i].tReindexCharacter(OpenNijiiroRW.Skin.Characters_DirName);
 			this.ReloadCharacter(-1, OpenNijiiroRW.SaveFileInstances[i].data.Character, i, true);
 		}
 
 
-		for (int i = 0; i < OpenNijiiroRW.Skin.Characters_Ptn; i++) {
+		for (int i = 0; i < OpenNijiiroRW.Skin.Characters_Ptn; i++)
+		{
 			Characters_Heya_Preview[i] = TxCGlobal(CHARACTERS + OpenNijiiroRW.Skin.Characters_DirName[i] + @$"{Path.DirectorySeparatorChar}Normal{Path.DirectorySeparatorChar}0.png");
 			Characters_Heya_Render[i] = TxCGlobal(CHARACTERS + OpenNijiiroRW.Skin.Characters_DirName[i] + @$"{Path.DirectorySeparatorChar}Render.png");
 			Characters_Result_Clear_1P[i] = TxCGlobal(CHARACTERS + OpenNijiiroRW.Skin.Characters_DirName[i] + @$"{Path.DirectorySeparatorChar}Result_Clear_1P.png");
@@ -1208,17 +1260,22 @@ class TextureLoader {
 			string[] delimiter = { "\n", "\r" };
 			string[] strSingleLine = _str.Split(delimiter, StringSplitOptions.RemoveEmptyEntries);
 
-			foreach (string line in strSingleLine) {
+			foreach (string line in strSingleLine)
+			{
 				if (line.StartsWith("Chara_Resolution=")) // required for Heya resolution compatibility
 				{
 					string[] values = line.Substring(17).Trim().Split(',');
 					OpenNijiiroRW.Skin.Characters_Resolution[i][0] = int.Parse(values[0]);
 					OpenNijiiroRW.Skin.Characters_Resolution[i][1] = int.Parse(values[1]);
-				} else if (line.StartsWith("Heya_Chara_Render_Offset=")) {
+				}
+				else if (line.StartsWith("Heya_Chara_Render_Offset="))
+				{
 					string[] values = line.Substring(25).Trim().Split(',');
 					OpenNijiiroRW.Skin.Characters_Heya_Render_Offset[i][0] = int.Parse(values[0]);
 					OpenNijiiroRW.Skin.Characters_Heya_Render_Offset[i][1] = int.Parse(values[1]);
-				} else if (line.StartsWith("Result_UseResult1P=")) {
+				}
+				else if (line.StartsWith("Result_UseResult1P="))
+				{
 					OpenNijiiroRW.Skin.Characters_UseResult1P[i] = FDK.CConversion.bONorOFF(line.Substring(19).Trim()[0]);
 				}
 			}
@@ -1248,30 +1305,36 @@ class TextureLoader {
 
 		#endregion
 
-		if (OpenNijiiroRW.ConfigIni.PreAssetsLoading) {
-			foreach (var act in OpenNijiiroRW.app.listTopLevelActivities) {
+		if (OpenNijiiroRW.ConfigIni.PreAssetsLoading)
+		{
+			foreach (var act in OpenNijiiroRW.app.listTopLevelActivities)
+			{
 				act.CreateManagedResource();
 				act.CreateUnmanagedResource();
 			}
 		}
 	}
 
-	public int[] CreateNumberedArrayFromInt(int total) {
+	public int[] CreateNumberedArrayFromInt(int total)
+	{
 		int[] array = new int[total];
-		for (int i = 0; i < total; i++) {
+		for (int i = 0; i < total; i++)
+		{
 			array[i] = i;
 		}
 		return array;
 	}
 
-	public CSkin.CSystemSound VoiceSelectOggOrWav(string basePath) {
+	public CSkin.CSystemSound VoiceSelectOggOrWav(string basePath)
+	{
 		if (File.Exists(basePath + @$".ogg"))
 			return new CSkin.CSystemSound(basePath + @$".ogg", false, false, true, ESoundGroup.Voice);
 		else
 			return new CSkin.CSystemSound(basePath + @$".wav", false, false, true, ESoundGroup.Voice);
 	}
 
-	public void ReloadCharacter(int old, int newC, int player, bool primary = false) {
+	public void ReloadCharacter(int old, int newC, int player, bool primary = false)
+	{
 		if (old == newC)
 			return;
 
@@ -1280,7 +1343,8 @@ class TextureLoader {
 			(OpenNijiiroRW.SaveFileInstances[1].data.Character != old || player == 1) &&
 			(OpenNijiiroRW.SaveFileInstances[2].data.Character != old || player == 2) &&
 			(OpenNijiiroRW.SaveFileInstances[3].data.Character != old || player == 3) &&
-			(OpenNijiiroRW.SaveFileInstances[4].data.Character != old || player == 4)) {
+			(OpenNijiiroRW.SaveFileInstances[4].data.Character != old || player == 4))
+		{
 			int i = old;
 
 			#region [Dispose the previous character]
@@ -1432,7 +1496,8 @@ class TextureLoader {
 			 OpenNijiiroRW.SaveFileInstances[1].data.Character != newC &&
 			 OpenNijiiroRW.SaveFileInstances[2].data.Character != newC &&
 			 OpenNijiiroRW.SaveFileInstances[3].data.Character != newC &&
-			 OpenNijiiroRW.SaveFileInstances[4].data.Character != newC) || primary) {
+			 OpenNijiiroRW.SaveFileInstances[4].data.Character != newC) || primary)
+		{
 			int i = newC;
 
 			#region [Allocate the new character]
@@ -1773,213 +1838,269 @@ class TextureLoader {
 			string[] delimiter = { "\n" };
 			string[] strSingleLine = _str.Split(delimiter, StringSplitOptions.RemoveEmptyEntries);
 
-			foreach (string s in strSingleLine) {
+			foreach (string s in strSingleLine)
+			{
 				string str = s.Replace('\t', ' ').TrimStart(new char[] { '\t', ' ' });
-				if ((str.Length != 0) && (str[0] != ';')) {
-					try {
+				if ((str.Length != 0) && (str[0] != ';'))
+				{
+					try
+					{
 						string strCommand;
 						string strParam;
 						string[] strArray = str.Split(new char[] { '=' });
 
-						if (strArray.Length == 2) {
+						if (strArray.Length == 2)
+						{
 							strCommand = strArray[0].Trim();
 							strParam = strArray[1].Trim();
 
-							switch (strCommand) {
-								case "Menu_Offset": {
+							switch (strCommand)
+							{
+								case "Menu_Offset":
+									{
 										string[] strSplit = strParam.Split(',');
-										for (int k = 0; k < 2; k++) {
+										for (int k = 0; k < 2; k++)
+										{
 											OpenNijiiroRW.Skin.Characters_Menu_Offset[i][k] = int.Parse(strSplit[k]);
 										}
 										break;
 									}
-								case "Result_Offset": {
+								case "Result_Offset":
+									{
 										string[] strSplit = strParam.Split(',');
-										for (int k = 0; k < 2; k++) {
+										for (int k = 0; k < 2; k++)
+										{
 											OpenNijiiroRW.Skin.Characters_Result_Offset[i][k] = int.Parse(strSplit[k]);
 										}
 										break;
 									}
-								case "Game_Chara_X": {
+								case "Game_Chara_X":
+									{
 										string[] strSplit = strParam.Split(',');
-										for (int k = 0; k < 2; k++) {
+										for (int k = 0; k < 2; k++)
+										{
 											OpenNijiiroRW.Skin.Characters_X[i][k] = int.Parse(strSplit[k]);
 										}
 										break;
 									}
-								case "Game_Chara_Y": {
+								case "Game_Chara_Y":
+									{
 										string[] strSplit = strParam.Split(',');
-										for (int k = 0; k < 2; k++) {
+										for (int k = 0; k < 2; k++)
+										{
 											OpenNijiiroRW.Skin.Characters_Y[i][k] = int.Parse(strSplit[k]);
 										}
 										break;
 									}
-								case "Game_Chara_4P": {
+								case "Game_Chara_4P":
+									{
 										string[] strSplit = strParam.Split(',');
-										for (int k = 0; k < 2; k++) {
+										for (int k = 0; k < 2; k++)
+										{
 											OpenNijiiroRW.Skin.Characters_4P[i][k] = int.Parse(strSplit[k]);
 										}
 										break;
 									}
-								case "Game_Chara_5P": {
+								case "Game_Chara_5P":
+									{
 										string[] strSplit = strParam.Split(',');
-										for (int k = 0; k < 2; k++) {
+										for (int k = 0; k < 2; k++)
+										{
 											OpenNijiiroRW.Skin.Characters_5P[i][k] = int.Parse(strSplit[k]);
 										}
 										break;
 									}
-								case "Game_Chara_X_AI": {
+								case "Game_Chara_X_AI":
+									{
 										string[] strSplit = strParam.Split(',');
-										for (int k = 0; k < 2; k++) {
+										for (int k = 0; k < 2; k++)
+										{
 											OpenNijiiroRW.Skin.Characters_X_AI[i][k] = int.Parse(strSplit[k]);
 										}
 										break;
 									}
-								case "Game_Chara_Y_AI": {
+								case "Game_Chara_Y_AI":
+									{
 										string[] strSplit = strParam.Split(',');
-										for (int k = 0; k < 2; k++) {
+										for (int k = 0; k < 2; k++)
+										{
 											OpenNijiiroRW.Skin.Characters_Y_AI[i][k] = int.Parse(strSplit[k]);
 										}
 										break;
 									}
-								case "Game_Chara_Balloon_X": {
+								case "Game_Chara_Balloon_X":
+									{
 										string[] strSplit = strParam.Split(',');
-										for (int k = 0; k < 2; k++) {
+										for (int k = 0; k < 2; k++)
+										{
 											OpenNijiiroRW.Skin.Characters_Balloon_X[i][k] = int.Parse(strSplit[k]);
 										}
 										break;
 									}
-								case "Game_Chara_Balloon_Y": {
+								case "Game_Chara_Balloon_Y":
+									{
 										string[] strSplit = strParam.Split(',');
-										for (int k = 0; k < 2; k++) {
+										for (int k = 0; k < 2; k++)
+										{
 											OpenNijiiroRW.Skin.Characters_Balloon_Y[i][k] = int.Parse(strSplit[k]);
 										}
 										break;
 									}
-								case "Game_Chara_Balloon_4P": {
+								case "Game_Chara_Balloon_4P":
+									{
 										string[] strSplit = strParam.Split(',');
-										for (int k = 0; k < 2; k++) {
+										for (int k = 0; k < 2; k++)
+										{
 											OpenNijiiroRW.Skin.Characters_Balloon_4P[i][k] = int.Parse(strSplit[k]);
 										}
 										break;
 									}
-								case "Game_Chara_Balloon_5P": {
+								case "Game_Chara_Balloon_5P":
+									{
 										string[] strSplit = strParam.Split(',');
-										for (int k = 0; k < 2; k++) {
+										for (int k = 0; k < 2; k++)
+										{
 											OpenNijiiroRW.Skin.Characters_Balloon_5P[i][k] = int.Parse(strSplit[k]);
 										}
 										break;
 									}
-								case "Game_Chara_Kusudama_X": {
+								case "Game_Chara_Kusudama_X":
+									{
 										string[] strSplit = strParam.Split(',');
-										for (int k = 0; k < 5; k++) {
+										for (int k = 0; k < 5; k++)
+										{
 											OpenNijiiroRW.Skin.Characters_Kusudama_X[i][k] = int.Parse(strSplit[k]);
 										}
 										break;
 									}
-								case "Game_Chara_Kusudama_Y": {
+								case "Game_Chara_Kusudama_Y":
+									{
 										string[] strSplit = strParam.Split(',');
-										for (int k = 0; k < 5; k++) {
+										for (int k = 0; k < 5; k++)
+										{
 											OpenNijiiroRW.Skin.Characters_Kusudama_Y[i][k] = int.Parse(strSplit[k]);
 										}
 										break;
 									}
-								case "Game_Chara_Balloon_Timer": {
+								case "Game_Chara_Balloon_Timer":
+									{
 										if (int.Parse(strParam) > 0)
 											OpenNijiiroRW.Skin.Characters_Balloon_Timer[i] = int.Parse(strParam);
 										break;
 									}
-								case "Game_Chara_Balloon_Delay": {
+								case "Game_Chara_Balloon_Delay":
+									{
 										if (int.Parse(strParam) > 0)
 											OpenNijiiroRW.Skin.Characters_Balloon_Delay[i] = int.Parse(strParam);
 										break;
 									}
-								case "Game_Chara_Balloon_FadeOut": {
+								case "Game_Chara_Balloon_FadeOut":
+									{
 										if (int.Parse(strParam) > 0)
 											OpenNijiiroRW.Skin.Characters_Balloon_FadeOut[i] = int.Parse(strParam);
 										break;
 									}
 								// パターン数の設定はTextureLoader.csで反映されます。
-								case "Game_Chara_Motion_Normal": {
+								case "Game_Chara_Motion_Normal":
+									{
 										OpenNijiiroRW.Skin.Characters_Motion_Normal[i] = CConversion.StringToIntArray(strParam);
 										break;
 									}
-								case "Game_Chara_Motion_10Combo": {
+								case "Game_Chara_Motion_10Combo":
+									{
 										OpenNijiiroRW.Skin.Characters_Motion_10Combo[i] = CConversion.StringToIntArray(strParam);
 										break;
 									}
-								case "Game_Chara_Motion_10Combo_Clear": {
+								case "Game_Chara_Motion_10Combo_Clear":
+									{
 										OpenNijiiroRW.Skin.Characters_Motion_10Combo_Clear[i] = CConversion.StringToIntArray(strParam);
 										break;
 									}
-								case "Game_Chara_Motion_10Combo_Max": {
+								case "Game_Chara_Motion_10Combo_Max":
+									{
 										OpenNijiiroRW.Skin.Characters_Motion_10ComboMax[i] = CConversion.StringToIntArray(strParam);
 										break;
 									}
-								case "Game_Chara_Motion_Miss": {
+								case "Game_Chara_Motion_Miss":
+									{
 										OpenNijiiroRW.Skin.Characters_Motion_Miss[i] = CConversion.StringToIntArray(strParam);
 										break;
 									}
-								case "Game_Chara_Motion_MissDown": {
+								case "Game_Chara_Motion_MissDown":
+									{
 										OpenNijiiroRW.Skin.Characters_Motion_MissDown[i] = CConversion.StringToIntArray(strParam);
 										break;
 									}
-								case "Game_Chara_Motion_ClearIn": {
+								case "Game_Chara_Motion_ClearIn":
+									{
 										OpenNijiiroRW.Skin.Characters_Motion_ClearIn[i] = CConversion.StringToIntArray(strParam);
 										break;
 									}
-								case "Game_Chara_Motion_Clear": {
+								case "Game_Chara_Motion_Clear":
+									{
 										OpenNijiiroRW.Skin.Characters_Motion_Clear[i] = CConversion.StringToIntArray(strParam);
 										OpenNijiiroRW.Skin.Characters_Motion_ClearMax[i] = OpenNijiiroRW.Skin.Characters_Motion_Clear[i];
 										break;
 									}
-								case "Game_Chara_Motion_ClearMax": {
+								case "Game_Chara_Motion_ClearMax":
+									{
 										OpenNijiiroRW.Skin.Characters_Motion_ClearMax[i] = CConversion.StringToIntArray(strParam);
 										break;
 									}
-								case "Game_Chara_Motion_MissIn": {
+								case "Game_Chara_Motion_MissIn":
+									{
 										OpenNijiiroRW.Skin.Characters_Motion_MissIn[i] = CConversion.StringToIntArray(strParam);
 										break;
 									}
-								case "Game_Chara_Motion_MissDownIn": {
+								case "Game_Chara_Motion_MissDownIn":
+									{
 										OpenNijiiroRW.Skin.Characters_Motion_MissDownIn[i] = CConversion.StringToIntArray(strParam);
 										break;
 									}
-								case "Game_Chara_Motion_GoGoStart": {
+								case "Game_Chara_Motion_GoGoStart":
+									{
 										OpenNijiiroRW.Skin.Characters_Motion_GoGoStart[i] = CConversion.StringToIntArray(strParam);
 										OpenNijiiroRW.Skin.Characters_Motion_GoGoStartMax[i] = OpenNijiiroRW.Skin.Characters_Motion_GoGoStart[i];
 										break;
 									}
-								case "Game_Chara_Motion_GoGoStart_Clear": {
+								case "Game_Chara_Motion_GoGoStart_Clear":
+									{
 										OpenNijiiroRW.Skin.Characters_Motion_GoGoStart_Clear[i] = CConversion.StringToIntArray(strParam);
 										break;
 									}
-								case "Game_Chara_Motion_GoGoStart_Max": {
+								case "Game_Chara_Motion_GoGoStart_Max":
+									{
 										OpenNijiiroRW.Skin.Characters_Motion_GoGoStartMax[i] = CConversion.StringToIntArray(strParam);
 										break;
 									}
-								case "Game_Chara_Motion_GoGo": {
+								case "Game_Chara_Motion_GoGo":
+									{
 										OpenNijiiroRW.Skin.Characters_Motion_GoGo[i] = CConversion.StringToIntArray(strParam);
 										OpenNijiiroRW.Skin.Characters_Motion_GoGoMax[i] = OpenNijiiroRW.Skin.Characters_Motion_GoGo[i];
 										break;
 									}
-								case "Game_Chara_Motion_GoGo_Max": {
+								case "Game_Chara_Motion_GoGo_Max":
+									{
 										OpenNijiiroRW.Skin.Characters_Motion_GoGoMax[i] = CConversion.StringToIntArray(strParam);
 										break;
 									}
-								case "Game_Chara_Motion_SoulIn": {
+								case "Game_Chara_Motion_SoulIn":
+									{
 										OpenNijiiroRW.Skin.Characters_Motion_SoulIn[i] = CConversion.StringToIntArray(strParam);
 										break;
 									}
-								case "Game_Chara_Motion_SoulOut": {
+								case "Game_Chara_Motion_SoulOut":
+									{
 										OpenNijiiroRW.Skin.Characters_Motion_SoulOut[i] = CConversion.StringToIntArray(strParam);
 										break;
 									}
-								case "Game_Chara_Motion_ClearOut": {
+								case "Game_Chara_Motion_ClearOut":
+									{
 										OpenNijiiroRW.Skin.Characters_Motion_ClearOut[i] = CConversion.StringToIntArray(strParam);
 										break;
 									}
-								case "Game_Chara_Motion_Return": {
+								case "Game_Chara_Motion_Return":
+									{
 										OpenNijiiroRW.Skin.Characters_Motion_Return[i] = CConversion.StringToIntArray(strParam);
 										break;
 									}
@@ -2028,145 +2149,180 @@ class TextureLoader {
                                     TJAPlayer3.Skin.Characters_Motion_Tower_Clear_Tired[i] = CConversion.StringToIntArray(strParam);
                                     break;
                                 }*/
-								case "Game_Chara_Beat_Normal": {
+								case "Game_Chara_Beat_Normal":
+									{
 										OpenNijiiroRW.Skin.Characters_Beat_Normal[i] = float.Parse(strParam);
 										break;
 									}
-								case "Game_Chara_Beat_10Combo": {
+								case "Game_Chara_Beat_10Combo":
+									{
 										OpenNijiiroRW.Skin.Characters_Beat_10Combo[i] = float.Parse(strParam);
 										break;
 									}
-								case "Game_Chara_Beat_10ComboMax": {
+								case "Game_Chara_Beat_10ComboMax":
+									{
 										OpenNijiiroRW.Skin.Characters_Beat_10ComboMax[i] = float.Parse(strParam);
 										break;
 									}
-								case "Game_Chara_Beat_Miss": {
+								case "Game_Chara_Beat_Miss":
+									{
 										OpenNijiiroRW.Skin.Characters_Beat_Miss[i] = float.Parse(strParam);
 										break;
 									}
-								case "Game_Chara_Beat_MissDown": {
+								case "Game_Chara_Beat_MissDown":
+									{
 										OpenNijiiroRW.Skin.Characters_Beat_MissDown[i] = float.Parse(strParam);
 										break;
 									}
-								case "Game_Chara_Beat_ClearIn": {
+								case "Game_Chara_Beat_ClearIn":
+									{
 										OpenNijiiroRW.Skin.Characters_Beat_ClearIn[i] = float.Parse(strParam);
 										break;
 									}
-								case "Game_Chara_Beat_Clear": {
+								case "Game_Chara_Beat_Clear":
+									{
 										OpenNijiiroRW.Skin.Characters_Beat_Clear[i] = float.Parse(strParam);
 										OpenNijiiroRW.Skin.Characters_Beat_ClearMax[i] = float.Parse(strParam);
 										break;
 									}
-								case "Game_Chara_Beat_ClearMax": {
+								case "Game_Chara_Beat_ClearMax":
+									{
 										OpenNijiiroRW.Skin.Characters_Beat_ClearMax[i] = float.Parse(strParam);
 										break;
 									}
-								case "Game_Chara_Beat_MissIn": {
+								case "Game_Chara_Beat_MissIn":
+									{
 										OpenNijiiroRW.Skin.Characters_Beat_MissIn[i] = float.Parse(strParam);
 										break;
 									}
-								case "Game_Chara_Beat_MissDownIn": {
+								case "Game_Chara_Beat_MissDownIn":
+									{
 										OpenNijiiroRW.Skin.Characters_Beat_MissDownIn[i] = float.Parse(strParam);
 										break;
 									}
-								case "Game_Chara_Beat_GoGoStart": {
+								case "Game_Chara_Beat_GoGoStart":
+									{
 										OpenNijiiroRW.Skin.Characters_Beat_GoGoStart[i] = float.Parse(strParam);
 										break;
 									}
-								case "Game_Chara_Beat_GoGoStartClear": {
+								case "Game_Chara_Beat_GoGoStartClear":
+									{
 										OpenNijiiroRW.Skin.Characters_Beat_GoGoStart_Clear[i] = float.Parse(strParam);
 										break;
 									}
-								case "Game_Chara_Beat_GoGoStartMax": {
+								case "Game_Chara_Beat_GoGoStartMax":
+									{
 										OpenNijiiroRW.Skin.Characters_Beat_GoGoStartMax[i] = float.Parse(strParam);
 										break;
 									}
-								case "Game_Chara_Beat_GoGo": {
+								case "Game_Chara_Beat_GoGo":
+									{
 										OpenNijiiroRW.Skin.Characters_Beat_GoGo[i] = float.Parse(strParam);
 										OpenNijiiroRW.Skin.Characters_Beat_GoGoMax[i] = float.Parse(strParam);
 										break;
 									}
-								case "Game_Chara_Beat_GoGoMax": {
+								case "Game_Chara_Beat_GoGoMax":
+									{
 										OpenNijiiroRW.Skin.Characters_Beat_GoGoMax[i] = float.Parse(strParam);
 										break;
 									}
-								case "Game_Chara_Beat_SoulIn": {
+								case "Game_Chara_Beat_SoulIn":
+									{
 										OpenNijiiroRW.Skin.Characters_Beat_SoulIn[i] = float.Parse(strParam);
 										break;
 									}
-								case "Game_Chara_Beat_Return": {
+								case "Game_Chara_Beat_Return":
+									{
 										OpenNijiiroRW.Skin.Characters_Beat_Return[i] = float.Parse(strParam);
 										break;
 									}
-								case "Game_Chara_Beat_Tower_Standing": {
+								case "Game_Chara_Beat_Tower_Standing":
+									{
 										OpenNijiiroRW.Skin.Characters_Beat_Tower_Standing[i] = float.Parse(strParam);
 										break;
 									}
-								case "Game_Chara_Beat_Tower_Standing_Tired": {
+								case "Game_Chara_Beat_Tower_Standing_Tired":
+									{
 										OpenNijiiroRW.Skin.Characters_Beat_Tower_Standing_Tired[i] = float.Parse(strParam);
 										break;
 									}
-								case "Game_Chara_Beat_Tower_Fail": {
+								case "Game_Chara_Beat_Tower_Fail":
+									{
 										OpenNijiiroRW.Skin.Characters_Beat_Tower_Fail[i] = float.Parse(strParam);
 										break;
 									}
-								case "Game_Chara_Beat_Tower_Clear": {
+								case "Game_Chara_Beat_Tower_Clear":
+									{
 										OpenNijiiroRW.Skin.Characters_Beat_Tower_Clear[i] = float.Parse(strParam);
 										break;
 									}
-								case "Game_Chara_Beat_Tower_Clear_Tired": {
+								case "Game_Chara_Beat_Tower_Clear_Tired":
+									{
 										OpenNijiiroRW.Skin.Characters_Beat_Tower_Clear_Tired[i] = float.Parse(strParam);
 										break;
 									}
-								case "Game_Chara_Tower_Clear_IsLooping": {
+								case "Game_Chara_Tower_Clear_IsLooping":
+									{
 										OpenNijiiroRW.Skin.Characters_Tower_Clear_IsLooping[i] = int.Parse(strParam) != 0;
 										break;
 									}
-								case "Game_Chara_Tower_Clear_Tired_IsLooping": {
+								case "Game_Chara_Tower_Clear_Tired_IsLooping":
+									{
 										OpenNijiiroRW.Skin.Characters_Tower_Clear_Tired_IsLooping[i] = int.Parse(strParam) != 0;
 										break;
 									}
-								case "Game_Chara_Tower_Fail_IsLooping": {
+								case "Game_Chara_Tower_Fail_IsLooping":
+									{
 										OpenNijiiroRW.Skin.Characters_Tower_Fail_IsLooping[i] = int.Parse(strParam) != 0;
 										break;
 									}
-								case "Chara_Entry_AnimationDuration": {
+								case "Chara_Entry_AnimationDuration":
+									{
 										OpenNijiiroRW.Skin.Characters_Title_Entry_AnimationDuration[i] = int.Parse(strParam);
 										break;
 									}
-								case "Chara_Normal_AnimationDuration": {
+								case "Chara_Normal_AnimationDuration":
+									{
 										OpenNijiiroRW.Skin.Characters_Title_Normal_AnimationDuration[i] = int.Parse(strParam);
 										break;
 									}
-								case "Chara_Menu_Loop_AnimationDuration": {
+								case "Chara_Menu_Loop_AnimationDuration":
+									{
 										OpenNijiiroRW.Skin.Characters_Menu_Loop_AnimationDuration[i] = int.Parse(strParam);
 										break;
 									}
-								case "Chara_Menu_Select_AnimationDuration": {
+								case "Chara_Menu_Select_AnimationDuration":
+									{
 										OpenNijiiroRW.Skin.Characters_Menu_Select_AnimationDuration[i] = int.Parse(strParam);
 										break;
 									}
-								case "Chara_Menu_Start_AnimationDuration": {
+								case "Chara_Menu_Start_AnimationDuration":
+									{
 										OpenNijiiroRW.Skin.Characters_Menu_Start_AnimationDuration[i] = int.Parse(strParam);
 										break;
 									}
-								case "Chara_Menu_Wait_AnimationDuration": {
+								case "Chara_Menu_Wait_AnimationDuration":
+									{
 										OpenNijiiroRW.Skin.Characters_Menu_Wait_AnimationDuration[i] = int.Parse(strParam);
 										break;
 									}
-								case "Chara_Result_Normal_AnimationDuration": {
+								case "Chara_Result_Normal_AnimationDuration":
+									{
 										OpenNijiiroRW.Skin.Characters_Result_Normal_AnimationDuration[i] = int.Parse(strParam);
 										break;
 									}
-								case "Chara_Result_Clear_AnimationDuration": {
+								case "Chara_Result_Clear_AnimationDuration":
+									{
 										OpenNijiiroRW.Skin.Characters_Result_Clear_AnimationDuration[i] = int.Parse(strParam);
 										break;
 									}
-								case "Chara_Result_Failed_In_AnimationDuration": {
+								case "Chara_Result_Failed_In_AnimationDuration":
+									{
 										OpenNijiiroRW.Skin.Characters_Result_Failed_In_AnimationDuration[i] = int.Parse(strParam);
 										break;
 									}
-								case "Chara_Result_Failed_AnimationDuration": {
+								case "Chara_Result_Failed_AnimationDuration":
+									{
 										OpenNijiiroRW.Skin.Characters_Result_Failed_AnimationDuration[i] = int.Parse(strParam);
 										break;
 									}
@@ -2185,7 +2341,9 @@ class TextureLoader {
 							}
 						}
 						continue;
-					} catch (Exception exception) {
+					}
+					catch (Exception exception)
+					{
 						Trace.TraceError(exception.ToString());
 						Trace.TraceError("例外が発生しましたが処理を継続します。 (6a32cc37-1527-412e-968a-512c1f0135cd)");
 						continue;
@@ -2257,8 +2415,10 @@ class TextureLoader {
 		#endregion
 	}
 
-	public void DisposeTexture() {
-		foreach (var tex in listTexture) {
+	public void DisposeTexture()
+	{
+		foreach (var tex in listTexture)
+		{
 			var texture = tex;
 			OpenNijiiroRW.tテクスチャの解放(ref texture);
 			texture?.Dispose();
@@ -2268,7 +2428,8 @@ class TextureLoader {
 
 		//if (TJAPlayer3.ConfigIni.PreAssetsLoading)
 		{
-			foreach (var act in OpenNijiiroRW.app.listTopLevelActivities) {
+			foreach (var act in OpenNijiiroRW.app.listTopLevelActivities)
+			{
 				act.ReleaseManagedResource();
 				act.ReleaseUnmanagedResource();
 			}

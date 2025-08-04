@@ -1,29 +1,39 @@
-﻿namespace OpenNijiiroRW {
-	internal class CUnlockSP : CUnlockCondition {
+﻿namespace OpenNijiiroRW
+{
+	internal class CUnlockSP : CUnlockCondition
+	{
 
 
-		public CUnlockSP(CUnlockConditionFactory.UnlockConditionJsonRaw rawJson) : base(rawJson) {
+		public CUnlockSP(CUnlockConditionFactory.UnlockConditionJsonRaw rawJson) : base(rawJson)
+		{
 			this.RequiredArgCount = 2;
 			this.ConditionId = "sp";
 		}
 
-		public override (bool, string?) tConditionMet(int player, EScreen screen = EScreen.MyRoom) {
+		public override (bool, string?) tConditionMet(int player, EScreen screen = EScreen.MyRoom)
+		{
 			if (this.Values.Length % this.RequiredArgCount == 0
-						&& this.Reference.Length == this.Values.Length / this.RequiredArgCount) {
+						&& this.Reference.Length == this.Values.Length / this.RequiredArgCount)
+			{
 				int _satisfactoryPlays = this.tGetCountChartsPassingCondition(player);
 
 				bool fulfiled = this.tValueRequirementMet(_satisfactoryPlays, this.Reference.Length);
 
-				if (screen == EScreen.Internal) {
+				if (screen == EScreen.Internal)
+				{
 					return (fulfiled, "");
-				} else {
+				}
+				else
+				{
 					return (fulfiled, null);
 				}
-			} else
+			}
+			else
 				return (false, CLangManager.LangInstance.GetString("UNLOCK_CONDITION_ERROR2", this.ConditionId, this.RequiredArgCount.ToString()));
 		}
 
-		public override string tConditionMessage(EScreen screen = EScreen.MyRoom) {
+		public override string tConditionMessage(EScreen screen = EScreen.MyRoom)
+		{
 			if (!(this.Values.Length % this.RequiredArgCount == 0
 						&& this.Reference.Length == this.Values.Length / this.RequiredArgCount))
 				return CLangManager.LangInstance.GetString("UNLOCK_CONDITION_ERROR2", this.ConditionId, this.RequiredArgCount.ToString());
@@ -37,7 +47,8 @@
 			var _challengeCount = this.Values.Length / this.RequiredArgCount;
 
 			var _count = 0;
-			for (int i = 0; i < _challengeCount; i++) {
+			for (int i = 0; i < _challengeCount; i++)
+			{
 				int _base = i * this.RequiredArgCount;
 				string _songId = this.Reference[i];
 				var _aimedDifficulty = this.Values[_base];
@@ -51,16 +62,21 @@
 
 
 				// Safisfied count
-				if (_aimedDifficulty >= (int)Difficulty.Easy && _aimedDifficulty <= (int)Difficulty.Edit) {
+				if (_aimedDifficulty >= (int)Difficulty.Easy && _aimedDifficulty <= (int)Difficulty.Edit)
+				{
 					string key = _songId + _aimedDifficulty.ToString();
 					var _cht = SaveData.bestPlaysDistinctCharts.TryGetValue(key, out var value) ? value : null;
 					if (_cht != null && _cht.ClearStatus + 1 >= _aimedStatus) _count++;
 
-				} else if (_aimedDifficulty < (int)Difficulty.Easy) {
-					for (int diff = (int)Difficulty.Easy; diff <= (int)Difficulty.Edit; diff++) {
+				}
+				else if (_aimedDifficulty < (int)Difficulty.Easy)
+				{
+					for (int diff = (int)Difficulty.Easy; diff <= (int)Difficulty.Edit; diff++)
+					{
 						string key = _songId + diff.ToString();
 						var _cht = SaveData.bestPlaysDistinctCharts.TryGetValue(key, out var value) ? value : null;
-						if (_cht != null && _cht.ClearStatus + 1 >= _aimedStatus) {
+						if (_cht != null && _cht.ClearStatus + 1 >= _aimedStatus)
+						{
 							_count++;
 							break;
 						}
@@ -73,27 +89,34 @@
 			return String.Join("\n", _rows);
 		}
 
-		protected override int tGetCountChartsPassingCondition(int player) {
+		protected override int tGetCountChartsPassingCondition(int player)
+		{
 			var bpDistinctCharts = OpenNijiiroRW.SaveFileInstances[player].data.bestPlaysDistinctCharts;
 			var chartStats = OpenNijiiroRW.SaveFileInstances[player].data.bestPlaysStats;
 
 			var _count = 0;
-			for (int i = 0; i < this.Values.Length / this.RequiredArgCount; i++) {
+			for (int i = 0; i < this.Values.Length / this.RequiredArgCount; i++)
+			{
 				int _base = i * this.RequiredArgCount;
 				string _songId = this.Reference[i];
 				var _aimedDifficulty = this.Values[_base];
 				var _aimedStatus = this.Values[_base + 1];
 
-				if (_aimedDifficulty >= (int)Difficulty.Easy && _aimedDifficulty <= (int)Difficulty.Edit) {
+				if (_aimedDifficulty >= (int)Difficulty.Easy && _aimedDifficulty <= (int)Difficulty.Edit)
+				{
 					string key = _songId + _aimedDifficulty.ToString();
 					var _cht = bpDistinctCharts.TryGetValue(key, out var value) ? value : null;
 					if (_cht != null && _cht.ClearStatus + 1 >= _aimedStatus) _count++;
 
-				} else if (_aimedDifficulty < (int)Difficulty.Easy) {
-					for (int diff = (int)Difficulty.Easy; diff <= (int)Difficulty.Edit; diff++) {
+				}
+				else if (_aimedDifficulty < (int)Difficulty.Easy)
+				{
+					for (int diff = (int)Difficulty.Easy; diff <= (int)Difficulty.Edit; diff++)
+					{
 						string key = _songId + diff.ToString();
 						var _cht = bpDistinctCharts.TryGetValue(key, out var value) ? value : null;
-						if (_cht != null && _cht.ClearStatus + 1 >= _aimedStatus) {
+						if (_cht != null && _cht.ClearStatus + 1 >= _aimedStatus)
+						{
 							_count++;
 							break;
 						}

@@ -3,10 +3,12 @@ using FDK;
 
 namespace OpenNijiiroRW;
 
-internal class CStage起動 : CStage {
+internal class CStage起動 : CStage
+{
 	// Constructor
 
-	public CStage起動() {
+	public CStage起動()
+	{
 		base.eStageID = CStage.EStage.StartUp;
 		base.IsDeActivated = true;
 	}
@@ -15,20 +17,24 @@ internal class CStage起動 : CStage {
 
 	// CStage 実装
 
-	public override void Activate() {
+	public override void Activate()
+	{
 		Trace.TraceInformation("起動ステージを活性化します。");
 		Trace.Indent();
-		try {
+		try
+		{
 			Background = new ScriptBG(CSkin.Path($"{TextureLoader.BASE}{TextureLoader.STARTUP}Script.lua"));
 			Background.Init();
 
-			if (OpenNijiiroRW.ConfigIsNew) {
+			if (OpenNijiiroRW.ConfigIsNew)
+			{
 				langSelectFont = HPrivateFastFont.tInstantiateMainFont(OpenNijiiroRW.Skin.StartUp_LangSelect_FontSize);
 				langSelectTitle = OpenNijiiroRW.tテクスチャの生成(langSelectFont.DrawText("Select Language:", System.Drawing.Color.White));
 				langList = new CTexture[CLangManager.Languages.Length];
 				langListHighlighted = new CTexture[CLangManager.Languages.Length];
 
-				for (int i = 0; i < langList.Length; i++) {
+				for (int i = 0; i < langList.Length; i++)
+				{
 					langList[i] = OpenNijiiroRW.tテクスチャの生成(langSelectFont.DrawText(CLangManager.Languages[i], System.Drawing.Color.White));
 					langListHighlighted[i] = OpenNijiiroRW.tテクスチャの生成(langSelectFont.DrawText(CLangManager.Languages[i], System.Drawing.Color.Red));
 				}
@@ -39,28 +45,36 @@ internal class CStage起動 : CStage {
 			base.ePhaseID = CStage.EPhase.Common_NORMAL;
 			base.Activate();
 			Trace.TraceInformation("起動ステージの活性化を完了しました。");
-		} finally {
+		}
+		finally
+		{
 			Trace.Unindent();
 		}
 	}
-	public override void DeActivate() {
+	public override void DeActivate()
+	{
 		Trace.TraceInformation("起動ステージを非活性化します。");
 		Trace.Indent();
-		try {
+		try
+		{
 			OpenNijiiroRW.tDisposeSafely(ref Background);
 
 			OpenNijiiroRW.tDisposeSafely(ref langSelectFont);
 			OpenNijiiroRW.tDisposeSafely(ref langSelectTitle);
-			if (langList != null) {
-				for (int i = 0; i < langList.Length; i++) {
+			if (langList != null)
+			{
+				for (int i = 0; i < langList.Length; i++)
+				{
 					OpenNijiiroRW.tDisposeSafely(ref langList[i]);
 					OpenNijiiroRW.tDisposeSafely(ref langListHighlighted[i]);
 				}
 			}
 
 			this.list進行文字列 = null;
-			if (es != null) {
-				if ((es.thDTXFileEnumerate != null) && es.thDTXFileEnumerate.IsAlive) {
+			if (es != null)
+			{
+				if ((es.thDTXFileEnumerate != null) && es.thDTXFileEnumerate.IsAlive)
+				{
 					Trace.TraceWarning("リスト構築スレッドを強制停止します。");
 					es.thDTXFileEnumerate.Abort();
 					es.thDTXFileEnumerate.Join();
@@ -68,19 +82,26 @@ internal class CStage起動 : CStage {
 			}
 			base.DeActivate();
 			Trace.TraceInformation("起動ステージの非活性化を完了しました。");
-		} finally {
+		}
+		finally
+		{
 			Trace.Unindent();
 		}
 	}
-	public override void CreateManagedResource() {
+	public override void CreateManagedResource()
+	{
 		base.CreateManagedResource();
 	}
-	public override void ReleaseManagedResource() {
+	public override void ReleaseManagedResource()
+	{
 		base.ReleaseManagedResource();
 	}
-	public override int Draw() {
-		if (!base.IsDeActivated) {
-			if (base.IsFirstDraw) {
+	public override int Draw()
+	{
+		if (!base.IsDeActivated)
+		{
+			if (base.IsFirstDraw)
+			{
 				this.list進行文字列.Add("DTXManiaXG Ver.K powered by YAMAHA Silent Session Drums");
 				this.list進行文字列.Add("Product by.kairera0467");
 				this.list進行文字列.Add("Release: " + OpenNijiiroRW.VERSION + " [" + System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString() + "]");
@@ -104,7 +125,8 @@ internal class CStage起動 : CStage {
 
 			#region [ this.str現在進行中 の決定 ]
 			//-----------------
-			switch (base.ePhaseID) {
+			switch (base.ePhaseID)
+			{
 				case CStage.EPhase.Startup_0_CreateSystemSound:
 					this.str現在進行中 = "SYSTEM SOUND...";
 					break;
@@ -130,23 +152,29 @@ internal class CStage起動 : CStage {
 					break;
 
 				case CStage.EPhase.Startup_6_LoadTextures:
-					if (!bIsLoadingTextures) {
-						void loadTexture() {
+					if (!bIsLoadingTextures)
+					{
+						void loadTexture()
+						{
 							this.list進行文字列.Add("LOADING TEXTURES...");
 
-							try {
+							try
+							{
 								OpenNijiiroRW.Tx.LoadTexture();
 
 								this.list進行文字列.Add("LOADING TEXTURES...OK");
 								this.str現在進行中 = "Setup done.";
 								this.ePhaseID = EPhase.Startup_Complete;
 								OpenNijiiroRW.Skin.bgm起動画面.tStop();
-							} catch (Exception exception) {
+							}
+							catch (Exception exception)
+							{
 								OpenNijiiroRW.Skin.bgm起動画面.tStop();
 
 								Trace.TraceError(exception.ToString());
 								this.list進行文字列.Add("LOADING TEXTURES...NG");
-								foreach (var text in exception.ToString().Split('\n')) {
+								foreach (var text in exception.ToString().Split('\n'))
+								{
 									this.list進行文字列.Add(text);
 								}
 							}
@@ -156,9 +184,12 @@ internal class CStage起動 : CStage {
 							this.ePhaseID = EPhase.Startup_Complete;
 							OpenNijiiroRW.Skin.bgm起動画面.tStop();
 						}
-						if (OpenNijiiroRW.ConfigIni.ASyncTextureLoad) {
+						if (OpenNijiiroRW.ConfigIni.ASyncTextureLoad)
+						{
 							Task.Run(loadTexture);
-						} else {
+						}
+						else
+						{
 							loadTexture();
 						}
 					}
@@ -168,19 +199,22 @@ internal class CStage起動 : CStage {
 			//-----------------
 			#endregion
 
-			if (ePhaseID != EPhase.Startup_Complete) {
+			if (ePhaseID != EPhase.Startup_Complete)
+			{
 				#region [ this.list進行文字列＋this.現在進行中 の表示 ]
 				//-----------------
 				int x = (int)(320 * OpenNijiiroRW.Skin.Resolution[0] / 1280.0);
 				int y = (int)(20 * OpenNijiiroRW.Skin.Resolution[1] / 720.0);
 				int dy = (int)((OpenNijiiroRW.actTextConsole.fontHeight + 8) * OpenNijiiroRW.Skin.Resolution[1] / 720.0);
-				for (int i = 0; i < this.list進行文字列.Count; i++) {
+				for (int i = 0; i < this.list進行文字列.Count; i++)
+				{
 					y = OpenNijiiroRW.actTextConsole.Print(x, y, CTextConsole.EFontType.White, this.list進行文字列[i]).y;
 					y += dy;
 				}
 				//-----------------
 				#endregion
-			} else if (OpenNijiiroRW.ConfigIsNew && !bLanguageSelected) // Prompt language selection if Config.ini is newly generated
+			}
+			else if (OpenNijiiroRW.ConfigIsNew && !bLanguageSelected) // Prompt language selection if Config.ini is newly generated
 			{
 				HBlackBackdrop.Draw();
 
@@ -190,7 +224,8 @@ internal class CStage起動 : CStage {
 				langSelectTitle.t2D中心基準描画(x, y);
 				y += langSelectTitle.szTextureSize.Height;
 
-				for (int i = 0; i < langList.Length; i++) {
+				for (int i = 0; i < langList.Length; i++)
+				{
 					if (i == langSelectIndex)
 						langListHighlighted[i].t2D中心基準描画(x, y);
 					else
@@ -199,22 +234,30 @@ internal class CStage起動 : CStage {
 					y += langList[i].szTextureSize.Height;
 				}
 
-				if (OpenNijiiroRW.InputManager.Keyboard.KeyPressed((int)SlimDXKeys.Key.DownArrow) || OpenNijiiroRW.InputManager.Keyboard.KeyPressed((int)SlimDXKeys.Key.RightArrow)) {
+				if (OpenNijiiroRW.InputManager.Keyboard.KeyPressed((int)SlimDXKeys.Key.DownArrow) || OpenNijiiroRW.InputManager.Keyboard.KeyPressed((int)SlimDXKeys.Key.RightArrow))
+				{
 					langSelectIndex = Math.Min(langSelectIndex + 1, CLangManager.Languages.Length - 1);
-				} else if (OpenNijiiroRW.InputManager.Keyboard.KeyPressed((int)SlimDXKeys.Key.UpArrow) || OpenNijiiroRW.InputManager.Keyboard.KeyPressed((int)SlimDXKeys.Key.LeftArrow)) {
+				}
+				else if (OpenNijiiroRW.InputManager.Keyboard.KeyPressed((int)SlimDXKeys.Key.UpArrow) || OpenNijiiroRW.InputManager.Keyboard.KeyPressed((int)SlimDXKeys.Key.LeftArrow))
+				{
 					langSelectIndex = Math.Max(langSelectIndex - 1, 0);
-				} else if (OpenNijiiroRW.InputManager.Keyboard.KeyPressed((int)SlimDXKeys.Key.Return)) {
+				}
+				else if (OpenNijiiroRW.InputManager.Keyboard.KeyPressed((int)SlimDXKeys.Key.Return))
+				{
 					OpenNijiiroRW.Skin.soundDecideSFX.tPlay();
 					OpenNijiiroRW.ConfigIni.sLang = CLangManager.intToLang(langSelectIndex);
 					CLangManager.langAttach(OpenNijiiroRW.ConfigIni.sLang);
 					bLanguageSelected = true;
 				}
-			} else {
+			}
+			else
+			{
 				if (es != null && es.IsSongListEnumCompletelyDone)                          // 曲リスト作成が終わったら
 				{
 					OpenNijiiroRW.Songs管理 = (es != null) ? es.Songs管理 : null;      // 最後に、曲リストを拾い上げる
 
-					if (OpenNijiiroRW.InputManager.Keyboard.KeyPressed((int)SlimDXKeys.Key.Return)) {
+					if (OpenNijiiroRW.InputManager.Keyboard.KeyPressed((int)SlimDXKeys.Key.Return))
+					{
 						OpenNijiiroRW.Skin.soundDecideSFX.tPlay();
 						return 1;
 					}

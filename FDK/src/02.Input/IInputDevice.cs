@@ -1,24 +1,31 @@
 ﻿namespace FDK;
 
-public interface IInputDevice : IDisposable {
+public interface IInputDevice : IDisposable
+{
 	// Properties
 
-	Silk.NET.Input.IInputDevice Device {
+	Silk.NET.Input.IInputDevice Device
+	{
 		get;
 	}
-	InputDeviceType CurrentType {
+	InputDeviceType CurrentType
+	{
 		get;
 	}
-	string GUID {
+	string GUID
+	{
 		get;
 	}
-	int ID {
+	int ID
+	{
 		get;
 	}
-	string Name {
+	string Name
+	{
 		get;
 	}
-	List<STInputEvent> InputEvents {
+	List<STInputEvent> InputEvents
+	{
 		get;
 	}
 	bool useBufferInput { get; set; }

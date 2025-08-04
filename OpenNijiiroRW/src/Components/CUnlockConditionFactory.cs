@@ -1,15 +1,20 @@
 ﻿using Newtonsoft.Json;
 
-namespace OpenNijiiroRW {
-	internal class CUnlockConditionFactory {
-		public class UnlockConditionJsonRaw {
-			public UnlockConditionJsonRaw() {
+namespace OpenNijiiroRW
+{
+	internal class CUnlockConditionFactory
+	{
+		public class UnlockConditionJsonRaw
+		{
+			public UnlockConditionJsonRaw()
+			{
 				Condition = "";
 				Values = new int[] { 0 };
 				Type = "me";
 				Reference = new string[] { "" };
 			}
-			public UnlockConditionJsonRaw(string cd, int[] vl, string tp, string[] rf) {
+			public UnlockConditionJsonRaw(string cd, int[] vl, string tp, string[] rf)
+			{
 				Condition = cd;
 				Values = vl;
 				Type = tp;
@@ -58,64 +63,85 @@ namespace OpenNijiiroRW {
 		 * orcomb : "OR combination", fullfil at least one of the included conditions to unlock the asset, n references for each condition in the reference array as a stringified JSON
 		 */
 
-		public CUnlockCondition GenerateUnlockObjectFromJsonRaw(UnlockConditionJsonRaw? rawJson) {
-			if (rawJson == null) {
+		public CUnlockCondition GenerateUnlockObjectFromJsonRaw(UnlockConditionJsonRaw? rawJson)
+		{
+			if (rawJson == null)
+			{
 				return new CUnlockError(null);
 			}
 
-			switch (rawJson.Condition) {
-				case "ch": {
+			switch (rawJson.Condition)
+			{
+				case "ch":
+					{
 						return new CUnlockCH(rawJson);
 					}
-				case "cs": {
+				case "cs":
+					{
 						return new CUnlockCS(rawJson);
 					}
-				case "cm": {
+				case "cm":
+					{
 						return new CUnlockCM(rawJson);
 					}
-				case "ce": {
+				case "ce":
+					{
 						return new CUnlockCE(rawJson);
 					}
-				case "sd": {
+				case "sd":
+					{
 						return new CUnlockSD(rawJson);
 					}
-				case "dp": {
+				case "dp":
+					{
 						return new CUnlockDP(rawJson);
 					}
-				case "lp": {
+				case "lp":
+					{
 						return new CUnlockLP(rawJson);
 					}
-				case "sp": {
+				case "sp":
+					{
 						return new CUnlockSP(rawJson);
 					}
-				case "sg": {
+				case "sg":
+					{
 						return new CUnlockSG(rawJson);
 					}
-				case "sc": {
+				case "sc":
+					{
 						return new CUnlockSC(rawJson);
 					}
-				case "tp": {
+				case "tp":
+					{
 						return new CUnlockTP(rawJson);
 					}
-				case "ap": {
+				case "ap":
+					{
 						return new CUnlockAP(rawJson);
 					}
-				case "aw": {
+				case "aw":
+					{
 						return new CUnlockAW(rawJson);
 					}
-				case "ig": {
+				case "ig":
+					{
 						return new CUnlockIG(rawJson);
 					}
-				case "gt": {
+				case "gt":
+					{
 						return new CUnlockGT(rawJson);
 					}
-				case "gc": {
+				case "gc":
+					{
 						return new CUnlockGC(rawJson);
 					}
-				case "andcomb": {
+				case "andcomb":
+					{
 						return new CUnlockAndComb(rawJson);
 					}
-				case "orcomb": {
+				case "orcomb":
+					{
 						return new CUnlockOrComb(rawJson);
 					}
 			}
@@ -123,7 +149,8 @@ namespace OpenNijiiroRW {
 			return new CUnlockError(null);
 		}
 
-		public CUnlockCondition GenerateUnlockObjectFromJsonPath(string jsonPath) {
+		public CUnlockCondition GenerateUnlockObjectFromJsonPath(string jsonPath)
+		{
 			UnlockConditionJsonRaw? rawJson = ConfigManager.GetConfig<UnlockConditionJsonRaw>(jsonPath);
 
 			return this.GenerateUnlockObjectFromJsonRaw(rawJson);

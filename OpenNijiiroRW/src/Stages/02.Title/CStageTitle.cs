@@ -5,10 +5,12 @@ using FDK;
 
 namespace OpenNijiiroRW;
 
-internal class CStageTitle : CStage {
+internal class CStageTitle : CStage
+{
 	// Constructor
 
-	public CStageTitle() {
+	public CStageTitle()
+	{
 		base.eStageID = CStage.EStage.Title;
 		base.IsDeActivated = true;
 		base.ChildActivities.Add(this.actFIfromSetup = new CActFIFOBlack());
@@ -22,10 +24,12 @@ internal class CStageTitle : CStage {
 
 	// CStage 実装
 
-	public override void Activate() {
+	public override void Activate()
+	{
 		Trace.TraceInformation("タイトルステージを活性化します。");
 		Trace.Indent();
-		try {
+		try
+		{
 			UnloadSaveFile();
 
 			this.PuchiChara.IdleAnimation();
@@ -55,7 +59,8 @@ internal class CStageTitle : CStage {
 			usedMenusCount = usedMenus.Length;
 
 			usedMenusPos = new int[usedMenusCount];
-			for (int i = 0; i < usedMenusCount; i++) {
+			for (int i = 0; i < usedMenusCount; i++)
+			{
 				usedMenusPos[i] = i + 1 - n現在の選択行モード選択;
 			}
 
@@ -74,50 +79,65 @@ internal class CStageTitle : CStage {
 			if (OpenNijiiroRW.ConfigIni.bBGMPlayVoiceSound)
 				OpenNijiiroRW.Skin.bgmタイトルイン.tPlay();
 			base.Activate();
-		} finally {
+		}
+		finally
+		{
 			Trace.TraceInformation("タイトルステージの活性化を完了しました。");
 			Trace.Unindent();
 		}
 	}
-	public override void DeActivate() {
+	public override void DeActivate()
+	{
 		Trace.TraceInformation("タイトルステージを非活性化します。");
 		Trace.Indent();
-		try {
+		try
+		{
 			OpenNijiiroRW.tDisposeSafely(ref Background);
-		} finally {
+		}
+		finally
+		{
 			Trace.TraceInformation("タイトルステージの非活性化を完了しました。");
 			Trace.Unindent();
 		}
 		base.DeActivate();
 	}
 
-	public void tReloadMenus() {
+	public void tReloadMenus()
+	{
 		if (this.pfMenuTitle != null && this.pfBoxText != null)
 			CMainMenuTab.tInitMenus(this.pfMenuTitle, this.pfBoxText, OpenNijiiroRW.Tx.ModeSelect_Bar, OpenNijiiroRW.Tx.ModeSelect_Bar_Chara);
 	}
 
-	public override void CreateManagedResource() {
+	public override void CreateManagedResource()
+	{
 		this.pfMenuTitle = HPrivateFastFont.tInstantiateMainFont(OpenNijiiroRW.Skin.Title_ModeSelect_Title_Scale[0]);
 		this.pfBoxText = HPrivateFastFont.tInstantiateBoxFont(OpenNijiiroRW.Skin.Title_ModeSelect_Title_Scale[1]);
 
 		base.CreateManagedResource();
 	}
-	public override void ReleaseManagedResource() {
+	public override void ReleaseManagedResource()
+	{
 
 		OpenNijiiroRW.tDisposeSafely(ref pfMenuTitle);
 		OpenNijiiroRW.tDisposeSafely(ref pfBoxText);
 
 		base.ReleaseManagedResource();
 	}
-	public override int Draw() {
-		if (!base.IsDeActivated) {
+	public override int Draw()
+	{
+		if (!base.IsDeActivated)
+		{
 			#region [ 初めての進行描画 ]
 			//---------------------
-			if (base.IsFirstDraw) {
-				if (OpenNijiiroRW.rPreviousStage == OpenNijiiroRW.stageStartup) {
+			if (base.IsFirstDraw)
+			{
+				if (OpenNijiiroRW.rPreviousStage == OpenNijiiroRW.stageStartup)
+				{
 					this.actFIfromSetup.tフェードイン開始();
 					base.ePhaseID = CStage.EPhase.Title_FadeIn;
-				} else {
+				}
+				else
+				{
 					this.actFI.tフェードイン開始();
 					base.ePhaseID = CStage.EPhase.Common_FADEIN;
 				}
@@ -134,8 +154,10 @@ internal class CStageTitle : CStage {
 			this.ctキャライン.Tick();
 			this.ctBarMove.Tick();
 
-			if (!OpenNijiiroRW.Skin.bgmタイトルイン.bIsPlaying) {
-				if (OpenNijiiroRW.ConfigIni.bBGMPlayVoiceSound && !b音声再生) {
+			if (!OpenNijiiroRW.Skin.bgmタイトルイン.bIsPlaying)
+			{
+				if (OpenNijiiroRW.ConfigIni.bBGMPlayVoiceSound && !b音声再生)
+				{
 					OpenNijiiroRW.Skin.bgmタイトル.tPlay();
 					b音声再生 = true;
 				}
@@ -147,14 +169,18 @@ internal class CStageTitle : CStage {
 
 			if (base.ePhaseID == CStage.EPhase.Common_NORMAL)    // プラグインの入力占有がない
 			{
-				if (OpenNijiiroRW.InputManager.Keyboard.KeyPressed((int)SlimDXKeys.Key.Escape) || OpenNijiiroRW.Pad.bPressed(EInstrumentPad.Drums, EPad.Cancel)) {
-					if (bモード選択) {
+				if (OpenNijiiroRW.InputManager.Keyboard.KeyPressed((int)SlimDXKeys.Key.Escape) || OpenNijiiroRW.Pad.bPressed(EInstrumentPad.Drums, EPad.Cancel))
+				{
+					if (bモード選択)
+					{
 						OpenNijiiroRW.Skin.soundCancelSFX.tPlay();
 						bSaveFileLoaded = false;
 						UnloadSaveFile();
 						if (bSaveFileLoaded == false)
 							OpenNijiiroRW.Skin.soundEntry.tPlay();
-					} else {
+					}
+					else
+					{
 						OpenNijiiroRW.Skin.soundDecideSFX.tPlay();
 						this._idNextStageForced = EReturnValue.EXIT;
 						this.actFO.tフェードアウト開始(0, 500);
@@ -162,7 +188,8 @@ internal class CStageTitle : CStage {
 					}
 				}
 #if DEBUG
-				if (OpenNijiiroRW.InputManager.Keyboard.KeyPressed((int)SlimDXKeys.Key.F8)) {
+				if (OpenNijiiroRW.InputManager.Keyboard.KeyPressed((int)SlimDXKeys.Key.F8))
+				{
 					CScoreIni_Importer.ImportScoreInisToSavesDb3();
 				}
 #endif
@@ -183,10 +210,12 @@ internal class CStageTitle : CStage {
 				*/
 
 				// 1st step (Save file loading)
-				if (!bSaveIsLoading) {
+				if (!bSaveIsLoading)
+				{
 
 					if (OpenNijiiroRW.Pad.bPressed(EInstrumentPad.Drums, EPad.Decide) ||
-						OpenNijiiroRW.Pad.bPressed(EInstrumentPad.Drums, EPad.RRed) || OpenNijiiroRW.Pad.bPressed(EInstrumentPad.Drums, EPad.LRed)) {
+						OpenNijiiroRW.Pad.bPressed(EInstrumentPad.Drums, EPad.RRed) || OpenNijiiroRW.Pad.bPressed(EInstrumentPad.Drums, EPad.LRed))
+					{
 						// Hit 1P save
 						OpenNijiiroRW.SaveFile = 0;
 						CMenuCharacter.tMenuResetTimer(CMenuCharacter.ECharacterAnimation.ENTRY_NORMAL);
@@ -194,7 +223,9 @@ internal class CStageTitle : CStage {
 						this.ctSaveLoading.CurrentValue = (int)this.ctSaveLoading.EndValue;
 						for (int i = 0; i < 2; i++)
 							OpenNijiiroRW.NamePlate.tNamePlateRefreshTitles(i);
-					} else if (OpenNijiiroRW.Pad.bPressed(EInstrumentPad.Drums, EPad.RRed2P) || OpenNijiiroRW.Pad.bPressed(EInstrumentPad.Drums, EPad.LRed2P)) {
+					}
+					else if (OpenNijiiroRW.Pad.bPressed(EInstrumentPad.Drums, EPad.RRed2P) || OpenNijiiroRW.Pad.bPressed(EInstrumentPad.Drums, EPad.LRed2P))
+					{
 						// Hit 2P save
 						OpenNijiiroRW.SaveFile = 1;
 						CMenuCharacter.tMenuResetTimer(CMenuCharacter.ECharacterAnimation.ENTRY_NORMAL);
@@ -202,7 +233,8 @@ internal class CStageTitle : CStage {
 						this.ctSaveLoading.CurrentValue = (int)this.ctSaveLoading.EndValue;
 						for (int i = 0; i < 2; i++)
 							OpenNijiiroRW.NamePlate.tNamePlateRefreshTitles(i);
-					} else if (OpenNijiiroRW.InputManager.Keyboard.KeyPressed((int)SlimDXKeys.Key.P)) // In case "P" is already binded to another pad
+					}
+					else if (OpenNijiiroRW.InputManager.Keyboard.KeyPressed((int)SlimDXKeys.Key.P)) // In case "P" is already binded to another pad
 					{
 						// Hit 1P save
 						OpenNijiiroRW.SaveFile = 0;
@@ -214,45 +246,57 @@ internal class CStageTitle : CStage {
 					}
 				}
 
-				if (OpenNijiiroRW.Pad.bPressed(EInstrumentPad.Drums, EPad.RightChange) || OpenNijiiroRW.InputManager.Keyboard.KeyPressed((int)SlimDXKeys.Key.RightArrow)) {
-					if (bプレイヤーエントリー && !bプレイヤーエントリー決定 && this.ctSaveLoaded.IsEnded) {
-						if (n現在の選択行プレイヤーエントリー + 1 <= 2) {
+				if (OpenNijiiroRW.Pad.bPressed(EInstrumentPad.Drums, EPad.RightChange) || OpenNijiiroRW.InputManager.Keyboard.KeyPressed((int)SlimDXKeys.Key.RightArrow))
+				{
+					if (bプレイヤーエントリー && !bプレイヤーエントリー決定 && this.ctSaveLoaded.IsEnded)
+					{
+						if (n現在の選択行プレイヤーエントリー + 1 <= 2)
+						{
 							OpenNijiiroRW.Skin.soundChangeSFX.tPlay();
 							n現在の選択行プレイヤーエントリー += 1;
 						}
 					}
 
-					if (bモード選択) {
+					if (bモード選択)
+					{
 						//if (n現在の選択行モード選択 < this.nbModes - 1)
-						if (n現在の選択行モード選択 < usedMenusCount - 1) {
+						if (n現在の選択行モード選択 < usedMenusCount - 1)
+						{
 							OpenNijiiroRW.Skin.soundChangeSFX.tPlay();
 							ctBarMove.Start(0, 250, 1.2f, OpenNijiiroRW.Timer);
 							n現在の選択行モード選択++;
 							this.bDownPushed = true;
 
-							for (int i = 0; i < usedMenusCount; i++) {
+							for (int i = 0; i < usedMenusCount; i++)
+							{
 								usedMenusPos[i] = i + 1 - n現在の選択行モード選択;
 							}
 						}
 					}
 				}
 
-				if (OpenNijiiroRW.Pad.bPressed(EInstrumentPad.Drums, EPad.LeftChange) || OpenNijiiroRW.InputManager.Keyboard.KeyPressed((int)SlimDXKeys.Key.LeftArrow)) {
-					if (bプレイヤーエントリー && !bプレイヤーエントリー決定 && this.ctSaveLoaded.IsEnded) {
-						if (n現在の選択行プレイヤーエントリー - 1 >= 0) {
+				if (OpenNijiiroRW.Pad.bPressed(EInstrumentPad.Drums, EPad.LeftChange) || OpenNijiiroRW.InputManager.Keyboard.KeyPressed((int)SlimDXKeys.Key.LeftArrow))
+				{
+					if (bプレイヤーエントリー && !bプレイヤーエントリー決定 && this.ctSaveLoaded.IsEnded)
+					{
+						if (n現在の選択行プレイヤーエントリー - 1 >= 0)
+						{
 							OpenNijiiroRW.Skin.soundChangeSFX.tPlay();
 							n現在の選択行プレイヤーエントリー -= 1;
 						}
 					}
 
-					if (bモード選択) {
-						if (n現在の選択行モード選択 > 0) {
+					if (bモード選択)
+					{
+						if (n現在の選択行モード選択 > 0)
+						{
 							OpenNijiiroRW.Skin.soundChangeSFX.tPlay();
 							ctBarMove.Start(0, 250, 1.2f, OpenNijiiroRW.Timer);
 							n現在の選択行モード選択--;
 							this.bDownPushed = false;
 
-							for (int i = 0; i < usedMenusCount; i++) {
+							for (int i = 0; i < usedMenusCount; i++)
+							{
 								usedMenusPos[i] = i + 1 - n現在の選択行モード選択;
 							}
 						}
@@ -261,10 +305,14 @@ internal class CStageTitle : CStage {
 
 
 				if (OpenNijiiroRW.Pad.bPressed(EInstrumentPad.Drums, EPad.Decide)
-					|| OpenNijiiroRW.InputManager.Keyboard.KeyPressed((int)SlimDXKeys.Key.Return)) {
-					if (bプレイヤーエントリー && this.ctSaveLoaded.IsEnded) {
-						if (n現在の選択行プレイヤーエントリー == 0 || n現在の選択行プレイヤーエントリー == 2) {
-							if (!bプレイヤーエントリー決定) {
+					|| OpenNijiiroRW.InputManager.Keyboard.KeyPressed((int)SlimDXKeys.Key.Return))
+				{
+					if (bプレイヤーエントリー && this.ctSaveLoaded.IsEnded)
+					{
+						if (n現在の選択行プレイヤーエントリー == 0 || n現在の選択行プレイヤーエントリー == 2)
+						{
+							if (!bプレイヤーエントリー決定)
+							{
 								OpenNijiiroRW.Skin.soundDecideSFX.tPlay();
 								ctエントリーバー決定点滅.Start(0, 1055, 1, OpenNijiiroRW.Timer);
 								bプレイヤーエントリー決定 = true;
@@ -273,7 +321,9 @@ internal class CStageTitle : CStage {
 									OpenNijiiroRW.ConfigIni.nPlayerCount = 1;
 								bSaveFileLoaded = true;
 							}
-						} else {
+						}
+						else
+						{
 							OpenNijiiroRW.Skin.soundDecideSFX.tPlay();
 							bプレイヤーエントリー = false;
 							bSaveIsLoading = false;
@@ -282,28 +332,35 @@ internal class CStageTitle : CStage {
 							ctSaveLoading = new CCounter();
 						}
 					}
-					if (bモード選択) {
+					if (bモード選択)
+					{
 						bool operationSucceded = false;
 
-						if (CMainMenuTab.__Menus[usedMenus[this.n現在の選択行モード選択]].rp == EReturnValue.DANGAMESTART || CMainMenuTab.__Menus[usedMenus[this.n現在の選択行モード選択]].rp == EReturnValue.TAIKOTOWERSSTART) {
+						if (CMainMenuTab.__Menus[usedMenus[this.n現在の選択行モード選択]].rp == EReturnValue.DANGAMESTART || CMainMenuTab.__Menus[usedMenus[this.n現在の選択行モード選択]].rp == EReturnValue.TAIKOTOWERSSTART)
+						{
 							if (OpenNijiiroRW.Songs管理.list曲ルート_Dan.Count > 0 && OpenNijiiroRW.ConfigIni.nPlayerCount == 1)
 								operationSucceded = true;
-						} else if (CMainMenuTab.__Menus[usedMenus[this.n現在の選択行モード選択]].implemented == true
+						}
+						else if (CMainMenuTab.__Menus[usedMenus[this.n現在の選択行モード選択]].implemented == true
 								   && (CMainMenuTab.__Menus[usedMenus[this.n現在の選択行モード選択]]._1pRestricted == false
 									   || OpenNijiiroRW.ConfigIni.nPlayerCount == 1))
 							operationSucceded = true;
 
-						if (operationSucceded == true) {
+						if (operationSucceded == true)
+						{
 							OpenNijiiroRW.Skin.soundDecideSFX.tPlay();
 							this.actFO.tフェードアウト開始(0, 500);
 							base.ePhaseID = CStage.EPhase.Common_FADEOUT;
-						} else
+						}
+						else
 							OpenNijiiroRW.Skin.soundError.tPlay();
 					}
 				}
 
-				if (ctSaveLoading.CurrentValue >= 500) {
-					if (!bSaveIsLoading) {
+				if (ctSaveLoading.CurrentValue >= 500)
+				{
+					if (!bSaveIsLoading)
+					{
 						OpenNijiiroRW.Skin.soundEntry.tStop();
 						ctSaveLoaded.Start(0, 3655, 1, OpenNijiiroRW.Timer);
 						bSaveIsLoading = true;
@@ -311,8 +368,10 @@ internal class CStageTitle : CStage {
 					}
 				}
 
-				if (ctエントリーバー決定点滅.CurrentValue >= 1055) {
-					if (!bモード選択) {
+				if (ctエントリーバー決定点滅.CurrentValue >= 1055)
+				{
+					if (!bモード選択)
+					{
 						/*
 						if (!TJAPlayer3.Skin.soundsanka.bPlayed)
 							TJAPlayer3.Skin.soundsanka.t再生する();
@@ -340,10 +399,12 @@ internal class CStageTitle : CStage {
 
 			#endregion
 
-			if (bSaveFileLoaded == false) {
+			if (bSaveFileLoaded == false)
+			{
 				#region [ Save Loading ]
 
-				if (!bSaveIsLoading) {
+				if (!bSaveIsLoading)
+				{
 					OpenNijiiroRW.Tx.Entry_Bar.t2D描画(0, 0);
 
 					if (this.ctコインイン待機.CurrentValue <= 255)
@@ -355,9 +416,13 @@ internal class CStageTitle : CStage {
 
 					OpenNijiiroRW.Tx.Entry_Bar_Text.t2D描画(OpenNijiiroRW.Skin.Title_Entry_Bar_Text_X[0], OpenNijiiroRW.Skin.Title_Entry_Bar_Text_Y[0], new RectangleF(0, 0, OpenNijiiroRW.Tx.Entry_Bar_Text.sz画像サイズ.Width, OpenNijiiroRW.Tx.Entry_Bar_Text.sz画像サイズ.Height / 2));
 					OpenNijiiroRW.Tx.Entry_Bar_Text.t2D描画(OpenNijiiroRW.Skin.Title_Entry_Bar_Text_X[1], OpenNijiiroRW.Skin.Title_Entry_Bar_Text_Y[1], new RectangleF(0, OpenNijiiroRW.Tx.Entry_Bar_Text.sz画像サイズ.Height / 2, OpenNijiiroRW.Tx.Entry_Bar_Text.sz画像サイズ.Width, OpenNijiiroRW.Tx.Entry_Bar_Text.sz画像サイズ.Height / 2));
-				} else {
-					if (this.ctSaveLoaded.CurrentValue <= 1000 && this.ctSaveLoadingFailed.CurrentValue <= 1128) {
-						if (bSaveIsLoading) {
+				}
+				else
+				{
+					if (this.ctSaveLoaded.CurrentValue <= 1000 && this.ctSaveLoadingFailed.CurrentValue <= 1128)
+					{
+						if (bSaveIsLoading)
+						{
 							OpenNijiiroRW.Tx.Tile_Black.Opacity = this.ctSaveLoaded.CurrentValue <= 2972 ? 128 : 128 - (this.ctSaveLoaded.CurrentValue - 2972);
 
 							for (int i = 0; i < OpenNijiiroRW.Skin.Resolution[0] / OpenNijiiroRW.Tx.Tile_Black.szTextureSize.Width + 1; i++)
@@ -371,12 +436,14 @@ internal class CStageTitle : CStage {
 							OpenNijiiroRW.Tx.Banapas_Load[1].Opacity = ctSaveLoaded.CurrentValue >= 872 ? 255 - (ctSaveLoaded.CurrentValue - 872) * 2 : ctSaveLoaded.CurrentValue <= 96 ? (int)((ctSaveLoaded.CurrentValue - 96) * 7.96875f) : 255;
 							OpenNijiiroRW.Tx.Banapas_Load[1].t2D描画(0, 0);
 
-							if (OpenNijiiroRW.Tx.Banapas_Load[2] != null) {
+							if (OpenNijiiroRW.Tx.Banapas_Load[2] != null)
+							{
 								int step = OpenNijiiroRW.Tx.Banapas_Load[2].szTextureSize.Width / OpenNijiiroRW.Skin.Title_LoadingPinFrameCount;
 								int cycle = OpenNijiiroRW.Skin.Title_LoadingPinCycle;
 								int _stamp = (ctSaveLoaded.CurrentValue - 200) % (OpenNijiiroRW.Skin.Title_LoadingPinInstances * cycle);
 
-								for (int i = 0; i < OpenNijiiroRW.Skin.Title_LoadingPinInstances; i++) {
+								for (int i = 0; i < OpenNijiiroRW.Skin.Title_LoadingPinInstances; i++)
+								{
 									OpenNijiiroRW.Tx.Banapas_Load[2].Opacity = ctSaveLoaded.CurrentValue >= 872 ? 255 - (ctSaveLoaded.CurrentValue - 872) * 2 : ctSaveLoaded.CurrentValue <= 96 ? (int)((ctSaveLoaded.CurrentValue - 96) * 7.96875f) : 255;
 
 
@@ -396,8 +463,11 @@ internal class CStageTitle : CStage {
 							}
 
 						}
-					} else {
-						if (bSaveIsLoading) {
+					}
+					else
+					{
+						if (bSaveIsLoading)
+						{
 							OpenNijiiroRW.Tx.Tile_Black.Opacity = this.ctSaveLoaded.CurrentValue <= 2972 ? 128 : 128 - (this.ctSaveLoaded.CurrentValue - 2972);
 
 							for (int i = 0; i < OpenNijiiroRW.Skin.Resolution[0] / OpenNijiiroRW.Tx.Tile_Black.szTextureSize.Width + 1; i++)
@@ -416,20 +486,28 @@ internal class CStageTitle : CStage {
 							float scalex = 0f;
 							float scaley = 0f;
 
-							if (count >= 300) {
-								if (count <= 300 + 270) {
+							if (count >= 300)
+							{
+								if (count <= 300 + 270)
+								{
 									anime = (float)Math.Sin((float)(count - 300) / 1.5f * (Math.PI / 180)) * 95f;
 									scalex = -(float)Math.Sin((float)(count - 300) / 1.5f * (Math.PI / 180)) * 0.15f;
 									scaley = (float)Math.Sin((float)(count - 300) / 1.5f * (Math.PI / 180)) * 0.2f;
-								} else if (count <= 300 + 270 + 100) {
+								}
+								else if (count <= 300 + 270 + 100)
+								{
 									scalex = (float)Math.Sin((float)(count - (300 + 270)) * 1.8f * (Math.PI / 180)) * 0.13f;
 									scaley = -(float)Math.Sin((float)(count - (300 + 270)) * 1.8f * (Math.PI / 180)) * 0.1f;
 									anime = 0;
-								} else if (count <= 300 + 540 + 100) {
+								}
+								else if (count <= 300 + 540 + 100)
+								{
 									anime = (float)Math.Sin((float)(count - (300 + 270 + 100)) / 1.5f * (Math.PI / 180)) * 95f;
 									scalex = -(float)Math.Sin((float)(count - (300 + 270 + 100)) / 1.5f * (Math.PI / 180)) * 0.15f;
 									scaley = (float)Math.Sin((float)(count - (300 + 270 + 100)) / 1.5f * (Math.PI / 180)) * 0.2f;
-								} else if (count <= 300 + 540 + 100 + 100) {
+								}
+								else if (count <= 300 + 540 + 100 + 100)
+								{
 									scalex = (float)Math.Sin((float)(count - (300 + 540 + 100)) * 1.8f * (Math.PI / 180)) * 0.13f;
 									scaley = -(float)Math.Sin((float)(count - (300 + 540 + 100)) * 1.8f * (Math.PI / 180)) * 0.1f;
 								}
@@ -440,7 +518,8 @@ internal class CStageTitle : CStage {
 							OpenNijiiroRW.Tx.Banapas_Load_Clear[1].Opacity = count >= 1872 ? 255 - (count - 1872) * 2 : count * 2;
 							OpenNijiiroRW.Tx.Banapas_Load_Clear[1].t2D拡大率考慮下中心基準描画(OpenNijiiroRW.Skin.Title_Banapas_Load_Clear_Anime[0], OpenNijiiroRW.Skin.Title_Banapas_Load_Clear_Anime[1] - anime);
 
-							if (ctSaveLoaded.CurrentValue >= 2000) {
+							if (ctSaveLoaded.CurrentValue >= 2000)
+							{
 								bプレイヤーエントリー = true;
 							}
 						}
@@ -452,8 +531,10 @@ internal class CStageTitle : CStage {
 
 			#region [ プレイヤーエントリー ]
 
-			if (bプレイヤーエントリー) {
-				if (!this.bキャラカウンター初期化) {
+			if (bプレイヤーエントリー)
+			{
+				if (!this.bキャラカウンター初期化)
+				{
 					//this.ctキャラエントリーループ = new CCounter(0, Chara_Entry.Length - 1, 1000 / 60, TJAPlayer3.Timer);
 					CMenuCharacter.tMenuResetTimer(CMenuCharacter.ECharacterAnimation.ENTRY);
 
@@ -563,12 +644,14 @@ internal class CStageTitle : CStage {
 
 			#region [ モード選択 ]
 
-			if (bモード選択) {
+			if (bモード選択)
+			{
 				this.ctBarAnimeIn.Tick();
 
 				#region [ キャラ描画 ]
 
-				for (int player = 0; player < OpenNijiiroRW.ConfigIni.nPlayerCount; player++) {
+				for (int player = 0; player < OpenNijiiroRW.ConfigIni.nPlayerCount; player++)
+				{
 					if (player >= 2) continue;
 
 					float CharaX = 0f, CharaY = 0f;
@@ -600,11 +683,13 @@ internal class CStageTitle : CStage {
 
 				#endregion
 
-				if (ctBarAnimeIn.CurrentValue >= (int)(16 * 16.6f)) {
+				if (ctBarAnimeIn.CurrentValue >= (int)(16 * 16.6f))
+				{
 					// TJAPlayer3.act文字コンソール.tPrint(0, 0, C文字コンソール.Eフォント種別.白, ctBarMove.n現在の値.ToString());
 
 					//for (int i = 0; i < this.nbModes; i++)
-					for (int i = 0; i < usedMenusCount; i++) {
+					for (int i = 0; i < usedMenusCount; i++)
+					{
 						// Get Menu reference
 						CMainMenuTab _menu = CMainMenuTab.__Menus[usedMenus[i]];
 						CTexture _bar = _menu.barTex;
@@ -613,14 +698,17 @@ internal class CStageTitle : CStage {
 						#region [Disable visualy 1p specific buttons if 2p]
 
 						if ((_menu._1pRestricted == true && OpenNijiiroRW.ConfigIni.nPlayerCount > 1)
-							|| _menu.implemented == false) {
+							|| _menu.implemented == false)
+						{
 							if (_bar != null)
 								_bar.color4 = CConversion.ColorToColor4(Color.DarkGray);
 							if (_chara != null)
 								_chara.color4 = CConversion.ColorToColor4(Color.DarkGray);
 							TitleTextureKey.ResolveTitleTexture(_menu.ttkBoxText, OpenNijiiroRW.Skin.Title_VerticalText, true).color4 = CConversion.ColorToColor4(Color.DarkGray);
 							TitleTextureKey.ResolveTitleTexture(_menu.ttkTitle, OpenNijiiroRW.Skin.Title_VerticalText).color4 = CConversion.ColorToColor4(Color.DarkGray);
-						} else {
+						}
+						else
+						{
 							if (_bar != null)
 								_bar.color4 = CConversion.ColorToColor4(Color.White);
 							if (_chara != null)
@@ -632,7 +720,8 @@ internal class CStageTitle : CStage {
 						#endregion
 
 						// if (this.stModeBar[i].n現在存在している行 == 1 && ctBarMove.n現在の値 >= 150)
-						if (usedMenusPos[i] == 1 && ctBarMove.CurrentValue >= 150) {
+						if (usedMenusPos[i] == 1 && ctBarMove.CurrentValue >= 150)
+						{
 							float barAnimef = (ctBarMove.CurrentValue / 100.0f) - 1.5f;
 
 							float barAnime = OpenNijiiroRW.Skin.Title_ModeSelect_Bar_Move[0] +
@@ -652,7 +741,8 @@ internal class CStageTitle : CStage {
 							//int BarAnime = ctBarAnimeIn.n現在の値 >= (int)(26 * 16.6f) + 100 ? 0 : ctBarAnimeIn.n現在の値 >= (int)(26 * 16.6f) && ctBarAnimeIn.n現在の値 <= (int)(26 * 16.6f) + 100 ? 40 + (int)((ctBarAnimeIn.n現在の値 - (26 * 16.6)) / 100f * 71f) : ctBarAnimeIn.n現在の値 < (int)(26 * 16.6f) ? 40 : 111;
 							//int BarAnime1 = BarAnime == 0 ? ctBarMove.n現在の値 >= 150 ? 40 + (int)((ctBarMove.n現在の値 - 150) / 100f * 71f) : ctBarMove.n現在の値 < 150 ? 40 : 111 : 0;
 
-							if (_bar != null) {
+							if (_bar != null)
+							{
 								_bar.Opacity = 255;
 								_bar.Scale.X = 1.0f;
 								_bar.Scale.Y = 1.0f;
@@ -669,9 +759,12 @@ internal class CStageTitle : CStage {
 										OpenNijiiroRW.Skin.Title_ModeSelect_Bar_Center_Rect[1][2],
 										OpenNijiiroRW.Skin.Title_ModeSelect_Bar_Center_Rect[1][3]));
 
-								if (OpenNijiiroRW.Skin.Title_VerticalBar) {
+								if (OpenNijiiroRW.Skin.Title_VerticalBar)
+								{
 									_bar.Scale.X = (barAnimeX / OpenNijiiroRW.Skin.Title_ModeSelect_Bar_Center_Rect[2][2]) * 2.0f;
-								} else {
+								}
+								else
+								{
 									_bar.Scale.Y = (barAnime / OpenNijiiroRW.Skin.Title_ModeSelect_Bar_Center_Rect[2][3]) * 2.0f;
 								}
 
@@ -683,7 +776,8 @@ internal class CStageTitle : CStage {
 							}
 
 
-							if (OpenNijiiroRW.Tx.ModeSelect_Bar[CMainMenuTab.__MenuCount] != null) {
+							if (OpenNijiiroRW.Tx.ModeSelect_Bar[CMainMenuTab.__MenuCount] != null)
+							{
 								CTexture _overlap = OpenNijiiroRW.Tx.ModeSelect_Bar[CMainMenuTab.__MenuCount];
 
 								_overlap.Scale.X = 1.0f;
@@ -700,9 +794,12 @@ internal class CStageTitle : CStage {
 										OpenNijiiroRW.Skin.Title_ModeSelect_Bar_Overlay_Rect[1][2],
 										OpenNijiiroRW.Skin.Title_ModeSelect_Bar_Overlay_Rect[1][3]));
 
-								if (OpenNijiiroRW.Skin.Title_VerticalBar) {
+								if (OpenNijiiroRW.Skin.Title_VerticalBar)
+								{
 									_overlap.Scale.X = (overlayAnimeX / OpenNijiiroRW.Skin.Title_ModeSelect_Bar_Overlay_Rect[2][2]);
-								} else {
+								}
+								else
+								{
 									_overlap.Scale.Y = (overlayAnime / OpenNijiiroRW.Skin.Title_ModeSelect_Bar_Overlay_Rect[2][3]);
 								}
 
@@ -724,7 +821,8 @@ internal class CStageTitle : CStage {
 								anime = 1.50f - (BarAnimeCount - 0.45f) * 0.61764705f;
 							anime *= OpenNijiiroRW.Skin.Title_ModeSelect_Bar_Chara_Move;
 
-							if (_chara != null) {
+							if (_chara != null)
+							{
 								_chara.Opacity = (int)(BarAnimeCount * 255f) + (int)(barAnimef * 2.5f);
 								_chara.t2D中心基準描画(OpenNijiiroRW.Skin.Title_ModeSelect_Bar_Chara_X[0] - anime, OpenNijiiroRW.Skin.Title_ModeSelect_Bar_Chara_Y[0],
 									new Rectangle(0, 0, _chara.szTextureSize.Width / 2, _chara.szTextureSize.Height));
@@ -737,12 +835,15 @@ internal class CStageTitle : CStage {
 								OpenNijiiroRW.Skin.Title_ModeSelect_Bar_Center_Title[1] - (OpenNijiiroRW.Skin.Title_ModeSelect_Bar_Center_Title_Move * BarAnimeCount));
 
 							CTexture currentText = TitleTextureKey.ResolveTitleTexture(_menu.ttkBoxText, OpenNijiiroRW.Skin.Title_VerticalText, true);
-							if (currentText != null) {
+							if (currentText != null)
+							{
 								currentText.Opacity = (int)(BarAnimeCount * 255f);
 								currentText?.t2D中心基準描画(OpenNijiiroRW.Skin.Title_ModeSelect_Bar_Center_BoxText[0], OpenNijiiroRW.Skin.Title_ModeSelect_Bar_Center_BoxText[1]);
 							}
 
-						} else {
+						}
+						else
+						{
 							int BarAnimeY = ctBarAnimeIn.CurrentValue >= (int)(26 * 16.6f) + 100 && ctBarAnimeIn.CurrentValue <= (int)(26 * 16.6f) + 299 ? 600 - (ctBarAnimeIn.CurrentValue - (int)(26 * 16.6f + 100)) * 3 : ctBarAnimeIn.CurrentValue >= (int)(26 * 16.6f) + 100 ? 0 : 600;
 							int BarAnimeX = ctBarAnimeIn.CurrentValue >= (int)(26 * 16.6f) + 100 && ctBarAnimeIn.CurrentValue <= (int)(26 * 16.6f) + 299 ? 100 - (int)((ctBarAnimeIn.CurrentValue - (int)(26 * 16.6f + 100)) * 0.5f) : ctBarAnimeIn.CurrentValue >= (int)(26 * 16.6f) + 100 ? 0 : 100;
 
@@ -769,13 +870,15 @@ internal class CStageTitle : CStage {
 							BarMoveY = ctBarMove.CurrentValue <= 100 ? (int)(pos.Y - posSelect.Y) - (int)(ctBarMove.CurrentValue / 100f * (pos.Y - posSelect.Y)) : 0;
 
 
-							if (_bar != null) {
+							if (_bar != null)
+							{
 								_bar.Scale.X = 1.0f;
 								_bar.Scale.Y = 1.0f;
 								_bar.t2D描画(pos.X + BarAnimeX - BarMoveX, pos.Y + BarAnimeY - BarMoveY);
 							}
 
-							if (OpenNijiiroRW.Tx.ModeSelect_Bar[CMainMenuTab.__MenuCount] != null) {
+							if (OpenNijiiroRW.Tx.ModeSelect_Bar[CMainMenuTab.__MenuCount] != null)
+							{
 								CTexture _overlap = OpenNijiiroRW.Tx.ModeSelect_Bar[CMainMenuTab.__MenuCount];
 
 								_overlap.Scale.X = 1.0f;
@@ -790,7 +893,8 @@ internal class CStageTitle : CStage {
 					}
 				}
 
-				for (int player = 0; player < OpenNijiiroRW.ConfigIni.nPlayerCount; player++) {
+				for (int player = 0; player < OpenNijiiroRW.ConfigIni.nPlayerCount; player++)
+				{
 					if (player >= 2) continue;
 
 					OpenNijiiroRW.NamePlate.tNamePlateDraw(OpenNijiiroRW.Skin.SongSelect_NamePlate_X[player], OpenNijiiroRW.Skin.SongSelect_NamePlate_Y[player], player, false, 255);
@@ -822,15 +926,18 @@ internal class CStageTitle : CStage {
 			#endregion
 
 			CStage.EPhase eフェーズid = base.ePhaseID;
-			switch (eフェーズid) {
+			switch (eフェーズid)
+			{
 				case CStage.EPhase.Common_FADEIN:
-					if (this.actFI.Draw() != 0) {
+					if (this.actFI.Draw() != 0)
+					{
 						base.ePhaseID = CStage.EPhase.Common_NORMAL;
 					}
 					break;
 
 				case CStage.EPhase.Common_FADEOUT:
-					if (this.actFO.Draw() == 0) {
+					if (this.actFO.Draw() == 0)
+					{
 						OpenNijiiroRW.Skin.bgmタイトル.tStop();
 						OpenNijiiroRW.Skin.bgmタイトルイン.tStop();
 						break;
@@ -843,7 +950,8 @@ internal class CStageTitle : CStage {
 						CMainMenuTab.__Menus[usedMenus[this.n現在の選択行モード選択]].rp);
 
 				case CStage.EPhase.Title_FadeIn:
-					if (this.actFIfromSetup.Draw() != 0) {
+					if (this.actFIfromSetup.Draw() != 0)
+					{
 						base.ePhaseID = CStage.EPhase.Common_NORMAL;
 					}
 					break;
@@ -851,7 +959,8 @@ internal class CStageTitle : CStage {
 		}
 		return 0;
 	}
-	public enum EReturnValue {
+	public enum EReturnValue
+	{
 		継続 = 0,
 		GAMESTART,
 		DANGAMESTART,
@@ -878,8 +987,10 @@ internal class CStageTitle : CStage {
 	private ScriptBG Background;
 
 	// Directly propose the different game options if the save file is already loaded, go back to save file select by pressing "Escape"
-	private void SkipSaveFileStep() {
-		if (bSaveFileLoaded == true) {
+	private void SkipSaveFileStep()
+	{
+		if (bSaveFileLoaded == true)
+		{
 			bモード選択 = true;
 			// bプレイヤーエントリー = true;
 			bSaveIsLoading = true;
@@ -908,7 +1019,8 @@ internal class CStageTitle : CStage {
 	}
 
 	// Restore the title screen to the "Taiko hit start" screen
-	private void UnloadSaveFile() {
+	private void UnloadSaveFile()
+	{
 		this.ctSaveLoading = new CCounter();
 		this.ctコインイン待機 = new CCounter(0, 2000, 1, OpenNijiiroRW.Timer);
 		this.ctSaveLoaded = new CCounter();
@@ -983,17 +1095,23 @@ internal class CStageTitle : CStage {
 	private Point[] ptモード選択バー座標 =
 		{ new Point(290, 107), new Point(319, 306), new Point(356, 513) };*/
 
-	private Point getFixedPositionForBar(int CurrentPos) {
+	private Point getFixedPositionForBar(int CurrentPos)
+	{
 		int posX;
 		int posY;
 
-		if (CurrentPos >= 0 && CurrentPos < 3) {
+		if (CurrentPos >= 0 && CurrentPos < 3)
+		{
 			posX = OpenNijiiroRW.Skin.Title_ModeSelect_Bar_X[CurrentPos];
 			posY = OpenNijiiroRW.Skin.Title_ModeSelect_Bar_Y[CurrentPos];
-		} else if (CurrentPos < 0) {
+		}
+		else if (CurrentPos < 0)
+		{
 			posX = OpenNijiiroRW.Skin.Title_ModeSelect_Bar_X[0] + CurrentPos * OpenNijiiroRW.Skin.Title_ModeSelect_Bar_Offset[0];
 			posY = OpenNijiiroRW.Skin.Title_ModeSelect_Bar_Y[0] + CurrentPos * OpenNijiiroRW.Skin.Title_ModeSelect_Bar_Offset[1];
-		} else {
+		}
+		else
+		{
 			posX = OpenNijiiroRW.Skin.Title_ModeSelect_Bar_X[2] + (CurrentPos - 2) * OpenNijiiroRW.Skin.Title_ModeSelect_Bar_Offset[0];
 			posY = OpenNijiiroRW.Skin.Title_ModeSelect_Bar_Y[2] + (CurrentPos - 2) * OpenNijiiroRW.Skin.Title_ModeSelect_Bar_Offset[1];
 		}

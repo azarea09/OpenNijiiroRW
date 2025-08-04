@@ -6,22 +6,27 @@ using OpenNijiiroRW.CSongListNodeComparers;
 namespace OpenNijiiroRW;
 
 [Serializable]
-internal class CSongs管理 {
+internal class CSongs管理
+{
 	// Properties
 
-	public int nスコアキャッシュから反映できたスコア数 {
+	public int nスコアキャッシュから反映できたスコア数
+	{
 		get;
 		set;
 	}
-	public int nファイルから反映できたスコア数 {
+	public int nファイルから反映できたスコア数
+	{
 		get;
 		set;
 	}
-	public int n検索されたスコア数 {
+	public int n検索されたスコア数
+	{
 		get;
 		set;
 	}
-	public int n検索された曲ノード数 {
+	public int n検索された曲ノード数
+	{
 		get;
 		set;
 	}
@@ -47,7 +52,8 @@ internal class CSongs管理 {
 
 	// Constructor
 
-	public CSongs管理() {
+	public CSongs管理()
+	{
 		this.listSongsDB = new();
 		this.list曲ルート = new List<CSongListNode>();
 		this.n検索された曲ノード数 = 0;
@@ -63,23 +69,28 @@ internal class CSongs管理 {
 	#region [ Fetch song list ]
 	//-----------------
 
-	public void UpdateDownloadBox() {
+	public void UpdateDownloadBox()
+	{
 
 		CSongListNode downloadBox = null;
-		for (int i = 0; i < OpenNijiiroRW.Songs管理.list曲ルート.Count; i++) {
-			if (OpenNijiiroRW.Songs管理.list曲ルート[i].songGenre == "Download") {
+		for (int i = 0; i < OpenNijiiroRW.Songs管理.list曲ルート.Count; i++)
+		{
+			if (OpenNijiiroRW.Songs管理.list曲ルート[i].songGenre == "Download")
+			{
 				downloadBox = OpenNijiiroRW.Songs管理.list曲ルート[i];
 				if (downloadBox.rParentNode != null) downloadBox = downloadBox.rParentNode;
 			}
 
 		}
 
-		if (downloadBox != null && downloadBox.childrenList != null) {
+		if (downloadBox != null && downloadBox.childrenList != null)
+		{
 
 			var flatten = OpenNijiiroRW.stageSongSelect.actSongList.flattenList(downloadBox.childrenList);
 
 			// Works because flattenList creates a new List
-			for (int i = 0; i < downloadBox.childrenList.Count; i++) {
+			for (int i = 0; i < downloadBox.childrenList.Count; i++)
+			{
 				CSongDict.tRemoveSongNode(downloadBox.childrenList[i].uniqueId);
 				downloadBox.childrenList.Remove(downloadBox.childrenList[i]);
 				i--;
@@ -88,9 +99,11 @@ internal class CSongs管理 {
 
 			var path = downloadBox.score[0].ファイル情報.フォルダの絶対パス;
 
-			if (flatten.Count > 0) {
+			if (flatten.Count > 0)
+			{
 				int index = list曲ルート.IndexOf(flatten[0]);
-				if (!list曲ルート.Contains(downloadBox)) {
+				if (!list曲ルート.Contains(downloadBox))
+				{
 					this.list曲ルート = this.list曲ルート.Except(flatten).ToList();
 					list曲ルート.Insert(index, downloadBox);
 				}
@@ -102,10 +115,12 @@ internal class CSongs管理 {
 		}
 
 	}
-	public void t曲を検索してリストを作成する(string str基点フォルダ, bool b子BOXへ再帰する) {
+	public void t曲を検索してリストを作成する(string str基点フォルダ, bool b子BOXへ再帰する)
+	{
 		this.t曲を検索してリストを作成する(str基点フォルダ, b子BOXへ再帰する, this.list曲ルート, null);
 	}
-	private void t曲を検索してリストを作成する(string str基点フォルダ, bool b子BOXへ再帰する, List<CSongListNode> listノードリスト, CSongListNode node親) {
+	private void t曲を検索してリストを作成する(string str基点フォルダ, bool b子BOXへ再帰する, List<CSongListNode> listノードリスト, CSongListNode node親)
+	{
 		if (!str基点フォルダ.EndsWith(Path.DirectorySeparatorChar))
 			str基点フォルダ = str基点フォルダ + Path.DirectorySeparatorChar;
 
@@ -120,17 +135,21 @@ internal class CSongs管理 {
 		string path = str基点フォルダ + "set.def";
 		bool hasSetDef = File.Exists(path);
 
-		if (hasSetDef && OpenNijiiroRW.ConfigIni.bOutputSongSearchLog) {
+		if (hasSetDef && OpenNijiiroRW.ConfigIni.bOutputSongSearchLog)
+		{
 			Trace.TraceInformation("set.def検出 : {0}", path);
 			Trace.Indent();
 		}
 
-		try {
-			foreach (FileInfo fileinfo in info.GetFiles()) {
+		try
+		{
+			foreach (FileInfo fileinfo in info.GetFiles())
+			{
 				SlowOrSuspendSearchTask();      // #27060 中断要求があったら、解除要求が来るまで待機, #PREMOVIE再生中は検索負荷を落とす
 				string strExt = fileinfo.Extension.ToLower();
 
-				if ((strExt.Equals(".tja") || strExt.Equals(".dtx"))) {
+				if ((strExt.Equals(".tja") || strExt.Equals(".dtx")))
+				{
 					// 2017.06.02 kairera0467 廃止。
 
 					#region[ 新処理 ]
@@ -141,59 +160,73 @@ internal class CSongs管理 {
 					var fs = File.OpenRead(filePath);
 					byte[] rawhash = hashProvider.ComputeHash(fs);
 					string hash = "";
-					for (int i = 0; i < rawhash.Length; i++) {
+					for (int i = 0; i < rawhash.Length; i++)
+					{
 						hash += string.Format("{0:X2}", rawhash[i]);
 					}
 
 					fs.Dispose();
 
-					if (listSongsDB.TryGetValue(filePath + hash, out CSongListNode value)) {
+					if (listSongsDB.TryGetValue(filePath + hash, out CSongListNode value))
+					{
 						this.n検索されたスコア数++;
 						listノードリスト.Add(value);
 						CSongDict.tAddSongNode(value.uniqueId, value);
 						value.rParentNode = node親;
 
-						if (value.rParentNode != null) {
+						if (value.rParentNode != null)
+						{
 							value.strScenePreset = value.rParentNode.strScenePreset;
-							if (value.rParentNode.IsChangedForeColor) {
+							if (value.rParentNode.IsChangedForeColor)
+							{
 								value.ForeColor = value.rParentNode.ForeColor;
 								value.IsChangedForeColor = true;
 							}
-							if (value.rParentNode.IsChangedBackColor) {
+							if (value.rParentNode.IsChangedBackColor)
+							{
 								value.BackColor = value.rParentNode.BackColor;
 								value.IsChangedBackColor = true;
 							}
-							if (value.rParentNode.isChangedBoxColor) {
+							if (value.rParentNode.isChangedBoxColor)
+							{
 								value.BoxColor = value.rParentNode.BoxColor;
 								value.isChangedBoxColor = true;
 							}
-							if (value.rParentNode.isChangedBgColor) {
+							if (value.rParentNode.isChangedBgColor)
+							{
 								value.BgColor = value.rParentNode.BgColor;
 								value.isChangedBgColor = true;
 							}
-							if (value.rParentNode.isChangedBgType) {
+							if (value.rParentNode.isChangedBgType)
+							{
 								value.BgType = value.rParentNode.BgType;
 								value.isChangedBgType = true;
 							}
-							if (value.rParentNode.isChangedBoxType) {
+							if (value.rParentNode.isChangedBoxType)
+							{
 								value.BoxType = value.rParentNode.BoxType;
 								value.isChangedBoxType = true;
 							}
-							if (value.rParentNode.isChangedBoxChara) {
+							if (value.rParentNode.isChangedBoxChara)
+							{
 								value.BoxChara = value.rParentNode.BoxChara;
 								value.isChangedBoxChara = true;
 							}
 						}
 
 						this.n検索された曲ノード数++;
-					} else {
+					}
+					else
+					{
 						CTja dtx = new CTja(filePath, false, 0, 0);
 						CSongListNode c曲リストノード = new CSongListNode();
 						c曲リストノード.nodeType = CSongListNode.ENodeType.SCORE;
 
 						bool hasAnyDifficultyProcessed = false;
-						for (int n = 0; n < (int)Difficulty.Total; n++) {
-							if (dtx.b譜面が存在する[n]) {
+						for (int n = 0; n < (int)Difficulty.Total; n++)
+						{
+							if (dtx.b譜面が存在する[n])
+							{
 								c曲リストノード.difficultiesCount++;
 								c曲リストノード.rParentNode = node親;
 								c曲リストノード.strBreadcrumbs = (c曲リストノード.rParentNode == null) ?
@@ -208,8 +241,10 @@ internal class CSongs管理 {
 								c曲リストノード.bMovie = !string.IsNullOrEmpty(dtx.strBGVIDEO_PATH);
 
 								c曲リストノード.DanSongs = new();
-								if (dtx.List_DanSongs != null) {
-									for (int i = 0; i < dtx.List_DanSongs.Count; i++) {
+								if (dtx.List_DanSongs != null)
+								{
+									for (int i = 0; i < dtx.List_DanSongs.Count; i++)
+									{
 										c曲リストノード.DanSongs.Add(dtx.List_DanSongs[i]);
 									}
 								}
@@ -222,40 +257,51 @@ internal class CSongs管理 {
 								c曲リストノード.songGenre = songGenreParent ?? dtx.GENRE ?? "";
 								c曲リストノード.songGenrePanel = (!string.IsNullOrEmpty(dtx.GENRE) ? dtx.GENRE : songGenreParent) ?? "";
 
-								if (!(dtx.SELECTBG != null && File.Exists(str基点フォルダ + dtx.SELECTBG))) {
+								if (!(dtx.SELECTBG != null && File.Exists(str基点フォルダ + dtx.SELECTBG)))
+								{
 									c曲リストノード.strSelectBGPath = c曲リストノード.rParentNode?.strSelectBGPath;
-								} else {
+								}
+								else
+								{
 									c曲リストノード.strSelectBGPath = str基点フォルダ + dtx.SELECTBG;
 								}
 								if (!File.Exists(c曲リストノード.strSelectBGPath)) c曲リストノード.strSelectBGPath = null;
 
-								if (c曲リストノード.rParentNode != null) {
+								if (c曲リストノード.rParentNode != null)
+								{
 									c曲リストノード.strScenePreset = c曲リストノード.rParentNode.strScenePreset;
-									if (c曲リストノード.rParentNode.IsChangedForeColor) {
+									if (c曲リストノード.rParentNode.IsChangedForeColor)
+									{
 										c曲リストノード.ForeColor = c曲リストノード.rParentNode.ForeColor;
 										c曲リストノード.IsChangedForeColor = true;
 									}
-									if (c曲リストノード.rParentNode.IsChangedBackColor) {
+									if (c曲リストノード.rParentNode.IsChangedBackColor)
+									{
 										c曲リストノード.BackColor = c曲リストノード.rParentNode.BackColor;
 										c曲リストノード.IsChangedBackColor = true;
 									}
-									if (c曲リストノード.rParentNode.isChangedBoxColor) {
+									if (c曲リストノード.rParentNode.isChangedBoxColor)
+									{
 										c曲リストノード.BoxColor = c曲リストノード.rParentNode.BoxColor;
 										c曲リストノード.isChangedBoxColor = true;
 									}
-									if (c曲リストノード.rParentNode.isChangedBgColor) {
+									if (c曲リストノード.rParentNode.isChangedBgColor)
+									{
 										c曲リストノード.BgColor = c曲リストノード.rParentNode.BgColor;
 										c曲リストノード.isChangedBgColor = true;
 									}
-									if (c曲リストノード.rParentNode.isChangedBgType) {
+									if (c曲リストノード.rParentNode.isChangedBgType)
+									{
 										c曲リストノード.BgType = c曲リストノード.rParentNode.BgType;
 										c曲リストノード.isChangedBgType = true;
 									}
-									if (c曲リストノード.rParentNode.isChangedBoxType) {
+									if (c曲リストノード.rParentNode.isChangedBoxType)
+									{
 										c曲リストノード.BoxType = c曲リストノード.rParentNode.BoxType;
 										c曲リストノード.isChangedBoxType = true;
 									}
-									if (c曲リストノード.rParentNode.isChangedBoxChara) {
+									if (c曲リストノード.rParentNode.isChangedBoxChara)
+									{
 										c曲リストノード.BoxChara = c曲リストノード.rParentNode.BoxChara;
 										c曲リストノード.isChangedBoxChara = true;
 									}
@@ -264,7 +310,8 @@ internal class CSongs管理 {
 								}
 
 
-								switch (CStrジャンルtoNum.ForAC15(c曲リストノード.songGenre)) {
+								switch (CStrジャンルtoNum.ForAC15(c曲リストノード.songGenre))
+								{
 									case 0:
 										c曲リストノード.ForeColor = OpenNijiiroRW.Skin.SongSelect_ForeColor_JPOP;
 										c曲リストノード.BackColor = OpenNijiiroRW.Skin.SongSelect_BackColor_JPOP;
@@ -317,13 +364,15 @@ internal class CSongs管理 {
 								c曲リストノード.score[n].ファイル情報.ファイルサイズ = fileinfo.Length;
 								c曲リストノード.score[n].ファイル情報.最終更新日時 = fileinfo.LastWriteTime;
 
-								if (c曲リストノード.rParentNode != null && String.IsNullOrEmpty(c曲リストノード.score[n].譜面情報.Preimage)) {
+								if (c曲リストノード.rParentNode != null && String.IsNullOrEmpty(c曲リストノード.score[n].譜面情報.Preimage))
+								{
 									c曲リストノード.score[n].譜面情報.Preimage = c曲リストノード.rParentNode.score[0].譜面情報.Preimage;
 								}
 
 								LoadChartInfo(c曲リストノード, dtx, n);
 
-								if (hasAnyDifficultyProcessed == false) {
+								if (hasAnyDifficultyProcessed == false)
+								{
 									this.n検索されたスコア数++;
 									listノードリスト.Add(c曲リストノード);
 									if (!listSongsDB.ContainsKey(filePath + hash)) listSongsDB.Add(filePath + hash, c曲リストノード);
@@ -336,20 +385,25 @@ internal class CSongs管理 {
 					#endregion
 				}
 			}
-		} finally {
-			if (hasSetDef && OpenNijiiroRW.ConfigIni.bOutputSongSearchLog) {
+		}
+		finally
+		{
+			if (hasSetDef && OpenNijiiroRW.ConfigIni.bOutputSongSearchLog)
+			{
 				Trace.Unindent();
 			}
 		}
 		#endregion
 
-		foreach (DirectoryInfo infoDir in info.GetDirectories()) {
+		foreach (DirectoryInfo infoDir in info.GetDirectories())
+		{
 			SlowOrSuspendSearchTask();      // #27060 中断要求があったら、解除要求が来るまで待機, #PREMOVIE再生中は検索負荷を落とす
 
 
 			#region [ a.box.def を含むフォルダの場合  ]
 			//-----------------------------
-			if (File.Exists(infoDir.FullName + @$"{Path.DirectorySeparatorChar}box.def")) {
+			if (File.Exists(infoDir.FullName + @$"{Path.DirectorySeparatorChar}box.def"))
+			{
 				CBoxDef boxdef = new CBoxDef(infoDir.FullName + @$"{Path.DirectorySeparatorChar}box.def");
 				CSongListNode c曲リストノード = new CSongListNode();
 				c曲リストノード.nodeType = CSongListNode.ENodeType.BOX;
@@ -359,43 +413,53 @@ internal class CSongs管理 {
 				c曲リストノード.strSelectBGPath = infoDir.FullName + Path.DirectorySeparatorChar + boxdef.SelectBG;
 				if (!File.Exists(c曲リストノード.strSelectBGPath)) c曲リストノード.strSelectBGPath = null;
 
-				if (boxdef.IsChangedForeColor) {
+				if (boxdef.IsChangedForeColor)
+				{
 					c曲リストノード.ForeColor = boxdef.ForeColor;
 					c曲リストノード.IsChangedForeColor = true;
 				}
-				if (boxdef.IsChangedBackColor) {
+				if (boxdef.IsChangedBackColor)
+				{
 					c曲リストノード.BackColor = boxdef.BackColor;
 					c曲リストノード.IsChangedBackColor = true;
 				}
-				if (boxdef.IsChangedBoxColor) {
+				if (boxdef.IsChangedBoxColor)
+				{
 					c曲リストノード.BoxColor = boxdef.BoxColor;
 					c曲リストノード.isChangedBoxColor = true;
 				}
-				if (boxdef.IsChangedBgColor) {
+				if (boxdef.IsChangedBgColor)
+				{
 					c曲リストノード.BgColor = boxdef.BgColor;
 					c曲リストノード.isChangedBgColor = true;
 				}
-				if (boxdef.IsChangedBgType) {
+				if (boxdef.IsChangedBgType)
+				{
 					c曲リストノード.BgType = boxdef.BgType;
 					c曲リストノード.isChangedBgType = true;
 				}
-				if (boxdef.IsChangedBoxType) {
+				if (boxdef.IsChangedBoxType)
+				{
 					c曲リストノード.BoxType = boxdef.BoxType;
 					c曲リストノード.isChangedBoxType = true;
 				}
-				if (boxdef.IsChangedBoxChara) {
+				if (boxdef.IsChangedBoxChara)
+				{
 					c曲リストノード.BoxChara = boxdef.BoxChara;
 					c曲リストノード.isChangedBoxChara = true;
 				}
 
 
 
-				for (int i = 0; i < 3; i++) {
-					if ((boxdef.strBoxText[i] != null)) {
+				for (int i = 0; i < 3; i++)
+				{
+					if ((boxdef.strBoxText[i] != null))
+					{
 						c曲リストノード.strBoxText[i] = boxdef.strBoxText[i];
 					}
 				}
-				switch (CStrジャンルtoNum.ForAC15(c曲リストノード.songGenre)) {
+				switch (CStrジャンルtoNum.ForAC15(c曲リストノード.songGenre))
+				{
 					case 0:
 						c曲リストノード.ForeColor = OpenNijiiroRW.Skin.SongSelect_ForeColor_JPOP;
 						c曲リストノード.BackColor = OpenNijiiroRW.Skin.SongSelect_BackColor_JPOP;
@@ -450,53 +514,70 @@ internal class CSongs管理 {
 
 				c曲リストノード.childrenList = new List<CSongListNode>();
 				// OPTK Shortcut File
-				foreach (string shortcutpath in Directory.GetFiles(infoDir.FullName, "*.optksc", SearchOption.TopDirectoryOnly)) {
+				foreach (string shortcutpath in Directory.GetFiles(infoDir.FullName, "*.optksc", SearchOption.TopDirectoryOnly))
+				{
 					c曲リストノード.shortcutIds.AddRange(File.ReadAllLines(shortcutpath));
 				}
 
 				listノードリスト.Add(c曲リストノード);
-				if (OpenNijiiroRW.ConfigIni.bOutputSongSearchLog) {
+				if (OpenNijiiroRW.ConfigIni.bOutputSongSearchLog)
+				{
 					Trace.TraceInformation("box.def検出 : {0}", infoDir.FullName + @$"{Path.DirectorySeparatorChar}box.def");
 					Trace.Indent();
-					try {
+					try
+					{
 						StringBuilder sb = new StringBuilder(0x400);
 						sb.Append(string.Format("nID#{0:D3}", c曲リストノード.nID));
-						if (c曲リストノード.rParentNode != null) {
+						if (c曲リストノード.rParentNode != null)
+						{
 							sb.Append(string.Format("(in#{0:D3}):", c曲リストノード.rParentNode.nID));
-						} else {
+						}
+						else
+						{
 							sb.Append("(onRoot):");
 						}
 						sb.Append("BOX, Title=" + c曲リストノード.ldTitle.GetString(""));
-						if ((c曲リストノード.songGenre != null) && (c曲リストノード.songGenre.Length > 0)) {
+						if ((c曲リストノード.songGenre != null) && (c曲リストノード.songGenre.Length > 0))
+						{
 							sb.Append(", Genre=" + c曲リストノード.songGenre);
 						}
-						if (c曲リストノード.IsChangedForeColor) {
+						if (c曲リストノード.IsChangedForeColor)
+						{
 							sb.Append(", ForeColor=" + c曲リストノード.ForeColor.ToString());
 						}
-						if (c曲リストノード.IsChangedBackColor) {
+						if (c曲リストノード.IsChangedBackColor)
+						{
 							sb.Append(", BackColor=" + c曲リストノード.BackColor.ToString());
 						}
-						if (c曲リストノード.isChangedBoxColor) {
+						if (c曲リストノード.isChangedBoxColor)
+						{
 							sb.Append(", BoxColor=" + c曲リストノード.BoxColor.ToString());
 						}
-						if (c曲リストノード.isChangedBgColor) {
+						if (c曲リストノード.isChangedBgColor)
+						{
 							sb.Append(", BgColor=" + c曲リストノード.BgColor.ToString());
 						}
-						if (c曲リストノード.isChangedBoxType) {
+						if (c曲リストノード.isChangedBoxType)
+						{
 							sb.Append(", BoxType=" + c曲リストノード.BoxType.ToString());
 						}
-						if (c曲リストノード.isChangedBgType) {
+						if (c曲リストノード.isChangedBgType)
+						{
 							sb.Append(", BgType=" + c曲リストノード.BgType.ToString());
 						}
-						if (c曲リストノード.isChangedBoxChara) {
+						if (c曲リストノード.isChangedBoxChara)
+						{
 							sb.Append(", BoxChara=" + c曲リストノード.BoxChara.ToString());
 						}
 						Trace.TraceInformation(sb.ToString());
-					} finally {
+					}
+					finally
+					{
 						Trace.Unindent();
 					}
 				}
-				if (b子BOXへ再帰する) {
+				if (b子BOXへ再帰する)
+				{
 					this.t曲を検索してリストを作成する(infoDir.FullName + Path.DirectorySeparatorChar, b子BOXへ再帰する, c曲リストノード.childrenList, c曲リストノード);
 				}
 			}
@@ -505,7 +586,8 @@ internal class CSongs管理 {
 
 			#region [ c.通常フォルダの場合 ]
 			//-----------------------------
-			else {
+			else
+			{
 				this.t曲を検索してリストを作成する(infoDir.FullName + Path.DirectorySeparatorChar, b子BOXへ再帰する, listノードリスト, node親);
 			}
 			//-----------------------------
@@ -515,13 +597,17 @@ internal class CSongs管理 {
 	//-----------------
 	#endregion
 
-	private void LoadChartInfo(CSongListNode c曲リストノード, CTja cdtx, int i) {
-		if ((c曲リストノード.score[i] != null) && !c曲リストノード.score[i].bSongDBにキャッシュがあった) {
+	private void LoadChartInfo(CSongListNode c曲リストノード, CTja cdtx, int i)
+	{
+		if ((c曲リストノード.score[i] != null) && !c曲リストノード.score[i].bSongDBにキャッシュがあった)
+		{
 			#region [ DTX ファイルのヘッダだけ読み込み、Cスコア.譜面情報 を設定する ]
 			//-----------------
 			string path = c曲リストノード.score[i].ファイル情報.ファイルの絶対パス;
-			if (File.Exists(path)) {
-				try {
+			if (File.Exists(path))
+			{
+				try
+				{
 					c曲リストノード.score[i].譜面情報.タイトル = cdtx.TITLE.GetString("");
 
 
@@ -544,7 +630,8 @@ internal class CSongs管理 {
 					c曲リストノード.score[i].譜面情報.SongLoudnessMetadata = cdtx.SongLoudnessMetadata;
 					c曲リストノード.score[i].譜面情報.nデモBGMオフセット = cdtx.nデモBGMオフセット;
 					c曲リストノード.score[i].譜面情報.strサブタイトル = cdtx.SUBTITLE.GetString("");
-					for (int k = 0; k < (int)Difficulty.Total; k++) {
+					for (int k = 0; k < (int)Difficulty.Total; k++)
+					{
 						c曲リストノード.score[i].譜面情報.b譜面分岐[k] = cdtx.bHIDDENBRANCH ? false : cdtx.bHasBranch[k];
 						c曲リストノード.score[i].譜面情報.nレベル[k] = cdtx.LEVELtaiko[k];
 						c曲リストノード.score[i].譜面情報.nLevelIcon[k] = cdtx.LEVELtaikoIcon[k];
@@ -559,8 +646,10 @@ internal class CSongs管理 {
 					c曲リストノード.score[i].譜面情報.cDanTickColor = cdtx.DANTICKCOLOR;
 
 					c曲リストノード.score[i].譜面情報.nTotalFloor = 0;
-					if ((Difficulty)i is Difficulty.Tower) {
-						for (int k = 0; k < cdtx.listChip.Count; k++) {
+					if ((Difficulty)i is Difficulty.Tower)
+					{
+						for (int k = 0; k < cdtx.listChip.Count; k++)
+						{
 							CChip pChip = cdtx.listChip[k];
 
 							if (pChip.n整数値_内部番号 > c曲リストノード.score[i].譜面情報.nTotalFloor && pChip.nChannelNo == 0x50)
@@ -575,7 +664,8 @@ internal class CSongs管理 {
 					cdtx.DeActivate();
 					#region [ 曲検索ログ出力 ]
 					//-----------------
-					if (OpenNijiiroRW.ConfigIni.bOutputSongSearchLog) {
+					if (OpenNijiiroRW.ConfigIni.bOutputSongSearchLog)
+					{
 						StringBuilder sb = new StringBuilder(0x400);
 						sb.Append(string.Format("曲データファイルから譜面情報を転記しました。({0})", path));
 						sb.Append("(title=" + c曲リストノード.score[i].譜面情報.タイトル);
@@ -597,7 +687,9 @@ internal class CSongs管理 {
 					}
 					//-----------------
 					#endregion
-				} catch (Exception exception) {
+				}
+				catch (Exception exception)
+				{
 					Trace.TraceError(exception.ToString());
 					c曲リストノード.score[i] = null;
 					c曲リストノード.difficultiesCount--;
@@ -612,37 +704,51 @@ internal class CSongs管理 {
 
 	#region [ 曲リストへ後処理を適用する ]
 	//-----------------
-	public void tSongListPostprocessing() {
+	public void tSongListPostprocessing()
+	{
 		listStrBoxDefSkinSubfolderFullName = new List<string>();
-		if (OpenNijiiroRW.Skin.strBoxDefSkinSubfolders != null) {
-			foreach (string b in OpenNijiiroRW.Skin.strBoxDefSkinSubfolders) {
+		if (OpenNijiiroRW.Skin.strBoxDefSkinSubfolders != null)
+		{
+			foreach (string b in OpenNijiiroRW.Skin.strBoxDefSkinSubfolders)
+			{
 				listStrBoxDefSkinSubfolderFullName.Add(b);
 			}
 		}
 
 		this.tSongListPostprocessing(this.list曲ルート);
 
-		for (int p = 0; p < list曲ルート.Count; p++) {
+		for (int p = 0; p < list曲ルート.Count; p++)
+		{
 			var c曲リストノード = list曲ルート[p];
-			if (c曲リストノード.nodeType == CSongListNode.ENodeType.BOX) {
-				if (c曲リストノード.songGenre == "段位道場") {
-					if (OpenNijiiroRW.ConfigIni.bDanTowerHide) {
+			if (c曲リストノード.nodeType == CSongListNode.ENodeType.BOX)
+			{
+				if (c曲リストノード.songGenre == "段位道場")
+				{
+					if (OpenNijiiroRW.ConfigIni.bDanTowerHide)
+					{
 						list曲ルート.Remove(c曲リストノード);
 						p--;
 					}
 
 					// Add to dojo
 					list曲ルート_Dan = c曲リストノード.childrenList;
-				} else if (c曲リストノード.songGenre == "太鼓タワー") {
-					if (OpenNijiiroRW.ConfigIni.bDanTowerHide) {
+				}
+				else if (c曲リストノード.songGenre == "太鼓タワー")
+				{
+					if (OpenNijiiroRW.ConfigIni.bDanTowerHide)
+					{
 						list曲ルート.Remove(c曲リストノード);
 						p--;
 					}
 
 					list曲ルート_Tower = c曲リストノード.childrenList;
-				} else {
-					for (int i = 0; i < c曲リストノード.childrenList.Count; i++) {
-						if (c曲リストノード.childrenList[i].score[6] != null) {
+				}
+				else
+				{
+					for (int i = 0; i < c曲リストノード.childrenList.Count; i++)
+					{
+						if (c曲リストノード.childrenList[i].score[6] != null)
+						{
 							list曲ルート_Dan.Add(c曲リストノード.childrenList[i]);
 
 							if (OpenNijiiroRW.ConfigIni.bDanTowerHide)
@@ -650,7 +756,8 @@ internal class CSongs管理 {
 
 							continue;
 						}
-						if (c曲リストノード.childrenList[i].score[5] != null) {
+						if (c曲リストノード.childrenList[i].score[5] != null)
+						{
 							list曲ルート_Tower.Add(c曲リストノード.childrenList[i]);
 
 							if (OpenNijiiroRW.ConfigIni.bDanTowerHide)
@@ -665,10 +772,12 @@ internal class CSongs管理 {
 		#region [ skin名で比較して、systemスキンとboxdefスキンに重複があれば、boxdefスキン側を削除する ]
 		string[] systemSkinNames = CSkin.GetSkinName(OpenNijiiroRW.Skin.strSystemSkinSubfolders);
 		List<string> l = new List<string>(listStrBoxDefSkinSubfolderFullName);
-		foreach (string boxdefSkinSubfolderFullName in l) {
+		foreach (string boxdefSkinSubfolderFullName in l)
+		{
 			if (Array.BinarySearch(systemSkinNames,
 					CSkin.GetSkinName(boxdefSkinSubfolderFullName),
-					StringComparer.InvariantCultureIgnoreCase) >= 0) {
+					StringComparer.InvariantCultureIgnoreCase) >= 0)
+			{
 				listStrBoxDefSkinSubfolderFullName.Remove(boxdefSkinSubfolderFullName);
 			}
 		}
@@ -679,9 +788,11 @@ internal class CSongs管理 {
 	}
 
 
-	private void tSongListPostprocessing(List<CSongListNode> nodeList, string parentName = "/", bool isGlobal = true) {
+	private void tSongListPostprocessing(List<CSongListNode> nodeList, string parentName = "/", bool isGlobal = true)
+	{
 
-		if (isGlobal && nodeList.Count > 0) {
+		if (isGlobal && nodeList.Count > 0)
+		{
 			var randomNode = CSongDict.tGenerateRandomButton(nodeList[0].rParentNode, parentName);
 			nodeList.Add(randomNode);
 
@@ -689,17 +800,20 @@ internal class CSongs管理 {
 
 		// Don't sort songs if the folder isn't global
 		// Call back reinsert back folders if sort called ?
-		if (isGlobal) {
+		if (isGlobal)
+		{
 			tSongListSortByPath(nodeList);
 		}
 
 		// すべてのノードについて…
-		foreach (CSongListNode songNode in nodeList) {
+		foreach (CSongListNode songNode in nodeList)
+		{
 			SlowOrSuspendSearchTask();      // #27060 中断要求があったら、解除要求が来るまで待機, #PREMOVIE再生中は検索負荷を落とす
 
 			#region [ Append "Back" buttons to the included folders ]
 			//-----------------------------
-			if (songNode.nodeType == CSongListNode.ENodeType.BOX) {
+			if (songNode.nodeType == CSongListNode.ENodeType.BOX)
+			{
 
 				tSongListSortByPath(songNode.childrenList);
 
@@ -718,9 +832,12 @@ internal class CSongs管理 {
 
 			#region [ If no node title found, try to fetch it within the score objects ]
 			//-----------------------------
-			if (string.IsNullOrEmpty(songNode.ldTitle.GetString(""))) {
-				for (int j = 0; j < (int)Difficulty.Total; j++) {
-					if ((songNode.score[j] != null) && !string.IsNullOrEmpty(songNode.score[j].譜面情報.タイトル)) {
+			if (string.IsNullOrEmpty(songNode.ldTitle.GetString("")))
+			{
+				for (int j = 0; j < (int)Difficulty.Total; j++)
+				{
+					if ((songNode.score[j] != null) && !string.IsNullOrEmpty(songNode.score[j].譜面情報.タイトル))
+					{
 						songNode.ldTitle = new CLocalizationData();
 
 						if (OpenNijiiroRW.ConfigIni.bOutputSongSearchLog)
@@ -744,17 +861,21 @@ internal class CSongs管理 {
 	#region [ Sort Song List ]
 	//-----------------
 
-	public static void tSongListSortByPath(List<CSongListNode> nodeList) {
+	public static void tSongListSortByPath(List<CSongListNode> nodeList)
+	{
 		tSongListSortByPath(nodeList, 1, 0);
 
-		foreach (CSongListNode songNode in nodeList) {
-			if ((songNode.childrenList != null) && (songNode.childrenList.Count > 1)) {
+		foreach (CSongListNode songNode in nodeList)
+		{
+			if ((songNode.childrenList != null) && (songNode.childrenList.Count > 1))
+			{
 				tSongListSortByPath(songNode.childrenList);
 			}
 		}
 	}
 
-	public static void tSongListSortByPath(List<CSongListNode> nodeList, int order, params object[] p) {
+	public static void tSongListSortByPath(List<CSongListNode> nodeList, int order, params object[] p)
+	{
 		var comparer = new ComparerChain<CSongListNode>(
 			new CSongListNodeComparerNodeType(),
 			new CSongListNodeComparerUnlockStatus(),
@@ -765,7 +886,8 @@ internal class CSongs管理 {
 		nodeList.Sort(comparer);
 	}
 
-	public static void tSongListSortByTitle(List<CSongListNode> nodeList, int order, params object[] p) {
+	public static void tSongListSortByTitle(List<CSongListNode> nodeList, int order, params object[] p)
+	{
 		var comparer = new ComparerChain<CSongListNode>(
 			new CSongListNodeComparerNodeType(),
 			new CSongListNodeComparerUnlockStatus(),
@@ -776,7 +898,8 @@ internal class CSongs管理 {
 		nodeList.Sort(comparer);
 	}
 
-	public static void tSongListSortBySubtitle(List<CSongListNode> nodeList, int order, params object[] p) {
+	public static void tSongListSortBySubtitle(List<CSongListNode> nodeList, int order, params object[] p)
+	{
 		var comparer = new ComparerChain<CSongListNode>(
 			new CSongListNodeComparerNodeType(),
 			new CSongListNodeComparerUnlockStatus(),
@@ -787,7 +910,8 @@ internal class CSongs管理 {
 		nodeList.Sort(comparer);
 	}
 
-	public static void tSongListSortByLevel(List<CSongListNode> nodeList, int order, params object[] p) {
+	public static void tSongListSortByLevel(List<CSongListNode> nodeList, int order, params object[] p)
+	{
 		var comparer = new ComparerChain<CSongListNode>(
 			new CSongListNodeComparerNodeType(),
 			new CSongListNodeComparerUnlockStatus(),
@@ -861,7 +985,8 @@ Debug.WriteLine( dBPM + ":" + c曲リストノード.strタイトル );
 
 	#region [ private ]
 	//-----------------
-	public List<string> listStrBoxDefSkinSubfolderFullName {
+	public List<string> listStrBoxDefSkinSubfolderFullName
+	{
 		get;
 		private set;
 	}
@@ -869,7 +994,8 @@ Debug.WriteLine( dBPM + ":" + c曲リストノード.strタイトル );
 	/// <summary>
 	/// 検索を中断_スローダウンする
 	/// </summary>
-	private void SlowOrSuspendSearchTask() {
+	private void SlowOrSuspendSearchTask()
+	{
 		if (this.bIsSuspending)     // #27060 中断要求があったら、解除要求が来るまで待機
 		{
 			AutoReset.WaitOne();

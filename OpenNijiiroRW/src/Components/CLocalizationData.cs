@@ -3,19 +3,23 @@
 namespace OpenNijiiroRW;
 
 [Serializable]
-internal class CLocalizationData {
+internal class CLocalizationData
+{
 	[JsonProperty("strings")]
 	private Dictionary<string, string> Strings = new Dictionary<string, string>();
 
-	public CLocalizationData() {
+	public CLocalizationData()
+	{
 		Strings = new Dictionary<string, string>();
 	}
 
-	public string[] GetAllStrings() {
+	public string[] GetAllStrings()
+	{
 		return Strings.Values.ToArray();
 	}
 
-	public string GetString(string defaultsDefault) {
+	public string GetString(string defaultsDefault)
+	{
 		string _lang = CLangManager.fetchLang();
 		if (Strings.ContainsKey(_lang))
 			return Strings[_lang];
@@ -24,7 +28,8 @@ internal class CLocalizationData {
 		return defaultsDefault;
 	}
 
-	public void SetString(string langcode, string str) {
+	public void SetString(string langcode, string str)
+	{
 		Strings[langcode] = str;
 	}
 }

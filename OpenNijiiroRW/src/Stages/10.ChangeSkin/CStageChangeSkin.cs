@@ -6,10 +6,12 @@ namespace OpenNijiiroRW;
 /// <summary>
 /// box.defによるスキン変更時に一時的に遷移する、スキン画像の一切無いステージ。
 /// </summary>
-internal class CStageChangeSkin : CStage {
+internal class CStageChangeSkin : CStage
+{
 	// Constructor
 
-	public CStageChangeSkin() {
+	public CStageChangeSkin()
+	{
 		base.eStageID = CStage.EStage.ChangeSkin;
 		base.IsDeActivated = true;
 	}
@@ -17,39 +19,54 @@ internal class CStageChangeSkin : CStage {
 
 	// CStage 実装
 
-	public override void Activate() {
+	public override void Activate()
+	{
 		Trace.TraceInformation("スキン変更ステージを活性化します。");
 		Trace.Indent();
-		try {
+		try
+		{
 			base.Activate();
 			Trace.TraceInformation("スキン変更ステージの活性化を完了しました。");
-		} finally {
+		}
+		finally
+		{
 			Trace.Unindent();
 		}
 	}
-	public override void DeActivate() {
+	public override void DeActivate()
+	{
 		Trace.TraceInformation("スキン変更ステージを非活性化します。");
 		Trace.Indent();
-		try {
+		try
+		{
 			base.DeActivate();
 			Trace.TraceInformation("スキン変更ステージの非活性化を完了しました。");
-		} finally {
+		}
+		finally
+		{
 			Trace.Unindent();
 		}
 	}
-	public override void CreateManagedResource() {
-		if (!base.IsDeActivated) {
+	public override void CreateManagedResource()
+	{
+		if (!base.IsDeActivated)
+		{
 			base.CreateManagedResource();
 		}
 	}
-	public override void ReleaseManagedResource() {
-		if (!base.IsDeActivated) {
+	public override void ReleaseManagedResource()
+	{
+		if (!base.IsDeActivated)
+		{
 			base.ReleaseManagedResource();
 		}
 	}
-	public override int Draw() {
-		if (!base.IsDeActivated) {
-			if (base.IsFirstDraw) {
+	public override int Draw()
+	{
+		if (!base.IsDeActivated)
+		{
+			if (base.IsFirstDraw)
+			{
 				base.IsFirstDraw = false;
 				return 0;
 			}

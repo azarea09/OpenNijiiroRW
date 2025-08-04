@@ -1,8 +1,11 @@
 ﻿using NLua;
 
-namespace OpenNijiiroRW {
-	public static class LuaSecurity {
-		public static void Secure(Lua lua) {
+namespace OpenNijiiroRW
+{
+	public static class LuaSecurity
+	{
+		public static void Secure(Lua lua)
+		{
 
 			lua.DoString(@"
 for k, _ in pairs(os) do

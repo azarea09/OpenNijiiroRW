@@ -5,56 +5,69 @@ using ManagedBass.Wasapi;
 
 namespace FDK;
 
-internal class CSoundDeviceWASAPI : ISoundDevice {
+internal class CSoundDeviceWASAPI : ISoundDevice
+{
 	// Properties
 
-	public ESoundDeviceType SoundDeviceType {
+	public ESoundDeviceType SoundDeviceType
+	{
 		get;
 		protected set;
 	}
-	public long OutputDelay {
+	public long OutputDelay
+	{
 		get;
 		protected set;
 	}
-	public long BufferSize {
+	public long BufferSize
+	{
 		get;
 		protected set;
 	}
 
 	// CSoundTimer 用に公開しているプロパティ
 
-	public long ElapsedTimeMs {
+	public long ElapsedTimeMs
+	{
 		get;
 		protected set;
 	}
-	public long UpdateSystemTimeMs {
+	public long UpdateSystemTimeMs
+	{
 		get;
 		protected set;
 	}
-	public CTimer SystemTimer {
+	public CTimer SystemTimer
+	{
 		get;
 		protected set;
 	}
 
 	public enum EWASAPIMode { Exclusion, Share }
 
-	public int nMasterVolume {
-		get {
+	public int nMasterVolume
+	{
+		get
+		{
 			float volume = 0.0f;
 			//if ( BassMix.BASS_Mixer_ChannelGetEnvelopePos( this.hMixer, BASSMIXEnvelope.BASS_MIXER_ENV_VOL, ref f音量 ) == -1 )
 			//    return 100;
 			//bool b = Bass.BASS_ChannelGetAttribute( this.hMixer, BASSAttribute.BASS_ATTRIB_VOL, ref f音量 );
 			bool b = Bass.ChannelGetAttribute(this.hMixer, ChannelAttribute.Volume, out volume);
-			if (!b) {
+			if (!b)
+			{
 				Errors be = Bass.LastError;
 				Trace.TraceInformation("WASAPI Master Volume Get Error: " + be.ToString());
-			} else {
+			}
+			else
+			{
 				Trace.TraceInformation("WASAPI Master Volume Get Success: " + (volume * 100));
 
 			}
 			return (int)(volume * 100);
 		}
-		set {
+		set
+		{
 			// bool b = Bass.BASS_SetVolume( value / 100.0f );
 			// →Exclusiveモード時は無効
 
@@ -72,10 +85,13 @@ internal class CSoundDeviceWASAPI : ISoundDevice {
 			//var nodes = new BASS_MIXER_NODE[ 1 ] { new BASS_MIXER_NODE( 0, (float) value ) };
 			//bool b = BassMix.BASS_Mixer_ChannelSetEnvelope( this.hMixer, BASSMIXEnvelope.BASS_MIXER_ENV_VOL, nodes );
 			//bool b = Bass.BASS_ChannelSetAttribute( this.hMixer, BASSAttribute.BASS_ATTRIB_VOL, value / 100.0f );
-			if (!b) {
+			if (!b)
+			{
 				Errors be = Bass.LastError;
 				Trace.TraceInformation("WASAPI Master Volume Set Error: " + be.ToString());
-			} else {
+			}
+			else
+			{
 				// int n = this.nMasterVolume;
 				// Trace.TraceInformation( "WASAPI Master Volume Set Success: " + value );
 
@@ -90,7 +106,8 @@ internal class CSoundDeviceWASAPI : ISoundDevice {
 	/// <param name="mode"></param>
 	/// <param name="bufferSize">(未使用; 本メソッド内で自動設定する)</param>
 	/// <param name="interval">(未使用; 本メソッド内で自動設定する)</param>
-	public CSoundDeviceWASAPI(EWASAPIMode mode, long bufferSize, long interval) {
+	public CSoundDeviceWASAPI(EWASAPIMode mode, long bufferSize, long interval)
+	{
 		// 初期化。
 
 		Trace.TraceInformation("BASS (WASAPI) の初期化を開始します。");
@@ -130,10 +147,12 @@ internal class CSoundDeviceWASAPI : ISoundDevice {
 		int a;
 		string strDefaultSoundDeviceName = null;
 		DeviceInfo[] bassDevInfos = new DeviceInfo[Bass.DeviceCount];
-		for (int j = 0; j < bassDevInfos.Length; j++) {
+		for (int j = 0; j < bassDevInfos.Length; j++)
+		{
 			bassDevInfos[j] = Bass.GetDeviceInfo(j);
 		}
-		for (a = 0; a < bassDevInfos.GetLength(0); a++) {
+		for (a = 0; a < bassDevInfos.GetLength(0); a++)
+		{
 			{
 				Trace.TraceInformation("Sound Device #{0}: {1}: IsDefault={2}, isEnabled={3}",
 					a,
@@ -141,7 +160,8 @@ internal class CSoundDeviceWASAPI : ISoundDevice {
 					bassDevInfos[a].IsDefault,
 					bassDevInfos[a].IsEnabled
 				);
-				if (bassDevInfos[a].IsDefault) {
+				if (bassDevInfos[a].IsDefault)
+				{
 					// これはOS標準のdefault device。後でWASAPIのdefault deviceと比較する。
 					strDefaultSoundDeviceName = bassDevInfos[a].Name;
 				}
@@ -162,7 +182,8 @@ internal class CSoundDeviceWASAPI : ISoundDevice {
 		#region [ 既定の出力デバイスと設定されているWASAPIデバイスを検索し、更新間隔msを設定できる最小値にする ]
 		int nDevNo = -1;
 		WasapiDeviceInfo deviceInfo;
-		for (int n = 0; BassWasapi.GetDeviceInfo(n, out deviceInfo); n++) {
+		for (int n = 0; BassWasapi.GetDeviceInfo(n, out deviceInfo); n++)
+		{
 			// #37940 2018.2.15: BASS_DEVICEINFOとBASS_WASAPI_DEVICEINFOで、IsDefaultとなっているデバイスが異なる場合がある。
 			// (WASAPIでIsDefaultとなっているデバイスが正しくない場合がある)
 			// そのため、BASS_DEVICEでIsDefaultとなっているものを探し、それと同じ名前のWASAPIデバイスを使用する。
@@ -171,7 +192,8 @@ internal class CSoundDeviceWASAPI : ISoundDevice {
 			// (具体的には、defperiod, minperiod, mixchans, mixfreqがすべて0のデバイスは使用不可のため
 			//  これらが0でないものを選択する)
 			//if ( deviceInfo.IsDefault )
-			if (deviceInfo.Name == strDefaultSoundDeviceName && deviceInfo.MixFrequency > 0) {
+			if (deviceInfo.Name == strDefaultSoundDeviceName && deviceInfo.MixFrequency > 0)
+			{
 				nDevNo = n;
 				#region [ 既定の出力デバイスの情報を表示 ]
 				Trace.TraceInformation("WASAPI Device #{0}: {1}: IsDefault={2}, defPeriod={3}s, minperiod={4}s, mixchans={5}, mixfreq={6}",
@@ -182,7 +204,8 @@ internal class CSoundDeviceWASAPI : ISoundDevice {
 				break;
 			}
 		}
-		if (nDevNo != -1) {
+		if (nDevNo != -1)
+		{
 			Trace.TraceInformation("Start Bass_Init(device=0(fixed value: no sound), deviceInfo.mixfreq=" + deviceInfo.MixFrequency + ", BASS_DEVICE_DEFAULT, Zero)");
 			if (!Bass.Init(0, deviceInfo.MixFrequency, DeviceInitFlags.Default, IntPtr.Zero))  // device = 0:"no device": BASS からはデバイスへアクセスさせない。アクセスは BASSWASAPI アドオンから行う。
 				throw new Exception(string.Format("BASS (WASAPI{0}) の初期化に失敗しました。(BASS_Init)[{1}]", mode.ToString(), Bass.LastError.ToString()));
@@ -198,7 +221,9 @@ internal class CSoundDeviceWASAPI : ISoundDevice {
 			//{
 			//	n希望バッファサイズms = n更新間隔ms + 1; // 2013.4.25 #31237 yyagi; バッファサイズ設定の完全自動化。更新間隔＝バッファサイズにするとBASS_ERROR_UNKNOWNになるので+1する。
 			//}
-		} else {
+		}
+		else
+		{
 			Trace.TraceError("Error: Default WASAPI Device is not found.");
 		}
 		#endregion
@@ -207,8 +232,10 @@ internal class CSoundDeviceWASAPI : ISoundDevice {
 		var flags = (mode == EWASAPIMode.Exclusion) ? WasapiInitFlags.AutoFormat | WasapiInitFlags.Exclusive : WasapiInitFlags.Shared | WasapiInitFlags.AutoFormat;
 		//var flags = ( mode == Eデバイスモード.排他 ) ? BASSWASAPIInit.BASS_WASAPI_AUTOFORMAT | BASSWASAPIInit.BASS_WASAPI_EVENT | BASSWASAPIInit.BASS_WASAPI_EXCLUSIVE : BASSWASAPIInit.BASS_WASAPI_AUTOFORMAT | BASSWASAPIInit.BASS_WASAPI_EVENT;
 
-		if (BassWasapi.Init(nデバイス, n周波数, nチャンネル数, flags, (bufferSize / 1000.0f), (interval / 1000.0f), this.tWasapiProc, IntPtr.Zero)) {
-			if (mode == EWASAPIMode.Exclusion) {
+		if (BassWasapi.Init(nデバイス, n周波数, nチャンネル数, flags, (bufferSize / 1000.0f), (interval / 1000.0f), this.tWasapiProc, IntPtr.Zero))
+		{
+			if (mode == EWASAPIMode.Exclusion)
+			{
 				#region [ 排他モードで作成成功。]
 				//-----------------
 				this.SoundDeviceType = ESoundDeviceType.ExclusiveWASAPI;
@@ -242,7 +269,9 @@ internal class CSoundDeviceWASAPI : ISoundDevice {
 				this.bIsBASSFree = false;
 				//-----------------
 				#endregion
-			} else {
+			}
+			else
+			{
 				#region [ 共有モードで作成成功。]
 				//-----------------
 				this.SoundDeviceType = ESoundDeviceType.SharedWASAPI;
@@ -283,7 +312,8 @@ internal class CSoundDeviceWASAPI : ISoundDevice {
 		//    #endregion
 		//}
 		#endregion
-		else {
+		else
+		{
 			#region [ それでも失敗したら例外発生。]
 			//-----------------
 			Errors errcode = Bass.LastError;
@@ -302,7 +332,8 @@ internal class CSoundDeviceWASAPI : ISoundDevice {
 			info.Frequency,
 			info.Channels,
 			BassFlags.MixerNonStop | BassFlags.Float | BassFlags.Decode);   // デコードのみ＝発声しない。WASAPIに出力されるだけ。
-		if (this.hMixer == 0) {
+		if (this.hMixer == 0)
+		{
 			Errors errcode = Bass.LastError;
 			BassWasapi.Free();
 			Bass.Free();
@@ -327,7 +358,8 @@ internal class CSoundDeviceWASAPI : ISoundDevice {
 			info.Frequency,
 			info.Channels,
 			BassFlags.MixerNonStop | BassFlags.Float | BassFlags.Decode);   // デコードのみ＝発声しない。WASAPIに出力されるだけ。
-		if (this.hMixer_DeviceOut == 0) {
+		if (this.hMixer_DeviceOut == 0)
+		{
 			Errors errcode = Bass.LastError;
 			BassWasapi.Free();
 			Bass.Free();
@@ -337,13 +369,15 @@ internal class CSoundDeviceWASAPI : ISoundDevice {
 
 		{
 			bool b1 = BassMix.MixerAddChannel(this.hMixer_DeviceOut, this.hMixer, BassFlags.Default);
-			if (!b1) {
+			if (!b1)
+			{
 				Errors errcode = Bass.LastError;
 				BassWasapi.Free();
 				Bass.Free();
 				this.bIsBASSFree = true;
 				throw new Exception(string.Format("BASSミキサ(最終段とmixing)の接続に失敗しました。[{0}]", errcode));
-			};
+			}
+			;
 		}
 
 
@@ -352,38 +386,46 @@ internal class CSoundDeviceWASAPI : ISoundDevice {
 		BassWasapi.Start();
 	}
 	#region [ tサウンドを作成する() ]
-	public CSound tCreateSound(string strファイル名, ESoundGroup soundGroup) {
+	public CSound tCreateSound(string strファイル名, ESoundGroup soundGroup)
+	{
 		var sound = new CSound(soundGroup);
 		sound.CreateWASAPISound(strファイル名, this.hMixer, this.SoundDeviceType);
 		return sound;
 	}
 
-	public void tCreateSound(string strファイル名, CSound sound) {
+	public void tCreateSound(string strファイル名, CSound sound)
+	{
 		sound.CreateWASAPISound(strファイル名, this.hMixer, this.SoundDeviceType);
 	}
 	#endregion
 
 	#region [ Dispose-Finallizeパターン実装 ]
 	//-----------------
-	public void Dispose() {
+	public void Dispose()
+	{
 		this.Dispose(true);
 		GC.SuppressFinalize(this);
 	}
-	protected void Dispose(bool bManagedDispose) {
+	protected void Dispose(bool bManagedDispose)
+	{
 		SoundDeviceType = ESoundDeviceType.Unknown;     // まず出力停止する(Dispose中にクラス内にアクセスされることを防ぐ)
-		if (hMixer != -1) {
+		if (hMixer != -1)
+		{
 			Bass.StreamFree(hMixer);
 		}
-		if (!bIsBASSFree) {
+		if (!bIsBASSFree)
+		{
 			BassWasapi.Free();  // システムタイマより先に呼び出すこと。（tWasapi処理() の中でシステムタイマを参照してるため）
 			Bass.Free();
 		}
-		if (bManagedDispose) {
+		if (bManagedDispose)
+		{
 			SystemTimer.Dispose();
 			SystemTimer = null;
 		}
 	}
-	~CSoundDeviceWASAPI() {
+	~CSoundDeviceWASAPI()
+	{
 		this.Dispose(false);
 	}
 	//-----------------
@@ -393,7 +435,8 @@ internal class CSoundDeviceWASAPI : ISoundDevice {
 	protected int hMixer_DeviceOut = -1;
 	protected WasapiProcedure tWasapiProc = null;
 
-	protected int tWASAPI処理(IntPtr buffer, int length, IntPtr user) {
+	protected int tWASAPI処理(IntPtr buffer, int length, IntPtr user)
+	{
 		// BASSミキサからの出力データをそのまま WASAPI buffer へ丸投げ。
 
 		int num = Bass.ChannelGetData(this.hMixer_DeviceOut, buffer, length);       // num = 実際に転送した長さ

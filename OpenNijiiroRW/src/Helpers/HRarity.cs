@@ -2,8 +2,10 @@
 
 namespace OpenNijiiroRW;
 
-internal class HRarity {
-	private static Dictionary<string, Color> RarityToColor = new Dictionary<string, Color> {
+internal class HRarity
+{
+	private static Dictionary<string, Color> RarityToColor = new Dictionary<string, Color>
+	{
 		["Poor"] = Color.Gray,
 		["Common"] = Color.White,
 		["Uncommon"] = Color.Lime,
@@ -13,7 +15,8 @@ internal class HRarity {
 		["Mythical"] = Color.Pink,
 	};
 
-	private static Dictionary<string, int> RarityToModalInt = new Dictionary<string, int> {
+	private static Dictionary<string, int> RarityToModalInt = new Dictionary<string, int>
+	{
 		["Poor"] = 0,
 		["Common"] = 0,
 		["Uncommon"] = 1,
@@ -23,7 +26,8 @@ internal class HRarity {
 		["Mythical"] = 4,
 	};
 
-	private static Dictionary<string, int> RarityToLangInt = new Dictionary<string, int> {
+	private static Dictionary<string, int> RarityToLangInt = new Dictionary<string, int>
+	{
 		["Poor"] = 0,
 		["Common"] = 1,
 		["Uncommon"] = 2,
@@ -33,7 +37,8 @@ internal class HRarity {
 		["Mythical"] = 6,
 	};
 
-	private static Dictionary<string, float> RarityToCoinMultiplier = new Dictionary<string, float> {
+	private static Dictionary<string, float> RarityToCoinMultiplier = new Dictionary<string, float>
+	{
 		["Poor"] = 1f,
 		["Common"] = 1f,
 		["Uncommon"] = 1f,
@@ -43,7 +48,8 @@ internal class HRarity {
 		["Mythical"] = 1f,
 	};
 
-	public static Color tRarityToColor(string rarity) {
+	public static Color tRarityToColor(string rarity)
+	{
 
 		Color textColor = Color.White;
 
@@ -54,7 +60,8 @@ internal class HRarity {
 
 	}
 
-	public static int tRarityToModalInt(string rarity) {
+	public static int tRarityToModalInt(string rarity)
+	{
 		int modalInt = 0;
 
 		if (RarityToModalInt.ContainsKey(rarity))
@@ -63,7 +70,8 @@ internal class HRarity {
 		return modalInt;
 	}
 
-	public static int tRarityToLangInt(string rarity) {
+	public static int tRarityToLangInt(string rarity)
+	{
 		int modalInt = 1;
 
 		if (RarityToLangInt.ContainsKey(rarity))
@@ -72,7 +80,8 @@ internal class HRarity {
 		return modalInt;
 	}
 
-	public static float tRarityToRarityToCoinMultiplier(string rarity) {
+	public static float tRarityToRarityToCoinMultiplier(string rarity)
+	{
 		float coinMult = 1f;
 
 		if (RarityToCoinMultiplier.ContainsKey(rarity))

@@ -1,12 +1,16 @@
 ﻿namespace OpenNijiiroRW.CSongListNodeComparers;
 
-internal sealed class CSongListNodeComparerNodeType : IComparer<CSongListNode> {
-	public int Compare(CSongListNode x, CSongListNode y) {
+internal sealed class CSongListNodeComparerNodeType : IComparer<CSongListNode>
+{
+	public int Compare(CSongListNode x, CSongListNode y)
+	{
 		return ToComparable(x.nodeType).CompareTo(ToComparable(y.nodeType));
 	}
 
-	private static int ToComparable(CSongListNode.ENodeType nodeType) {
-		switch (nodeType) {
+	private static int ToComparable(CSongListNode.ENodeType nodeType)
+	{
+		switch (nodeType)
+		{
 			case CSongListNode.ENodeType.BOX:
 				return 0;
 			case CSongListNode.ENodeType.SCORE:

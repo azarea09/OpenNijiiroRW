@@ -3,9 +3,12 @@ using FDK;
 
 namespace OpenNijiiroRW;
 
-class CVisualLogManager {
-	class LogCard {
-		public LogCard(TraceEventType type, string message) {
+class CVisualLogManager
+{
+	class LogCard
+	{
+		public LogCard(TraceEventType type, string message)
+		{
 			lct = type;
 			msg = message;
 			InitTimeSinceCreation();
@@ -14,8 +17,10 @@ class CVisualLogManager {
 		private void InitTimeSinceCreation()
 			=> timeSinceCreation = new CCounter(0, 10000, 1, OpenNijiiroRW.Timer);
 
-		public int Display(int y) {
-			if (timeSinceCreation.IsStoped) {
+		public int Display(int y)
+		{
+			if (timeSinceCreation.IsStoped)
+			{
 				// OpenNijiiroRW.Timer was null. Reinitialize.
 				InitTimeSinceCreation();
 			}
@@ -25,14 +30,16 @@ class CVisualLogManager {
 				return y; // exceeded screen; skip drawing
 
 			// Display stuff here
-			if (OpenNijiiroRW.actTextConsole != null) {
+			if (OpenNijiiroRW.actTextConsole != null)
+			{
 				y = OpenNijiiroRW.actTextConsole.Print(0, y, CTextConsole.EFontType.Cyan, msg).y;
 				y += OpenNijiiroRW.actTextConsole.fontHeight + 24;
 			}
 			return y;
 		}
 
-		public bool IsExpired() {
+		public bool IsExpired()
+		{
 			return timeSinceCreation.IsEnded;
 		}
 
@@ -41,22 +48,28 @@ class CVisualLogManager {
 		private string msg;
 	}
 
-	public void PushCard(TraceEventType lct, string msg) {
+	public void PushCard(TraceEventType lct, string msg)
+	{
 		cards.Enqueue(new LogCard(lct, msg));
 	}
 
-	public void Display() {
-		if (this.firstCard?.IsExpired() ?? true) {
+	public void Display()
+	{
+		if (this.firstCard?.IsExpired() ?? true)
+		{
 			while (this.cards.TryDequeue(out this.firstCard) && this.firstCard.IsExpired())
 				;
 		}
 		int y = 0;
 		if (this.firstCard != null)
 			y = this.firstCard.Display(y);
-		try {
+		try
+		{
 			foreach (var card in this.cards)
 				y = card.Display(y);
-		} catch (InvalidOperationException ex) {
+		}
+		catch (InvalidOperationException ex)
+		{
 			// item updated during drawing; skip
 		}
 	}

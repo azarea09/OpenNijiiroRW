@@ -3,25 +3,30 @@
 namespace OpenNijiiroRW;
 
 // Small static class which refers to the Tower mode important informations
-static internal class CFloorManagement {
-	public static void reinitialize(int life) {
+static internal class CFloorManagement
+{
+	public static void reinitialize(int life)
+	{
 		CFloorManagement.LastRegisteredFloor = 1;
 		CFloorManagement.MaxNumberOfLives = life;
 		CFloorManagement.CurrentNumberOfLives = life;
 		CFloorManagement.InvincibilityFrames = null;
 	}
 
-	public static void reload() {
+	public static void reload()
+	{
 		CFloorManagement.LastRegisteredFloor = 1;
 		CFloorManagement.CurrentNumberOfLives = CFloorManagement.MaxNumberOfLives;
 		CFloorManagement.InvincibilityFrames = null;
 	}
 
-	public static void damage() {
+	public static void damage()
+	{
 		if (CFloorManagement.InvincibilityFrames != null && CFloorManagement.InvincibilityFrames.CurrentValue < CFloorManagement.InvincibilityDurationSpeedDependent)
 			return;
 
-		if (CFloorManagement.CurrentNumberOfLives > 0) {
+		if (CFloorManagement.CurrentNumberOfLives > 0)
+		{
 			CFloorManagement.InvincibilityFrames = new CCounter(0, CFloorManagement.InvincibilityDurationSpeedDependent + 1000, 1, OpenNijiiroRW.Timer);
 			CFloorManagement.CurrentNumberOfLives--;
 			//TJAPlayer3.Skin.soundTowerMiss.t再生する();
@@ -29,7 +34,8 @@ static internal class CFloorManagement {
 		}
 	}
 
-	public static bool isBlinking() {
+	public static bool isBlinking()
+	{
 		if (CFloorManagement.InvincibilityFrames == null || CFloorManagement.InvincibilityFrames.CurrentValue >= CFloorManagement.InvincibilityDurationSpeedDependent)
 			return false;
 
@@ -39,7 +45,8 @@ static internal class CFloorManagement {
 		return true;
 	}
 
-	public static void loopFrames() {
+	public static void loopFrames()
+	{
 		if (CFloorManagement.InvincibilityFrames != null)
 			CFloorManagement.InvincibilityFrames.Tick();
 	}
@@ -49,7 +56,8 @@ static internal class CFloorManagement {
 	public static int CurrentNumberOfLives = 5;
 
 	// prevents one from playing in 7.65x or so speed and passing the life challenge easily.
-	public static double InvincibilityDurationSpeedDependent {
+	public static double InvincibilityDurationSpeedDependent
+	{
 		get => CTja.TjaDurationToGameDuration(InvincibilityDuration);
 	}
 

@@ -2,17 +2,20 @@
 
 namespace OpenNijiiroRW;
 
-internal class CActImplClearAnimation : CActivity {
+internal class CActImplClearAnimation : CActivity
+{
 	/// <summary>
 	/// 課題
 	/// _クリア失敗 →素材不足(確保はできる。切り出しと加工をしてないだけ。)
 	/// _
 	/// </summary>
-	public CActImplClearAnimation() {
+	public CActImplClearAnimation()
+	{
 		base.IsDeActivated = true;
 	}
 
-	public void Start() {
+	public void Start()
+	{
 		// this.ct進行メイン = new CCounter(0, 500, 1000 / 60, TJAPlayer3.Timer);
 
 		bSongsPlayed = false;
@@ -28,56 +31,79 @@ internal class CActImplClearAnimation : CActivity {
         */
 
 		// モードの決定。クリア失敗・フルコンボも事前に作っとく。
-		if (OpenNijiiroRW.stageSongSelect.nChoosenSongDifficulty[0] == (int)Difficulty.Tower) {
-			if (CFloorManagement.CurrentNumberOfLives > 0) {
-				if (OpenNijiiroRW.stageGameScreen.CChartScore[0].nMiss == 0 && OpenNijiiroRW.stageGameScreen.CChartScore[0].nMine == 0) {
+		if (OpenNijiiroRW.stageSongSelect.nChoosenSongDifficulty[0] == (int)Difficulty.Tower)
+		{
+			if (CFloorManagement.CurrentNumberOfLives > 0)
+			{
+				if (OpenNijiiroRW.stageGameScreen.CChartScore[0].nMiss == 0 && OpenNijiiroRW.stageGameScreen.CChartScore[0].nMine == 0)
+				{
 					if (OpenNijiiroRW.stageGameScreen.CChartScore[0].nGood == 0)
 						this.Mode[0] = EndMode.Tower_TopReached_Perfect;
 					else
 						this.Mode[0] = EndMode.Tower_TopReached_FullCombo;
-				} else
+				}
+				else
 					this.Mode[0] = EndMode.Tower_TopReached_Pass;
-			} else
+			}
+			else
 				this.Mode[0] = EndMode.Tower_Dropout;
-		} else if (OpenNijiiroRW.stageSongSelect.nChoosenSongDifficulty[0] == (int)Difficulty.Dan) {
+		}
+		else if (OpenNijiiroRW.stageSongSelect.nChoosenSongDifficulty[0] == (int)Difficulty.Dan)
+		{
 			// 段位認定モード。
-			if (!Dan_Cert.GetFailedAllChallenges(OpenNijiiroRW.stageGameScreen.actDan.GetExam(), OpenNijiiroRW.stageSongSelect.rChoosenSong.DanSongs)) {
+			if (!Dan_Cert.GetFailedAllChallenges(OpenNijiiroRW.stageGameScreen.actDan.GetExam(), OpenNijiiroRW.stageSongSelect.rChoosenSong.DanSongs))
+			{
 				// 段位認定モード、クリア成功
 				// this.Mode[0] = EndMode.StageCleared;
 
 				bool bgold = OpenNijiiroRW.stageGameScreen.actDan.GetResultExamStatus(OpenNijiiroRW.stageGameScreen.actDan.GetExam(), OpenNijiiroRW.stageSongSelect.rChoosenSong.DanSongs) == Exam.Status.Better_Success;
 
-				if (OpenNijiiroRW.stageGameScreen.CChartScore[0].nMiss == 0 && OpenNijiiroRW.stageGameScreen.CChartScore[0].nMine == 0) {
+				if (OpenNijiiroRW.stageGameScreen.CChartScore[0].nMiss == 0 && OpenNijiiroRW.stageGameScreen.CChartScore[0].nMine == 0)
+				{
 					if (OpenNijiiroRW.stageGameScreen.CChartScore[0].nGood == 0)
 						this.Mode[0] = bgold ? EndMode.Dan_Gold_Perfect : EndMode.Dan_Red_Perfect;
 					else
 						this.Mode[0] = bgold ? EndMode.Dan_Gold_FullCombo : EndMode.Dan_Red_FullCombo;
-				} else
+				}
+				else
 					this.Mode[0] = bgold ? EndMode.Dan_Gold_Pass : EndMode.Dan_Red_Pass;
 
 
-			} else {
+			}
+			else
+			{
 				// 段位認定モード、クリア失敗
 				this.Mode[0] = EndMode.Dan_Fail;
 			}
-		} else if (OpenNijiiroRW.ConfigIni.bAIBattleMode) {
-			if (OpenNijiiroRW.stageGameScreen.bIsAIBattleWin) {
-				if (OpenNijiiroRW.stageGameScreen.CChartScore[0].nMiss == 0 && OpenNijiiroRW.stageGameScreen.CChartScore[0].nMine == 0) {
+		}
+		else if (OpenNijiiroRW.ConfigIni.bAIBattleMode)
+		{
+			if (OpenNijiiroRW.stageGameScreen.bIsAIBattleWin)
+			{
+				if (OpenNijiiroRW.stageGameScreen.CChartScore[0].nMiss == 0 && OpenNijiiroRW.stageGameScreen.CChartScore[0].nMine == 0)
+				{
 					if (OpenNijiiroRW.stageGameScreen.CChartScore[0].nGood == 0)
 						this.Mode[0] = EndMode.AI_Win_Perfect;
 					else
 						this.Mode[0] = EndMode.AI_Win_FullCombo;
-				} else
+				}
+				else
 					this.Mode[0] = EndMode.AI_Win;
-			} else {
+			}
+			else
+			{
 				this.Mode[0] = EndMode.AI_Lose;
 			}
-		} else {
+		}
+		else
+		{
 			// 通常のモード。
 			// ここでフルコンボフラグをチェックするが現時点ではない。
 			// 今の段階では魂ゲージ80%以上でチェック。
-			for (int i = 0; i < OpenNijiiroRW.ConfigIni.nPlayerCount; i++) {
-				if (HGaugeMethods.UNSAFE_FastNormaCheck(i)) {
+			for (int i = 0; i < OpenNijiiroRW.ConfigIni.nPlayerCount; i++)
+			{
+				if (HGaugeMethods.UNSAFE_FastNormaCheck(i))
+				{
 					if (OpenNijiiroRW.stageGameScreen.CChartScore[i].nMiss == 0 && OpenNijiiroRW.stageGameScreen.CChartScore[i].nMine == 0)
 					//if (TJAPlayer3.stage演奏ドラム画面.nヒット数_Auto含まない.Drums.Miss == 0)
 					{
@@ -85,27 +111,35 @@ internal class CActImplClearAnimation : CActivity {
 						//if (TJAPlayer3.stage演奏ドラム画面.nヒット数_Auto含まない.Drums.Great == 0)
 						{
 							this.Mode[i] = EndMode.StagePerfectCombo;
-						} else {
+						}
+						else
+						{
 							this.Mode[i] = EndMode.StageFullCombo;
 						}
-					} else {
+					}
+					else
+					{
 						this.Mode[i] = EndMode.StageCleared;
 					}
-				} else {
+				}
+				else
+				{
 					this.Mode[i] = EndMode.StageFailed;
 				}
 			}
 		}
 	}
 
-	public override void Activate() {
+	public override void Activate()
+	{
 		this.bリザルトボイス再生済み = false;
 		this.Mode = new EndMode[5];
 
 		var origindir = CSkin.Path($"{TextureLoader.BASE}{TextureLoader.GAME}{TextureLoader.END}");
 
 
-		if (OpenNijiiroRW.stageSongSelect.nChoosenSongDifficulty[0] == (int)Difficulty.Tower) {
+		if (OpenNijiiroRW.stageSongSelect.nChoosenSongDifficulty[0] == (int)Difficulty.Tower)
+		{
 			Tower_DropoutScript = new EndAnimeScript($@"{origindir}Tower_Dropout{Path.DirectorySeparatorChar}Script.lua");
 			Tower_DropoutScript.Init();
 
@@ -122,7 +156,9 @@ internal class CActImplClearAnimation : CActivity {
 			this.soundTowerTopPass = OpenNijiiroRW.SoundManager.tCreateSound(CSkin.Path(@$"Sounds{Path.DirectorySeparatorChar}Tower{Path.DirectorySeparatorChar}Tower_TopReached_Pass.ogg"), ESoundGroup.SoundEffect);
 			this.soundTowerTopFC = OpenNijiiroRW.SoundManager.tCreateSound(CSkin.Path(@$"Sounds{Path.DirectorySeparatorChar}Tower{Path.DirectorySeparatorChar}Tower_TopReached_FullCombo.ogg"), ESoundGroup.SoundEffect);
 			this.soundTowerTopPerfect = OpenNijiiroRW.SoundManager.tCreateSound(CSkin.Path(@$"Sounds{Path.DirectorySeparatorChar}Tower{Path.DirectorySeparatorChar}Tower_TopReached_Perfect.ogg"), ESoundGroup.SoundEffect);
-		} else if (OpenNijiiroRW.stageSongSelect.nChoosenSongDifficulty[0] == (int)Difficulty.Dan) {
+		}
+		else if (OpenNijiiroRW.stageSongSelect.nChoosenSongDifficulty[0] == (int)Difficulty.Dan)
+		{
 			Dan_FailScript = new EndAnimeScript($@"{origindir}Dan_Fail{Path.DirectorySeparatorChar}Script.lua");
 			Dan_FailScript.Init();
 
@@ -152,7 +188,9 @@ internal class CActImplClearAnimation : CActivity {
 			this.soundDanGoldFC = OpenNijiiroRW.SoundManager.tCreateSound(CSkin.Path(@$"Sounds{Path.DirectorySeparatorChar}Dan{Path.DirectorySeparatorChar}Dan_Gold_FullCombo.ogg"), ESoundGroup.SoundEffect);
 			this.soundDanGoldPerfect = OpenNijiiroRW.SoundManager.tCreateSound(CSkin.Path(@$"Sounds{Path.DirectorySeparatorChar}Dan{Path.DirectorySeparatorChar}Dan_Gold_Perfect.ogg"), ESoundGroup.SoundEffect);
 
-		} else if (OpenNijiiroRW.ConfigIni.bAIBattleMode) {
+		}
+		else if (OpenNijiiroRW.ConfigIni.bAIBattleMode)
+		{
 			AILoseScript = new EndAnimeScript($@"{origindir}AI_Lose{Path.DirectorySeparatorChar}Script.lua");
 			AILoseScript.Init();
 
@@ -169,7 +207,9 @@ internal class CActImplClearAnimation : CActivity {
 			this.soundAIWin = OpenNijiiroRW.SoundManager.tCreateSound(CSkin.Path(@$"Sounds{Path.DirectorySeparatorChar}AIBattle_Win.ogg"), ESoundGroup.SoundEffect);
 			this.soundAIWinFullCombo = OpenNijiiroRW.SoundManager.tCreateSound(CSkin.Path(@$"Sounds{Path.DirectorySeparatorChar}AIBattle_Win_FullCombo.ogg"), ESoundGroup.SoundEffect);
 			this.soundAIWinPerfectCombo = OpenNijiiroRW.SoundManager.tCreateSound(CSkin.Path(@$"Sounds{Path.DirectorySeparatorChar}AIBattle_Win_AllPerfect.ogg"), ESoundGroup.SoundEffect);
-		} else {
+		}
+		else
+		{
 			FailedScript = new EndAnimeScript($@"{origindir}ClearFailed{Path.DirectorySeparatorChar}Script.lua");//ClearFailed
 			FailedScript.Init();
 
@@ -187,15 +227,19 @@ internal class CActImplClearAnimation : CActivity {
 		base.Activate();
 	}
 
-	public override void DeActivate() {
+	public override void DeActivate()
+	{
 		this.ct進行メイン = null;
 
-		if (OpenNijiiroRW.stageSongSelect.nChoosenSongDifficulty[0] == (int)Difficulty.Tower) {
+		if (OpenNijiiroRW.stageSongSelect.nChoosenSongDifficulty[0] == (int)Difficulty.Tower)
+		{
 			Tower_DropoutScript.Dispose();
 			Tower_TopReached_PassScript.Dispose();
 			Tower_TopReached_FullComboScript.Dispose();
 			Tower_TopReached_PerfectScript.Dispose();
-		} else if (OpenNijiiroRW.stageSongSelect.nChoosenSongDifficulty[0] == (int)Difficulty.Dan) {
+		}
+		else if (OpenNijiiroRW.stageSongSelect.nChoosenSongDifficulty[0] == (int)Difficulty.Dan)
+		{
 			Dan_FailScript.Dispose();
 			Dan_Red_PassScript.Dispose();
 			Dan_Red_FullComboScript.Dispose();
@@ -203,12 +247,16 @@ internal class CActImplClearAnimation : CActivity {
 			Dan_Gold_PassScript.Dispose();
 			Dan_Gold_FullComboScript.Dispose();
 			Dan_Gold_PerfectScript.Dispose();
-		} else if (OpenNijiiroRW.ConfigIni.bAIBattleMode) {
+		}
+		else if (OpenNijiiroRW.ConfigIni.bAIBattleMode)
+		{
 			AILoseScript.Dispose();
 			AIWinScript.Dispose();
 			AIWin_FullComboScript.Dispose();
 			AIWin_PerfectScript.Dispose();
-		} else {
+		}
+		else
+		{
 			FailedScript.Dispose();
 			ClearScript.Dispose();
 			FullComboScript.Dispose();
@@ -218,7 +266,8 @@ internal class CActImplClearAnimation : CActivity {
 		base.DeActivate();
 	}
 
-	public override void CreateManagedResource() {
+	public override void CreateManagedResource()
+	{
 		this.b再生済み = false;
 
 		this.soundTowerDropout = OpenNijiiroRW.SoundManager.tCreateSound(CSkin.Path(@$"Sounds{Path.DirectorySeparatorChar}Tower{Path.DirectorySeparatorChar}Tower_Dropout.ogg"), ESoundGroup.SoundEffect);
@@ -238,7 +287,8 @@ internal class CActImplClearAnimation : CActivity {
 		this.soundAIWin = OpenNijiiroRW.SoundManager.tCreateSound(CSkin.Path(@$"Sounds{Path.DirectorySeparatorChar}AIBattle_Win.ogg"), ESoundGroup.SoundEffect);
 		this.soundAIWinFullCombo = OpenNijiiroRW.SoundManager.tCreateSound(CSkin.Path(@$"Sounds{Path.DirectorySeparatorChar}AIBattle_Win_FullCombo.ogg"), ESoundGroup.SoundEffect);
 		this.soundAIWinPerfectCombo = OpenNijiiroRW.SoundManager.tCreateSound(CSkin.Path(@$"Sounds{Path.DirectorySeparatorChar}AIBattle_Win_AllPerfect.ogg"), ESoundGroup.SoundEffect);
-		for (int i = 0; i < OpenNijiiroRW.MAX_PLAYERS; i++) {
+		for (int i = 0; i < OpenNijiiroRW.MAX_PLAYERS; i++)
+		{
 			this.soundClear[i] = OpenNijiiroRW.SoundManager.tCreateSound(CSkin.Path(@$"Sounds{Path.DirectorySeparatorChar}Clear.ogg"), ESoundGroup.SoundEffect);
 			this.soundFailed[i] = OpenNijiiroRW.SoundManager.tCreateSound(CSkin.Path(@$"Sounds{Path.DirectorySeparatorChar}Failed.ogg"), ESoundGroup.SoundEffect);
 			this.soundFullCombo[i] = OpenNijiiroRW.SoundManager.tCreateSound(CSkin.Path(@$"Sounds{Path.DirectorySeparatorChar}FullCombo.ogg"), ESoundGroup.SoundEffect);
@@ -248,7 +298,8 @@ internal class CActImplClearAnimation : CActivity {
 		base.CreateManagedResource();
 	}
 
-	public override void ReleaseManagedResource() {
+	public override void ReleaseManagedResource()
+	{
 		this.soundTowerDropout?.tDispose();
 		this.soundTowerTopPass?.tDispose();
 		this.soundTowerTopFC?.tDispose();
@@ -267,7 +318,8 @@ internal class CActImplClearAnimation : CActivity {
 		this.soundAIWinFullCombo?.tDispose();
 		this.soundAIWinPerfectCombo?.tDispose();
 
-		for (int i = 0; i < OpenNijiiroRW.MAX_PLAYERS; i++) {
+		for (int i = 0; i < OpenNijiiroRW.MAX_PLAYERS; i++)
+		{
 			this.soundClear[i]?.tDispose();
 			this.soundFailed[i]?.tDispose();
 			this.soundFullCombo[i]?.tDispose();
@@ -279,7 +331,8 @@ internal class CActImplClearAnimation : CActivity {
 
 	#region [effects]
 	// ------------------------------------
-	private void showEndEffect_Failed(int i) {
+	private void showEndEffect_Failed(int i)
+	{
 		if (!OpenNijiiroRW.stageGameScreen.bPAUSE) FailedScript.Update(i);
 		FailedScript.Draw(i);
 
@@ -306,7 +359,8 @@ internal class CActImplClearAnimation : CActivity {
         }
         */
 	}
-	private void showEndEffect_Clear(int i) {
+	private void showEndEffect_Clear(int i)
+	{
 		if (!OpenNijiiroRW.stageGameScreen.bPAUSE) ClearScript.Update(i);
 		ClearScript.Draw(i);
 
@@ -482,7 +536,8 @@ internal class CActImplClearAnimation : CActivity {
         */
 	}
 
-	private void showEndEffect_FullCombo(int i) {
+	private void showEndEffect_FullCombo(int i)
+	{
 		if (!OpenNijiiroRW.stageGameScreen.bPAUSE) FullComboScript.Update(i);
 		FullComboScript.Draw(i);
 
@@ -500,7 +555,8 @@ internal class CActImplClearAnimation : CActivity {
         */
 	}
 
-	private void showEndEffect_PerfectCombo(int i) {
+	private void showEndEffect_PerfectCombo(int i)
+	{
 		if (!OpenNijiiroRW.stageGameScreen.bPAUSE) PerfectComboScript.Update(i);
 		PerfectComboScript.Draw(i);
 
@@ -522,23 +578,29 @@ internal class CActImplClearAnimation : CActivity {
 	// ------------------------------------
 	#endregion
 
-	public override int Draw() {
-		if (base.IsFirstDraw) {
+	public override int Draw()
+	{
+		if (base.IsFirstDraw)
+		{
 			base.IsFirstDraw = false;
 		}
-		if (this.ct進行メイン != null && (OpenNijiiroRW.stageGameScreen.ePhaseID == CStage.EPhase.Game_EndStage || OpenNijiiroRW.stageGameScreen.ePhaseID == CStage.EPhase.Game_STAGE_FAILED || OpenNijiiroRW.stageGameScreen.ePhaseID == CStage.EPhase.Game_STAGE_CLEAR_FadeOut)) {
+		if (this.ct進行メイン != null && (OpenNijiiroRW.stageGameScreen.ePhaseID == CStage.EPhase.Game_EndStage || OpenNijiiroRW.stageGameScreen.ePhaseID == CStage.EPhase.Game_STAGE_FAILED || OpenNijiiroRW.stageGameScreen.ePhaseID == CStage.EPhase.Game_STAGE_CLEAR_FadeOut))
+		{
 			this.ct進行メイン.Tick();
 
 			//CDTXMania.act文字コンソール.tPrint( 0, 0, C文字コンソール.Eフォント種別.灰, this.ct進行メイン.n現在の値.ToString() );
 			//仮置き
 
-			if (!bSongsPlayed) {
-				for (int i = 0; i < OpenNijiiroRW.ConfigIni.nPlayerCount; i++) {
+			if (!bSongsPlayed)
+			{
+				for (int i = 0; i < OpenNijiiroRW.ConfigIni.nPlayerCount; i++)
+				{
 					if (i == 1 && OpenNijiiroRW.ConfigIni.bAIBattleMode) break;
 
 					int pan = OpenNijiiroRW.ConfigIni.nPanning[OpenNijiiroRW.ConfigIni.nPlayerCount - 1][i];
 
-					switch (this.Mode[i]) {
+					switch (this.Mode[i])
+					{
 						case EndMode.StageFailed:
 							FailedScript.PlayEndAnime(i);
 							this.soundFailed[i]?.SetPanning(pan);
@@ -655,10 +717,12 @@ internal class CActImplClearAnimation : CActivity {
 			}
 
 
-			for (int i = 0; i < OpenNijiiroRW.ConfigIni.nPlayerCount; i++) {
+			for (int i = 0; i < OpenNijiiroRW.ConfigIni.nPlayerCount; i++)
+			{
 				if (i == 1 && OpenNijiiroRW.ConfigIni.bAIBattleMode) break;
 
-				switch (this.Mode[i]) {
+				switch (this.Mode[i])
+				{
 					case EndMode.StageFailed:
 						this.showEndEffect_Failed(i);
 						break;
@@ -742,7 +806,8 @@ internal class CActImplClearAnimation : CActivity {
 
 
 
-			if (this.ct進行メイン.IsEnded) {
+			if (this.ct進行メイン.IsEnded)
+			{
 				return 1;
 			}
 		}
@@ -816,7 +881,8 @@ internal class CActImplClearAnimation : CActivity {
 	CSound soundAIWinPerfectCombo;
 
 	public EndMode[] Mode { get; private set; }
-	public enum EndMode {
+	public enum EndMode
+	{
 		StageFailed,
 		StageCleared,
 		StageFullCombo,

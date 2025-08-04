@@ -9,16 +9,21 @@ namespace FDK;
 /// 全ASIOデバイスを列挙する静的クラス。
 /// BASS_Init()やBASS_ASIO_Init()の状態とは無関係に使用可能。
 /// </summary>
-public static class CEnumerateAllAsioDevices {
-	public static string[] GetAllASIODevices() {
-		try {
+public static class CEnumerateAllAsioDevices
+{
+	public static string[] GetAllASIODevices()
+	{
+		try
+		{
 			string[] bassAsioDevName = new string[BassAsio.DeviceCount];
 			for (int i = 0; i < bassAsioDevName.Length; i++)
 				bassAsioDevName[i] = BassAsio.GetDeviceInfo(i).Name;
 
 			if (bassAsioDevName.Length != 0)
 				return bassAsioDevName;
-		} catch (Exception e) {
+		}
+		catch (Exception e)
+		{
 			Trace.TraceWarning($"Exception occured in GetAllASIODevices ({e})");
 		}
 
@@ -26,62 +31,79 @@ public static class CEnumerateAllAsioDevices {
 	}
 }
 
-internal class CSoundDeviceASIO : ISoundDevice {
+internal class CSoundDeviceASIO : ISoundDevice
+{
 	// Properties
 
-	public ESoundDeviceType SoundDeviceType {
+	public ESoundDeviceType SoundDeviceType
+	{
 		get;
 		protected set;
 	}
-	public long OutputDelay {
+	public long OutputDelay
+	{
 		get;
 		protected set;
 	}
-	public long BufferSize {
+	public long BufferSize
+	{
 		get;
 		protected set;
 	}
-	public int ASIODevice {
+	public int ASIODevice
+	{
 		get;
 		set;
 	}
 
 	// CSoundTimer 用に公開しているプロパティ
 
-	public long ElapsedTimeMs {
+	public long ElapsedTimeMs
+	{
 		get;
 		protected set;
 	}
-	public long UpdateSystemTimeMs {
+	public long UpdateSystemTimeMs
+	{
 		get;
 		protected set;
 	}
-	public CTimer SystemTimer {
+	public CTimer SystemTimer
+	{
 		get;
 		protected set;
 	}
 
 
 	// マスターボリュームの制御コードは、WASAPI/ASIOで全く同じ。
-	public int nMasterVolume {
-		get {
+	public int nMasterVolume
+	{
+		get
+		{
 			float f音量 = 0.0f;
 			bool b = Bass.ChannelGetAttribute(this.hMixer, ChannelAttribute.Volume, out f音量);
-			if (!b) {
+			if (!b)
+			{
 				Errors be = Bass.LastError;
 				Trace.TraceInformation("ASIO Master Volume Get Error: " + be.ToString());
-			} else {
+			}
+			else
+			{
 				//Trace.TraceInformation( "ASIO Master Volume Get Success: " + (f音量 * 100) );
 
 			}
 			return (int)(f音量 * 100);
 		}
-		set {
+		set
+		{
 			bool b = Bass.ChannelSetAttribute(this.hMixer, ChannelAttribute.Volume, (float)(value / 100.0));
-			if (!b) {
+			if (!b)
+			{
 				Errors be = Bass.LastError;
 				Trace.TraceInformation("ASIO Master Volume Set Error: " + be.ToString());
-			} else {
+			}
+			else
+			{
 				// int n = this.nMasterVolume;
 				// Trace.TraceInformation( "ASIO Master Volume Set Success: " + value );
 			}
@@ -90,7 +112,8 @@ internal class CSoundDeviceASIO : ISoundDevice {
 
 	// メソッド
 
-	public CSoundDeviceASIO(long bufferSize, int deviceIndex) {
+	public CSoundDeviceASIO(long bufferSize, int deviceIndex)
+	{
 		// 初期化。
 
 		Trace.TraceInformation("BASS (ASIO) の初期化を開始します。");
@@ -171,12 +194,15 @@ internal class CSoundDeviceASIO : ISoundDevice {
 			#endregion
 			//-----------------
 			#endregion
-		} else {
+		}
+		else
+		{
 			#region [ ASIO の初期化に失敗。]
 			//-----------------
 			Errors errcode = Bass.LastError;
 			string errmes = errcode.ToString();
-			if (errcode == Errors.OK) {
+			if (errcode == Errors.OK)
+			{
 				errmes = "BASS_OK; The device may be dissconnected";
 			}
 			Bass.Free();
@@ -203,7 +229,8 @@ internal class CSoundDeviceASIO : ISoundDevice {
 		}
 		for (int i = 1; i < this.n出力チャンネル数; i++)        // 出力チャネルを全てチャネル0とグループ化する。
 		{                                                       // チャネル1だけを0とグループ化すると、3ch以上の出力をサポートしたカードでの動作がおかしくなる
-			if (!BassAsio.ChannelJoin(false, i, 0)) {
+			if (!BassAsio.ChannelJoin(false, i, 0))
+			{
 				#region [ 初期化に失敗。]
 				//-----------------
 				BassAsio.Free();
@@ -233,7 +260,8 @@ internal class CSoundDeviceASIO : ISoundDevice {
 			flag |= BassFlags.Float;
 		this.hMixer = BassMix.CreateMixerStream((int)this.db周波数, this.n出力チャンネル数, flag);
 
-		if (this.hMixer == 0) {
+		if (this.hMixer == 0)
+		{
 			Errors err = Bass.LastError;
 			BassAsio.Free();
 			Bass.Free();
@@ -245,7 +273,8 @@ internal class CSoundDeviceASIO : ISoundDevice {
 
 		var mixerInfo = Bass.ChannelGetInfo(this.hMixer);
 		int nサンプルサイズbyte = 0;
-		switch (this.fmtASIOチャンネルフォーマット) {
+		switch (this.fmtASIOチャンネルフォーマット)
+		{
 			case AsioSampleFormat.Bit16: nサンプルサイズbyte = 2; break;
 			case AsioSampleFormat.Bit24: nサンプルサイズbyte = 3; break;
 			case AsioSampleFormat.Bit32: nサンプルサイズbyte = 4; break;
@@ -262,7 +291,8 @@ internal class CSoundDeviceASIO : ISoundDevice {
 		// hMixerの音量制御を反映させる。
 		this.hMixer_DeviceOut = BassMix.CreateMixerStream(
 			(int)this.db周波数, this.n出力チャンネル数, flag);
-		if (this.hMixer_DeviceOut == 0) {
+		if (this.hMixer_DeviceOut == 0)
+		{
 			Errors errcode = Bass.LastError;
 			BassAsio.Free();
 			Bass.Free();
@@ -271,13 +301,15 @@ internal class CSoundDeviceASIO : ISoundDevice {
 		}
 		{
 			bool b1 = BassMix.MixerAddChannel(this.hMixer_DeviceOut, this.hMixer, BassFlags.Default);
-			if (!b1) {
+			if (!b1)
+			{
 				Errors errcode = Bass.LastError;
 				BassAsio.Free();
 				Bass.Free();
 				this.bIsBASSFree = true;
 				throw new Exception(string.Format("BASSミキサ(最終段とmixing)の接続に失敗しました。[{0}]", errcode));
-			};
+			}
+			;
 		}
 
 
@@ -292,7 +324,9 @@ internal class CSoundDeviceASIO : ISoundDevice {
 			Bass.Free();
 			this.bIsBASSFree = true;
 			throw new Exception("ASIO デバイス出力開始に失敗しました。" + err.ToString());
-		} else {
+		}
+		else
+		{
 			int n遅延sample = BassAsio.GetLatency(false); // この関数は BASS_ASIO_Start() 後にしか呼び出せない。
 			int n希望遅延sample = (int)(bufferSize * this.db周波数 / 1000.0);
 			this.BufferSize = this.OutputDelay = (long)(n遅延sample * 1000.0f / this.db周波数);
@@ -301,13 +335,15 @@ internal class CSoundDeviceASIO : ISoundDevice {
 	}
 
 	#region [ tサウンドを作成する() ]
-	public CSound tCreateSound(string strファイル名, ESoundGroup soundGroup) {
+	public CSound tCreateSound(string strファイル名, ESoundGroup soundGroup)
+	{
 		var sound = new CSound(soundGroup);
 		sound.CreateASIOSound(strファイル名, this.hMixer);
 		return sound;
 	}
 
-	public void tCreateSound(string strファイル名, CSound sound) {
+	public void tCreateSound(string strファイル名, CSound sound)
+	{
 		sound.CreateASIOSound(strファイル名, this.hMixer);
 	}
 	#endregion
@@ -315,26 +351,32 @@ internal class CSoundDeviceASIO : ISoundDevice {
 
 	#region [ Dispose-Finallizeパターン実装 ]
 	//-----------------
-	public void Dispose() {
+	public void Dispose()
+	{
 		this.Dispose(true);
 		GC.SuppressFinalize(this);
 	}
-	protected void Dispose(bool bManagedDispose) {
+	protected void Dispose(bool bManagedDispose)
+	{
 		SoundDeviceType = ESoundDeviceType.Unknown;     // まず出力停止する(Dispose中にクラス内にアクセスされることを防ぐ)
-		if (hMixer != -1) {
+		if (hMixer != -1)
+		{
 			Bass.StreamFree(hMixer);
 		}
-		if (!bIsBASSFree) {
+		if (!bIsBASSFree)
+		{
 			BassAsio.Free();    // システムタイマより先に呼び出すこと。（tAsio処理() の中でシステムタイマを参照してるため）
 			Bass.Free();
 		}
 
-		if (bManagedDispose) {
+		if (bManagedDispose)
+		{
 			SystemTimer.Dispose();
 			SystemTimer = null;
 		}
 	}
-	~CSoundDeviceASIO() {
+	~CSoundDeviceASIO()
+	{
 		this.Dispose(false);
 	}
 	//-----------------
@@ -351,7 +393,8 @@ internal class CSoundDeviceASIO : ISoundDevice {
 																				//protected BASSASIOFormat fmtASIOチャンネルフォーマット = BASSASIOFormat.BASS_ASIO_FORMAT_32BIT;// 16bit 固定
 	protected AsioProcedure tAsioProc = null;
 
-	protected int tAsio処理(bool input, int channel, IntPtr buffer, int length, IntPtr user) {
+	protected int tAsio処理(bool input, int channel, IntPtr buffer, int length, IntPtr user)
+	{
 		if (input) return 0;
 
 

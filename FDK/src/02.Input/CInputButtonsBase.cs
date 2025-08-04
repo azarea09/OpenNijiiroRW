@@ -1,11 +1,11 @@
-﻿using Silk.NET.Input;
+﻿namespace FDK;
 
-namespace FDK;
-
-public abstract class CInputButtonsBase : IInputDevice, IDisposable {
+public abstract class CInputButtonsBase : IInputDevice, IDisposable
+{
 	// Constructor
 
-	public CInputButtonsBase(int nButtonStates) {
+	public CInputButtonsBase(int nButtonStates)
+	{
 		this.ButtonStates = new (bool, int)[nButtonStates];
 		this.EventBuffer = new List<STInputEvent>(nButtonStates);
 		this.InputEvents = [];
@@ -27,12 +27,14 @@ public abstract class CInputButtonsBase : IInputDevice, IDisposable {
 	public string strDeviceName { get; set; }
 	public bool useBufferInput { get; set; }
 
-	public void Polling() {
+	public void Polling()
+	{
 		// clear previous input buffer
 		InputEvents.Clear();
 		// update per-frame button state, also fill the new input buffer for non-buffered input
 		// for buffered input, the input buffer has already been filled.
-		for (int i = 0; i < ButtonStates.Length; i++) {
+		for (int i = 0; i < ButtonStates.Length; i++)
+		{
 			// Use the same timer used in gameplay to prevent desyncs between BGM/chart and input.
 			this.ProcessButtonState(i, SoundManager.PlayTimer.SystemTimeMs);
 		}
@@ -40,22 +42,34 @@ public abstract class CInputButtonsBase : IInputDevice, IDisposable {
 		(this.InputEvents, this.EventBuffer) = (this.EventBuffer, this.InputEvents);
 	}
 
-	protected void ProcessButtonState(int idxBtn, long msTimestamp) {
-		if (ButtonStates[idxBtn].isPressed) {
-			if (ButtonStates[idxBtn].state >= 1) {
+	protected void ProcessButtonState(int idxBtn, long msTimestamp)
+	{
+		if (ButtonStates[idxBtn].isPressed)
+		{
+			if (ButtonStates[idxBtn].state >= 1)
+			{
 				ButtonStates[idxBtn].state = 2;
-			} else {
+			}
+			else
+			{
 				ButtonStates[idxBtn].state = 1;
-				if (!this.useBufferInput) {
+				if (!this.useBufferInput)
+				{
 					this.AddPressedEvent(idxBtn, msTimestamp);
 				}
 			}
-		} else {
-			if (ButtonStates[idxBtn].state <= -1) {
+		}
+		else
+		{
+			if (ButtonStates[idxBtn].state <= -1)
+			{
 				ButtonStates[idxBtn].state = -2;
-			} else {
+			}
+			else
+			{
 				ButtonStates[idxBtn].state = -1;
-				if (!this.useBufferInput) {
+				if (!this.useBufferInput)
+				{
 					this.AddReleasedEvent(idxBtn, msTimestamp);
 				}
 			}
@@ -63,7 +77,8 @@ public abstract class CInputButtonsBase : IInputDevice, IDisposable {
 	}
 
 	protected void AddReleasedEvent(int idxBtn, long msTImestamp)
-		=> this.EventBuffer.Add(new STInputEvent() {
+		=> this.EventBuffer.Add(new STInputEvent()
+		{
 			nKey = idxBtn,
 			Pressed = false,
 			Released = true,
@@ -72,7 +87,8 @@ public abstract class CInputButtonsBase : IInputDevice, IDisposable {
 		});
 
 	protected void AddPressedEvent(int idxBtn, long msTimestamp)
-		=> this.EventBuffer.Add(new STInputEvent() {
+		=> this.EventBuffer.Add(new STInputEvent()
+		{
 			nKey = idxBtn,
 			Pressed = true,
 			Released = false,
@@ -80,30 +96,38 @@ public abstract class CInputButtonsBase : IInputDevice, IDisposable {
 			nVelocity = 0,
 		});
 
-	protected void ButtonDown(int idxBtn) {
-		if (this.useBufferInput && !this.ButtonStates[idxBtn].isPressed) {
+	protected void ButtonDown(int idxBtn)
+	{
+		if (this.useBufferInput && !this.ButtonStates[idxBtn].isPressed)
+		{
 			this.AddPressedEvent(idxBtn, SoundManager.PlayTimer.msGetPreciseNowSoundTimerTime());
 		}
 		this.ButtonStates[idxBtn].isPressed = true;
 	}
 
-	protected void ButtonUp(int idxBtn) {
-		if (this.useBufferInput && this.ButtonStates[idxBtn].isPressed) {
+	protected void ButtonUp(int idxBtn)
+	{
+		if (this.useBufferInput && this.ButtonStates[idxBtn].isPressed)
+		{
 			this.AddReleasedEvent(idxBtn, SoundManager.PlayTimer.msGetPreciseNowSoundTimerTime());
 		}
 		this.ButtonStates[idxBtn].isPressed = false;
 	}
 
-	public bool KeyPressed(int nButton) {
+	public bool KeyPressed(int nButton)
+	{
 		return ButtonStates[nButton].state == 1;
 	}
-	public bool KeyPressing(int nButton) {
+	public bool KeyPressing(int nButton)
+	{
 		return ButtonStates[nButton].state >= 1;
 	}
-	public bool KeyReleased(int nButton) {
+	public bool KeyReleased(int nButton)
+	{
 		return ButtonStates[nButton].state == -1;
 	}
-	public bool KeyReleasing(int nButton) {
+	public bool KeyReleasing(int nButton)
+	{
 		return ButtonStates[nButton].state <= -1;
 	}
 	//-----------------
@@ -111,8 +135,10 @@ public abstract class CInputButtonsBase : IInputDevice, IDisposable {
 
 	#region [ IDisposable 実装 ]
 	//-----------------
-	public void Dispose() {
-		if (!this.IsDisposed) {
+	public void Dispose()
+	{
+		if (!this.IsDisposed)
+		{
 			this.InputEvents.Clear();
 			this.EventBuffer.Clear();
 			this.IsDisposed = true;

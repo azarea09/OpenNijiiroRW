@@ -2,7 +2,8 @@
 
 namespace OpenNijiiroRW;
 
-class CMenuCharacter {
+class CMenuCharacter
+{
 	private static CCounter[] ctCharacterNormal = new CCounter[5] { new CCounter(), new CCounter(), new CCounter(), new CCounter(), new CCounter() };
 	private static CCounter[] ctCharacterSelect = new CCounter[5] { new CCounter(), new CCounter(), new CCounter(), new CCounter(), new CCounter() };
 	private static CCounter[] ctCharacterStart = new CCounter[5] { new CCounter(), new CCounter(), new CCounter(), new CCounter(), new CCounter() };
@@ -10,7 +11,8 @@ class CMenuCharacter {
 	private static CCounter[] ctCharacterEntry = new CCounter[5] { new CCounter(), new CCounter(), new CCounter(), new CCounter(), new CCounter() };
 	private static CCounter[] ctCharacterEntryNormal = new CCounter[5] { new CCounter(), new CCounter(), new CCounter(), new CCounter(), new CCounter() };
 
-	public enum ECharacterAnimation {
+	public enum ECharacterAnimation
+	{
 		// Song select
 		NORMAL,
 		START,
@@ -22,37 +24,46 @@ class CMenuCharacter {
 	}
 
 
-	private static bool _usesSubstituteTexture(int player, ECharacterAnimation eca) {
+	private static bool _usesSubstituteTexture(int player, ECharacterAnimation eca)
+	{
 		int _charaId = OpenNijiiroRW.SaveFileInstances[OpenNijiiroRW.GetActualPlayer(player)].data.Character;
 
-		if (_charaId >= 0 && _charaId < OpenNijiiroRW.Skin.Characters_Ptn) {
-			switch (eca) {
-				case (ECharacterAnimation.NORMAL): {
+		if (_charaId >= 0 && _charaId < OpenNijiiroRW.Skin.Characters_Ptn)
+		{
+			switch (eca)
+			{
+				case (ECharacterAnimation.NORMAL):
+					{
 						if (OpenNijiiroRW.Tx.Characters_Menu_Loop[_charaId].Length > 0)
 							return false;
 						break;
 					}
-				case (ECharacterAnimation.START): {
+				case (ECharacterAnimation.START):
+					{
 						if (OpenNijiiroRW.Tx.Characters_Menu_Start[_charaId].Length > 0)
 							return false;
 						break;
 					}
-				case (ECharacterAnimation.SELECT): {
+				case (ECharacterAnimation.SELECT):
+					{
 						if (OpenNijiiroRW.Tx.Characters_Menu_Select[_charaId].Length > 0)
 							return false;
 						break;
 					}
-				case (ECharacterAnimation.WAIT): {
+				case (ECharacterAnimation.WAIT):
+					{
 						if (OpenNijiiroRW.Tx.Characters_Menu_Wait[_charaId].Length > 0)
 							return false;
 						break;
 					}
-				case (ECharacterAnimation.ENTRY): {
+				case (ECharacterAnimation.ENTRY):
+					{
 						if (OpenNijiiroRW.Tx.Characters_Title_Entry[_charaId].Length > 0)
 							return false;
 						break;
 					}
-				case (ECharacterAnimation.ENTRY_NORMAL): {
+				case (ECharacterAnimation.ENTRY_NORMAL):
+					{
 						if (OpenNijiiroRW.Tx.Characters_Title_Normal[_charaId].Length > 0)
 							return false;
 						break;
@@ -63,33 +74,40 @@ class CMenuCharacter {
 		return true;
 	}
 
-	public static CTexture[] _getReferenceArray(int player, ECharacterAnimation eca) {
+	public static CTexture[] _getReferenceArray(int player, ECharacterAnimation eca)
+	{
 		int _charaId = OpenNijiiroRW.SaveFileInstances[OpenNijiiroRW.GetActualPlayer(player)].data.Character;
 
-		if (_charaId >= 0 && _charaId < OpenNijiiroRW.Skin.Characters_Ptn) {
-			switch (eca) {
-				case (ECharacterAnimation.NORMAL): {
+		if (_charaId >= 0 && _charaId < OpenNijiiroRW.Skin.Characters_Ptn)
+		{
+			switch (eca)
+			{
+				case (ECharacterAnimation.NORMAL):
+					{
 						if (OpenNijiiroRW.Tx.Characters_Menu_Loop[_charaId].Length > 0)
 							return OpenNijiiroRW.Tx.Characters_Menu_Loop[_charaId];
 						if (OpenNijiiroRW.Tx.Characters_Normal[_charaId].Length > 0)
 							return OpenNijiiroRW.Tx.Characters_Normal[_charaId];
 						break;
 					}
-				case (ECharacterAnimation.START): {
+				case (ECharacterAnimation.START):
+					{
 						if (OpenNijiiroRW.Tx.Characters_Menu_Start[_charaId].Length > 0)
 							return OpenNijiiroRW.Tx.Characters_Menu_Start[_charaId];
 						if (OpenNijiiroRW.Tx.Characters_10Combo[_charaId].Length > 0)
 							return OpenNijiiroRW.Tx.Characters_10Combo[_charaId];
 						break;
 					}
-				case (ECharacterAnimation.SELECT): {
+				case (ECharacterAnimation.SELECT):
+					{
 						if (OpenNijiiroRW.Tx.Characters_Menu_Select[_charaId].Length > 0)
 							return OpenNijiiroRW.Tx.Characters_Menu_Select[_charaId];
 						if (OpenNijiiroRW.Tx.Characters_10Combo[_charaId].Length > 0)
 							return OpenNijiiroRW.Tx.Characters_10Combo[_charaId];
 						break;
 					}
-				case (ECharacterAnimation.WAIT): {
+				case (ECharacterAnimation.WAIT):
+					{
 						if (OpenNijiiroRW.Tx.Characters_Menu_Wait[_charaId].Length > 0)
 							return OpenNijiiroRW.Tx.Characters_Menu_Wait[_charaId];
 						if (OpenNijiiroRW.Tx.Characters_Menu_Loop[_charaId].Length > 0)
@@ -98,14 +116,16 @@ class CMenuCharacter {
 							return OpenNijiiroRW.Tx.Characters_GoGoTime[_charaId];
 						break;
 					}
-				case (ECharacterAnimation.ENTRY): {
+				case (ECharacterAnimation.ENTRY):
+					{
 						if (OpenNijiiroRW.Tx.Characters_Title_Entry[_charaId].Length > 0)
 							return OpenNijiiroRW.Tx.Characters_Title_Entry[_charaId];
 						if (OpenNijiiroRW.Tx.Characters_10Combo[_charaId].Length > 0)
 							return OpenNijiiroRW.Tx.Characters_10Combo[_charaId];
 						break;
 					}
-				case (ECharacterAnimation.ENTRY_NORMAL): {
+				case (ECharacterAnimation.ENTRY_NORMAL):
+					{
 						if (OpenNijiiroRW.Tx.Characters_Title_Normal[_charaId].Length > 0)
 							return OpenNijiiroRW.Tx.Characters_Title_Normal[_charaId];
 						if (OpenNijiiroRW.Tx.Characters_Normal[_charaId].Length > 0)
@@ -119,84 +139,108 @@ class CMenuCharacter {
 		return null;
 	}
 
-	public static CCounter[] _getReferenceCounter(ECharacterAnimation eca) {
-		switch (eca) {
-			case (ECharacterAnimation.NORMAL): {
+	public static CCounter[] _getReferenceCounter(ECharacterAnimation eca)
+	{
+		switch (eca)
+		{
+			case (ECharacterAnimation.NORMAL):
+				{
 					return ctCharacterNormal;
 				}
-			case (ECharacterAnimation.START): {
+			case (ECharacterAnimation.START):
+				{
 					return ctCharacterStart;
 				}
-			case (ECharacterAnimation.SELECT): {
+			case (ECharacterAnimation.SELECT):
+				{
 					return ctCharacterSelect;
 				}
-			case (ECharacterAnimation.WAIT): {
+			case (ECharacterAnimation.WAIT):
+				{
 					return ctCharacterWait;
 				}
-			case (ECharacterAnimation.ENTRY): {
+			case (ECharacterAnimation.ENTRY):
+				{
 					return ctCharacterEntry;
 				}
-			case (ECharacterAnimation.ENTRY_NORMAL): {
+			case (ECharacterAnimation.ENTRY_NORMAL):
+				{
 					return ctCharacterEntryNormal;
 				}
 		}
 		return null;
 	}
 
-	public static int _getReferenceAnimationDuration(int player, ECharacterAnimation eca) {
+	public static int _getReferenceAnimationDuration(int player, ECharacterAnimation eca)
+	{
 		int _charaId = OpenNijiiroRW.SaveFileInstances[OpenNijiiroRW.GetActualPlayer(player)].data.Character;
 
-		switch (eca) {
-			case (ECharacterAnimation.NORMAL): {
+		switch (eca)
+		{
+			case (ECharacterAnimation.NORMAL):
+				{
 					return OpenNijiiroRW.Skin.Characters_Menu_Loop_AnimationDuration[_charaId];
 				}
-			case (ECharacterAnimation.START): {
+			case (ECharacterAnimation.START):
+				{
 					return OpenNijiiroRW.Skin.Characters_Menu_Start_AnimationDuration[_charaId];
 				}
-			case (ECharacterAnimation.SELECT): {
+			case (ECharacterAnimation.SELECT):
+				{
 					return OpenNijiiroRW.Skin.Characters_Menu_Select_AnimationDuration[_charaId];
 				}
-			case (ECharacterAnimation.WAIT): {
+			case (ECharacterAnimation.WAIT):
+				{
 					return OpenNijiiroRW.Skin.Characters_Menu_Wait_AnimationDuration[_charaId];
 				}
-			case (ECharacterAnimation.ENTRY): {
+			case (ECharacterAnimation.ENTRY):
+				{
 					return OpenNijiiroRW.Skin.Characters_Title_Entry_AnimationDuration[_charaId];
 				}
-			case (ECharacterAnimation.ENTRY_NORMAL): {
+			case (ECharacterAnimation.ENTRY_NORMAL):
+				{
 					return OpenNijiiroRW.Skin.Characters_Title_Normal_AnimationDuration[_charaId];
 				}
 		}
 		return 1000;
 	}
 
-	public static void tDisableCounter(ECharacterAnimation eca) {
-		switch (eca) {
-			case (ECharacterAnimation.NORMAL): {
+	public static void tDisableCounter(ECharacterAnimation eca)
+	{
+		switch (eca)
+		{
+			case (ECharacterAnimation.NORMAL):
+				{
 					for (int i = 0; i < 5; i++)
 						ctCharacterNormal[i] = new CCounter();
 					break;
 				}
-			case (ECharacterAnimation.START): {
+			case (ECharacterAnimation.START):
+				{
 					for (int i = 0; i < 5; i++)
 						ctCharacterStart[i] = new CCounter();
 					break;
 				}
-			case (ECharacterAnimation.SELECT): {
+			case (ECharacterAnimation.SELECT):
+				{
 					for (int i = 0; i < 5; i++)
 						ctCharacterSelect[i] = new CCounter();
 					break;
 				}
-			case (ECharacterAnimation.WAIT): {
+			case (ECharacterAnimation.WAIT):
+				{
 					for (int i = 0; i < 5; i++)
 						ctCharacterWait[i] = new CCounter();
 					break;
 				}
-			case (ECharacterAnimation.ENTRY): {
+			case (ECharacterAnimation.ENTRY):
+				{
 					for (int i = 0; i < 5; i++)
 						ctCharacterEntry[i] = new CCounter();
 					break;
 				}
-			case (ECharacterAnimation.ENTRY_NORMAL): {
+			case (ECharacterAnimation.ENTRY_NORMAL):
+				{
 					for (int i = 0; i < 5; i++)
 						ctCharacterEntryNormal[i] = new CCounter();
 					break;
@@ -206,29 +250,35 @@ class CMenuCharacter {
 	}
 
 
-	public static void tMenuResetTimer(int player, ECharacterAnimation eca) {
+	public static void tMenuResetTimer(int player, ECharacterAnimation eca)
+	{
 		CTexture[] _ref = _getReferenceArray(player, eca);
 		CCounter[] _ctref = _getReferenceCounter(eca);
 		int _animeref = _getReferenceAnimationDuration(player, eca);
 
-		if (_ref != null && _ref.Length > 0 && _ctref != null) {
+		if (_ref != null && _ref.Length > 0 && _ctref != null)
+		{
 			_ctref[player] = new CCounter(0, _ref.Length - 1, _animeref / (float)_ref.Length, OpenNijiiroRW.Timer);
 		}
 	}
 
-	public static void tMenuResetTimer(ECharacterAnimation eca) {
-		for (int i = 0; i < 5; i++) {
+	public static void tMenuResetTimer(ECharacterAnimation eca)
+	{
+		for (int i = 0; i < 5; i++)
+		{
 			tMenuResetTimer(i, eca);
 		}
 	}
 
-	public static void tMenuDisplayCharacter(int player, int x, int y, ECharacterAnimation eca, int opacity = 255) {
+	public static void tMenuDisplayCharacter(int player, int x, int y, ECharacterAnimation eca, int opacity = 255)
+	{
 		int _charaId = OpenNijiiroRW.SaveFileInstances[OpenNijiiroRW.GetActualPlayer(player)].data.Character;
 		CTexture[] _ref = _getReferenceArray(player, eca);
 		CCounter[] _ctref = _getReferenceCounter(eca);
 		bool _substitute = _usesSubstituteTexture(player, eca);
 
-		if (_ctref[player] != null && _ref != null && _ctref[player].CurrentValue < _ref.Length) {
+		if (_ctref[player] != null && _ref != null && _ctref[player].CurrentValue < _ref.Length)
+		{
 			if (eca == ECharacterAnimation.NORMAL
 				|| eca == ECharacterAnimation.WAIT
 				|| eca == ECharacterAnimation.ENTRY
@@ -253,12 +303,15 @@ class CMenuCharacter {
 			float _x = x + (OpenNijiiroRW.Skin.Characters_Menu_Offset[_charaId][0] * _tex.Scale.X);
 			float _y = y + (OpenNijiiroRW.Skin.Characters_Menu_Offset[_charaId][1] * _tex.Scale.Y);
 
-			if (player % 2 == 0) {
+			if (player % 2 == 0)
+			{
 				_tex.t2D拡大率考慮下中心基準描画(
 					_x,
 					_y // 312
 				);
-			} else {
+			}
+			else
+			{
 				_tex.t2D拡大率考慮下中心基準描画Mirrored(
 					_x,
 					_y // 312

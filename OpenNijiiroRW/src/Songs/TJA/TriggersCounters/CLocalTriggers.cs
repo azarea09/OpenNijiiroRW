@@ -1,23 +1,29 @@
-﻿namespace OpenNijiiroRW {
-	internal class CLocalTriggers {
+﻿namespace OpenNijiiroRW
+{
+	internal class CLocalTriggers
+	{
 		private Dictionary<string, bool> _localTriggers;
 		private int _player;
 
-		public CLocalTriggers() {
+		public CLocalTriggers()
+		{
 			this._localTriggers = new Dictionary<string, bool>();
 			this._player = -1;
 		}
 
-		public CLocalTriggers(int player) {
+		public CLocalTriggers(int player)
+		{
 			this._localTriggers = new Dictionary<string, bool>();
 			this._player = player;
 		}
 
-		public void Store(string triggerName, string expr) {
+		public void Store(string triggerName, string expr)
+		{
 			this._localTriggers[triggerName] = CTExpression.Evaluate(expr, _player) != 0;
 		}
 
-		public void Elevate(string triggerName) {
+		public void Elevate(string triggerName)
+		{
 			if (_player < 0) return;
 			if (OpenNijiiroRW.ConfigIni.bAutoPlay[_player] || (OpenNijiiroRW.ConfigIni.bAIBattleMode && _player == 1)) return;
 
@@ -26,7 +32,8 @@
 			_sf.tSetGlobalTrigger(triggerName, _val);
 		}
 
-		public bool Get(string triggerName) {
+		public bool Get(string triggerName)
+		{
 			this._localTriggers.TryGetValue(triggerName, out bool triggerValue);
 			return triggerValue;
 		}

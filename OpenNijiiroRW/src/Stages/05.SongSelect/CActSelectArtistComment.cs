@@ -2,13 +2,16 @@
 
 namespace OpenNijiiroRW;
 
-internal class CActSelectArtistComment : CActivity {
+internal class CActSelectArtistComment : CActivity
+{
 	// メソッド
 
-	public CActSelectArtistComment() {
+	public CActSelectArtistComment()
+	{
 		base.IsDeActivated = true;
 	}
-	public void t選択曲が変更された() {
+	public void t選択曲が変更された()
+	{
 		/*
 		Cスコア cスコア = TJAPlayer3.stage選曲.r現在選択中のスコア;
 		if( cスコア != null )
@@ -116,7 +119,8 @@ internal class CActSelectArtistComment : CActivity {
 
 	// CActivity 実装
 
-	public override void Activate() {
+	public override void Activate()
+	{
 		this.txArtist = null;
 		this.txComment = null;
 		this.strArtist = "";
@@ -128,18 +132,22 @@ internal class CActSelectArtistComment : CActivity {
 		this.t選択曲が変更された();
 		base.Activate();
 	}
-	public override void DeActivate() {
+	public override void DeActivate()
+	{
 		OpenNijiiroRW.tテクスチャの解放(ref this.txArtist);
 		OpenNijiiroRW.tテクスチャの解放(ref this.txComment);
 		this.ctComment = null;
 		base.DeActivate();
 	}
-	public override void CreateManagedResource() {
+	public override void CreateManagedResource()
+	{
 		this.ft描画用フォント = new CCachedFontRenderer(CFontRenderer.DefaultFontName, 26, CFontRenderer.FontStyle.Regular);
 		base.CreateManagedResource();
 	}
-	public override void ReleaseManagedResource() {
-		if (this.ft描画用フォント != null) {
+	public override void ReleaseManagedResource()
+	{
+		if (this.ft描画用フォント != null)
+		{
 			this.ft描画用フォント.Dispose();
 			this.ft描画用フォント = null;
 		}
@@ -148,8 +156,10 @@ internal class CActSelectArtistComment : CActivity {
 		OpenNijiiroRW.tテクスチャの解放(ref this.txComment);
 		base.ReleaseManagedResource();
 	}
-	public override int Draw() {
-		if (!base.IsDeActivated) {
+	public override int Draw()
+	{
+		if (!base.IsDeActivated)
+		{
 			/*
 			if( this.ctComment.b進行中 )
 			{

@@ -21,7 +21,8 @@ namespace FDK;
 ///    SongGainController for combination with a configured target loudness, resulting in a
 ///    gain value assigned to the sound object just before playback begins.
 /// </summary>
-public static class LoudnessMetadataScanner {
+public static class LoudnessMetadataScanner
+{
 	private const string Bs1770GainExeFileName = "bs1770gain.exe";
 
 	private static readonly Stack<string> Jobs = new Stack<string>();
@@ -31,19 +32,23 @@ public static class LoudnessMetadataScanner {
 	private static Thread ScanningThread;
 	private static Semaphore Semaphore;
 
-	public static void StartBackgroundScanning() {
+	public static void StartBackgroundScanning()
+	{
 		var tracePrefix = $"{nameof(LoudnessMetadataScanner)}.{nameof(StartBackgroundScanning)}";
 
-		if (!IsBs1770GainAvailable()) {
+		if (!IsBs1770GainAvailable())
+		{
 			Trace.TraceInformation($"{tracePrefix}: BS1770GAIN is not available. A background scanning thread will not be started.");
 			return;
 		}
 
 		Trace.TraceInformation($"{tracePrefix}: BS1770GAIN is available. Starting background scanning thread...");
 
-		lock (LockObject) {
+		lock (LockObject)
+		{
 			Semaphore = new Semaphore(Jobs.Count, int.MaxValue);
-			ScanningThread = new Thread(Scan) {
+			ScanningThread = new Thread(Scan)
+			{
 				IsBackground = true,
 				Name = "LoudnessMetadataScanner background scanning thread.",
 				Priority = ThreadPriority.Lowest
@@ -54,10 +59,12 @@ public static class LoudnessMetadataScanner {
 		Trace.TraceInformation($"{tracePrefix}: Background scanning thread started.");
 	}
 
-	public static void StopBackgroundScanning(bool joinImmediately) {
+	public static void StopBackgroundScanning(bool joinImmediately)
+	{
 		var scanningThread = ScanningThread;
 
-		if (scanningThread == null) {
+		if (scanningThread == null)
+		{
 			return;
 		}
 
@@ -65,29 +72,36 @@ public static class LoudnessMetadataScanner {
 
 		Trace.TraceInformation($"{tracePrefix}: Stopping background scanning thread...");
 
-		lock (LockObject) {
+		lock (LockObject)
+		{
 			ScanningThread = null;
 			Semaphore.Release();
 			Semaphore = null;
 		}
 
-		if (joinImmediately) {
+		if (joinImmediately)
+		{
 			scanningThread.Join();
 		}
 
 		Trace.TraceInformation($"{tracePrefix}: Background scanning thread stopped.");
 	}
 
-	public static LoudnessMetadata? LoadForAudioPath(string absoluteBgmPath) {
-		try {
+	public static LoudnessMetadata? LoadForAudioPath(string absoluteBgmPath)
+	{
+		try
+		{
 			var loudnessMetadataPath = GetLoudnessMetadataPath(absoluteBgmPath);
 
-			if (File.Exists(loudnessMetadataPath)) {
+			if (File.Exists(loudnessMetadataPath))
+			{
 				return LoadFromMetadataPath(loudnessMetadataPath);
 			}
 
 			SubmitForBackgroundScanning(absoluteBgmPath);
-		} catch (Exception e) {
+		}
+		catch (Exception e)
+		{
 			var tracePrefix = $"{nameof(LoudnessMetadataScanner)}.{nameof(LoadForAudioPath)}";
 			Trace.TraceError($"{tracePrefix}: Encountered an exception while attempting to load {absoluteBgmPath}");
 			Trace.TraceError(e.ToString());
@@ -96,17 +110,22 @@ public static class LoudnessMetadataScanner {
 		return null;
 	}
 
-	private static string GetLoudnessMetadataPath(string absoluteBgmPath) {
+	private static string GetLoudnessMetadataPath(string absoluteBgmPath)
+	{
 		return Path.Combine(
 			Path.GetDirectoryName(absoluteBgmPath),
 			Path.GetFileNameWithoutExtension(absoluteBgmPath) + ".bs1770gain.xml");
 	}
 
-	private static LoudnessMetadata? LoadFromMetadataPath(string loudnessMetadataPath) {
+	private static LoudnessMetadata? LoadFromMetadataPath(string loudnessMetadataPath)
+	{
 		XPathDocument xPathDocument;
-		try {
+		try
+		{
 			xPathDocument = new XPathDocument(loudnessMetadataPath);
-		} catch (IOException) {
+		}
+		catch (IOException)
+		{
 			var tracePrefix = $"{nameof(LoudnessMetadataScanner)}.{nameof(LoadFromMetadataPath)}";
 			Trace.TraceWarning($"{tracePrefix}: Encountered IOException while attempting to read {loudnessMetadataPath}. This can occur when attempting to load while scanning the same file. Returning null...");
 			return null;
@@ -118,7 +137,8 @@ public static class LoudnessMetadataScanner {
 		var integratedLufsNode = trackNavigator?.SelectSingleNode(@"integrated/@lufs");
 		var truePeakTpfsNode = trackNavigator?.SelectSingleNode(@"true-peak/@tpfs");
 
-		if (trackNavigator == null || integratedLufsNode == null || truePeakTpfsNode == null) {
+		if (trackNavigator == null || integratedLufsNode == null || truePeakTpfsNode == null)
+		{
 			var tracePrefix = $"{nameof(LoudnessMetadataScanner)}.{nameof(LoadFromMetadataPath)}";
 			Trace.TraceWarning($"{tracePrefix}: Encountered incorrect xml element structure while parsing {loudnessMetadataPath}. Returning null...");
 			return null;
@@ -127,7 +147,8 @@ public static class LoudnessMetadataScanner {
 		var integrated = integratedLufsNode.ValueAsDouble;
 		var truePeak = truePeakTpfsNode.ValueAsDouble;
 
-		if (integrated <= -70.0 || truePeak >= 12.04) {
+		if (integrated <= -70.0 || truePeak >= 12.04)
+		{
 			var tracePrefix = $"{nameof(LoudnessMetadataScanner)}.{nameof(LoadFromMetadataPath)}";
 			Trace.TraceWarning($"{tracePrefix}: Encountered evidence of extreme clipping while parsing {loudnessMetadataPath}. Returning null...");
 			return null;
@@ -136,8 +157,10 @@ public static class LoudnessMetadataScanner {
 		return new LoudnessMetadata(new Lufs(integrated), new Lufs(truePeak));
 	}
 
-	private static void SubmitForBackgroundScanning(string absoluteBgmPath) {
-		lock (LockObject) {
+	private static void SubmitForBackgroundScanning(string absoluteBgmPath)
+	{
+		lock (LockObject)
+		{
 			// Quite often, the loading process will cause the same job to be submitted many times.
 			// As such, we'll do a quick check as when this happens an equivalent job will often
 			// already be at the top of the stack and we need not add it again.
@@ -150,21 +173,26 @@ public static class LoudnessMetadataScanner {
 			// scrolling through songs and previewing them. Their current interests should drive
 			// scanning priorities, and it is for this reason that a stack is used instead of a queue.
 			var semaphore = Semaphore;
-			if (semaphore != null && (Jobs.Count == 0 || Jobs.Peek() != absoluteBgmPath)) {
+			if (semaphore != null && (Jobs.Count == 0 || Jobs.Peek() != absoluteBgmPath))
+			{
 				Jobs.Push(absoluteBgmPath);
 				semaphore.Release();
 			}
 		}
 	}
 
-	private static void Scan() {
-		try {
-			while (true) {
+	private static void Scan()
+	{
+		try
+		{
+			while (true)
+			{
 				RaiseScanningStateChanged(false);
 
 				Semaphore?.WaitOne();
 
-				if (ScanningThread == null) {
+				if (ScanningThread == null)
+				{
 					return;
 				}
 
@@ -172,22 +200,26 @@ public static class LoudnessMetadataScanner {
 
 				int jobCount;
 				string absoluteBgmPath;
-				lock (LockObject) {
+				lock (LockObject)
+				{
 					jobCount = Jobs.Count;
 					absoluteBgmPath = Jobs.Pop();
 				}
 
 				var tracePrefix = $"{nameof(LoudnessMetadataScanner)}.{nameof(Scan)}";
 
-				try {
-					if (!File.Exists(absoluteBgmPath)) {
+				try
+				{
+					if (!File.Exists(absoluteBgmPath))
+					{
 						Trace.TraceWarning($"{tracePrefix}: Scanning jobs outstanding: {jobCount - 1}. Missing audio file. Skipping {absoluteBgmPath}...");
 						continue;
 					}
 
 					var loudnessMetadataPath = GetLoudnessMetadataPath(absoluteBgmPath);
 
-					if (File.Exists(loudnessMetadataPath)) {
+					if (File.Exists(loudnessMetadataPath))
+					{
 						Trace.TraceWarning($"{tracePrefix}: Scanning jobs outstanding: {jobCount - 1}. Pre-existing metadata. Skipping {absoluteBgmPath}...");
 						continue;
 					}
@@ -201,30 +233,41 @@ public static class LoudnessMetadataScanner {
 
 					var seconds = stopwatch.Elapsed.TotalSeconds;
 					RecentFileScanDurations.Enqueue(seconds);
-					while (RecentFileScanDurations.Count > 20) {
+					while (RecentFileScanDurations.Count > 20)
+					{
 						RecentFileScanDurations.Dequeue();
 					}
 					var averageSeconds = RecentFileScanDurations.Average();
 					Trace.TraceInformation($"{tracePrefix}: Scanned in {seconds}s. Estimated remaining: {(int)(averageSeconds * (jobCount - 1))}s.");
-				} catch (Exception e) {
+				}
+				catch (Exception e)
+				{
 					Trace.TraceError($"{tracePrefix}: Encountered an exception while attempting to scan {absoluteBgmPath}");
 					Trace.TraceError(e.ToString());
 				}
 			}
-		} catch (Exception e) {
+		}
+		catch (Exception e)
+		{
 			var tracePrefix = $"{nameof(LoudnessMetadataScanner)}.{nameof(Scan)}";
 			Trace.TraceError($"{tracePrefix}: caught an exception at the level of the thread method. The background scanning thread will now terminate.");
 			Trace.TraceError(e.ToString());
 		}
 	}
 
-	private static bool IsBs1770GainAvailable() {
-		try {
+	private static bool IsBs1770GainAvailable()
+	{
+		try
+		{
 			Execute(null, Bs1770GainExeFileName, "-h");
 			return true;
-		} catch (Win32Exception) {
+		}
+		catch (Win32Exception)
+		{
 			return false;
-		} catch (Exception e) {
+		}
+		catch (Exception e)
+		{
 			var tracePrefix = $"{nameof(LoudnessMetadataScanner)}.{nameof(IsBs1770GainAvailable)}";
 			Trace.TraceError($"{tracePrefix}: Encountered an exception. Returning false...");
 			Trace.TraceError(e.ToString());
@@ -234,8 +277,10 @@ public static class LoudnessMetadataScanner {
 	}
 
 	private static string Execute(
-		string workingDirectory, string fileName, string arguments, bool shouldFailOnStdErrDataReceived = false) {
-		var processStartInfo = new ProcessStartInfo(fileName, arguments) {
+		string workingDirectory, string fileName, string arguments, bool shouldFailOnStdErrDataReceived = false)
+	{
+		var processStartInfo = new ProcessStartInfo(fileName, arguments)
+		{
 			CreateNoWindow = true,
 			RedirectStandardError = true,
 			RedirectStandardOutput = true,
@@ -245,17 +290,22 @@ public static class LoudnessMetadataScanner {
 
 		var stdoutWriter = new StringWriter();
 		var stderrWriter = new StringWriter();
-		using (var process = Process.Start(processStartInfo)) {
-			process.OutputDataReceived += (s, e) => {
-				if (e.Data != null) {
+		using (var process = Process.Start(processStartInfo))
+		{
+			process.OutputDataReceived += (s, e) =>
+			{
+				if (e.Data != null)
+				{
 					stdoutWriter.Write(e.Data);
 					stdoutWriter.Write(Environment.NewLine);
 				}
 			};
 
 			var errorDataReceived = false;
-			process.ErrorDataReceived += (s, e) => {
-				if (e.Data != null) {
+			process.ErrorDataReceived += (s, e) =>
+			{
+				if (e.Data != null)
+				{
 					errorDataReceived = true;
 					stderrWriter.Write(e.Data);
 					stderrWriter.Write(Environment.NewLine);
@@ -266,9 +316,11 @@ public static class LoudnessMetadataScanner {
 			process.BeginErrorReadLine();
 			process.WaitForExit();
 
-			if ((shouldFailOnStdErrDataReceived && errorDataReceived) || process.ExitCode != 0) {
+			if ((shouldFailOnStdErrDataReceived && errorDataReceived) || process.ExitCode != 0)
+			{
 				var stderr = stderrWriter.ToString();
-				if (string.IsNullOrEmpty(stderr)) {
+				if (string.IsNullOrEmpty(stderr))
+				{
 					stderr = stdoutWriter.ToString();
 				}
 
@@ -280,12 +332,15 @@ public static class LoudnessMetadataScanner {
 		}
 	}
 
-	private static void RaiseScanningStateChanged(bool isActivelyScanning) {
+	private static void RaiseScanningStateChanged(bool isActivelyScanning)
+	{
 		ScanningStateChanged?.Invoke(null, new ScanningStateChangedEventArgs(isActivelyScanning));
 	}
 
-	public class ScanningStateChangedEventArgs : EventArgs {
-		public ScanningStateChangedEventArgs(bool isActivelyScanning) {
+	public class ScanningStateChangedEventArgs : EventArgs
+	{
+		public ScanningStateChangedEventArgs(bool isActivelyScanning)
+		{
 			IsActivelyScanning = isActivelyScanning;
 		}
 

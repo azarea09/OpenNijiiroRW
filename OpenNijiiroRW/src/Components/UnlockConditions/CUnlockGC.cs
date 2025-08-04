@@ -1,31 +1,41 @@
-﻿namespace OpenNijiiroRW {
-	internal class CUnlockGC : CUnlockCondition {
+﻿namespace OpenNijiiroRW
+{
+	internal class CUnlockGC : CUnlockCondition
+	{
 		/*
 		 * "Global Counter" Unlock condition object
 		 * Validates if the total AI Battle win count requirement is satisfied
 		 */
 
-		public CUnlockGC(CUnlockConditionFactory.UnlockConditionJsonRaw rawJson) : base(rawJson) {
+		public CUnlockGC(CUnlockConditionFactory.UnlockConditionJsonRaw rawJson) : base(rawJson)
+		{
 			this.RequiredArgCount = 1;
 			this.ConditionId = "gc";
 		}
 
-		public override (bool, string?) tConditionMet(int player, EScreen screen = EScreen.MyRoom) {
-			if (this.Values.Length == this.RequiredArgCount) {
+		public override (bool, string?) tConditionMet(int player, EScreen screen = EScreen.MyRoom)
+		{
+			if (this.Values.Length == this.RequiredArgCount)
+			{
 				double _globalCounter = OpenNijiiroRW.SaveFileInstances[player].tGetGlobalCounter(this.Reference[0]);
 
 				bool fulfiled = this.tValueRequirementMet(_globalCounter, (double)this.Values[0]);
 
-				if (screen == EScreen.Internal) {
+				if (screen == EScreen.Internal)
+				{
 					return (fulfiled, "");
-				} else {
+				}
+				else
+				{
 					return (fulfiled, null);
 				}
-			} else
+			}
+			else
 				return (false, CLangManager.LangInstance.GetString("UNLOCK_CONDITION_ERROR", this.ConditionId, this.RequiredArgCount.ToString()));
 		}
 
-		public override string tConditionMessage(EScreen screen = EScreen.MyRoom) {
+		public override string tConditionMessage(EScreen screen = EScreen.MyRoom)
+		{
 			if (this.Values.Length < this.RequiredArgCount)
 				return CLangManager.LangInstance.GetString("UNLOCK_CONDITION_ERROR", this.ConditionId, this.RequiredArgCount);
 
@@ -36,7 +46,8 @@
 			return CLangManager.LangInstance.GetString("UNLOCK_CONDITION_GLOBAL_COUNTER", _type, this.Reference[0], this.Values[0], _cur);
 		}
 
-		protected override int tGetCountChartsPassingCondition(int player) {
+		protected override int tGetCountChartsPassingCondition(int player)
+		{
 			// Unused for this condition
 			return -1;
 		}

@@ -2,25 +2,33 @@
 
 namespace OpenNijiiroRW;
 
-class ResultBG : ScriptBG {
+class ResultBG : ScriptBG
+{
 	private LuaFunction LuaSkipAnimation;
 
-	public ResultBG(string filePath) : base(filePath) {
-		if (LuaScript != null) {
+	public ResultBG(string filePath) : base(filePath)
+	{
+		if (LuaScript != null)
+		{
 			LuaSkipAnimation = LuaScript.GetFunction("skipAnime");
 		}
 	}
 
-	public new void Dispose() {
+	public new void Dispose()
+	{
 		base.Dispose();
 		LuaSkipAnimation?.Dispose();
 	}
 
-	public void SkipAnimation() {
+	public void SkipAnimation()
+	{
 		if (LuaScript == null) return;
-		try {
+		try
+		{
 			LuaSkipAnimation.Call();
-		} catch (Exception ex) {
+		}
+		catch (Exception ex)
+		{
 		}
 	}
 }

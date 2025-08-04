@@ -2,7 +2,8 @@
 
 namespace FDK;
 
-public class ScreenRenderer : IDisposable {
+public class ScreenRenderer : IDisposable
+{
 	private static uint VAO;
 	private static uint VBO;
 	private static uint EBO;
@@ -11,7 +12,8 @@ public class ScreenRenderer : IDisposable {
 
 	private static bool initialized = false;
 
-	public static void Init() {
+	public static void Init()
+	{
 		if (initialized) return;
 
 		var gl = Game.Gl;
@@ -67,8 +69,10 @@ public class ScreenRenderer : IDisposable {
 		// VBOを作成
 		VBO = gl.GenBuffer();
 		gl.BindBuffer(BufferTargetARB.ArrayBuffer, VBO);
-		unsafe {
-			fixed (float* data = vertices) {
+		unsafe
+		{
+			fixed (float* data = vertices)
+			{
 				gl.BufferData(BufferTargetARB.ArrayBuffer, (nuint)(vertices.Length * sizeof(float)),
 					data, BufferUsageARB.StaticDraw);
 			}
@@ -77,8 +81,10 @@ public class ScreenRenderer : IDisposable {
 		// EBOを作成
 		EBO = gl.GenBuffer();
 		gl.BindBuffer(BufferTargetARB.ElementArrayBuffer, EBO);
-		unsafe {
-			fixed (uint* data = indices) {
+		unsafe
+		{
+			fixed (uint* data = indices)
+			{
 				gl.BufferData(BufferTargetARB.ElementArrayBuffer, (nuint)(indices.Length * sizeof(uint)),
 					data, BufferUsageARB.StaticDraw);
 			}
@@ -87,14 +93,16 @@ public class ScreenRenderer : IDisposable {
 		// 頂点属性を設定
 		uint positionLocation = (uint)gl.GetAttribLocation(ShaderProgram, "aPosition");
 		gl.EnableVertexAttribArray(positionLocation);
-		unsafe {
+		unsafe
+		{
 			gl.VertexAttribPointer(positionLocation, 3, VertexAttribPointerType.Float, false,
 				5 * sizeof(float), (void*)0);
 		}
 
 		uint texCoordLocation = (uint)gl.GetAttribLocation(ShaderProgram, "aTexCoord");
 		gl.EnableVertexAttribArray(texCoordLocation);
-		unsafe {
+		unsafe
+		{
 			gl.VertexAttribPointer(texCoordLocation, 2, VertexAttribPointerType.Float, false,
 				5 * sizeof(float), (void*)(3 * sizeof(float)));
 		}
@@ -116,7 +124,8 @@ public class ScreenRenderer : IDisposable {
 	/// <param name="viewportHeight">ビューポートの高さ</param>
 	/// <param name="viewportX">ビューポートのX座標</param>
 	/// <param name="viewportY">ビューポートのY座標</param>
-	public static void DrawToScreen(RenderTexture renderTexture, int viewportWidth, int viewportHeight, int viewportX = 0, int viewportY = 0) {
+	public static void DrawToScreen(RenderTexture renderTexture, int viewportWidth, int viewportHeight, int viewportX = 0, int viewportY = 0)
+	{
 		var gl = Game.Gl;
 
 		gl.Disable(GLEnum.Blend);
@@ -134,7 +143,8 @@ public class ScreenRenderer : IDisposable {
 
 		// VAOをバインドして描画
 		gl.BindVertexArray(VAO);
-		unsafe {
+		unsafe
+		{
 			gl.DrawElements(PrimitiveType.Triangles, 6, DrawElementsType.UnsignedInt, (void*)0);
 		}
 		gl.BindVertexArray(0);
@@ -145,7 +155,8 @@ public class ScreenRenderer : IDisposable {
 		gl.Enable(GLEnum.Blend);
 	}
 
-	public static void Terminate() {
+	public static void Terminate()
+	{
 		if (!initialized) return;
 
 		var gl = Game.Gl;
@@ -157,7 +168,8 @@ public class ScreenRenderer : IDisposable {
 		initialized = false;
 	}
 
-	public void Dispose() {
+	public void Dispose()
+	{
 		Terminate();
 	}
 }

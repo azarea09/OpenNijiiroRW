@@ -2,20 +2,24 @@
 
 namespace OpenNijiiroRW;
 
-internal class CActSelectPreimageパネル : CActivity {
+internal class CActSelectPreimageパネル : CActivity
+{
 	// メソッド
 
-	public CActSelectPreimageパネル() {
+	public CActSelectPreimageパネル()
+	{
 		base.IsDeActivated = true;
 	}
-	public void tSelectedSongChanged() {
+	public void tSelectedSongChanged()
+	{
 		this.ctDelayedDisplay = new CCounter(-OpenNijiiroRW.ConfigIni.nMsWaitPreviewImageFromSongSelected, 100, 1, OpenNijiiroRW.Timer);
 		this.bNewPreimageLoaded = false;
 	}
 
 	// CActivity 実装
 
-	public override void Activate() {
+	public override void Activate()
+	{
 		this.rCurrentlyDisplayedPreimage = this.txDefaultPreimage;
 		this.strCurrentFilename = "";
 		this.bNewPreimageLoaded = false;
@@ -23,36 +27,46 @@ internal class CActSelectPreimageパネル : CActivity {
 		this.tUpdatePreimage(OpenNijiiroRW.stageSongSelect.r現在選択中のスコア);
 		base.Activate();
 	}
-	public override void DeActivate() {
+	public override void DeActivate()
+	{
 		OpenNijiiroRW.tテクスチャの解放(ref this.txPreimage);
 		this.ctApparitionAnimation = null;
 		this.ctDelayedDisplay = null;
 		base.DeActivate();
 	}
-	public override void CreateManagedResource() {
+	public override void CreateManagedResource()
+	{
 		this.txDefaultPreimage = OpenNijiiroRW.tテクスチャの生成(CSkin.Path(@$"Graphics{Path.DirectorySeparatorChar}3_SongSelect{Path.DirectorySeparatorChar}PreImageDefault.png"), false);
 		base.CreateManagedResource();
 	}
-	public override void ReleaseManagedResource() {
+	public override void ReleaseManagedResource()
+	{
 
 		OpenNijiiroRW.tテクスチャの解放(ref this.txDefaultPreimage);
 		base.ReleaseManagedResource();
 	}
-	public override int Draw() {
-		if (!base.IsDeActivated) {
-			if (base.IsFirstDraw) {
+	public override int Draw()
+	{
+		if (!base.IsDeActivated)
+		{
+			if (base.IsFirstDraw)
+			{
 				this.ctApparitionAnimation = new CCounter(0, 100, 5, OpenNijiiroRW.Timer);
 				base.IsFirstDraw = false;
 			}
 			this.ctApparitionAnimation.Tick();
-			if ((!OpenNijiiroRW.stageSongSelect.bCurrentlyScrolling && (this.ctDelayedDisplay != null)) && this.ctDelayedDisplay.IsTicked) {
+			if ((!OpenNijiiroRW.stageSongSelect.bCurrentlyScrolling && (this.ctDelayedDisplay != null)) && this.ctDelayedDisplay.IsTicked)
+			{
 				this.ctDelayedDisplay.Tick();
-				if ((this.ctDelayedDisplay.CurrentValue >= 0) && this.bNewPreimageStillLoading) {
+				if ((this.ctDelayedDisplay.CurrentValue >= 0) && this.bNewPreimageStillLoading)
+				{
 					this.tUpdatePreimage(OpenNijiiroRW.stageSongSelect.r現在選択中のスコア);
 					OpenNijiiroRW.Timer.Update();
 					this.ctDelayedDisplay.msNowTime = OpenNijiiroRW.Timer.NowTimeMs;
 					this.bNewPreimageLoaded = true;
-				} else if (this.ctDelayedDisplay.IsEnded && this.ctDelayedDisplay.IsTicked) {
+				}
+				else if (this.ctDelayedDisplay.IsEnded && this.ctDelayedDisplay.IsTicked)
+				{
 					this.ctDelayedDisplay.Stop();
 				}
 			}
@@ -61,15 +75,18 @@ internal class CActSelectPreimageパネル : CActivity {
 		return 0;
 	}
 
-	public CTexture? tGenerateAndGetPreimage(CSongListNode cScoreInst) {
+	public CTexture? tGenerateAndGetPreimage(CSongListNode cScoreInst)
+	{
 		this.tUpdatePreimage(cScoreInst?.score[0] ?? null);
 		return tGetPreimageTextureResized();
 	}
 
-	public CTexture? tGetPreimageTextureResized() {
+	public CTexture? tGetPreimageTextureResized()
+	{
 
 
-		if (this.rCurrentlyDisplayedPreimage != null) {
+		if (this.rCurrentlyDisplayedPreimage != null)
+		{
 
 			int width = OpenNijiiroRW.Skin.SongSelect_Preimage_Size[0];
 			int height = OpenNijiiroRW.Skin.SongSelect_Preimage_Size[1];
@@ -97,17 +114,22 @@ internal class CActSelectPreimageパネル : CActivity {
 	private CTexture txPreimage;
 	private CTexture txDefaultPreimage;
 	private bool bNewPreimageLoaded;
-	private bool bNewPreimageStillLoading {
-		get {
+	private bool bNewPreimageStillLoading
+	{
+		get
+		{
 			return !this.bNewPreimageLoaded;
 		}
-		set {
+		set
+		{
 			this.bNewPreimageLoaded = !value;
 		}
 	}
 
-	private void tUpdatePreimage(CScore? cScoreInst) {
-		if (cScoreInst != null && this.tBuildPreimageAssets(cScoreInst)) {
+	private void tUpdatePreimage(CScore? cScoreInst)
+	{
+		if (cScoreInst != null && this.tBuildPreimageAssets(cScoreInst))
+		{
 			return;
 		}
 
@@ -115,34 +137,43 @@ internal class CActSelectPreimageパネル : CActivity {
 		this.rCurrentlyDisplayedPreimage = this.txDefaultPreimage;
 		this.strCurrentFilename = "";
 	}
-	private bool tBuildPreimageAssets(CScore cScoreInst) {
+	private bool tBuildPreimageAssets(CScore cScoreInst)
+	{
 		if ((cScoreInst == null) || string.IsNullOrEmpty(cScoreInst.譜面情報.Preimage)) return false;
 
 		string str = ((!Path.IsPathRooted(cScoreInst.譜面情報.Preimage)) ? cScoreInst.ファイル情報.フォルダの絶対パス : "") + cScoreInst.譜面情報.Preimage;
-		if (!str.Equals(this.strCurrentFilename)) {
+		if (!str.Equals(this.strCurrentFilename))
+		{
 			OpenNijiiroRW.tテクスチャの解放(ref this.txPreimage);
 			this.strCurrentFilename = str;
-			if (!File.Exists(this.strCurrentFilename)) {
+			if (!File.Exists(this.strCurrentFilename))
+			{
 				LogNotification.PopWarning("Preimage not found ({0})".SafeFormat(this.strCurrentFilename));
 				return false;
 			}
 			this.txPreimage = OpenNijiiroRW.tテクスチャの生成(this.strCurrentFilename, false);
-			if (this.txPreimage != null) {
+			if (this.txPreimage != null)
+			{
 				this.rCurrentlyDisplayedPreimage = this.txPreimage;
-			} else {
+			}
+			else
+			{
 				this.rCurrentlyDisplayedPreimage = this.txDefaultPreimage;
 			}
 		}
 		return true;
 	}
 
-	private void tDisplayPreimage() {
-		if (!OpenNijiiroRW.stageSongSelect.bCurrentlyScrolling && (((this.ctDelayedDisplay != null) && (this.ctDelayedDisplay.CurrentValue > 0)) && !this.bNewPreimageStillLoading)) {
+	private void tDisplayPreimage()
+	{
+		if (!OpenNijiiroRW.stageSongSelect.bCurrentlyScrolling && (((this.ctDelayedDisplay != null) && (this.ctDelayedDisplay.CurrentValue > 0)) && !this.bNewPreimageStillLoading))
+		{
 
 			float num3 = ((float)this.ctDelayedDisplay.CurrentValue) / 100f;
 			float num4 = 0.9f + (0.1f * num3);
 
-			if (this.rCurrentlyDisplayedPreimage != null) {
+			if (this.rCurrentlyDisplayedPreimage != null)
+			{
 
 				int width = OpenNijiiroRW.Skin.SongSelect_Preimage_Size[0];
 				int height = OpenNijiiroRW.Skin.SongSelect_Preimage_Size[1];
@@ -157,11 +188,13 @@ internal class CActSelectPreimageパネル : CActivity {
 
 				var HiddenIndex = OpenNijiiroRW.Databases.DBSongUnlockables.tGetSongHiddenIndex(OpenNijiiroRW.stageSongSelect.actSongList.rCurrentlySelectedSong);
 
-				if (HiddenIndex >= DBSongUnlockables.EHiddenIndex.BLURED) {
+				if (HiddenIndex >= DBSongUnlockables.EHiddenIndex.BLURED)
+				{
 					this.rCurrentlyDisplayedPreimage.bUseNoiseEffect = true;
 					this.rCurrentlyDisplayedPreimage.t2D拡大率考慮中央基準描画(OpenNijiiroRW.Skin.SongSelect_Preimage[0], OpenNijiiroRW.Skin.SongSelect_Preimage[1]);
 					this.rCurrentlyDisplayedPreimage.bUseNoiseEffect = false;
-				} else
+				}
+				else
 					this.rCurrentlyDisplayedPreimage.t2D拡大率考慮中央基準描画(OpenNijiiroRW.Skin.SongSelect_Preimage[0], OpenNijiiroRW.Skin.SongSelect_Preimage[1]);
 			}
 		}

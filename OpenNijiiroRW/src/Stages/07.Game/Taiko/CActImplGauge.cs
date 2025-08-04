@@ -4,7 +4,8 @@ using FDK;
 
 namespace OpenNijiiroRW;
 
-internal class CActImplGauge : CAct演奏ゲージ共通 {
+internal class CActImplGauge : CAct演奏ゲージ共通
+{
 	// コンストラクタ
 	/// <summary>
 	/// ゲージの描画クラス。ドラム側。
@@ -14,18 +15,24 @@ internal class CActImplGauge : CAct演奏ゲージ共通 {
 	/// _Danger時にゲージの色が変わる演出の実装。
 	/// _Danger、MAX時のアニメーション実装。
 	/// </summary>
-	public CActImplGauge() {
+	public CActImplGauge()
+	{
 		base.IsDeActivated = true;
 	}
 
-	public override void Start(int nLane, ENoteJudge judge, int player) {
-		for (int j = 0; j < 32; j++) {
-			if (player == 0) {
-				if (!this.st花火状態[player][j].b使用中) {
+	public override void Start(int nLane, ENoteJudge judge, int player)
+	{
+		for (int j = 0; j < 32; j++)
+		{
+			if (player == 0)
+			{
+				if (!this.st花火状態[player][j].b使用中)
+				{
 					this.st花火状態[player][j].ct進行 = new CCounter(0, 10, 20, OpenNijiiroRW.Timer);
 					this.st花火状態[player][j].nPlayer = player;
 
-					switch (nLane) {
+					switch (nLane)
+					{
 						case 0x11:
 						case 0x12:
 						case 0x15:
@@ -49,16 +56,20 @@ internal class CActImplGauge : CAct演奏ゲージ共通 {
 
 	// CActivity 実装
 
-	public override void Activate() {
+	public override void Activate()
+	{
 		this.ct炎 = new CCounter(0, 6, 50, OpenNijiiroRW.Timer);
 
-		for (int player = 0; player < 5; player++) {
-			for (int i = 0; i < 32; i++) {
+		for (int player = 0; player < 5; player++)
+		{
+			for (int i = 0; i < 32; i++)
+			{
 				this.st花火状態[player][i].ct進行 = new CCounter();
 			}
 		}
 
-		if (OpenNijiiroRW.Skin.Game_Gauge_Rainbow_Timer <= 1) {
+		if (OpenNijiiroRW.Skin.Game_Gauge_Rainbow_Timer <= 1)
+		{
 			throw new DivideByZeroException("SkinConfigの設定\"Game_Gauge_Rainbow_Timer\"を1以下にすることは出来ません。");
 		}
 		this.ct虹アニメ = new CCounter(0, OpenNijiiroRW.Skin.Game_Gauge_Rainbow_Ptn - 1, OpenNijiiroRW.Skin.Game_Gauge_Rainbow_Timer, OpenNijiiroRW.Timer);
@@ -67,9 +78,12 @@ internal class CActImplGauge : CAct演奏ゲージ共通 {
 
 		base.Activate();
 	}
-	public override void DeActivate() {
-		for (int player = 0; player < 5; player++) {
-			for (int i = 0; i < 32; i++) {
+	public override void DeActivate()
+	{
+		for (int player = 0; player < 5; player++)
+		{
+			for (int i = 0; i < 32; i++)
+			{
 				this.st花火状態[player][i].ct進行 = null;
 			}
 		}
@@ -77,19 +91,24 @@ internal class CActImplGauge : CAct演奏ゲージ共通 {
 
 		this.ct虹アニメ = null;
 	}
-	public override void CreateManagedResource() {
+	public override void CreateManagedResource()
+	{
 		//this.tx音符 = CDTXMania.tテクスチャの生成(CSkin.Path(@"Graphics\7_taiko_notes.png"));
 		base.CreateManagedResource();
 	}
-	public override void ReleaseManagedResource() {
+	public override void ReleaseManagedResource()
+	{
 		base.ReleaseManagedResource();
 	}
-	public override int Draw() {
-		if (!base.IsDeActivated) {
+	public override int Draw()
+	{
+		if (!base.IsDeActivated)
+		{
 			//CDTXMania.act文字コンソール.tPrint( 20, 150, C文字コンソール.Eフォント種別.白, this.db現在のゲージ値.Taiko.ToString() );
 
 			#region [ 初めての進行描画 ]
-			if (base.IsFirstDraw) {
+			if (base.IsFirstDraw)
+			{
 				base.IsFirstDraw = false;
 			}
 			#endregion
@@ -124,7 +143,8 @@ internal class CActImplGauge : CAct演奏ゲージ共通 {
 				return 0;
 
 
-			if (OpenNijiiroRW.stageSongSelect.nChoosenSongDifficulty[0] != (int)Difficulty.Dan) {
+			if (OpenNijiiroRW.stageSongSelect.nChoosenSongDifficulty[0] != (int)Difficulty.Dan)
+			{
 				#region [Regular gauges]
 
 				// Flash opacity
@@ -142,29 +162,39 @@ internal class CActImplGauge : CAct演奏ゲージ共通 {
 				this.ct炎.TickLoop();
 				int soulFireFrame = this.ct炎.CurrentValue;
 
-				for (int i = 0; i < OpenNijiiroRW.ConfigIni.nPlayerCount; i++) {
+				for (int i = 0; i < OpenNijiiroRW.ConfigIni.nPlayerCount; i++)
+				{
 					if (OpenNijiiroRW.ConfigIni.bAIBattleMode && i == 1) continue;
 					HGaugeMethods.UNSAFE_DrawGaugeFast(i, Opacity, rainbowFrame, soulFireFrame);
 				}
 
 				#endregion
-			} else {
+			}
+			else
+			{
 				float scale = 1.0f;
-				if (OpenNijiiroRW.ConfigIni.bAIBattleMode) {
+				if (OpenNijiiroRW.ConfigIni.bAIBattleMode)
+				{
 					scale = 0.8f;
 				}
 
 				int[] gauge_x = new int[5];
 				int[] gauge_y = new int[5];
 
-				for (int i = 0; i < OpenNijiiroRW.ConfigIni.nPlayerCount; i++) {
-					if (OpenNijiiroRW.ConfigIni.nPlayerCount == 5) {
+				for (int i = 0; i < OpenNijiiroRW.ConfigIni.nPlayerCount; i++)
+				{
+					if (OpenNijiiroRW.ConfigIni.nPlayerCount == 5)
+					{
 						gauge_x[i] = OpenNijiiroRW.Skin.Game_Gauge_5P[0] + (OpenNijiiroRW.Skin.Game_UIMove_5P[0] * i);
 						gauge_y[i] = OpenNijiiroRW.Skin.Game_Gauge_5P[1] + (OpenNijiiroRW.Skin.Game_UIMove_5P[1] * i);
-					} else if (OpenNijiiroRW.ConfigIni.nPlayerCount == 4 || OpenNijiiroRW.ConfigIni.nPlayerCount == 3) {
+					}
+					else if (OpenNijiiroRW.ConfigIni.nPlayerCount == 4 || OpenNijiiroRW.ConfigIni.nPlayerCount == 3)
+					{
 						gauge_x[i] = OpenNijiiroRW.Skin.Game_Gauge_4P[0] + (OpenNijiiroRW.Skin.Game_UIMove_4P[0] * i);
 						gauge_y[i] = OpenNijiiroRW.Skin.Game_Gauge_4P[1] + (OpenNijiiroRW.Skin.Game_UIMove_4P[1] * i);
-					} else {
+					}
+					else
+					{
 						gauge_x[i] = OpenNijiiroRW.Skin.Game_Gauge_X[i];
 						gauge_y[i] = OpenNijiiroRW.Skin.Game_Gauge_Y[i];
 					}
@@ -172,24 +202,32 @@ internal class CActImplGauge : CAct演奏ゲージ共通 {
 
 				#region [Gauge base]
 
-				if (OpenNijiiroRW.stageSongSelect.nChoosenSongDifficulty[0] == (int)Difficulty.Dan) {
-					if (OpenNijiiroRW.P1IsBlue()) {
+				if (OpenNijiiroRW.stageSongSelect.nChoosenSongDifficulty[0] == (int)Difficulty.Dan)
+				{
+					if (OpenNijiiroRW.P1IsBlue())
+					{
 						OpenNijiiroRW.Tx.Gauge_Dan[4]?.t2D描画(gauge_x[0], gauge_y[0],
 							new Rectangle(OpenNijiiroRW.Skin.Game_Gauge_Rect[0], OpenNijiiroRW.Skin.Game_Gauge_Rect[1], OpenNijiiroRW.Skin.Game_Gauge_Rect[2], OpenNijiiroRW.Skin.Game_Gauge_Rect[3]));
-					} else {
+					}
+					else
+					{
 						OpenNijiiroRW.Tx.Gauge_Dan[0]?.t2D描画(gauge_x[0], gauge_y[0],
 							new Rectangle(OpenNijiiroRW.Skin.Game_Gauge_Rect[0], OpenNijiiroRW.Skin.Game_Gauge_Rect[1], OpenNijiiroRW.Skin.Game_Gauge_Rect[2], OpenNijiiroRW.Skin.Game_Gauge_Rect[3]));
 					}
 
 
-					if (OpenNijiiroRW.Tx.Gauge_Dan[2] != null) {
-						for (int i = 0; i < OpenNijiiroRW.TJA.Dan_C.Length; i++) {
-							if (OpenNijiiroRW.TJA.Dan_C[i] != null) {
+					if (OpenNijiiroRW.Tx.Gauge_Dan[2] != null)
+					{
+						for (int i = 0; i < OpenNijiiroRW.TJA.Dan_C.Length; i++)
+						{
+							if (OpenNijiiroRW.TJA.Dan_C[i] != null)
+							{
 								Dan_C dan_c = OpenNijiiroRW.TJA.List_DanSongs[OpenNijiiroRW.stageGameScreen.actDan.NowCymbolShowingNumber].Dan_C[i] != null ?
 									OpenNijiiroRW.TJA.List_DanSongs[OpenNijiiroRW.stageGameScreen.actDan.NowCymbolShowingNumber].Dan_C[i] :
 									OpenNijiiroRW.TJA.Dan_C[i];
 
-								if (dan_c.ExamType == Exam.Type.Gauge) {
+								if (dan_c.ExamType == Exam.Type.Gauge)
+								{
 									OpenNijiiroRW.Tx.Gauge_Dan[2].t2D描画(gauge_x[0] + (dan_c.GetValue()[0] / 2 * nWidth), gauge_y[0],
 										new Rectangle((dan_c.GetValue()[0] / 2 * nWidth), 0, OpenNijiiroRW.Skin.Game_Gauge_Rect[2] - (dan_c.GetValue()[0] / 2 * nWidth), OpenNijiiroRW.Skin.Game_Gauge_Rect[3]));
 								}
@@ -202,29 +240,36 @@ internal class CActImplGauge : CAct演奏ゲージ共通 {
 
 				#region [ Gauge 1P ]
 
-				if (OpenNijiiroRW.Tx.Gauge[0] != null) {
+				if (OpenNijiiroRW.Tx.Gauge[0] != null)
+				{
 					int x;
 					int y;
-					if (OpenNijiiroRW.ConfigIni.bAIBattleMode) {
+					if (OpenNijiiroRW.ConfigIni.bAIBattleMode)
+					{
 						x = OpenNijiiroRW.Skin.Game_Gauge_X_AI;
 						y = OpenNijiiroRW.Skin.Game_Gauge_Y_AI;
-					} else {
+					}
+					else
+					{
 						x = gauge_x[0];
 						y = gauge_y[0];
 					}
 
-					if (OpenNijiiroRW.stageSongSelect.nChoosenSongDifficulty[0] == (int)Difficulty.Dan) {
+					if (OpenNijiiroRW.stageSongSelect.nChoosenSongDifficulty[0] == (int)Difficulty.Dan)
+					{
 						if (OpenNijiiroRW.P1IsBlue())
 							OpenNijiiroRW.Tx.Gauge_Dan[5]?.t2D描画(x, y, new Rectangle(0, 0, nRectX[0], OpenNijiiroRW.Skin.Game_Gauge_Rect[3]));
 						else
 							OpenNijiiroRW.Tx.Gauge_Dan[1]?.t2D描画(x, y, new Rectangle(0, 0, nRectX[0], OpenNijiiroRW.Skin.Game_Gauge_Rect[3]));
 
-						for (int i = 0; i < OpenNijiiroRW.TJA.Dan_C.Length; i++) {
+						for (int i = 0; i < OpenNijiiroRW.TJA.Dan_C.Length; i++)
+						{
 							Dan_C dan_c = OpenNijiiroRW.TJA.List_DanSongs[OpenNijiiroRW.stageGameScreen.actDan.NowCymbolShowingNumber].Dan_C[i] != null ?
 								OpenNijiiroRW.TJA.List_DanSongs[OpenNijiiroRW.stageGameScreen.actDan.NowCymbolShowingNumber].Dan_C[i] :
 								OpenNijiiroRW.TJA.Dan_C[i];
 
-							if (dan_c != null && dan_c.ExamType == Exam.Type.Gauge && db現在のゲージ値[0] >= dan_c.GetValue()[0]) {
+							if (dan_c != null && dan_c.ExamType == Exam.Type.Gauge && db現在のゲージ値[0] >= dan_c.GetValue()[0])
+							{
 								OpenNijiiroRW.Tx.Gauge_Dan[3].Opacity = 255;
 								OpenNijiiroRW.Tx.Gauge_Dan[3]?.t2D描画(x + (dan_c.GetValue()[0] / 2 * nWidth), y, new Rectangle(dan_c.GetValue()[0] / 2 * nWidth, 0, nRectX[0] - (dan_c.GetValue()[0] / 2 * nWidth), OpenNijiiroRW.Skin.Game_Gauge_Rect[3]));
 
@@ -243,10 +288,12 @@ internal class CActImplGauge : CAct演奏ゲージ共通 {
 
 					#region [Rainbow]
 
-					if (this.db現在のゲージ値[0] >= 100.0) {
+					if (this.db現在のゲージ値[0] >= 100.0)
+					{
 						this.ct虹アニメ.TickLoop();
 						this.ct虹透明度.TickLoop();
-						if (OpenNijiiroRW.Tx.Gauge_Rainbow[this.ct虹アニメ.CurrentValue] != null) {
+						if (OpenNijiiroRW.Tx.Gauge_Rainbow[this.ct虹アニメ.CurrentValue] != null)
+						{
 							OpenNijiiroRW.Tx.Gauge_Rainbow[this.ct虹アニメ.CurrentValue].Scale.X = scale;
 							OpenNijiiroRW.Tx.Gauge_Rainbow[this.ct虹アニメ.CurrentValue].Scale.Y = scale;
 
@@ -275,7 +322,8 @@ internal class CActImplGauge : CAct演奏ゲージ共通 {
 
 					#endregion
 
-					if (OpenNijiiroRW.Tx.Gauge_Line[0] != null) {
+					if (OpenNijiiroRW.Tx.Gauge_Line[0] != null)
+					{
 
 						OpenNijiiroRW.Tx.Gauge_Line[0].Scale.X = scale;
 						OpenNijiiroRW.Tx.Gauge_Line[0].Scale.Y = scale;
@@ -288,32 +336,43 @@ internal class CActImplGauge : CAct演奏ゲージ共通 {
 				#endregion
 
 				// Soul fire here
-				if (OpenNijiiroRW.Tx.Gauge_Soul_Fire != null) {
+				if (OpenNijiiroRW.Tx.Gauge_Soul_Fire != null)
+				{
 					//仮置き
 					int soulfire_width = OpenNijiiroRW.Tx.Gauge_Soul_Fire.szTextureSize.Width / 8;
 					int soulfire_height = OpenNijiiroRW.Tx.Gauge_Soul_Fire.szTextureSize.Height;
-					for (int i = 0; i < OpenNijiiroRW.ConfigIni.nPlayerCount; i++) {
+					for (int i = 0; i < OpenNijiiroRW.ConfigIni.nPlayerCount; i++)
+					{
 						if (OpenNijiiroRW.ConfigIni.bAIBattleMode && i == 1) break;
 
 						int x;
 						int y;
-						if (OpenNijiiroRW.ConfigIni.bAIBattleMode) {
+						if (OpenNijiiroRW.ConfigIni.bAIBattleMode)
+						{
 							x = OpenNijiiroRW.Skin.Gauge_Soul_Fire_X_AI;
 							y = OpenNijiiroRW.Skin.Gauge_Soul_Fire_Y_AI;
-						} else {
-							if (OpenNijiiroRW.ConfigIni.nPlayerCount == 5) {
+						}
+						else
+						{
+							if (OpenNijiiroRW.ConfigIni.nPlayerCount == 5)
+							{
 								x = OpenNijiiroRW.Skin.Gauge_Soul_Fire_5P[0] + (OpenNijiiroRW.Skin.Game_UIMove_5P[0] * i);
 								y = OpenNijiiroRW.Skin.Gauge_Soul_Fire_5P[1] + (OpenNijiiroRW.Skin.Game_UIMove_5P[1] * i);
-							} else if (OpenNijiiroRW.ConfigIni.nPlayerCount == 4 || OpenNijiiroRW.ConfigIni.nPlayerCount == 3) {
+							}
+							else if (OpenNijiiroRW.ConfigIni.nPlayerCount == 4 || OpenNijiiroRW.ConfigIni.nPlayerCount == 3)
+							{
 								x = OpenNijiiroRW.Skin.Gauge_Soul_Fire_4P[0] + (OpenNijiiroRW.Skin.Game_UIMove_4P[0] * i);
 								y = OpenNijiiroRW.Skin.Gauge_Soul_Fire_4P[1] + (OpenNijiiroRW.Skin.Game_UIMove_4P[1] * i);
-							} else {
+							}
+							else
+							{
 								x = OpenNijiiroRW.Skin.Gauge_Soul_Fire_X[i];
 								y = OpenNijiiroRW.Skin.Gauge_Soul_Fire_Y[i];
 							}
 						}
 
-						if (this.db現在のゲージ値[i] >= 100.0) {
+						if (this.db現在のゲージ値[i] >= 100.0)
+						{
 							this.ct炎.TickLoop();
 
 							OpenNijiiroRW.Tx.Gauge_Soul_Fire.Scale.X = scale;
@@ -323,25 +382,35 @@ internal class CActImplGauge : CAct演奏ゲージ共通 {
 						}
 					}
 				}
-				if (OpenNijiiroRW.Tx.Gauge_Soul != null) {
+				if (OpenNijiiroRW.Tx.Gauge_Soul != null)
+				{
 					//仮置き
 					int soul_height = OpenNijiiroRW.Tx.Gauge_Soul.szTextureSize.Height / 2;
-					for (int i = 0; i < OpenNijiiroRW.ConfigIni.nPlayerCount; i++) {
+					for (int i = 0; i < OpenNijiiroRW.ConfigIni.nPlayerCount; i++)
+					{
 						if (OpenNijiiroRW.ConfigIni.bAIBattleMode && i == 1) break;
 
 						int x;
 						int y;
-						if (OpenNijiiroRW.ConfigIni.bAIBattleMode) {
+						if (OpenNijiiroRW.ConfigIni.bAIBattleMode)
+						{
 							x = OpenNijiiroRW.Skin.Gauge_Soul_X_AI;
 							y = OpenNijiiroRW.Skin.Gauge_Soul_Y_AI;
-						} else {
-							if (OpenNijiiroRW.ConfigIni.nPlayerCount == 5) {
+						}
+						else
+						{
+							if (OpenNijiiroRW.ConfigIni.nPlayerCount == 5)
+							{
 								x = OpenNijiiroRW.Skin.Gauge_Soul_5P[0] + (OpenNijiiroRW.Skin.Game_UIMove_5P[0] * i);
 								y = OpenNijiiroRW.Skin.Gauge_Soul_5P[1] + (OpenNijiiroRW.Skin.Game_UIMove_5P[1] * i);
-							} else if (OpenNijiiroRW.ConfigIni.nPlayerCount == 4 || OpenNijiiroRW.ConfigIni.nPlayerCount == 3) {
+							}
+							else if (OpenNijiiroRW.ConfigIni.nPlayerCount == 4 || OpenNijiiroRW.ConfigIni.nPlayerCount == 3)
+							{
 								x = OpenNijiiroRW.Skin.Gauge_Soul_4P[0] + (OpenNijiiroRW.Skin.Game_UIMove_4P[0] * i);
 								y = OpenNijiiroRW.Skin.Gauge_Soul_4P[1] + (OpenNijiiroRW.Skin.Game_UIMove_4P[1] * i);
-							} else {
+							}
+							else
+							{
 								x = OpenNijiiroRW.Skin.Gauge_Soul_X[i];
 								y = OpenNijiiroRW.Skin.Gauge_Soul_Y[i];
 							}
@@ -350,9 +419,12 @@ internal class CActImplGauge : CAct演奏ゲージ共通 {
 						OpenNijiiroRW.Tx.Gauge_Soul.Scale.X = scale;
 						OpenNijiiroRW.Tx.Gauge_Soul.Scale.Y = scale;
 
-						if (this.db現在のゲージ値[i] >= 80.0) {
+						if (this.db現在のゲージ値[i] >= 80.0)
+						{
 							OpenNijiiroRW.Tx.Gauge_Soul.t2D描画(x, y, new Rectangle(0, 0, OpenNijiiroRW.Tx.Gauge_Soul.szTextureSize.Width, soul_height));
-						} else {
+						}
+						else
+						{
 							OpenNijiiroRW.Tx.Gauge_Soul.t2D描画(x, y, new Rectangle(0, soul_height, OpenNijiiroRW.Tx.Gauge_Soul.szTextureSize.Width, soul_height));
 						}
 					}
@@ -366,11 +438,15 @@ internal class CActImplGauge : CAct演奏ゲージ共通 {
 
 			//仮置き
 			int[] nSoulExplosion = new int[] { 73, 468, 0, 0 };
-			for (int i = 0; i < OpenNijiiroRW.ConfigIni.nPlayerCount; i++) {
-				for (int d = 0; d < 32; d++) {
-					if (this.st花火状態[i][d].b使用中) {
+			for (int i = 0; i < OpenNijiiroRW.ConfigIni.nPlayerCount; i++)
+			{
+				for (int d = 0; d < 32; d++)
+				{
+					if (this.st花火状態[i][d].b使用中)
+					{
 						this.st花火状態[i][d].ct進行.Tick();
-						if (this.st花火状態[i][d].ct進行.IsEnded) {
+						if (this.st花火状態[i][d].ct進行.IsEnded)
+						{
 							this.st花火状態[i][d].ct進行.Stop();
 							this.st花火状態[i][d].b使用中 = false;
 						}
@@ -399,7 +475,8 @@ internal class CActImplGauge : CAct演奏ゲージ共通 {
 		new STSTATUS[ 32 ]
 	};
 	[StructLayout(LayoutKind.Sequential)]
-	protected struct STSTATUS {
+	protected struct STSTATUS
+	{
 		public CCounter ct進行;
 		public bool isBig;
 		public bool b使用中;

@@ -3,34 +3,47 @@ using FDK;
 
 namespace OpenNijiiroRW;
 
-internal class CActFIFOStart : CActivity {
+internal class CActFIFOStart : CActivity
+{
 	// メソッド
 
 	public void tフェードアウト開始() => tフェードアウト開始(false);
-	public void tフェードアウト開始(bool skipDelay) {
+	public void tフェードアウト開始(bool skipDelay)
+	{
 		this.mode = EFIFOMode.FadeOut;
 
 		OpenNijiiroRW.Skin.soundDanSelectBGM.tStop();
 		if (OpenNijiiroRW.stageSongSelect.nChoosenSongDifficulty[0] == (int)Difficulty.Dan)
 			this.counter = new CCounter(skipDelay ? 1000 : 0, 1255, 1, OpenNijiiroRW.Timer);
-		else if (OpenNijiiroRW.ConfigIni.bAIBattleMode) {
+		else if (OpenNijiiroRW.ConfigIni.bAIBattleMode)
+		{
 			this.counter = new CCounter(skipDelay ? 2000 : 0, 5500, 1, OpenNijiiroRW.Timer);
-		} else if (OpenNijiiroRW.stageSongSelect.nChoosenSongDifficulty[0] >= (int)Difficulty.Tower) {
+		}
+		else if (OpenNijiiroRW.stageSongSelect.nChoosenSongDifficulty[0] >= (int)Difficulty.Tower)
+		{
 			this.counter = new CCounter(skipDelay ? 1000 : 0, 3580, 1, OpenNijiiroRW.Timer);
-		} else {
+		}
+		else
+		{
 			this.counter = new CCounter(skipDelay ? 2580 : 0, 3580, 1, OpenNijiiroRW.Timer);
 		}
 	}
-	public void tフェードイン開始() {
+	public void tフェードイン開始()
+	{
 		this.mode = EFIFOMode.FadeIn;
 
-		if (OpenNijiiroRW.stageSongSelect.nChoosenSongDifficulty[0] == (int)Difficulty.Dan) {
+		if (OpenNijiiroRW.stageSongSelect.nChoosenSongDifficulty[0] == (int)Difficulty.Dan)
+		{
 			this.counter = new CCounter(0, 255, 1, OpenNijiiroRW.Timer);
 
 			OpenNijiiroRW.stageGameScreen.actDan.Start(OpenNijiiroRW.stageGameScreen.ListDan_Number);
-		} else if (OpenNijiiroRW.ConfigIni.bAIBattleMode) {
+		}
+		else if (OpenNijiiroRW.ConfigIni.bAIBattleMode)
+		{
 			this.counter = new CCounter(0, 3580, 1, OpenNijiiroRW.Timer);
-		} else {
+		}
+		else
+		{
 			this.counter = new CCounter(0, 3580, 1, OpenNijiiroRW.Timer);
 		}
 	}
@@ -41,23 +54,29 @@ internal class CActFIFOStart : CActivity {
 
 	// CActivity 実装
 
-	public override void DeActivate() {
+	public override void DeActivate()
+	{
 		//CDTXMania.tテクスチャの解放( ref this.tx幕 );
 		base.DeActivate();
 	}
-	public override void CreateManagedResource() {
+	public override void CreateManagedResource()
+	{
 		//this.tx幕 = CDTXMania.tテクスチャの生成( CSkin.Path( @"Graphics\6_FO.png" ) );
 		//	this.tx幕2 = CDTXMania.tテクスチャの生成( CSkin.Path( @"Graphics\6_FI.png" ) );
 		base.CreateManagedResource();
 	}
-	public override int Draw() {
-		if (base.IsDeActivated || (this.counter == null)) {
+	public override int Draw()
+	{
+		if (base.IsDeActivated || (this.counter == null))
+		{
 			return 0;
 		}
 		this.counter.Tick();
 
-		if (OpenNijiiroRW.stageSongSelect.nChoosenSongDifficulty[0] >= (int)Difficulty.Tower) {
-			if (OpenNijiiroRW.Tx.Tile_Black != null) {
+		if (OpenNijiiroRW.stageSongSelect.nChoosenSongDifficulty[0] >= (int)Difficulty.Tower)
+		{
+			if (OpenNijiiroRW.Tx.Tile_Black != null)
+			{
 				OpenNijiiroRW.Tx.Tile_Black.Opacity = this.mode == EFIFOMode.FadeOut ? -1000 + counter.CurrentValue : 255 - counter.CurrentValue;
 				for (int i = 0; i <= (RenderSurfaceSize.Width / OpenNijiiroRW.Tx.Tile_Black.szTextureSize.Width); i++)      // #23510 2010.10.31 yyagi: change "clientSize.Width" to "640" to fix FIFO drawing size
 				{
@@ -67,23 +86,29 @@ internal class CActFIFOStart : CActivity {
 					}
 				}
 			}
-		} else if (OpenNijiiroRW.ConfigIni.bAIBattleMode) {
-			if (this.mode == EFIFOMode.FadeOut) {
+		}
+		else if (OpenNijiiroRW.ConfigIni.bAIBattleMode)
+		{
+			if (this.mode == EFIFOMode.FadeOut)
+			{
 				var preTime = (this.counter.CurrentValue >= 2000 ? this.counter.CurrentValue - 2000 : 0) * 2;
 
 				OpenNijiiroRW.Tx.SongLoading_Fade_AI.Opacity = preTime;
 				OpenNijiiroRW.Tx.SongLoading_Fade_AI.t2D描画(0, 0);
 
-				if (preTime > 500) {
+				if (preTime > 500)
+				{
 					OpenNijiiroRW.Tx.SongLoading_Fade_AI_Anime_Base.Scale.X = Math.Min(((preTime - 500) / 255.0f), 1.0f);
 					OpenNijiiroRW.Tx.SongLoading_Fade_AI_Anime_Base.t2D拡大率考慮中央基準描画(OpenNijiiroRW.Skin.Resolution[0] / 2, OpenNijiiroRW.Skin.Resolution[1] / 2);
 				}
 
-				if (preTime > 1000) {
+				if (preTime > 1000)
+				{
 					OpenNijiiroRW.Tx.SongLoading_Fade_AI_Anime_Ring.Opacity = preTime - 1000;
 					OpenNijiiroRW.Tx.SongLoading_Fade_AI_Anime_Ring.Rotation = preTime / 6000.0f;
 					OpenNijiiroRW.Tx.SongLoading_Fade_AI_Anime_Ring.t2D描画(OpenNijiiroRW.Skin.SongLoading_Fade_AI_Anime_Ring[0], OpenNijiiroRW.Skin.SongLoading_Fade_AI_Anime_Ring[1]);
-					if (preTime - 1000 < 1500) {
+					if (preTime - 1000 < 1500)
+					{
 						OpenNijiiroRW.Tx.SongLoading_Fade_AI_Anime_NowLoading.Opacity = preTime - 1000;
 						OpenNijiiroRW.Tx.SongLoading_Fade_AI_Anime_NowLoading.t2D描画(0, 0);
 
@@ -97,7 +122,9 @@ internal class CActFIFOStart : CActivity {
 						OpenNijiiroRW.Tx.SongLoading_Fade_AI_Anime_LoadBar.t2D描画(OpenNijiiroRW.Skin.SongLoading_Fade_AI_Anime_LoadBar[0], OpenNijiiroRW.Skin.SongLoading_Fade_AI_Anime_LoadBar[1],
 							new RectangleF(0, 0, OpenNijiiroRW.Tx.SongLoading_Fade_AI_Anime_LoadBar.szTextureSize.Width * value,
 								OpenNijiiroRW.Tx.SongLoading_Fade_AI_Anime_LoadBar.szTextureSize.Height));
-					} else {
+					}
+					else
+					{
 						OpenNijiiroRW.Tx.SongLoading_Fade_AI_Anime_Start.t2D描画(0, 0);
 					}
 				}
@@ -111,20 +138,31 @@ internal class CActFIFOStart : CActivity {
 				OpenNijiiroRW.Tx.SongLoading_Bg_AI_Wait.t2D描画(0, 0);
 
 				OpenNijiiroRW.Tx.SongLoading_Plate_AI.Opacity = time - 255;
-				if (OpenNijiiroRW.Skin.SongLoading_Plate_ReferencePoint == CSkin.ReferencePoint.Left) {
+				if (OpenNijiiroRW.Skin.SongLoading_Plate_ReferencePoint == CSkin.ReferencePoint.Left)
+				{
 					OpenNijiiroRW.Tx.SongLoading_Plate_AI.t2D描画(OpenNijiiroRW.Skin.SongLoading_Plate_X_AI, OpenNijiiroRW.Skin.SongLoading_Plate_Y_AI - (OpenNijiiroRW.Tx.SongLoading_Plate_AI.sz画像サイズ.Height / 2));
-				} else if (OpenNijiiroRW.Skin.SongLoading_Plate_ReferencePoint == CSkin.ReferencePoint.Right) {
+				}
+				else if (OpenNijiiroRW.Skin.SongLoading_Plate_ReferencePoint == CSkin.ReferencePoint.Right)
+				{
 					OpenNijiiroRW.Tx.SongLoading_Plate_AI.t2D描画(OpenNijiiroRW.Skin.SongLoading_Plate_X_AI - OpenNijiiroRW.Tx.SongLoading_Plate_AI.sz画像サイズ.Width, OpenNijiiroRW.Skin.SongLoading_Plate_Y_AI - (OpenNijiiroRW.Tx.SongLoading_Plate_AI.sz画像サイズ.Height / 2));
-				} else {
+				}
+				else
+				{
 					OpenNijiiroRW.Tx.SongLoading_Plate_AI.t2D描画(OpenNijiiroRW.Skin.SongLoading_Plate_X_AI - (OpenNijiiroRW.Tx.SongLoading_Plate_AI.sz画像サイズ.Width / 2), OpenNijiiroRW.Skin.SongLoading_Plate_Y_AI - (OpenNijiiroRW.Tx.SongLoading_Plate_AI.sz画像サイズ.Height / 2));
 				}
-			} else {
+			}
+			else
+			{
 				OpenNijiiroRW.Tx.SongLoading_Bg_AI.Opacity = 255 - counter.CurrentValue;
 				OpenNijiiroRW.Tx.SongLoading_Bg_AI.t2D描画(0, 0);
 			}
-		} else {
-			if (this.mode == EFIFOMode.FadeOut) {
-				if (OpenNijiiroRW.Tx.SongLoading_Fade != null) {
+		}
+		else
+		{
+			if (this.mode == EFIFOMode.FadeOut)
+			{
+				if (OpenNijiiroRW.Tx.SongLoading_Fade != null)
+				{
 					// 曲開始幕アニメ。
 					// 地味に横の拡大率が変動しているのが一番厄介...
 					var time = this.counter.CurrentValue >= 2580 ? this.counter.CurrentValue - 2580 : 0;
@@ -137,8 +175,11 @@ internal class CActFIFOStart : CActivity {
 					DrawChara(time, (time - 730f) * (255f / 270f));
 				}
 
-			} else {
-				if (OpenNijiiroRW.Tx.SongLoading_Fade != null) {
+			}
+			else
+			{
+				if (OpenNijiiroRW.Tx.SongLoading_Fade != null)
+				{
 					// 曲開始幕アニメ。
 					// 地味に横の拡大率が変動しているのが一番厄介...
 					var time = this.counter.CurrentValue;
@@ -153,19 +194,25 @@ internal class CActFIFOStart : CActivity {
 			}
 		}
 
-		if (this.mode == EFIFOMode.FadeOut) {
-			if (this.counter.CurrentValue != this.counter.EndValue) {
+		if (this.mode == EFIFOMode.FadeOut)
+		{
+			if (this.counter.CurrentValue != this.counter.EndValue)
+			{
 				return 0;
 			}
-		} else if (this.mode == EFIFOMode.FadeIn) {
-			if (this.counter.CurrentValue != this.counter.EndValue) {
+		}
+		else if (this.mode == EFIFOMode.FadeIn)
+		{
+			if (this.counter.CurrentValue != this.counter.EndValue)
+			{
 				return 0;
 			}
 		}
 		return 1;
 	}
 
-	private void DrawBack(CTexture ShowTex, double time, double max, double end, bool IsExit) {
+	private void DrawBack(CTexture ShowTex, double time, double max, double end, bool IsExit)
+	{
 		if (ShowTex == null) return;
 		if (time - max >= end) time = end + max;
 
@@ -184,7 +231,8 @@ internal class CActFIFOStart : CActivity {
 	/// キラキラ✨
 	/// </summary>
 	/// <param name="opacity"></param>
-	private void DrawStar(float opacity) {
+	private void DrawStar(float opacity)
+	{
 		if (OpenNijiiroRW.Tx.SongLoading_BgWait is null) return;
 
 		OpenNijiiroRW.Tx.SongLoading_BgWait.Opacity = (int)opacity;
@@ -196,7 +244,8 @@ internal class CActFIFOStart : CActivity {
 	/// </summary>
 	/// <param name="opacity"></param>
 	/// <param name="scaleX"></param>
-	private void DrawPlate(float opacity, float scaleX, float scaleY = 1f) {
+	private void DrawPlate(float opacity, float scaleX, float scaleY = 1f)
+	{
 		if (OpenNijiiroRW.Tx.SongLoading_Plate is null) return;
 		var SizeX_Harf = OpenNijiiroRW.Tx.SongLoading_Plate.szTextureSize.Width / 2.0f;
 		var SizeY_Harf = OpenNijiiroRW.Tx.SongLoading_Plate.szTextureSize.Height / 2.0f;
@@ -207,12 +256,14 @@ internal class CActFIFOStart : CActivity {
 		OpenNijiiroRW.Tx.SongLoading_Plate.t2D描画(OpenNijiiroRW.Skin.SongLoading_Plate_X + SizeX_Harf - (SizeX_Harf * scaleX) - SizeX_Harf, OpenNijiiroRW.Skin.SongLoading_Plate_Y - SizeY_Harf + ((1f - scaleY) * SizeY_Harf));
 	}
 
-	private void DrawChara(double time, float opacity, float X = -1, float Y = -1) {
+	private void DrawChara(double time, float opacity, float X = -1, float Y = -1)
+	{
 		if (OpenNijiiroRW.Tx.SongLoading_Plate is null || (X == -1 && Y == -1 ? time <= 680 : false)) return;
 		var SizeXHarf = OpenNijiiroRW.Tx.SongLoading_Chara.szTextureSize.Width / 2f;
 		var SizeY = OpenNijiiroRW.Tx.SongLoading_Chara.szTextureSize.Height;
 
-		if (X == -1 && Y == -1) {
+		if (X == -1 && Y == -1)
+		{
 			Y = (float)(Math.Sin((time - 680f) * (Math.PI / 320.0)) * OpenNijiiroRW.Skin.SongLoading_Chara_Move[1]);
 			X = (float)((time - 680f) / 320.0) * OpenNijiiroRW.Skin.SongLoading_Chara_Move[0];
 		}

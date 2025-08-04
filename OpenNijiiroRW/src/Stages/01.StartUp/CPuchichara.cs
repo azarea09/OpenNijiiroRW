@@ -4,7 +4,8 @@ using Silk.NET.Maths;
 
 namespace OpenNijiiroRW;
 
-class CPuchichara {
+class CPuchichara
+{
 	public CTexture tx;
 	public CTexture render;
 	public CSkin.CSystemSound welcome;
@@ -13,7 +14,8 @@ class CPuchichara {
 	public CUnlockCondition? unlock;
 	public string _path;
 
-	public float GetEffectCoinMultiplier() {
+	public float GetEffectCoinMultiplier()
+	{
 		float mult = 1f;
 
 		mult *= HRarity.tRarityToRarityToCoinMultiplier(metadata.Rarity);
@@ -22,17 +24,20 @@ class CPuchichara {
 		return mult;
 	}
 
-	public void tGetUnlockedItems(int _player, ModalQueue mq) {
+	public void tGetUnlockedItems(int _player, ModalQueue mq)
+	{
 		int player = OpenNijiiroRW.GetActualPlayer(_player);
 		var _sf = OpenNijiiroRW.SaveFileInstances[player].data.UnlockedPuchicharas;
 		bool _edited = false;
 
 		var _npvKey = Path.GetFileName(_path);
 
-		if (!_sf.Contains(_npvKey)) {
+		if (!_sf.Contains(_npvKey))
+		{
 			var _fulfilled = unlock?.tConditionMet(player, CUnlockCondition.EScreen.Internal).Item1 ?? false;
 
-			if (_fulfilled) {
+			if (_fulfilled)
+			{
 				_sf.Add(_npvKey);
 				_edited = true;
 				mq.tAddModal(
@@ -51,12 +56,14 @@ class CPuchichara {
 			OpenNijiiroRW.SaveFileInstances[player].tApplyHeyaChanges();
 	}
 
-	public CPuchichara(string path) {
+	public CPuchichara(string path)
+	{
 		_path = path;
 
 		// Puchichara textures
 		tx = OpenNijiiroRW.Tx.TxCAbsolute($@"{path}{Path.DirectorySeparatorChar}Chara.png");
-		if (tx != null) {
+		if (tx != null)
+		{
 			tx.Scale = new Vector3D<float>(OpenNijiiroRW.Skin.Game_PuchiChara_Scale[0]);
 		}
 

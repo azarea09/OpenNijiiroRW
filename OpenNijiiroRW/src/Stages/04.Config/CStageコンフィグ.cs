@@ -6,7 +6,8 @@ using SkiaSharp;
 
 namespace OpenNijiiroRW;
 
-internal class CStageコンフィグ : CStage {
+internal class CStageコンフィグ : CStage
+{
 	// Properties
 
 	public CActDFPFont actFont { get; private set; }
@@ -15,7 +16,8 @@ internal class CStageコンフィグ : CStage {
 
 	// Constructor
 
-	public CStageコンフィグ() {
+	public CStageコンフィグ()
+	{
 		CActDFPFont font;
 		base.eStageID = CStage.EStage.Config;
 		base.ePhaseID = CStage.EPhase.Common_NORMAL;
@@ -49,10 +51,12 @@ internal class CStageコンフィグ : CStage {
 
 	// CStage 実装
 
-	public override void Activate() {
+	public override void Activate()
+	{
 		Trace.TraceInformation("コンフィグステージを活性化します。");
 		Trace.Indent();
-		try {
+		try
+		{
 			OpenNijiiroRW.Skin.bgmコンフィグ画面.tPlay();
 
 			this.n現在のメニュー番号 = 0;                                                    //
@@ -69,29 +73,38 @@ internal class CStageコンフィグ : CStage {
 			Background.Init();
 
 
-			if (this.bメニューにフォーカス中) {
+			if (this.bメニューにフォーカス中)
+			{
 				this.t説明文パネルに現在選択されているメニューの説明を描画する();
-			} else {
+			}
+			else
+			{
 				this.t説明文パネルに現在選択されている項目の説明を描画する();
 			}
-		} finally {
+		}
+		finally
+		{
 			Trace.TraceInformation("コンフィグステージの活性化を完了しました。");
 			Trace.Unindent();
 		}
 		base.Activate();        // 2011.3.14 yyagi: On活性化()をtryの中から外に移動
 	}
-	public override void DeActivate() {
+	public override void DeActivate()
+	{
 		Trace.TraceInformation("コンフィグステージを非活性化します。");
 		Trace.Indent();
-		try {
+		try
+		{
 			OpenNijiiroRW.Skin.bgmコンフィグ画面.tStop();
 
 			OpenNijiiroRW.ConfigIni.t書き出し(OpenNijiiroRW.strEXEのあるフォルダ + "Config.ini");    // CONFIGだけ
-			for (int i = 0; i < 4; i++) {
+			for (int i = 0; i < 4; i++)
+			{
 				this.ctキー反復用[i] = null;
 			}
 
-			for (int i = 0; i < txMenuItemLeft.GetLength(0); i++) {
+			for (int i = 0; i < txMenuItemLeft.GetLength(0); i++)
+			{
 				txMenuItemLeft[i, 0].Dispose();
 				txMenuItemLeft[i, 0] = null;
 				txMenuItemLeft[i, 1].Dispose();
@@ -102,20 +115,27 @@ internal class CStageコンフィグ : CStage {
 			OpenNijiiroRW.tDisposeSafely(ref Background);
 
 			base.DeActivate();
-		} catch (UnauthorizedAccessException e) {
+		}
+		catch (UnauthorizedAccessException e)
+		{
 			Trace.TraceError(e.ToString());
 			Trace.TraceError("ファイルが読み取り専用になっていないか、管理者権限がないと書き込めなくなっていないか等を確認して下さい");
 			Trace.TraceError("例外が発生しましたが処理を継続します。 (7a61f01b-1703-4aad-8d7d-08bd88ae8760)");
-		} catch (Exception e) {
+		}
+		catch (Exception e)
+		{
 			Trace.TraceError(e.ToString());
 			Trace.TraceError("例外が発生しましたが処理を継続します。 (83f0d93c-bb04-4a19-a596-bc32de39f496)");
-		} finally {
+		}
+		finally
+		{
 			Trace.TraceInformation("コンフィグステージの非活性化を完了しました。");
 			Trace.Unindent();
 		}
 	}
 
-	public void ReloadMenus() {
+	public void ReloadMenus()
+	{
 		string[] strMenuItem = {
 			CLangManager.LangInstance.GetString("SETTINGS_SYSTEM"),
 			CLangManager.LangInstance.GetString("SETTINGS_GAME"),
@@ -124,9 +144,12 @@ internal class CStageコンフィグ : CStage {
 
 		txMenuItemLeft = new CTexture[strMenuItem.Length, 2];
 
-		using (var prvFont = HPrivateFastFont.tInstantiateMainFont(OpenNijiiroRW.Skin.Config_Font_Scale)) {
-			for (int i = 0; i < strMenuItem.Length; i++) {
-				using (var bmpStr = prvFont.DrawText(strMenuItem[i], Color.White, Color.Black, null, 30)) {
+		using (var prvFont = HPrivateFastFont.tInstantiateMainFont(OpenNijiiroRW.Skin.Config_Font_Scale))
+		{
+			for (int i = 0; i < strMenuItem.Length; i++)
+			{
+				using (var bmpStr = prvFont.DrawText(strMenuItem[i], Color.White, Color.Black, null, 30))
+				{
 					txMenuItemLeft[i, 0]?.Dispose();
 					txMenuItemLeft[i, 0] = OpenNijiiroRW.tテクスチャの生成(bmpStr, false);
 				}
@@ -136,7 +159,8 @@ internal class CStageコンフィグ : CStage {
 						   null,
 						   OpenNijiiroRW.Skin.Config_Selected_Menu_Text_Grad_Color_1,
 						   OpenNijiiroRW.Skin.Config_Selected_Menu_Text_Grad_Color_2,
-						   30)) {
+						   30))
+				{
 					txMenuItemLeft[i, 1]?.Dispose();
 					txMenuItemLeft[i, 1] = OpenNijiiroRW.tテクスチャの生成(bmpStr, false);
 				}
@@ -189,7 +213,8 @@ internal class CStageコンフィグ : CStage {
 	}
 	public override void ReleaseManagedResource()                                           // OPTIONと同じ(COnfig.iniの書き出しタイミングのみ異なるが、無視して良い)
 	{
-		if (this.ftフォント != null) {
+		if (this.ftフォント != null)
+		{
 			this.ftフォント.Dispose();
 			this.ftフォント = null;
 		}
@@ -201,11 +226,13 @@ internal class CStageコンフィグ : CStage {
 		OpenNijiiroRW.tテクスチャの解放(ref this.tx説明文パネル);
 		base.ReleaseManagedResource();
 	}
-	public override int Draw() {
+	public override int Draw()
+	{
 		if (base.IsDeActivated)
 			return 0;
 
-		if (base.IsFirstDraw) {
+		if (base.IsFirstDraw)
+		{
 			base.ePhaseID = CStage.EPhase.Common_FADEIN;
 			this.actFIFO.tフェードイン開始();
 			base.IsFirstDraw = false;
@@ -233,7 +260,8 @@ internal class CStageコンフィグ : CStage {
 
 		#region [ Menu Cursor ]
 		//---------------------
-		if (OpenNijiiroRW.Tx.Config_Cursor != null) {
+		if (OpenNijiiroRW.Tx.Config_Cursor != null)
+		{
 			#region Old
 			/*
 			Rectangle rectangle;
@@ -288,7 +316,8 @@ internal class CStageコンフィグ : CStage {
 		//---------------------
 		//int menuY = 162 - 22 + 13;
 		//int stepY = 39;
-		for (int i = 0; i < txMenuItemLeft.GetLength(0); i++) {
+		for (int i = 0; i < txMenuItemLeft.GetLength(0); i++)
+		{
 			//Bitmap bmpStr = (this.n現在のメニュー番号 == i) ?
 			//      prvFont.DrawPrivateFont( strMenuItem[ i ], Color.White, Color.Black, Color.Yellow, Color.OrangeRed ) :
 			//      prvFont.DrawPrivateFont( strMenuItem[ i ], Color.White, Color.Black );
@@ -296,8 +325,8 @@ internal class CStageコンフィグ : CStage {
 
 			int flag = (this.n現在のメニュー番号 == i) ? 1 : 0;
 			txMenuItemLeft[i, flag].t2D中心基準描画(OpenNijiiroRW.Skin.Config_Item_X[i] + OpenNijiiroRW.Skin.Config_Item_Font_Offset[0], OpenNijiiroRW.Skin.Config_Item_Y[i] + OpenNijiiroRW.Skin.Config_Item_Font_Offset[1]); //55
-																																																		 //txMenuItem.Dispose();
-																																																		 //menuY += stepY;
+																																																						 //txMenuItem.Dispose();
+																																																						 //menuY += stepY;
 		}
 		//---------------------
 		#endregion
@@ -311,7 +340,8 @@ internal class CStageコンフィグ : CStage {
 
 		#region [ Item ]
 		//---------------------
-		switch (this.eItemPanelモード) {
+		switch (this.eItemPanelモード)
+		{
 			case EItemPanelモード.パッド一覧:
 				this.actList.Draw(!this.bメニューにフォーカス中);
 				break;
@@ -344,15 +374,18 @@ internal class CStageコンフィグ : CStage {
 
 		#region [ FadeOut ]
 		//---------------------
-		switch (base.ePhaseID) {
+		switch (base.ePhaseID)
+		{
 			case CStage.EPhase.Common_FADEIN:
-				if (this.actFIFO.Draw() != 0) {
+				if (this.actFIFO.Draw() != 0)
+				{
 					base.ePhaseID = CStage.EPhase.Common_NORMAL;
 				}
 				break;
 
 			case CStage.EPhase.Common_FADEOUT:
-				if (this.actFIFO.Draw() == 0) {
+				if (this.actFIFO.Draw() == 0)
+				{
 					break;
 				}
 				return 1;
@@ -370,36 +403,45 @@ internal class CStageコンフィグ : CStage {
 			|| this.actKeyAssign.bキー入力待ちの最中である)
 			return 0;
 
-		if (actCalibrationMode.IsStarted) {
+		if (actCalibrationMode.IsStarted)
+		{
 			if (OpenNijiiroRW.Skin.bgmコンフィグ画面.bIsPlaying)
 				OpenNijiiroRW.Skin.bgmコンフィグ画面.tStop();
 
 			actCalibrationMode.Update();
 			actCalibrationMode.Draw();
-		} else if (actList.ScoreIniImportThreadIsActive) {
+		}
+		else if (actList.ScoreIniImportThreadIsActive)
+		{
 			HBlackBackdrop.Draw(191);
 
-			using (var prvFont = HPrivateFastFont.tInstantiateMainFont(OpenNijiiroRW.Skin.Config_Font_Scale)) {
+			using (var prvFont = HPrivateFastFont.tInstantiateMainFont(OpenNijiiroRW.Skin.Config_Font_Scale))
+			{
 				using (var status_text = new CTexture(prvFont.DrawText(
 						   CScoreIni_Importer.Status,
 						   Color.White,
 						   Color.Black,
 						   null,
 						   30,
-						   true))) {
+						   true)))
+				{
 					status_text.t2D_DisplayImage_AnchorCenter(RenderSurfaceSize.Width / 2, RenderSurfaceSize.Height / 2);
 				}
 			}
 		}
 		// 曲データの一覧取得中は、キー入力を無効化する
-		else if (!OpenNijiiroRW.EnumSongs.IsEnumerating || OpenNijiiroRW.actEnumSongs.bコマンドでの曲データ取得 != true) {
+		else if (!OpenNijiiroRW.EnumSongs.IsEnumerating || OpenNijiiroRW.actEnumSongs.bコマンドでの曲データ取得 != true)
+		{
 			if (!OpenNijiiroRW.Skin.bgmコンフィグ画面.bIsPlaying)
 				OpenNijiiroRW.Skin.bgmコンフィグ画面.tPlay();
 
-			if ((OpenNijiiroRW.InputManager.Keyboard.KeyPressed((int)SlimDXKeys.Key.Escape) || OpenNijiiroRW.Pad.bPressed(EInstrumentPad.Drums, EPad.FT)) || OpenNijiiroRW.Pad.bPressedGB(EPad.FT)) {
+			if ((OpenNijiiroRW.InputManager.Keyboard.KeyPressed((int)SlimDXKeys.Key.Escape) || OpenNijiiroRW.Pad.bPressed(EInstrumentPad.Drums, EPad.FT)) || OpenNijiiroRW.Pad.bPressedGB(EPad.FT))
+			{
 				OpenNijiiroRW.Skin.soundCancelSFX.tPlay();
-				if (!this.bメニューにフォーカス中) {
-					if (this.eItemPanelモード == EItemPanelモード.キーコード一覧) {
+				if (!this.bメニューにフォーカス中)
+				{
+					if (this.eItemPanelモード == EItemPanelモード.キーコード一覧)
+					{
 						OpenNijiiroRW.stageConfig.tアサイン完了通知();
 						return 0;
 					}
@@ -409,29 +451,40 @@ internal class CStageコンフィグ : CStage {
 					}
 					this.t説明文パネルに現在選択されているメニューの説明を描画する();
 					this.actList.tEsc押下();                              // #24525 2011.3.15 yyagi ESC押下時の右メニュー描画用
-				} else {
+				}
+				else
+				{
 					this.actFIFO.tフェードアウト開始();
 					base.ePhaseID = CStage.EPhase.Common_FADEOUT;
 				}
-			} else if ((OpenNijiiroRW.Pad.bPressedDGB(EPad.CY) || OpenNijiiroRW.Pad.bPressed(EInstrumentPad.Drums, EPad.RD)) || (OpenNijiiroRW.Pad.bPressed(EInstrumentPad.Drums, EPad.LC) || (OpenNijiiroRW.ConfigIni.bEnterIsNotUsedInKeyAssignments && OpenNijiiroRW.InputManager.Keyboard.KeyPressed((int)SlimDXKeys.Key.Return)))) {
-				if (this.n現在のメニュー番号 == 2) {
+			}
+			else if ((OpenNijiiroRW.Pad.bPressedDGB(EPad.CY) || OpenNijiiroRW.Pad.bPressed(EInstrumentPad.Drums, EPad.RD)) || (OpenNijiiroRW.Pad.bPressed(EInstrumentPad.Drums, EPad.LC) || (OpenNijiiroRW.ConfigIni.bEnterIsNotUsedInKeyAssignments && OpenNijiiroRW.InputManager.Keyboard.KeyPressed((int)SlimDXKeys.Key.Return))))
+			{
+				if (this.n現在のメニュー番号 == 2)
+				{
 					// Exit
 					OpenNijiiroRW.Skin.soundDecideSFX.tPlay();
 					this.actFIFO.tフェードアウト開始();
 					base.ePhaseID = CStage.EPhase.Common_FADEOUT;
-				} else if (this.bメニューにフォーカス中) {
+				}
+				else if (this.bメニューにフォーカス中)
+				{
 					OpenNijiiroRW.Skin.soundDecideSFX.tPlay();
 					this.bメニューにフォーカス中 = false;
 					this.t説明文パネルに現在選択されている項目の説明を描画する();
-				} else {
-					switch (this.eItemPanelモード) {
+				}
+				else
+				{
+					switch (this.eItemPanelモード)
+					{
 						case EItemPanelモード.パッド一覧:
 							bool bIsKeyAssignSelectedBeforeHitEnter = this.actList.bIsKeyAssignSelected;    // #24525 2011.3.15 yyagi
 							this.actList.tEnter押下();
 
 							this.t説明文パネルに現在選択されている項目の説明を描画する();
 
-							if (this.actList.b現在選択されている項目はReturnToMenuである) {
+							if (this.actList.b現在選択されている項目はReturnToMenuである)
+							{
 								this.t説明文パネルに現在選択されているメニューの説明を描画する();
 								if (bIsKeyAssignSelectedBeforeHitEnter == false)                            // #24525 2011.3.15 yyagi
 								{
@@ -448,12 +501,14 @@ internal class CStageコンフィグ : CStage {
 			}
 			this.ctキー反復用.Up.KeyIntervalFunc(OpenNijiiroRW.InputManager.Keyboard.KeyPressing((int)SlimDXKeys.Key.UpArrow), new CCounter.KeyProcess(this.tカーソルを上へ移動する));
 			this.ctキー反復用.R.KeyIntervalFunc(OpenNijiiroRW.Pad.IsPressingGB(EPad.HH), new CCounter.KeyProcess(this.tカーソルを上へ移動する));
-			if (OpenNijiiroRW.Pad.bPressed(EInstrumentPad.Drums, EPad.SD)) {
+			if (OpenNijiiroRW.Pad.bPressed(EInstrumentPad.Drums, EPad.SD))
+			{
 				this.tカーソルを上へ移動する();
 			}
 			this.ctキー反復用.Down.KeyIntervalFunc(OpenNijiiroRW.InputManager.Keyboard.KeyPressing((int)SlimDXKeys.Key.DownArrow), new CCounter.KeyProcess(this.tカーソルを下へ移動する));
 			this.ctキー反復用.B.KeyIntervalFunc(OpenNijiiroRW.Pad.IsPressingGB(EPad.BD), new CCounter.KeyProcess(this.tカーソルを下へ移動する));
-			if (OpenNijiiroRW.Pad.bPressed(EInstrumentPad.Drums, EPad.LT)) {
+			if (OpenNijiiroRW.Pad.bPressed(EInstrumentPad.Drums, EPad.LT))
+			{
 				this.tカーソルを下へ移動する();
 			}
 		}
@@ -465,20 +520,25 @@ internal class CStageコンフィグ : CStage {
 
 	#region [ private ]
 	//-----------------
-	private enum EItemPanelモード {
+	private enum EItemPanelモード
+	{
 		パッド一覧,
 		キーコード一覧
 	}
 
 	[StructLayout(LayoutKind.Sequential)]
-	private struct STキー反復用カウンタ {
+	private struct STキー反復用カウンタ
+	{
 		public CCounter Up;
 		public CCounter Down;
 		public CCounter R;
 		public CCounter B;
-		public CCounter this[int index] {
-			get {
-				switch (index) {
+		public CCounter this[int index]
+		{
+			get
+			{
+				switch (index)
+				{
 					case 0:
 						return this.Up;
 
@@ -493,8 +553,10 @@ internal class CStageコンフィグ : CStage {
 				}
 				throw new IndexOutOfRangeException();
 			}
-			set {
-				switch (index) {
+			set
+			{
+				switch (index)
+				{
 					case 0:
 						this.Up = value;
 						return;
@@ -537,9 +599,12 @@ internal class CStageコンフィグ : CStage {
 
 	private ScriptBG Background;
 
-	private void tカーソルを下へ移動する() {
-		if (!this.bメニューにフォーカス中) {
-			switch (this.eItemPanelモード) {
+	private void tカーソルを下へ移動する()
+	{
+		if (!this.bメニューにフォーカス中)
+		{
+			switch (this.eItemPanelモード)
+			{
 				case EItemPanelモード.パッド一覧:
 					this.actList.t次に移動();
 					return;
@@ -548,10 +613,13 @@ internal class CStageコンフィグ : CStage {
 					this.actKeyAssign.t次に移動();
 					return;
 			}
-		} else {
+		}
+		else
+		{
 			OpenNijiiroRW.Skin.soundカーソル移動音.tPlay();
 			this.n現在のメニュー番号 = (this.n現在のメニュー番号 + 1) % 3;
-			switch (this.n現在のメニュー番号) {
+			switch (this.n現在のメニュー番号)
+			{
 				case 0:
 					this.actList.t項目リストの設定_System();
 					break;
@@ -567,9 +635,12 @@ internal class CStageコンフィグ : CStage {
 			this.t説明文パネルに現在選択されているメニューの説明を描画する();
 		}
 	}
-	private void tカーソルを上へ移動する() {
-		if (!this.bメニューにフォーカス中) {
-			switch (this.eItemPanelモード) {
+	private void tカーソルを上へ移動する()
+	{
+		if (!this.bメニューにフォーカス中)
+		{
+			switch (this.eItemPanelモード)
+			{
 				case EItemPanelモード.パッド一覧:
 					this.actList.t前に移動();
 					return;
@@ -578,10 +649,13 @@ internal class CStageコンフィグ : CStage {
 					this.actKeyAssign.t前に移動();
 					return;
 			}
-		} else {
+		}
+		else
+		{
 			OpenNijiiroRW.Skin.soundカーソル移動音.tPlay();
 			this.n現在のメニュー番号 = ((this.n現在のメニュー番号 - 1) + 3) % 3;
-			switch (this.n現在のメニュー番号) {
+			switch (this.n現在のメニュー番号)
+			{
 				case 0:
 					this.actList.t項目リストの設定_System();
 					break;
@@ -597,10 +671,13 @@ internal class CStageコンフィグ : CStage {
 			this.t説明文パネルに現在選択されているメニューの説明を描画する();
 		}
 	}
-	private void t説明文パネルに現在選択されているメニューの説明を描画する() {
-		try {
+	private void t説明文パネルに現在選択されているメニューの説明を描画する()
+	{
+		try
+		{
 			string text = "";
-			switch (this.n現在のメニュー番号) {
+			switch (this.n現在のメニュー番号)
+			{
 				case 0:
 					text = CLangManager.LangInstance.GetString("SETTINGS_SYSTEM_DESC");
 					break;
@@ -612,32 +689,41 @@ internal class CStageコンフィグ : CStage {
 					break;
 			}
 			SKBitmap image = ftフォント.DrawText(text, Color.White, Color.Black, null, 30);
-			if (this.tx説明文パネル != null) {
+			if (this.tx説明文パネル != null)
+			{
 				this.tx説明文パネル.Dispose();
 			}
 			this.tx説明文パネル = new CTexture(image);
 			image.Dispose();
-		} catch (CTextureCreateFailedException e) {
+		}
+		catch (CTextureCreateFailedException e)
+		{
 			Trace.TraceError(e.ToString());
 			Trace.TraceError("説明文テクスチャの作成に失敗しました。");
 			this.tx説明文パネル = null;
 		}
 	}
-	private void t説明文パネルに現在選択されている項目の説明を描画する() {
-		try {
+	private void t説明文パネルに現在選択されている項目の説明を描画する()
+	{
+		try
+		{
 			var image = new SKBitmap(440, 288);     // 説明文領域サイズの縦横 2 倍。（描画時に 0.5 倍で表示する___のは中止。処理速度向上のため。）
 
 			CItemBase item = this.actList.ib現在の選択項目;
-			if ((item.str説明文 != null) && (item.str説明文.Length > 0)) {
+			if ((item.str説明文 != null) && (item.str説明文.Length > 0))
+			{
 				image.Dispose();
 				image = ftフォント.DrawText(item.str説明文, Color.White, Color.Black, null, 30);
 			}
-			if (this.tx説明文パネル != null) {
+			if (this.tx説明文パネル != null)
+			{
 				this.tx説明文パネル.Dispose();
 			}
 			this.tx説明文パネル = new CTexture(image);
 			image.Dispose();
-		} catch (CTextureCreateFailedException e) {
+		}
+		catch (CTextureCreateFailedException e)
+		{
 			Trace.TraceError(e.ToString());
 			Trace.TraceError("説明文パネルテクスチャの作成に失敗しました。");
 			this.tx説明文パネル = null;

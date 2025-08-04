@@ -2,13 +2,16 @@
 
 namespace OpenNijiiroRW;
 
-internal class SaveFile {
+internal class SaveFile
+{
 
-	public void tSaveFile(string filename) {
+	public void tSaveFile(string filename)
+	{
 		path = @$"Saves{Path.DirectorySeparatorChar}" + filename + @".json";
 		name = filename;
 
-		if (!File.Exists(path)) {
+		if (!File.Exists(path))
+		{
 			this.data.Name = filename;
 			tSaveFile();
 		}
@@ -18,7 +21,8 @@ internal class SaveFile {
 		tInitSaveFile();
 	}
 
-	public void tInitSaveFile() {
+	public void tInitSaveFile()
+	{
 		// Best plays
 		data.bestPlays = DBSaves.GetBestPlaysAsDict(data.SaveId);
 		data.tFactorizeBestPlays();
@@ -30,7 +34,8 @@ internal class SaveFile {
 		data.GlobalCounters = DBSaves.GetGlobalCountersDict(data.SaveId);
 	}
 
-	public void tLoadUnlockables() {
+	public void tLoadUnlockables()
+	{
 		data.UnlockedCharacters = DBSaves.FetchStringUnlockedAsset(data.SaveId, "unlocked_characters");
 		data.UnlockedPuchicharas = DBSaves.FetchStringUnlockedAsset(data.SaveId, "unlocked_puchicharas");
 		data.UnlockedSongs = DBSaves.FetchStringUnlockedAsset(data.SaveId, "unlocked_songs");
@@ -40,25 +45,29 @@ internal class SaveFile {
 
 	#region [Triggers and Counters]
 
-	public void tSetGlobalTrigger(string triggerName, bool triggerValue) {
+	public void tSetGlobalTrigger(string triggerName, bool triggerValue)
+	{
 		if (triggerValue) data.ActiveTriggers.Add(triggerName);
 		else data.ActiveTriggers.Remove(triggerName);
 
 		DBSaves.DBToggleGlobalTrigger(data.SaveId, triggerName, triggerValue);
 	}
 
-	public void tSetGlobalCounter(string counterName, double counterValue) {
+	public void tSetGlobalCounter(string counterName, double counterValue)
+	{
 		if (data.GlobalCounters.ContainsKey(counterName)) data.GlobalCounters[counterName] = counterValue;
 		else data.GlobalCounters.Add(counterName, counterValue);
 
 		DBSaves.DBSetGlobalCounter(data.SaveId, counterName, counterValue);
 	}
 
-	public bool tGetGlobalTrigger(string triggerName) {
+	public bool tGetGlobalTrigger(string triggerName)
+	{
 		return data.ActiveTriggers.Contains(triggerName);
 	}
 
-	public double tGetGlobalCounter(string counterName) {
+	public double tGetGlobalCounter(string counterName)
+	{
 		data.GlobalCounters.TryGetValue(counterName, out double counterValue);
 		return counterValue;
 	}
@@ -68,7 +77,8 @@ internal class SaveFile {
 
 	#region [Medals and PlayCount]
 
-	public void tEarnCoins(int amount) {
+	public void tEarnCoins(int amount)
+	{
 		data.Medals += amount;
 		data.TotalEarnedMedals += amount;
 
@@ -79,7 +89,8 @@ internal class SaveFile {
 	}
 
 	// Return false if the current amount of coins is to low
-	public bool tSpendCoins(int amount) {
+	public bool tSpendCoins(int amount)
+	{
 		if (data.Medals < amount)
 			return false;
 
@@ -88,7 +99,8 @@ internal class SaveFile {
 		return true;
 	}
 
-	public void tRegisterAIBattleModePlay(bool IsWon) {
+	public void tRegisterAIBattleModePlay(bool IsWon)
+	{
 		data.AIBattleModePlaycount++;
 		if (IsWon) data.AIBattleModeWins++;
 		DBSaves.RegisterAIBattleModePlay(data.SaveId, IsWon);
@@ -98,7 +110,8 @@ internal class SaveFile {
 
 	#region [Dan titles]
 
-	public bool tUpdateDanTitle(string title, bool isGold, int clearStatus) {
+	public bool tUpdateDanTitle(string title, bool isGold, int clearStatus)
+	{
 		bool changed = false;
 
 		bool iG = isGold;
@@ -107,7 +120,8 @@ internal class SaveFile {
 		if (this.data.DanTitles == null)
 			this.data.DanTitles = new Dictionary<string, CDanTitle>();
 
-		if (this.data.DanTitles.ContainsKey(title)) {
+		if (this.data.DanTitles.ContainsKey(title))
+		{
 			if (this.data.DanTitles[title].clearStatus > cs)
 				cs = this.data.DanTitles[title].clearStatus;
 			if (this.data.DanTitles[title].isGold)
@@ -117,7 +131,8 @@ internal class SaveFile {
 		// Automatically set the dan to nameplate if new
 		// Add a function within the NamePlate.cs file to update the title texture
 
-		if (!this.data.DanTitles.ContainsKey(title) || cs != clearStatus || iG != isGold) {
+		if (!this.data.DanTitles.ContainsKey(title) || cs != clearStatus || iG != isGold)
+		{
 			DBSaves.RegisterDanTitle(data.SaveId, title, clearStatus, isGold);
 			changed = true;
 		}
@@ -130,13 +145,16 @@ internal class SaveFile {
 
 	#region [Auxilliary classes]
 
-	public class CDanTitle {
-		public CDanTitle(bool iG, int cs) {
+	public class CDanTitle
+	{
+		public CDanTitle(bool iG, int cs)
+		{
 			isGold = iG;
 			clearStatus = cs;
 		}
 
-		public CDanTitle() {
+		public CDanTitle()
+		{
 			isGold = false;
 			clearStatus = 0;
 		}
@@ -148,8 +166,10 @@ internal class SaveFile {
 		public int clearStatus;
 	}
 
-	public class CNamePlateTitle {
-		public CNamePlateTitle(int type) {
+	public class CNamePlateTitle
+	{
+		public CNamePlateTitle(int type)
+		{
 			iType = type;
 			cld = new CLocalizationData();
 		}
@@ -161,8 +181,10 @@ internal class SaveFile {
 		public CLocalizationData cld;
 	}
 
-	public class CPassStatus {
-		public CPassStatus() {
+	public class CPassStatus
+	{
+		public CPassStatus()
+		{
 			d = new int[5] { -1, -1, -1, -1, -1 };
 		}
 
@@ -173,7 +195,8 @@ internal class SaveFile {
 
 	#region [Heya]
 
-	public void tReindexCharacter(string[] characterNamesList) {
+	public void tReindexCharacter(string[] characterNamesList)
+	{
 		string character = this.data.CharacterName;
 
 		if (characterNamesList.Contains(character))
@@ -181,17 +204,20 @@ internal class SaveFile {
 
 	}
 
-	public void tUpdateCharacterName(string newChara) {
+	public void tUpdateCharacterName(string newChara)
+	{
 		this.data.CharacterName = newChara;
 	}
 
-	public void tApplyHeyaChanges() {
+	public void tApplyHeyaChanges()
+	{
 		DBSaves.ApplyChangesFromMyRoom(this);
 	}
 
 	#endregion
 
-	public class Data {
+	public class Data
+	{
 		[JsonProperty("saveId")]
 		public Int64 SaveId = 0;
 
@@ -288,22 +314,29 @@ internal class SaveFile {
 		[JsonIgnore]
 		public BestPlayRecords.CBestPlayStats bestPlaysStats = new BestPlayRecords.CBestPlayStats();
 
-		public BestPlayRecords.CSongSelectTableEntry tGetSongSelectTableEntry(string uniqueId) {
+		public BestPlayRecords.CSongSelectTableEntry tGetSongSelectTableEntry(string uniqueId)
+		{
 			if (songSelectTableEntries.ContainsKey(uniqueId)) return songSelectTableEntries[uniqueId];
 			return new BestPlayRecords.CSongSelectTableEntry();
 		}
 
 		#region [Factorize best plays]
 
-		public void tFactorizeBestPlays() {
+		public void tFactorizeBestPlays()
+		{
 			bestPlaysDistinctCharts = new Dictionary<string, BestPlayRecords.CBestPlayRecord>();
 
-			foreach (BestPlayRecords.CBestPlayRecord bestPlay in bestPlays.Values) {
+			foreach (BestPlayRecords.CBestPlayRecord bestPlay in bestPlays.Values)
+			{
 				string key = bestPlay.ChartUniqueId + bestPlay.ChartDifficulty.ToString();
-				if (!bestPlaysDistinctCharts.ContainsKey(key)) {
+				if (!bestPlaysDistinctCharts.ContainsKey(key))
+				{
 					bestPlaysDistinctCharts[key] = bestPlay.Copy();
-				} else {
-					if (bestPlay.HighScore > bestPlaysDistinctCharts[key].HighScore) {
+				}
+				else
+				{
+					if (bestPlay.HighScore > bestPlaysDistinctCharts[key].HighScore)
+					{
 						bestPlaysDistinctCharts[key].HighScore = bestPlay.HighScore;
 						bestPlaysDistinctCharts[key].HighScoreGoodCount = bestPlay.HighScoreGoodCount;
 						bestPlaysDistinctCharts[key].HighScoreOkCount = bestPlay.HighScoreOkCount;
@@ -321,12 +354,17 @@ internal class SaveFile {
 			bestPlaysDistinctSongs = new Dictionary<string, BestPlayRecords.CBestPlayRecord>();
 			songSelectTableEntries = new Dictionary<string, BestPlayRecords.CSongSelectTableEntry>();
 
-			foreach (BestPlayRecords.CBestPlayRecord bestPlay in bestPlaysDistinctCharts.Values) {
+			foreach (BestPlayRecords.CBestPlayRecord bestPlay in bestPlaysDistinctCharts.Values)
+			{
 				string key = bestPlay.ChartUniqueId;
-				if (!bestPlaysDistinctSongs.ContainsKey(key)) {
+				if (!bestPlaysDistinctSongs.ContainsKey(key))
+				{
 					bestPlaysDistinctSongs[key] = bestPlay.Copy();
-				} else {
-					if (bestPlay.HighScore > bestPlaysDistinctSongs[key].HighScore) {
+				}
+				else
+				{
+					if (bestPlay.HighScore > bestPlaysDistinctSongs[key].HighScore)
+					{
 						bestPlaysDistinctSongs[key].HighScore = bestPlay.HighScore;
 						bestPlaysDistinctSongs[key].HighScoreGoodCount = bestPlay.HighScoreGoodCount;
 						bestPlaysDistinctSongs[key].HighScoreOkCount = bestPlay.HighScoreOkCount;
@@ -341,14 +379,17 @@ internal class SaveFile {
 				}
 
 				// Entries to replace score.GPInfo on the song select menus
-				if (!songSelectTableEntries.ContainsKey(key)) {
+				if (!songSelectTableEntries.ContainsKey(key))
+				{
 					songSelectTableEntries[key] = new BestPlayRecords.CSongSelectTableEntry();
 				}
-				if (bestPlay.ChartDifficulty > songSelectTableEntries[key].ScoreRankDifficulty && bestPlay.ScoreRank >= 0) {
+				if (bestPlay.ChartDifficulty > songSelectTableEntries[key].ScoreRankDifficulty && bestPlay.ScoreRank >= 0)
+				{
 					songSelectTableEntries[key].ScoreRankDifficulty = (int)bestPlay.ChartDifficulty;
 					songSelectTableEntries[key].ScoreRank = (int)bestPlay.ScoreRank;
 				}
-				if (bestPlay.ChartDifficulty > songSelectTableEntries[key].ClearStatusDifficulty && bestPlay.ClearStatus >= 0) {
+				if (bestPlay.ChartDifficulty > songSelectTableEntries[key].ClearStatusDifficulty && bestPlay.ClearStatus >= 0)
+				{
 					songSelectTableEntries[key].ClearStatusDifficulty = (int)bestPlay.ChartDifficulty;
 					songSelectTableEntries[key].ClearStatus = (int)bestPlay.ClearStatus;
 				}
@@ -370,11 +411,13 @@ internal class SaveFile {
 
 	#region [private]
 
-	private void tSaveFile() {
+	private void tSaveFile()
+	{
 		ConfigManager.SaveConfig(data, path);
 	}
 
-	private void tLoadFile() {
+	private void tLoadFile()
+	{
 		data = ConfigManager.GetConfig<Data>(path);
 	}
 

@@ -2,19 +2,23 @@
 
 namespace OpenNijiiroRW;
 
-class NamePlateConfig {
-	public void tNamePlateConfig() {
+class NamePlateConfig
+{
+	public void tNamePlateConfig()
+	{
 		// Deprecated, only converts to new format
 		tLoadFile();
 	}
 
 	#region [Medals]
 
-	public void tEarnCoins(int[] amounts) {
+	public void tEarnCoins(int[] amounts)
+	{
 		if (amounts.Length < 2)
 			return;
 
-		for (int i = 0; i < 5; i++) {
+		for (int i = 0; i < 5; i++)
+		{
 			int p = OpenNijiiroRW.GetActualPlayer(i);
 
 			data.Medals[p] += amounts[i];
@@ -23,7 +27,8 @@ class NamePlateConfig {
 	}
 
 	// Return false if the current amount of coins is to low
-	public bool tSpendCoins(int amount, int player) {
+	public bool tSpendCoins(int amount, int player)
+	{
 		if (player > 1 || player < 0)
 			return false;
 
@@ -41,7 +46,8 @@ class NamePlateConfig {
 
 	#region [Dan titles]
 
-	public bool tUpdateDanTitle(string title, bool isGold, int clearStatus, int player) {
+	public bool tUpdateDanTitle(string title, bool isGold, int clearStatus, int player)
+	{
 		bool changed = false;
 
 		bool iG = isGold;
@@ -50,7 +56,8 @@ class NamePlateConfig {
 		if (OpenNijiiroRW.NamePlateConfig.data.DanTitles[player] == null)
 			OpenNijiiroRW.NamePlateConfig.data.DanTitles[player] = new Dictionary<string, SaveFile.CDanTitle>();
 
-		if (OpenNijiiroRW.NamePlateConfig.data.DanTitles[player].ContainsKey(title)) {
+		if (OpenNijiiroRW.NamePlateConfig.data.DanTitles[player].ContainsKey(title))
+		{
 			if (OpenNijiiroRW.NamePlateConfig.data.DanTitles[player][title].clearStatus > cs)
 				cs = OpenNijiiroRW.NamePlateConfig.data.DanTitles[player][title].clearStatus;
 			if (OpenNijiiroRW.NamePlateConfig.data.DanTitles[player][title].isGold)
@@ -60,7 +67,8 @@ class NamePlateConfig {
 		// Automatically set the dan to nameplate if new
 		// Add a function within the NamePlate.cs file to update the title texture
 
-		if (!OpenNijiiroRW.NamePlateConfig.data.DanTitles[player].ContainsKey(title) || cs != clearStatus || iG != isGold) {
+		if (!OpenNijiiroRW.NamePlateConfig.data.DanTitles[player].ContainsKey(title) || cs != clearStatus || iG != isGold)
+		{
 			changed = true;
 		}
 
@@ -78,8 +86,10 @@ class NamePlateConfig {
 
 	#region [Auxilliary classes]
 
-	public class CDanTitle {
-		public CDanTitle(bool iG, int cs) {
+	public class CDanTitle
+	{
+		public CDanTitle(bool iG, int cs)
+		{
 			isGold = iG;
 			clearStatus = cs;
 		}
@@ -91,8 +101,10 @@ class NamePlateConfig {
 		public int clearStatus;
 	}
 
-	public class CNamePlateTitle {
-		public CNamePlateTitle(int type) {
+	public class CNamePlateTitle
+	{
+		public CNamePlateTitle(int type)
+		{
 			iType = type;
 		}
 
@@ -104,7 +116,8 @@ class NamePlateConfig {
 
 	#region [Heya]
 
-	public void tReindexCharacter(int p, string[] characterNamesList) {
+	public void tReindexCharacter(int p, string[] characterNamesList)
+	{
 		string character = this.data.CharacterName[p];
 
 		if (characterNamesList.Contains(character))
@@ -112,17 +125,20 @@ class NamePlateConfig {
 
 	}
 
-	public void tUpdateCharacterName(int p, string newChara) {
+	public void tUpdateCharacterName(int p, string newChara)
+	{
 		this.data.CharacterName[p] = newChara;
 	}
 
-	public void tApplyHeyaChanges() {
+	public void tApplyHeyaChanges()
+	{
 		this.tSaveFile();
 	}
 
 	#endregion
 
-	public class Data {
+	public class Data
+	{
 		[JsonProperty("name")]
 		public string[] Name = { "プレイヤー1", "プレイヤー2", "プレイヤー3", "プレイヤー4", "プレイヤー5" };
 
@@ -175,17 +191,20 @@ class NamePlateConfig {
 
 	#region [private]
 
-	private void tSaveFile() {
+	private void tSaveFile()
+	{
 		ConfigManager.SaveConfig(data, "NamePlate.json");
 	}
 
-	private void tLoadFile() {
+	private void tLoadFile()
+	{
 		if (!File.Exists("NamePlate.json"))
 			return;
 
 		var _data = ConfigManager.GetConfig<Data>(@"NamePlate.json");
 
-		for (int i = 0; i < _data.Name.Length; i++) {
+		for (int i = 0; i < _data.Name.Length; i++)
+		{
 			var _sf = new SaveFile();
 			_sf.tSaveFile((i + 1) + "P");
 			_sf.data.Name = _data.Name[i];

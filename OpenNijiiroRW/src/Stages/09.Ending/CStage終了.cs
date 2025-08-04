@@ -3,10 +3,12 @@ using FDK;
 
 namespace OpenNijiiroRW;
 
-internal class CStage終了 : CStage {
+internal class CStage終了 : CStage
+{
 	// Constructor
 
-	public CStage終了() {
+	public CStage終了()
+	{
 		base.eStageID = CStage.EStage.End;
 		base.ePhaseID = CStage.EPhase.Common_NORMAL;
 		base.IsDeActivated = true;
@@ -15,33 +17,42 @@ internal class CStage終了 : CStage {
 
 	// CStage 実装
 
-	public override void Activate() {
+	public override void Activate()
+	{
 		Trace.TraceInformation("終了ステージを活性化します。");
 		Trace.Indent();
-		try {
+		try
+		{
 			this.ct時間稼ぎ = new CCounter();
 
 			Background = new ScriptBG(CSkin.Path($"{TextureLoader.BASE}{TextureLoader.EXIT}Script.lua"));
 			Background.Init();
 
 			base.Activate();
-		} finally {
+		}
+		finally
+		{
 			Trace.TraceInformation("終了ステージの活性化を完了しました。");
 			Trace.Unindent();
 		}
 	}
-	public override void DeActivate() {
+	public override void DeActivate()
+	{
 		Trace.TraceInformation("終了ステージを非活性化します。");
 		Trace.Indent();
-		try {
+		try
+		{
 			OpenNijiiroRW.tDisposeSafely(ref Background);
 			base.DeActivate();
-		} finally {
+		}
+		finally
+		{
 			Trace.TraceInformation("終了ステージの非活性化を完了しました。");
 			Trace.Unindent();
 		}
 	}
-	public override void CreateManagedResource() {
+	public override void CreateManagedResource()
+	{
 
 		//            this.tx文字 = CDTXMania.tテクスチャの生成( CSkin.Path( @"Graphics\9_text.png" ) );
 		//            this.tx文字2 = CDTXMania.tテクスチャの生成( CSkin.Path( @"Graphics\9_text.png" ) );
@@ -51,7 +62,8 @@ internal class CStage終了 : CStage {
 		//            this.ds背景 = CDTXMania.t失敗してもスキップ可能なDirectShowを生成する( CSkin.Path( @"Graphics\9_background.mp4" ), CDTXMania.app.WindowHandle, true );
 		base.CreateManagedResource();
 	}
-	public override void ReleaseManagedResource() {
+	public override void ReleaseManagedResource()
+	{
 
 		//CDTXMania.tテクスチャの解放( ref this.tx背景 );
 		//            CDTXMania.tテクスチャの解放( ref this.tx文字 );
@@ -61,7 +73,8 @@ internal class CStage終了 : CStage {
 		//            CDTXMania.t安全にDisposeする( ref this.ds背景 );
 		base.ReleaseManagedResource();
 	}
-	public override int Draw() {
+	public override int Draw()
+	{
 		/*
         if( !TJAPlayer3.ConfigIni.bEndingAnime ) //2017.01.27 DD
         {
@@ -69,8 +82,10 @@ internal class CStage終了 : CStage {
         }
 		*/
 
-		if (!base.IsDeActivated) {
-			if (base.IsFirstDraw) {
+		if (!base.IsDeActivated)
+		{
+			if (base.IsFirstDraw)
+			{
 				OpenNijiiroRW.Skin.soundゲーム終了音.tPlay();
 				this.ct時間稼ぎ.Start(0, OpenNijiiroRW.Skin.Exit_Duration, 1, OpenNijiiroRW.Timer);
 				base.IsFirstDraw = false;
@@ -84,7 +99,8 @@ internal class CStage終了 : CStage {
 
 			//TJAPlayer3.Tx.Exit_Background?.t2D描画( 0, 0 );
 
-			if (this.ct時間稼ぎ.IsEnded && !OpenNijiiroRW.Skin.soundゲーム終了音.bIsPlaying) {
+			if (this.ct時間稼ぎ.IsEnded && !OpenNijiiroRW.Skin.soundゲーム終了音.bIsPlaying)
+			{
 				return 1;
 			}
 		}

@@ -3,24 +3,31 @@ using FDK;
 
 namespace OpenNijiiroRW;
 
-internal class CActオプションパネル : CActivity {
+internal class CActオプションパネル : CActivity
+{
 	// CActivity 実装
 
-	public override void DeActivate() {
-		if (!base.IsDeActivated) {
+	public override void DeActivate()
+	{
+		if (!base.IsDeActivated)
+		{
 			base.DeActivate();
 		}
 	}
-	public override void CreateManagedResource() {
+	public override void CreateManagedResource()
+	{
 		this.txオプションパネル = OpenNijiiroRW.tテクスチャの生成(CSkin.Path($@"Graphics{Path.DirectorySeparatorChar}Screen option panels.png"), false);
 		base.CreateManagedResource();
 	}
-	public override void ReleaseManagedResource() {
+	public override void ReleaseManagedResource()
+	{
 		OpenNijiiroRW.tテクスチャの解放(ref this.txオプションパネル);
 		base.ReleaseManagedResource();
 	}
-	public override int Draw() {
-		if (!base.IsDeActivated) {
+	public override int Draw()
+	{
+		if (!base.IsDeActivated)
+		{
 			CConfigIni configIni = OpenNijiiroRW.ConfigIni;
 			/*
 			if( this.txオプションパネル != null )

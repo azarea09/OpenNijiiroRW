@@ -3,7 +3,8 @@
 /// <summary>
 /// Animation interface.
 /// </summary>
-interface IAnimatable {
+interface IAnimatable
+{
 	/// <summary>
 	/// Starts the animation.
 	/// </summary>

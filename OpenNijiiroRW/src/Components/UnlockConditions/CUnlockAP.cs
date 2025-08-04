@@ -1,32 +1,42 @@
-﻿namespace OpenNijiiroRW {
-	internal class CUnlockAP : CUnlockCondition {
+﻿namespace OpenNijiiroRW
+{
+	internal class CUnlockAP : CUnlockCondition
+	{
 		/*
 		 * "AI Battle plays" Unlock condition object
 		 * Validates if the total AI Battle playcount requirement is satisfied
 		 */
 
 
-		public CUnlockAP(CUnlockConditionFactory.UnlockConditionJsonRaw rawJson) : base(rawJson) {
+		public CUnlockAP(CUnlockConditionFactory.UnlockConditionJsonRaw rawJson) : base(rawJson)
+		{
 			this.RequiredArgCount = 1;
 			this.ConditionId = "ap";
 		}
 
-		public override (bool, string?) tConditionMet(int player, EScreen screen = EScreen.MyRoom) {
-			if (this.Values.Length == this.RequiredArgCount) {
+		public override (bool, string?) tConditionMet(int player, EScreen screen = EScreen.MyRoom)
+		{
+			if (this.Values.Length == this.RequiredArgCount)
+			{
 				int _satisfactoryPlays = (int)OpenNijiiroRW.SaveFileInstances[player].data.AIBattleModePlaycount;
 
 				bool fulfiled = this.tValueRequirementMet(_satisfactoryPlays, this.Values[0]);
 
-				if (screen == EScreen.Internal) {
+				if (screen == EScreen.Internal)
+				{
 					return (fulfiled, "");
-				} else {
+				}
+				else
+				{
 					return (fulfiled, null);
 				}
-			} else
+			}
+			else
 				return (false, CLangManager.LangInstance.GetString("UNLOCK_CONDITION_ERROR", this.ConditionId, this.RequiredArgCount.ToString()));
 		}
 
-		public override string tConditionMessage(EScreen screen = EScreen.MyRoom) {
+		public override string tConditionMessage(EScreen screen = EScreen.MyRoom)
+		{
 			if (this.Values.Length < this.RequiredArgCount)
 				return CLangManager.LangInstance.GetString("UNLOCK_CONDITION_ERROR", this.ConditionId, this.RequiredArgCount);
 
@@ -37,7 +47,8 @@
 			return CLangManager.LangInstance.GetString("UNLOCK_CONDITION_AIPLAY", this.Values[0], SaveData.AIBattleModePlaycount);
 		}
 
-		protected override int tGetCountChartsPassingCondition(int player) {
+		protected override int tGetCountChartsPassingCondition(int player)
+		{
 			// Unused for this condition
 			return -1;
 		}

@@ -2,16 +2,20 @@
 
 namespace OpenNijiiroRW;
 
-internal class CActImplLane : CActivity {
-	public CActImplLane() {
+internal class CActImplLane : CActivity
+{
+	public CActImplLane()
+	{
 		base.IsDeActivated = true;
 	}
 
-	public override void Activate() {
+	public override void Activate()
+	{
 		this.ct分岐アニメ進行 = new CCounter[5];
 		this.nBefore = new CTja.ECourse[5];
 		this.nAfter = new CTja.ECourse[5];
-		for (int i = 0; i < OpenNijiiroRW.ConfigIni.nPlayerCount; i++) {
+		for (int i = 0; i < OpenNijiiroRW.ConfigIni.nPlayerCount; i++)
+		{
 			this.ct分岐アニメ進行[i] = new CCounter();
 			this.nBefore = new CTja.ECourse[5];
 			this.nAfter = new CTja.ECourse[5];
@@ -23,26 +27,33 @@ internal class CActImplLane : CActivity {
 		base.Activate();
 	}
 
-	public override void DeActivate() {
+	public override void DeActivate()
+	{
 		OpenNijiiroRW.tDisposeSafely(ref this.ct分岐アニメ進行);
 		base.DeActivate();
 	}
 
-	public override void CreateManagedResource() {
+	public override void CreateManagedResource()
+	{
 		base.CreateManagedResource();
 	}
 
-	public override void ReleaseManagedResource() {
+	public override void ReleaseManagedResource()
+	{
 
 
 		base.ReleaseManagedResource();
 	}
 
-	public override int Draw() {
-		for (int i = 0; i < OpenNijiiroRW.ConfigIni.nPlayerCount; i++) {
-			if (!this.ct分岐アニメ進行[i].IsStoped) {
+	public override int Draw()
+	{
+		for (int i = 0; i < OpenNijiiroRW.ConfigIni.nPlayerCount; i++)
+		{
+			if (!this.ct分岐アニメ進行[i].IsStoped)
+			{
 				this.ct分岐アニメ進行[i].Tick();
-				if (this.ct分岐アニメ進行[i].IsEnded) {
+				if (this.ct分岐アニメ進行[i].IsEnded)
+				{
 					this.bState[i] = false;
 					this.ct分岐アニメ進行[i].Stop();
 				}
@@ -52,29 +63,39 @@ internal class CActImplLane : CActivity {
 		int[] x = new int[5];
 		int[] y = new int[5];
 
-		for (int i = 0; i < OpenNijiiroRW.ConfigIni.nPlayerCount; i++) {
-			if (OpenNijiiroRW.ConfigIni.nPlayerCount == 5) {
+		for (int i = 0; i < OpenNijiiroRW.ConfigIni.nPlayerCount; i++)
+		{
+			if (OpenNijiiroRW.ConfigIni.nPlayerCount == 5)
+			{
 				x[i] = OpenNijiiroRW.Skin.Game_Lane_5P[0] + (OpenNijiiroRW.Skin.Game_UIMove_5P[0] * i);
 				y[i] = OpenNijiiroRW.Skin.Game_Lane_5P[1] + (OpenNijiiroRW.Skin.Game_UIMove_5P[1] * i);
-			} else if (OpenNijiiroRW.ConfigIni.nPlayerCount == 4 || OpenNijiiroRW.ConfigIni.nPlayerCount == 3) {
+			}
+			else if (OpenNijiiroRW.ConfigIni.nPlayerCount == 4 || OpenNijiiroRW.ConfigIni.nPlayerCount == 3)
+			{
 				x[i] = OpenNijiiroRW.Skin.Game_Lane_4P[0] + (OpenNijiiroRW.Skin.Game_UIMove_4P[0] * i);
 				y[i] = OpenNijiiroRW.Skin.Game_Lane_4P[1] + (OpenNijiiroRW.Skin.Game_UIMove_4P[1] * i);
-			} else {
+			}
+			else
+			{
 				x[i] = OpenNijiiroRW.Skin.Game_Lane_X[i];
 				y[i] = OpenNijiiroRW.Skin.Game_Lane_Y[i];
 			}
 		}
 
 		//アニメーション中の分岐レイヤー(背景)の描画を行う。
-		for (int i = 0; i < OpenNijiiroRW.ConfigIni.nPlayerCount; i++) {
-			if (OpenNijiiroRW.stageGameScreen.bUseBranch[i] == true) {
+		for (int i = 0; i < OpenNijiiroRW.ConfigIni.nPlayerCount; i++)
+		{
+			if (OpenNijiiroRW.stageGameScreen.bUseBranch[i] == true)
+			{
 
 				#region NullCheck
 
 				bool _laneNull = false;
 
-				for (int j = 0; j < OpenNijiiroRW.Tx.Lane_Base.Length; j++) {
-					if (OpenNijiiroRW.Tx.Lane_Base[j] == null) {
+				for (int j = 0; j < OpenNijiiroRW.Tx.Lane_Base.Length; j++)
+				{
+					if (OpenNijiiroRW.Tx.Lane_Base[j] == null)
+					{
 						_laneNull = true;
 						break;
 					}
@@ -82,26 +103,36 @@ internal class CActImplLane : CActivity {
 
 				#endregion
 
-				if (OpenNijiiroRW.ConfigIni.SimpleMode) {
+				if (OpenNijiiroRW.ConfigIni.SimpleMode)
+				{
 					OpenNijiiroRW.Tx.Lane_Base[(int)nAfter[i]].t2D描画(x[i], y[i]);
-				} else if (this.ct分岐アニメ進行[i].IsTicked && !_laneNull) {
+				}
+				else if (this.ct分岐アニメ進行[i].IsTicked && !_laneNull)
+				{
 					#region[ 普通譜面_レベルアップ ]
 					//普通→玄人
-					if (nBefore[i] == 0 && nAfter[i] == CTja.ECourse.eNormal) {
+					if (nBefore[i] == 0 && nAfter[i] == CTja.ECourse.eNormal)
+					{
 						OpenNijiiroRW.Tx.Lane_Base[1].Opacity = this.ct分岐アニメ進行[i].CurrentValue > 100 ? 255 : ((this.ct分岐アニメ進行[i].CurrentValue * 0xff) / 100);
 						OpenNijiiroRW.Tx.Lane_Base[0].t2D描画(x[i], y[i]);
 						OpenNijiiroRW.Tx.Lane_Base[1].t2D描画(x[i], y[i]);
 					}
 					//普通→達人
-					if (nBefore[i] == 0 && nAfter[i] == CTja.ECourse.eMaster) {
+					if (nBefore[i] == 0 && nAfter[i] == CTja.ECourse.eMaster)
+					{
 						OpenNijiiroRW.Tx.Lane_Base[0].t2D描画(x[i], y[i]);
-						if (this.ct分岐アニメ進行[i].CurrentValue < 100) {
+						if (this.ct分岐アニメ進行[i].CurrentValue < 100)
+						{
 							OpenNijiiroRW.Tx.Lane_Base[1].Opacity = this.ct分岐アニメ進行[i].CurrentValue > 100 ? 255 : ((this.ct分岐アニメ進行[i].CurrentValue * 0xff) / 100);
 							OpenNijiiroRW.Tx.Lane_Base[1].t2D描画(x[i], y[i]);
-						} else if (this.ct分岐アニメ進行[i].CurrentValue >= 100 && this.ct分岐アニメ進行[i].CurrentValue < 150) {
+						}
+						else if (this.ct分岐アニメ進行[i].CurrentValue >= 100 && this.ct分岐アニメ進行[i].CurrentValue < 150)
+						{
 							OpenNijiiroRW.Tx.Lane_Base[1].Opacity = 255;
 							OpenNijiiroRW.Tx.Lane_Base[1].t2D描画(x[i], y[i]);
-						} else if (this.ct分岐アニメ進行[i].CurrentValue >= 150) {
+						}
+						else if (this.ct分岐アニメ進行[i].CurrentValue >= 150)
+						{
 							OpenNijiiroRW.Tx.Lane_Base[1].t2D描画(x[i], y[i]);
 							OpenNijiiroRW.Tx.Lane_Base[2].Opacity = this.ct分岐アニメ進行[i].CurrentValue > 250 ? 255 : (((this.ct分岐アニメ進行[i].CurrentValue - 150) * 0xff) / 100);
 							OpenNijiiroRW.Tx.Lane_Base[2].t2D描画(x[i], y[i]);
@@ -110,7 +141,8 @@ internal class CActImplLane : CActivity {
 					#endregion
 
 					#region[ 玄人譜面_レベルアップ ]
-					if (nBefore[i] == CTja.ECourse.eExpert && nAfter[i] == CTja.ECourse.eMaster) {
+					if (nBefore[i] == CTja.ECourse.eExpert && nAfter[i] == CTja.ECourse.eMaster)
+					{
 						OpenNijiiroRW.Tx.Lane_Base[1].t2D描画(x[i], y[i]);
 						OpenNijiiroRW.Tx.Lane_Base[2].Opacity = this.ct分岐アニメ進行[i].CurrentValue > 100 ? 255 : ((this.ct分岐アニメ進行[i].CurrentValue * 0xff) / 100);
 						OpenNijiiroRW.Tx.Lane_Base[2].t2D描画(x[i], y[i]);
@@ -118,7 +150,8 @@ internal class CActImplLane : CActivity {
 					#endregion
 
 					#region[ 玄人譜面_レベルダウン ]
-					if (nBefore[i] == CTja.ECourse.eExpert && nAfter[i] == CTja.ECourse.eNormal) {
+					if (nBefore[i] == CTja.ECourse.eExpert && nAfter[i] == CTja.ECourse.eNormal)
+					{
 						OpenNijiiroRW.Tx.Lane_Base[1].t2D描画(x[i], y[i]);
 						OpenNijiiroRW.Tx.Lane_Base[0].Opacity = this.ct分岐アニメ進行[i].CurrentValue > 100 ? 255 : ((this.ct分岐アニメ進行[i].CurrentValue * 0xff) / 100);
 						OpenNijiiroRW.Tx.Lane_Base[0].t2D描画(x[i], y[i]);
@@ -126,21 +159,28 @@ internal class CActImplLane : CActivity {
 					#endregion
 
 					#region[ 達人譜面_レベルダウン ]
-					if (nBefore[i] == CTja.ECourse.eMaster && nAfter[i] == CTja.ECourse.eNormal) {
+					if (nBefore[i] == CTja.ECourse.eMaster && nAfter[i] == CTja.ECourse.eNormal)
+					{
 						OpenNijiiroRW.Tx.Lane_Base[2].t2D描画(x[i], y[i]);
-						if (this.ct分岐アニメ進行[i].CurrentValue < 100) {
+						if (this.ct分岐アニメ進行[i].CurrentValue < 100)
+						{
 							OpenNijiiroRW.Tx.Lane_Base[1].Opacity = this.ct分岐アニメ進行[i].CurrentValue > 100 ? 255 : ((this.ct分岐アニメ進行[i].CurrentValue * 0xff) / 100);
 							OpenNijiiroRW.Tx.Lane_Base[1].t2D描画(x[i], y[i]);
-						} else if (this.ct分岐アニメ進行[i].CurrentValue >= 100 && this.ct分岐アニメ進行[i].CurrentValue < 150) {
+						}
+						else if (this.ct分岐アニメ進行[i].CurrentValue >= 100 && this.ct分岐アニメ進行[i].CurrentValue < 150)
+						{
 							OpenNijiiroRW.Tx.Lane_Base[1].Opacity = 255;
 							OpenNijiiroRW.Tx.Lane_Base[1].t2D描画(x[i], y[i]);
-						} else if (this.ct分岐アニメ進行[i].CurrentValue >= 150) {
+						}
+						else if (this.ct分岐アニメ進行[i].CurrentValue >= 150)
+						{
 							OpenNijiiroRW.Tx.Lane_Base[1].t2D描画(x[i], y[i]);
 							OpenNijiiroRW.Tx.Lane_Base[0].Opacity = this.ct分岐アニメ進行[i].CurrentValue > 250 ? 255 : (((this.ct分岐アニメ進行[i].CurrentValue - 150) * 0xff) / 100);
 							OpenNijiiroRW.Tx.Lane_Base[0].t2D描画(x[i], y[i]);
 						}
 					}
-					if (nBefore[i] == CTja.ECourse.eMaster && nAfter[i] == CTja.ECourse.eExpert) {
+					if (nBefore[i] == CTja.ECourse.eMaster && nAfter[i] == CTja.ECourse.eExpert)
+					{
 						OpenNijiiroRW.Tx.Lane_Base[2].t2D描画(x[i], y[i]);
 						OpenNijiiroRW.Tx.Lane_Base[2].Opacity = this.ct分岐アニメ進行[i].CurrentValue > 100 ? 255 : ((this.ct分岐アニメ進行[i].CurrentValue * 0xff) / 100);
 						OpenNijiiroRW.Tx.Lane_Base[2].t2D描画(x[i], y[i]);
@@ -152,8 +192,10 @@ internal class CActImplLane : CActivity {
 		return base.Draw();
 	}
 
-	public virtual void t分岐レイヤー_コース変化(CTja.ECourse n現在, CTja.ECourse n次回, int player) {
-		if (n現在 == n次回) {
+	public virtual void t分岐レイヤー_コース変化(CTja.ECourse n現在, CTja.ECourse n次回, int player)
+	{
+		if (n現在 == n次回)
+		{
 			return;
 		}
 		this.ct分岐アニメ進行[player] = new CCounter(0, 300, 2, OpenNijiiroRW.Timer);

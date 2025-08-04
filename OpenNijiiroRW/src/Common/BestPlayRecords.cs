@@ -1,8 +1,10 @@
 ﻿namespace OpenNijiiroRW;
 
-internal class BestPlayRecords {
+internal class BestPlayRecords
+{
 
-	public enum EClearStatus {
+	public enum EClearStatus
+	{
 		NONE = 0,
 		ASSISTED_CLEAR = 1,
 		CLEAR = 2,
@@ -11,7 +13,8 @@ internal class BestPlayRecords {
 		TOTAL = 5
 	}
 
-	public enum EDanClearStatus {
+	public enum EDanClearStatus
+	{
 		NONE = 0,
 		ASSISTED_CLEAR_RED = 1,
 		ASSISTED_CLEAR_GOLD = 2,
@@ -24,7 +27,8 @@ internal class BestPlayRecords {
 		TOTAL = 9
 	}
 
-	public enum ETowerClearStatus {
+	public enum ETowerClearStatus
+	{
 		NONE = 0,
 		ASSISTED_CLEAR = 1,
 		PROGRESS_10 = 2,
@@ -37,7 +41,8 @@ internal class BestPlayRecords {
 		TOTAL = 9
 	}
 
-	public class CSongSelectTableEntry {
+	public class CSongSelectTableEntry
+	{
 		public int ScoreRankDifficulty = 0;
 		public int ScoreRank = -1;
 		public int ClearStatusDifficulty = 0;
@@ -48,7 +53,8 @@ internal class BestPlayRecords {
 		public int[] HighScore = new int[(int)Difficulty.Total] { 0, 0, 0, 0, 0, 0, 0 };
 	}
 
-	public class CBestPlayRecord {
+	public class CBestPlayRecord
+	{
 		public string ChartUniqueId = "none";
 		public string ChartGenre = "none";
 		public string Charter = "none";
@@ -77,7 +83,8 @@ internal class BestPlayRecords {
 		public Int64 HighScoreBoomCount = 0;
 	}
 
-	public class CBestPlayStats {
+	public class CBestPlayStats
+	{
 		public int DistinctPlays = 0;
 		public int DistinctClears = 0;
 		public int DistinctFCs = 0;
@@ -105,7 +112,8 @@ internal class BestPlayRecords {
 		public Dictionary<string, int> CharterFCs = new Dictionary<string, int>();
 		public Dictionary<string, int> CharterPerfects = new Dictionary<string, int>();
 
-		public CBestPlayStats() {
+		public CBestPlayStats()
+		{
 			// 0 : Not clear, 1 : Assisted clear, 2 : Clear, 3 : FC, 4 : Perfect
 			ClearStatuses[0] = new int[(int)EClearStatus.TOTAL] { 0, 0, 0, 0, 0 };
 			ClearStatuses[1] = new int[(int)EClearStatus.TOTAL] { 0, 0, 0, 0, 0 };
@@ -124,7 +132,8 @@ internal class BestPlayRecords {
 		}
 	}
 
-	static private void InitOrAddDict<T>(Dictionary<T, int> dict, T entry) where T : notnull {
+	static private void InitOrAddDict<T>(Dictionary<T, int> dict, T entry) where T : notnull
+	{
 		if (!dict.ContainsKey(entry))
 			dict[entry] = 0;
 		dict[entry]++;
@@ -133,20 +142,24 @@ internal class BestPlayRecords {
 	static public CBestPlayStats tGenerateBestPlayStats(
 		Dictionary<string, CBestPlayRecord>.ValueCollection uniqueChartBestPlays,
 		Dictionary<string, CBestPlayRecord>.ValueCollection uniqueSongBestPlays
-	) {
+	)
+	{
 		CBestPlayStats stats = new CBestPlayStats();
 
 		// Individual charts
-		foreach (CBestPlayRecord record in uniqueChartBestPlays) {
+		foreach (CBestPlayRecord record in uniqueChartBestPlays)
+		{
 			Int64 roundedDifficulty = Math.Max((int)Difficulty.Easy, Math.Min((int)Difficulty.Total - 1, record.ChartDifficulty));
-			if (roundedDifficulty <= (int)Difficulty.Edit) {
+			if (roundedDifficulty <= (int)Difficulty.Edit)
+			{
 				string[] ChartersArr = record.Charter.SplitByCommas();
 				Int64 roundedScoreRank = Math.Max(0, Math.Min(7, record.ScoreRank + 1));
 				Int64 roundedClearStatus = Math.Max((int)EClearStatus.NONE, Math.Min((int)EClearStatus.PERFECT, record.ClearStatus + 1));
 
 				stats.ScoreRanks[roundedDifficulty][roundedScoreRank]++;
 				stats.ClearStatuses[roundedDifficulty][roundedClearStatus]++;
-				foreach (string Charter in ChartersArr) {
+				foreach (string Charter in ChartersArr)
+				{
 					InitOrAddDict(stats.CharterPlays, Charter);
 					if (roundedClearStatus >= (int)EClearStatus.CLEAR) InitOrAddDict(stats.CharterClears, Charter);
 					if (roundedClearStatus >= (int)EClearStatus.FC) InitOrAddDict(stats.CharterFCs, Charter);
@@ -164,11 +177,15 @@ internal class BestPlayRecords {
 				if (roundedClearStatus >= (int)EClearStatus.CLEAR) stats.DistinctClears++;
 				if (roundedClearStatus >= (int)EClearStatus.FC) stats.DistinctFCs++;
 				if (roundedClearStatus == (int)EClearStatus.PERFECT) stats.DistinctPerfects++;
-			} else if (roundedDifficulty == (int)Difficulty.Tower) {
+			}
+			else if (roundedDifficulty == (int)Difficulty.Tower)
+			{
 				Int64 roundedClearStatus = Math.Clamp(record.ClearStatus + 1, (int)ETowerClearStatus.NONE, (int)ETowerClearStatus.TOTAL);
 				stats.ClearStatuses[roundedDifficulty][roundedClearStatus]++;
 
-			} else if (roundedDifficulty == (int)Difficulty.Dan) {
+			}
+			else if (roundedDifficulty == (int)Difficulty.Dan)
+			{
 				Int64 roundedClearStatus = Math.Clamp(record.ClearStatus + 1, (int)EDanClearStatus.NONE, (int)EDanClearStatus.TOTAL);
 				stats.ClearStatuses[roundedDifficulty][roundedClearStatus]++;
 
@@ -176,10 +193,12 @@ internal class BestPlayRecords {
 		}
 
 		// Individual songs
-		foreach (CBestPlayRecord record in uniqueSongBestPlays) {
+		foreach (CBestPlayRecord record in uniqueSongBestPlays)
+		{
 			Int64 roundedDifficulty = Math.Max((int)Difficulty.Easy, Math.Min((int)Difficulty.Total - 1, record.ChartDifficulty));
 
-			if (roundedDifficulty <= (int)Difficulty.Edit) {
+			if (roundedDifficulty <= (int)Difficulty.Edit)
+			{
 				Int64 roundedClearStatus = Math.Max((int)EClearStatus.NONE, Math.Min((int)EClearStatus.PERFECT, record.ClearStatus + 1));
 
 				InitOrAddDict(stats.SongGenrePlays, record.ChartGenre);

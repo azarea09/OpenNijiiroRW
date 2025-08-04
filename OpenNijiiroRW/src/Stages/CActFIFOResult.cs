@@ -2,48 +2,64 @@
 
 namespace OpenNijiiroRW;
 
-internal class CActFIFOResult : CActivity {
+internal class CActFIFOResult : CActivity
+{
 	// メソッド
 
-	public void tフェードアウト開始() {
+	public void tフェードアウト開始()
+	{
 		this.mode = EFIFOMode.FadeOut;
 		this.counter = new CCounter(0, 100, 30, OpenNijiiroRW.Timer);
 	}
-	public void tフェードイン開始() {
+	public void tフェードイン開始()
+	{
 		this.mode = EFIFOMode.FadeIn;
 		this.counter = new CCounter(0, 300, 2, OpenNijiiroRW.Timer);
 	}
-	public void tフェードイン完了() {
+	public void tフェードイン完了()
+	{
 		this.counter.CurrentValue = (int)counter.BeginValue;
 	}
 
 
 	// CActivity 実装
 
-	public override void DeActivate() {
-		if (!base.IsDeActivated) {
+	public override void DeActivate()
+	{
+		if (!base.IsDeActivated)
+		{
 			//CDTXMania.tテクスチャの解放( ref this.tx黒タイル64x64 );
 			base.DeActivate();
 		}
 	}
-	public override void CreateManagedResource() {
+	public override void CreateManagedResource()
+	{
 		//this.tx黒タイル64x64 = CDTXMania.tテクスチャの生成( CSkin.Path( @"Graphics\Tile black 64x64.png" ), false );
 		base.CreateManagedResource();
 	}
-	public override int Draw() {
-		if (base.IsDeActivated || (this.counter == null)) {
+	public override int Draw()
+	{
+		if (base.IsDeActivated || (this.counter == null))
+		{
 			return 0;
 		}
 		this.counter.Tick();
 		// Size clientSize = CDTXMania.app.Window.ClientSize;	// #23510 2010.10.31 yyagi: delete as of no one use this any longer.
-		if (OpenNijiiroRW.Tx.Tile_Black != null) {
-			if (this.mode == EFIFOMode.FadeIn) {
-				if (counter.CurrentValue >= 200) {
+		if (OpenNijiiroRW.Tx.Tile_Black != null)
+		{
+			if (this.mode == EFIFOMode.FadeIn)
+			{
+				if (counter.CurrentValue >= 200)
+				{
 					OpenNijiiroRW.Tx.Tile_Black.Opacity = (((100 - (this.counter.CurrentValue - 200)) * 0xff) / 100);
-				} else {
+				}
+				else
+				{
 					OpenNijiiroRW.Tx.Tile_Black.Opacity = 255;
 				}
-			} else {
+			}
+			else
+			{
 				OpenNijiiroRW.Tx.Tile_Black.Opacity = (((this.counter.CurrentValue) * 0xff) / 100);
 			}
 
@@ -55,12 +71,17 @@ internal class CActFIFOResult : CActivity {
 				}
 			}
 		}
-		if (this.mode == EFIFOMode.FadeOut) {
-			if (this.counter.CurrentValue != 100) {
+		if (this.mode == EFIFOMode.FadeOut)
+		{
+			if (this.counter.CurrentValue != 100)
+			{
 				return 0;
 			}
-		} else {
-			if (this.counter.CurrentValue != 300) {
+		}
+		else
+		{
+			if (this.counter.CurrentValue != 300)
+			{
 				return 0;
 			}
 		}

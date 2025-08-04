@@ -9,10 +9,12 @@ using Rectangle = System.Drawing.Rectangle;
 
 namespace OpenNijiiroRW;
 
-internal class CActSelect演奏履歴パネル : CActivity {
+internal class CActSelect演奏履歴パネル : CActivity
+{
 	// メソッド
 
-	public CActSelect演奏履歴パネル() {
+	public CActSelect演奏履歴パネル()
+	{
 		ST文字位置[] st文字位置Array = new ST文字位置[10];
 
 		ST文字位置 st文字位置 = new ST文字位置();
@@ -59,22 +61,29 @@ internal class CActSelect演奏履歴パネル : CActivity {
 
 		base.IsDeActivated = true;
 	}
-	public void t選択曲が変更された() {
+	public void t選択曲が変更された()
+	{
 		CScore cスコア = OpenNijiiroRW.stageSongSelect.r現在選択中のスコア;
-		if ((cスコア != null) && !OpenNijiiroRW.stageSongSelect.bCurrentlyScrolling) {
-			try {
-				foreach (var item in tx文字列パネル) {
+		if ((cスコア != null) && !OpenNijiiroRW.stageSongSelect.bCurrentlyScrolling)
+		{
+			try
+			{
+				foreach (var item in tx文字列パネル)
+				{
 					item.Dispose();
 				}
 				tx文字列パネル.Clear();
-				for (int i = 0; i < (int)Difficulty.Total; i++) {
+				for (int i = 0; i < (int)Difficulty.Total; i++)
+				{
 					SKBitmap image = ft表示用フォント.DrawText(cスコア.譜面情報.演奏履歴[i], Color.Yellow);
 					var tex = new CTexture(image);
 					tex.Scale = new Vector3D<float>(0.5f, 0.5f, 1f);
 					this.tx文字列パネル.Add(tex);
 					image.Dispose();
 				}
-			} catch (CTextureCreateFailedException e) {
+			}
+			catch (CTextureCreateFailedException e)
+			{
 				Trace.TraceError(e.ToString());
 				Trace.TraceError("演奏履歴文字列テクスチャの作成に失敗しました。");
 				this.tx文字列パネル = null;
@@ -85,16 +94,19 @@ internal class CActSelect演奏履歴パネル : CActivity {
 
 	// CActivity 実装
 
-	public override void Activate() {
+	public override void Activate()
+	{
 		this.n本体X = 810;
 		this.n本体Y = 558;
 		base.Activate();
 	}
-	public override void DeActivate() {
+	public override void DeActivate()
+	{
 		this.ct登場アニメ用 = null;
 		base.DeActivate();
 	}
-	public override void CreateManagedResource() {
+	public override void CreateManagedResource()
+	{
 		this.ft表示用フォント = new CCachedFontRenderer("Arial", 30, CFontRenderer.FontStyle.Bold);
 
 		//this.txパネル本体 = CDTXMania.tテクスチャの生成( CSkin.Path( @"Graphics\5_play history panel.png" ) );
@@ -107,8 +119,10 @@ internal class CActSelect演奏履歴パネル : CActivity {
 		this.t選択曲が変更された();
 		base.CreateManagedResource();
 	}
-	public override void ReleaseManagedResource() {
-		if (this.ft表示用フォント != null) {
+	public override void ReleaseManagedResource()
+	{
+		if (this.ft表示用フォント != null)
+		{
 			this.ft表示用フォント.Dispose();
 			this.ft表示用フォント = null;
 		}
@@ -121,18 +135,23 @@ internal class CActSelect演奏履歴パネル : CActivity {
 		//            CDTXMania.tテクスチャの解放( ref this.tx文字 );
 		base.ReleaseManagedResource();
 	}
-	public override int Draw() {
-		if (!base.IsDeActivated) {
-			if (base.IsFirstDraw) {
+	public override int Draw()
+	{
+		if (!base.IsDeActivated)
+		{
+			if (base.IsFirstDraw)
+			{
 				this.ct登場アニメ用 = new CCounter(0, 3000, 1, OpenNijiiroRW.Timer);
 				base.IsFirstDraw = false;
 			}
 			this.ct登場アニメ用.Tick();
 			int x = 980;
 			int y = 350;
-			if (OpenNijiiroRW.stageSongSelect.r現在選択中のスコア != null && this.ct登場アニメ用.CurrentValue >= 2000 && OpenNijiiroRW.stageSongSelect.rNowSelectedSong.nodeType == CSongListNode.ENodeType.SCORE) {
+			if (OpenNijiiroRW.stageSongSelect.r現在選択中のスコア != null && this.ct登場アニメ用.CurrentValue >= 2000 && OpenNijiiroRW.stageSongSelect.rNowSelectedSong.nodeType == CSongListNode.ENodeType.SCORE)
+			{
 				//CDTXMania.Tx.SongSelect_ScoreWindow_Text.n透明度 = ct登場アニメ用.n現在の値 - 1745;
-				if (OpenNijiiroRW.Tx.SongSelect_ScoreWindow[OpenNijiiroRW.stageSongSelect.n現在選択中の曲の難易度] != null) {
+				if (OpenNijiiroRW.Tx.SongSelect_ScoreWindow[OpenNijiiroRW.stageSongSelect.n現在選択中の曲の難易度] != null)
+				{
 					//CDTXMania.Tx.SongSelect_ScoreWindow[CDTXMania.stage選曲.n現在選択中の曲の難易度].n透明度 = ct登場アニメ用.n現在の値 - 1745;
 					OpenNijiiroRW.Tx.SongSelect_ScoreWindow[OpenNijiiroRW.stageSongSelect.n現在選択中の曲の難易度].t2D描画(x, y);
 					this.t小文字表示(x + 56, y + 160, string.Format("{0,7:######0}", OpenNijiiroRW.stageSongSelect.r現在選択中のスコア.譜面情報.nハイスコア[OpenNijiiroRW.stageSongSelect.n現在選択中の曲の難易度].ToString()));
@@ -160,17 +179,23 @@ internal class CActSelect演奏履歴パネル : CActivity {
 	//-----------------
 
 	[StructLayout(LayoutKind.Sequential)]
-	private struct ST文字位置 {
+	private struct ST文字位置
+	{
 		public char ch;
 		public Point pt;
 	}
 	private readonly ST文字位置[] st小文字位置;
-	private void t小文字表示(int x, int y, string str) {
-		foreach (char ch in str) {
-			for (int i = 0; i < this.st小文字位置.Length; i++) {
-				if (this.st小文字位置[i].ch == ch) {
+	private void t小文字表示(int x, int y, string str)
+	{
+		foreach (char ch in str)
+		{
+			for (int i = 0; i < this.st小文字位置.Length; i++)
+			{
+				if (this.st小文字位置[i].ch == ch)
+				{
 					Rectangle rectangle = new Rectangle(this.st小文字位置[i].pt.X, this.st小文字位置[i].pt.Y, 26, 36);
-					if (OpenNijiiroRW.Tx.SongSelect_ScoreWindow_Text != null) {
+					if (OpenNijiiroRW.Tx.SongSelect_ScoreWindow_Text != null)
+					{
 						OpenNijiiroRW.Tx.SongSelect_ScoreWindow_Text.t2D描画(x, y, rectangle);
 					}
 					break;
@@ -180,7 +205,8 @@ internal class CActSelect演奏履歴パネル : CActivity {
 		}
 	}
 
-	public void tSongChange() {
+	public void tSongChange()
+	{
 		this.ct登場アニメ用 = new CCounter(0, 3000, 1, OpenNijiiroRW.Timer);
 	}
 

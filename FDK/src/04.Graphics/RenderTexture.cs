@@ -1,10 +1,9 @@
 ﻿using Silk.NET.OpenGLES;
-using Silk.NET.Maths;
-using System;
 
 namespace FDK;
 
-public class RenderTexture : IDisposable {
+public class RenderTexture : IDisposable
+{
 	private uint framebuffer;
 	private uint colorTexture;
 	private uint depthRenderbuffer;
@@ -17,13 +16,15 @@ public class RenderTexture : IDisposable {
 	/// </summary>
 	/// <param name="width">テクスチャの幅</param>
 	/// <param name="height">テクスチャの高さ</param>
-	public RenderTexture(int width, int height) {
+	public RenderTexture(int width, int height)
+	{
 		Width = width;
 		Height = height;
 		CreateFramebuffer();
 	}
 
-	private void CreateFramebuffer() {
+	private void CreateFramebuffer()
+	{
 		var gl = Game.Gl;
 
 		// フレームバッファを作成
@@ -33,12 +34,16 @@ public class RenderTexture : IDisposable {
 		// カラーテクスチャを作成
 		colorTexture = gl.GenTexture();
 		gl.BindTexture(TextureTarget.Texture2D, colorTexture);
-		unsafe {
-			if (OperatingSystem.IsMacOS()) {
+		unsafe
+		{
+			if (OperatingSystem.IsMacOS())
+			{
 				// macOSの場合はsized internal formatを使用
 				gl.TexImage2D(TextureTarget.Texture2D, 0, (int)InternalFormat.Rgba8,
 					(uint)Width, (uint)Height, 0, PixelFormat.Rgba, GLEnum.UnsignedByte, null);
-			} else {
+			}
+			else
+			{
 				// OpenGL ESの場合はunsized formatを使用
 				gl.TexImage2D(TextureTarget.Texture2D, 0, (int)PixelFormat.Rgba,
 					(uint)Width, (uint)Height, 0, PixelFormat.Rgba, GLEnum.UnsignedByte, null);
@@ -63,7 +68,8 @@ public class RenderTexture : IDisposable {
 
 		// フレームバッファの完成度をチェック
 		var status = gl.CheckFramebufferStatus(FramebufferTarget.Framebuffer);
-		if (status != GLEnum.FramebufferComplete) {
+		if (status != GLEnum.FramebufferComplete)
+		{
 			throw new Exception($"フレームバッファが不完全です: {status}");
 		}
 
@@ -76,7 +82,8 @@ public class RenderTexture : IDisposable {
 	/// <summary>
 	/// このレンダーテクスチャをアクティブにして描画開始
 	/// </summary>
-	public void BeginDraw() {
+	public void BeginDraw()
+	{
 		var gl = Game.Gl;
 		gl.BindFramebuffer(FramebufferTarget.Framebuffer, framebuffer);
 		gl.Viewport(0, 0, (uint)Width, (uint)Height);
@@ -89,12 +96,14 @@ public class RenderTexture : IDisposable {
 	/// <summary>
 	/// レンダーテクスチャへの描画を終了
 	/// </summary>
-	public void EndDraw() {
+	public void EndDraw()
+	{
 		var gl = Game.Gl;
 		gl.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
 	}
 
-	public void Dispose() {
+	public void Dispose()
+	{
 		var gl = Game.Gl;
 		gl.DeleteFramebuffer(framebuffer);
 		gl.DeleteTexture(colorTexture);

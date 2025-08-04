@@ -1,14 +1,18 @@
 ﻿namespace FDK;
 
-public class CActivity {
+public class CActivity
+{
 	// Properties
 
 	public bool IsActivated { get; private set; }
-	public bool IsDeActivated {
-		get {
+	public bool IsDeActivated
+	{
+		get
+		{
 			return !this.IsActivated;
 		}
-		set {
+		set
+		{
 			this.IsActivated = !value;
 		}
 	}
@@ -24,7 +28,8 @@ public class CActivity {
 
 	// Constructor
 
-	public CActivity() {
+	public CActivity()
+	{
 		this.IsDeActivated = true;
 		this.ChildActivities = new List<CActivity>();
 	}
@@ -35,7 +40,8 @@ public class CActivity {
 	#region [ 子クラスで必要なもののみ override すること。]
 	//-----------------
 
-	public virtual void Activate() {
+	public virtual void Activate()
+	{
 		// すでに活性化してるなら何もしない。
 		if (this.IsActivated)
 			return;
@@ -53,7 +59,8 @@ public class CActivity {
 		// その他の初期化
 		this.IsFirstDraw = true;
 	}
-	public virtual void DeActivate() {
+	public virtual void DeActivate()
+	{
 		// 活性化してないなら何もしない。
 		if (this.IsDeActivated)
 			return;
@@ -76,7 +83,8 @@ public class CActivity {
 	/// <para>いつどのタイミングで呼び出されるか（いつDirect3Dが再作成されるか）分からないので、
 	/// いつ何時呼び出されても問題無いようにコーディングしておくこと。</para>
 	/// </summary>
-	public virtual void CreateManagedResource() {
+	public virtual void CreateManagedResource()
+	{
 		// すべての 子Activity の Managed リソースを作成する。
 		foreach (CActivity activity in this.ChildActivities)
 			activity.CreateManagedResource();
@@ -89,7 +97,8 @@ public class CActivity {
 	/// <para>いつどのタイミングで呼び出されるか（いつDirect3Dが再作成またはリセットされるか）分からないので、
 	/// いつ何時呼び出されても問題無いようにコーディングしておくこと。</para>
 	/// </summary>
-	public virtual void CreateUnmanagedResource() {
+	public virtual void CreateUnmanagedResource()
+	{
 		// すべての 子Activity の Unmanaged リソースを作成する。
 		foreach (CActivity activity in this.ChildActivities)
 			activity.CreateUnmanagedResource();
@@ -101,7 +110,8 @@ public class CActivity {
 	/// <para>いつどのタイミングで呼び出されるか（いつDirect3Dが解放またはリセットされるか）分からないので、
 	/// いつ何時呼び出されても問題無いようにコーディングしておくこと。</para>
 	/// </summary>
-	public virtual void ReleaseUnmanagedResource() {
+	public virtual void ReleaseUnmanagedResource()
+	{
 		// 活性化してないなら何もしない。
 		if (this.IsDeActivated)
 			return;
@@ -118,7 +128,8 @@ public class CActivity {
 	/// <para>いつどのタイミングで呼び出されるか（いつDirect3Dが解放されるか）分からないので、
 	/// いつ何時呼び出されても問題無いようにコーディングしておくこと。</para>
 	/// </summary>
-	public virtual void ReleaseManagedResource() {
+	public virtual void ReleaseManagedResource()
+	{
 		// 活性化してないなら何もしない。
 		if (this.IsDeActivated)
 			return;
@@ -133,7 +144,8 @@ public class CActivity {
 	/// <para>このメソッドは BeginScene() の後に呼び出されるので、メソッド内でいきなり描画を行ってかまわない。</para>
 	/// </summary>
 	/// <returns>任意の整数。呼び出し元との整合性を合わせておくこと。</returns>
-	public virtual int Draw() {
+	public virtual int Draw()
+	{
 		// 活性化してないなら何もしない。
 		if (this.IsDeActivated)
 			return 0;

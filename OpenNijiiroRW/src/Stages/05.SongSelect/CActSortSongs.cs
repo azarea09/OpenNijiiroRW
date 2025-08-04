@@ -1,13 +1,16 @@
 ﻿namespace OpenNijiiroRW;
 
-internal class CActSortSongs : CActSelectPopupMenu {
+internal class CActSortSongs : CActSelectPopupMenu
+{
 
 	// Constructor
 
-	public CActSortSongs() {
+	public CActSortSongs()
+	{
 	}
 
-	public override void Activate() {
+	public override void Activate()
+	{
 		List<CItemBase> lci = new List<CItemBase>();
 		lci.Add(new CItemList(CLangManager.LangInstance.GetString("SONGSELECT_SORT_PATH"), CItemBase.EPanelType.Normal, 0, "", "", new string[] { "Z,Y,X,...", "A,B,C,..." }));
 		lci.Add(new CItemList(CLangManager.LangInstance.GetString("SONGSELECT_SORT_TITLE"), CItemBase.EPanelType.Normal, 0, "", "", new string[] { "Z,Y,X,...", "A,B,C,..." }));
@@ -22,15 +25,18 @@ internal class CActSortSongs : CActSelectPopupMenu {
 	}
 
 	// メソッド
-	public void tActivatePopupMenu(EInstrumentPad einst, ref CActSelect曲リスト ca) {
+	public void tActivatePopupMenu(EInstrumentPad einst, ref CActSelect曲リスト ca)
+	{
 		this.act曲リスト = ca;
 		base.tActivatePopupMenu(einst);
 	}
 
-	public override void tEnter押下Main(int nSortOrder) {
+	public override void tEnter押下Main(int nSortOrder)
+	{
 		nSortOrder *= 2;    // 0,1  => -1, 1
 		nSortOrder -= 1;
-		switch ((EOrder)n現在の選択行) {
+		switch ((EOrder)n現在の選択行)
+		{
 			case EOrder.Path:
 				this.act曲リスト.t曲リストのソート(
 					CSongs管理.tSongListSortByPath, nSortOrder
@@ -74,8 +80,10 @@ internal class CActSortSongs : CActSelectPopupMenu {
 
 	// CActivity 実装
 
-	public override void DeActivate() {
-		if (!base.IsDeActivated) {
+	public override void DeActivate()
+	{
+		if (!base.IsDeActivated)
+		{
 			base.DeActivate();
 		}
 	}
@@ -85,7 +93,8 @@ internal class CActSortSongs : CActSelectPopupMenu {
 
 	private CActSelect曲リスト act曲リスト;
 
-	private enum EOrder : int {
+	private enum EOrder : int
+	{
 		Path = 0,
 		Title = 1,
 		Subtitle = 2,

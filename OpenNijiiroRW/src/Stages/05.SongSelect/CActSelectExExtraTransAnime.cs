@@ -2,8 +2,10 @@
 
 namespace OpenNijiiroRW;
 
-internal class CActSelectExExtraTransAnime : CActivity {
-	enum AnimeState {
+internal class CActSelectExExtraTransAnime : CActivity
+{
+	enum AnimeState
+	{
 		NotRunning = 0,
 		ExToExtra = 1,
 		ExtraToEx = 2,
@@ -13,7 +15,8 @@ internal class CActSelectExExtraTransAnime : CActivity {
 	// Activate when swapping between ex/extra
 	// Do not let player move until timer is complete
 	// Stop drawing script when timer is finished
-	public CActSelectExExtraTransAnime() {
+	public CActSelectExExtraTransAnime()
+	{
 
 	}
 	// because i can't read japanese very well :
@@ -40,11 +43,13 @@ internal class CActSelectExExtraTransAnime : CActivity {
 		ExToExtraCounter = null;
 		ExtraToExCounter = null;
 
-		if (ExToExtraScript != null) {
+		if (ExToExtraScript != null)
+		{
 			ExToExtraScript.Dispose();
 			ExToExtraScript = null;
 		}
-		if (ExtraToExScript != null) {
+		if (ExtraToExScript != null)
+		{
 			ExtraToExScript.Dispose();
 			ExtraToExScript = null;
 		}
@@ -57,10 +62,12 @@ internal class CActSelectExExtraTransAnime : CActivity {
 
 	public override int Draw() //On Progress Draw
 	{
-		switch (CurrentState) {
+		switch (CurrentState)
+		{
 			case AnimeState.ExToExtra:
 				ExToExtraCounter.Tick();
-				if (ExToExtraCounter.IsEnded) {
+				if (ExToExtraCounter.IsEnded)
+				{
 					CurrentState = AnimeState.NotRunning;
 					ExToExtraCounter.Stop();
 					return 0;
@@ -72,7 +79,8 @@ internal class CActSelectExExtraTransAnime : CActivity {
 
 			case AnimeState.ExtraToEx:
 				ExtraToExCounter.Tick();
-				if (ExtraToExCounter.IsEnded) {
+				if (ExtraToExCounter.IsEnded)
+				{
 					CurrentState = AnimeState.NotRunning;
 					ExtraToExCounter.Stop();
 					return 0;
@@ -93,17 +101,21 @@ internal class CActSelectExExtraTransAnime : CActivity {
 		base.DeActivate();
 	}
 
-	public void BeginAnime(bool toExtra) {
+	public void BeginAnime(bool toExtra)
+	{
 		if (!OpenNijiiroRW.ConfigIni.ShowExExtraAnime) return;
 		else if (toExtra && !ExToExtraScript.Exists()) return;
 		else if (!toExtra && !ExtraToExScript.Exists()) return;
 
 		CurrentState = toExtra ? AnimeState.ExToExtra : AnimeState.ExtraToEx;
-		if (toExtra) {
+		if (toExtra)
+		{
 			ExToExtraCounter = new CCounter(0, 1, OpenNijiiroRW.Skin.SongSelect_Difficulty_Bar_ExExtra_AnimeDuration[0], OpenNijiiroRW.Timer);
 			ExToExtraScript.PlayAnimation();
 			OpenNijiiroRW.Skin.soundExToExtra[0]?.tPlay(); // Placeholder code
-		} else {
+		}
+		else
+		{
 			ExtraToExCounter = new CCounter(0, 1, OpenNijiiroRW.Skin.SongSelect_Difficulty_Bar_ExExtra_AnimeDuration[1], OpenNijiiroRW.Timer);
 			ExtraToExScript.PlayAnimation();
 			OpenNijiiroRW.Skin.soundExtraToEx[0]?.tPlay(); // Placeholder code

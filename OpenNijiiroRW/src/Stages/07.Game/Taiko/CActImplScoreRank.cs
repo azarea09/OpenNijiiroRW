@@ -2,8 +2,10 @@
 
 namespace OpenNijiiroRW;
 
-class CActImplScoreRank : CActivity {
-	public override void Activate() {
+class CActImplScoreRank : CActivity
+{
+	public override void Activate()
+	{
 		double RollTimems = 0;
 
 		/*
@@ -16,34 +18,40 @@ class CActImplScoreRank : CActivity {
         }
         */
 
-		for (int player = 0; player < 5; player++) {
+		for (int player = 0; player < 5; player++)
+		{
 			this.ScoreRank[player] = new int[] { 500000, 600000, 700000, 800000, 900000, 950000, OpenNijiiroRW.stageGameScreen.GetCeilingGen4ShinUchiScore(player) };
 
-			for (int i = 0; i < 7; i++) {
+			for (int i = 0; i < 7; i++)
+			{
 				this.counter[player][i] = new CCounter();
 			}
 		}
 		base.Activate();
 	}
 
-	public override void DeActivate() {
+	public override void DeActivate()
+	{
 		base.DeActivate();
 	}
 
-	public override void CreateManagedResource() {
+	public override void CreateManagedResource()
+	{
 		TowerResult_ScoreRankEffect = OpenNijiiroRW.tテクスチャの生成(CSkin.Path($"{TextureLoader.BASE}{TextureLoader.TOWERRESULT}ScoreRankEffect.png"));
 
 		base.CreateManagedResource();
 	}
 
-	public override void ReleaseManagedResource() {
+	public override void ReleaseManagedResource()
+	{
 
 		OpenNijiiroRW.tDisposeSafely(ref TowerResult_ScoreRankEffect);
 
 		base.ReleaseManagedResource();
 	}
 
-	private void displayScoreRank(int i, int player, float x, float y, int mode = 0) {
+	private void displayScoreRank(int i, int player, float x, float y, int mode = 0)
+	{
 		CCounter cct = this.counter[player][i];
 
 		CTexture tex = OpenNijiiroRW.Tx.ScoreRank;
@@ -53,15 +61,18 @@ class CActImplScoreRank : CActivity {
 		if (tex == null)
 			return;
 
-		if (!cct.IsTicked) {
+		if (!cct.IsTicked)
+		{
 			cct.Start(0, 3000, 1, OpenNijiiroRW.Timer);
 		}
-		if (cct.CurrentValue <= 255) {
+		if (cct.CurrentValue <= 255)
+		{
 			tex.Opacity = cct.CurrentValue;
 			x = ((cct.CurrentValue / 255.0f) - 1.0f) * (player == 0 ? -OpenNijiiroRW.Skin.Game_Judge_Move[0] : OpenNijiiroRW.Skin.Game_Judge_Move[0]);
 			y = ((cct.CurrentValue / 255.0f) - 1.0f) * (player == 0 ? -OpenNijiiroRW.Skin.Game_Judge_Move[1] : OpenNijiiroRW.Skin.Game_Judge_Move[1]);
 		}
-		if (cct.CurrentValue > 255 && cct.CurrentValue <= 255 + 180) {
+		if (cct.CurrentValue > 255 && cct.CurrentValue <= 255 + 180)
+		{
 			tex.Opacity = 255;
 
 			float newSize = 1.0f + (float)Math.Sin((cct.CurrentValue - 255) * (Math.PI / 180)) * 0.2f;
@@ -70,14 +81,16 @@ class CActImplScoreRank : CActivity {
 			x = 0;
 			y = 0;
 		}
-		if (cct.CurrentValue > 255 + 180 && cct.CurrentValue <= 2745) {
+		if (cct.CurrentValue > 255 + 180 && cct.CurrentValue <= 2745)
+		{
 			tex.Opacity = 255;
 			tex.Scale.X = 1.0f;
 			tex.Scale.Y = 1.0f;
 			x = 0;
 			y = 0;
 		}
-		if (cct.CurrentValue >= 2745 && cct.CurrentValue <= 3000) {
+		if (cct.CurrentValue >= 2745 && cct.CurrentValue <= 3000)
+		{
 			tex.Opacity = 255 - ((cct.CurrentValue - 2745));
 			x = ((cct.CurrentValue - 2745) / 255.0f) * (player == 0 || OpenNijiiroRW.ConfigIni.nPlayerCount >= 2 ? -OpenNijiiroRW.Skin.Game_Judge_Move[0] : OpenNijiiroRW.Skin.Game_Judge_Move[0]);
 			y = ((cct.CurrentValue - 2745) / 255.0f) * (player == 0 || OpenNijiiroRW.ConfigIni.nPlayerCount >= 2 ? -OpenNijiiroRW.Skin.Game_Judge_Move[1] : OpenNijiiroRW.Skin.Game_Judge_Move[1]);
@@ -85,13 +98,18 @@ class CActImplScoreRank : CActivity {
 
 		var xpos = 0;
 		var ypos = 0;
-		if (OpenNijiiroRW.ConfigIni.nPlayerCount == 5) {
+		if (OpenNijiiroRW.ConfigIni.nPlayerCount == 5)
+		{
 			xpos = OpenNijiiroRW.Skin.Game_ScoreRank_5P[0] + (OpenNijiiroRW.Skin.Game_UIMove_5P[0] * player);
 			ypos = OpenNijiiroRW.Skin.Game_ScoreRank_5P[1] + (OpenNijiiroRW.Skin.Game_UIMove_5P[1] * player);
-		} else if (OpenNijiiroRW.ConfigIni.nPlayerCount == 4 || OpenNijiiroRW.ConfigIni.nPlayerCount == 3) {
+		}
+		else if (OpenNijiiroRW.ConfigIni.nPlayerCount == 4 || OpenNijiiroRW.ConfigIni.nPlayerCount == 3)
+		{
 			xpos = OpenNijiiroRW.Skin.Game_ScoreRank_4P[0] + (OpenNijiiroRW.Skin.Game_UIMove_4P[0] * player);
 			ypos = OpenNijiiroRW.Skin.Game_ScoreRank_4P[1] + (OpenNijiiroRW.Skin.Game_UIMove_4P[1] * player);
-		} else {
+		}
+		else
+		{
 			xpos = OpenNijiiroRW.Skin.Game_ScoreRank_X[player];
 			ypos = OpenNijiiroRW.Skin.Game_ScoreRank_Y[player];
 		}
@@ -101,7 +119,8 @@ class CActImplScoreRank : CActivity {
 		int width;
 		int height;
 
-		switch (mode) {
+		switch (mode)
+		{
 			case 1:
 				width = tex.szTextureSize.Width / 7;
 				height = tex.szTextureSize.Height;
@@ -118,19 +137,25 @@ class CActImplScoreRank : CActivity {
 			tex.t2D拡大率考慮中央基準描画(xpos, ypos, new System.Drawing.Rectangle(width * i, 0, width, height));
 	}
 
-	public override int Draw() {
-		if (OpenNijiiroRW.stageSongSelect.nChoosenSongDifficulty[0] != (int)Difficulty.Dan) {
+	public override int Draw()
+	{
+		if (OpenNijiiroRW.stageSongSelect.nChoosenSongDifficulty[0] != (int)Difficulty.Dan)
+		{
 			float x = 0;
 			float y = 0;
 
-			for (int i = 0; i < 7; i++) {
-				if (OpenNijiiroRW.stageSongSelect.nChoosenSongDifficulty[0] != (int)Difficulty.Tower) {
+			for (int i = 0; i < 7; i++)
+			{
+				if (OpenNijiiroRW.stageSongSelect.nChoosenSongDifficulty[0] != (int)Difficulty.Tower)
+				{
 
-					for (int player = 0; player < 5; player++) {
+					for (int player = 0; player < 5; player++)
+					{
 						#region [Ensou score ranks]
 
 						counter[player][i].Tick();
-						if (OpenNijiiroRW.stageGameScreen.actScore.GetScore(player) >= ScoreRank[player][i]) {
+						if (OpenNijiiroRW.stageGameScreen.actScore.GetScore(player) >= ScoreRank[player][i])
+						{
 							displayScoreRank(i, player, x, y);
 
 							#region [Legacy]
@@ -174,7 +199,9 @@ class CActImplScoreRank : CActivity {
 						x = 0;
 					}
 					#endregion
-				} else if (OpenNijiiroRW.stageSongSelect.nChoosenSongDifficulty[0] == (int)Difficulty.Tower) {
+				}
+				else if (OpenNijiiroRW.stageSongSelect.nChoosenSongDifficulty[0] == (int)Difficulty.Tower)
+				{
 					#region [Tower score ranks]
 
 					double progress = CFloorManagement.LastRegisteredFloor / ((double)OpenNijiiroRW.stageSongSelect.rChoosenSong.score[5].譜面情報.nTotalFloor);
@@ -194,13 +221,15 @@ class CActImplScoreRank : CActivity {
 
 					bool satisfied = true;
 					for (int j = 0; j <= i; j++)
-						if (conditions[j] == false) {
+						if (conditions[j] == false)
+						{
 							satisfied = false;
 							break;
 						}
 
 
-					if (satisfied == true) {
+					if (satisfied == true)
+					{
 						displayScoreRank(i, 0, x, y, 1);
 					}
 

@@ -5,7 +5,8 @@ using FDK;
 namespace OpenNijiiroRW;
 
 [Serializable]
-internal class CScore {
+internal class CScore
+{
 	// Old DTX class, to deprecate ASAP and handle everything on CSongListNode
 
 
@@ -14,11 +15,13 @@ internal class CScore {
 	public STScoreIni情報 ScoreIni情報;
 	[Serializable]
 	[StructLayout(LayoutKind.Sequential)]
-	public struct STScoreIni情報 {
+	public struct STScoreIni情報
+	{
 		public DateTime 最終更新日時;
 		public long ファイルサイズ;
 
-		public STScoreIni情報(DateTime 最終更新日時, long ファイルサイズ) {
+		public STScoreIni情報(DateTime 最終更新日時, long ファイルサイズ)
+		{
 			this.最終更新日時 = 最終更新日時;
 			this.ファイルサイズ = ファイルサイズ;
 		}
@@ -27,13 +30,15 @@ internal class CScore {
 	public STファイル情報 ファイル情報;
 	[Serializable]
 	[StructLayout(LayoutKind.Sequential)]
-	public struct STファイル情報 {
+	public struct STファイル情報
+	{
 		public string ファイルの絶対パス;
 		public string フォルダの絶対パス;
 		public DateTime 最終更新日時;
 		public long ファイルサイズ;
 
-		public STファイル情報(string ファイルの絶対パス, string フォルダの絶対パス, DateTime 最終更新日時, long ファイルサイズ) {
+		public STファイル情報(string ファイルの絶対パス, string フォルダの絶対パス, DateTime 最終更新日時, long ファイルサイズ)
+		{
 			this.ファイルの絶対パス = ファイルの絶対パス;
 			this.フォルダの絶対パス = フォルダの絶対パス;
 			this.最終更新日時 = 最終更新日時;
@@ -45,7 +50,8 @@ internal class CScore {
 
 	[Serializable]
 	[StructLayout(LayoutKind.Sequential)]
-	public struct ST譜面情報 {
+	public struct ST譜面情報
+	{
 		public string タイトル;
 		public string アーティスト名;
 		public string コメント;
@@ -90,7 +96,8 @@ internal class CScore {
 
 		[Serializable]
 		[StructLayout(LayoutKind.Sequential)]
-		public struct STHISTORY {
+		public struct STHISTORY
+		{
 			public string 行1;
 			public string 行2;
 			public string 行3;
@@ -98,9 +105,12 @@ internal class CScore {
 			public string 行5;
 			public string 行6;
 			public string 行7;
-			public string this[int index] {
-				get {
-					switch (index) {
+			public string this[int index]
+			{
+				get
+				{
+					switch (index)
+					{
 						case 0:
 							return this.行1;
 
@@ -122,8 +132,10 @@ internal class CScore {
 					}
 					throw new IndexOutOfRangeException();
 				}
-				set {
-					switch (index) {
+				set
+				{
+					switch (index)
+					{
 						case 0:
 							this.行1 = value;
 							return;
@@ -157,7 +169,8 @@ internal class CScore {
 
 		[Serializable]
 		[StructLayout(LayoutKind.Sequential)]
-		public struct STRANK {
+		public struct STRANK
+		{
 			public int Drums;
 			public int Guitar;
 			public int Bass;
@@ -165,13 +178,17 @@ internal class CScore {
 
 		[Serializable]
 		[StructLayout(LayoutKind.Sequential)]
-		public struct STSKILL {
+		public struct STSKILL
+		{
 			public double Drums;
 			public double Guitar;
 			public double Bass;
-			public double this[int index] {
-				get {
-					switch (index) {
+			public double this[int index]
+			{
+				get
+				{
+					switch (index)
+					{
 						case 0:
 							return this.Drums;
 
@@ -183,11 +200,14 @@ internal class CScore {
 					}
 					throw new IndexOutOfRangeException();
 				}
-				set {
-					if ((value < 0.0) || (value > 100.0)) {
+				set
+				{
+					if ((value < 0.0) || (value > 100.0))
+					{
 						throw new ArgumentOutOfRangeException();
 					}
-					switch (index) {
+					switch (index)
+					{
 						case 0:
 							this.Drums = value;
 							return;
@@ -207,8 +227,10 @@ internal class CScore {
 	}
 
 	public bool bSongDBにキャッシュがあった;
-	public bool bスコアが有効である {
-		get {
+	public bool bスコアが有効である
+	{
+		get
+		{
 			return (((this.譜面情報.レベル[0] + this.譜面情報.レベル[1]) + this.譜面情報.レベル[2]) != 0);
 		}
 	}
@@ -216,7 +238,8 @@ internal class CScore {
 
 	// Constructor
 
-	public CScore() {
+	public CScore()
+	{
 		this.ScoreIni情報 = new STScoreIni情報(DateTime.MinValue, 0L);
 		this.bSongDBにキャッシュがあった = false;
 		this.ファイル情報 = new STファイル情報("", "", DateTime.MinValue, 0L);

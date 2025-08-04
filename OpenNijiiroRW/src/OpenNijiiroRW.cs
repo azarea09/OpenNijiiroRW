@@ -7,13 +7,13 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using DiscordRPC;
 using FDK;
-using Silk.NET.Maths;
 using SkiaSharp;
 using Rectangle = System.Drawing.Rectangle;
 
 namespace OpenNijiiroRW;
 
-internal class OpenNijiiroRW : Game {
+internal class OpenNijiiroRW : Game
+{
 	// Properties
 	#region [ properties ]
 	public static readonly string VERSION = Assembly.GetExecutingAssembly().GetName().Version.ToString();
@@ -22,11 +22,13 @@ internal class OpenNijiiroRW : Game {
 
 	public static readonly int MAX_PLAYERS = 5;
 
-	private static string GetAppDisplayThreePartVersion() {
+	private static string GetAppDisplayThreePartVersion()
+	{
 		return $"v{GetAppNumericThreePartVersion()}";
 	}
 
-	private static string GetAppNumericThreePartVersion() {
+	private static string GetAppNumericThreePartVersion()
+	{
 		var version = Assembly.GetExecutingAssembly().GetName().Version;
 
 		return $"{version.Major}.{version.Minor}.{version.Build}";
@@ -41,31 +43,37 @@ internal class OpenNijiiroRW : Game {
 			?.InformationalVersion
 		?? $"{GetAppDisplayThreePartVersion()} (unknown informational version)";
 
-	public static CStage latestSongSelect {
+	public static CStage latestSongSelect
+	{
 		get;
 		private set;
 	}
 
-	public static OpenNijiiroRW app {
+	public static OpenNijiiroRW app
+	{
 		get;
 		private set;
 	}
-	public static CTextConsole actTextConsole {
+	public static CTextConsole actTextConsole
+	{
 		get;
 		private set;
 	}
-	public static CConfigIni ConfigIni {
+	public static CConfigIni ConfigIni
+	{
 		get;
 		private set;
 	}
 
-	public static CVisualLogManager VisualLogManager {
+	public static CVisualLogManager VisualLogManager
+	{
 		get;
 		private set;
 	}
 
 	#region [DTX instances]
-	public static CTja? TJA { // only for P1
+	public static CTja? TJA
+	{ // only for P1
 		get => tja[0];
 		set => SetTJA(0, value);
 	}
@@ -75,18 +83,22 @@ internal class OpenNijiiroRW : Game {
 
 	public static CTja? GetTJA(int player)
 		=> tja.ElementAtOrDefault(player);
-	public static void SetTJA(int player, CTja? value) {
-		if (!(player >= 0 && player <= tja.Length)) {
+	public static void SetTJA(int player, CTja? value)
+	{
+		if (!(player >= 0 && player <= tja.Length))
+		{
 			return;
 		}
-		if ((tja[player] != null) && (app != null)) {
+		if ((tja[player] != null) && (app != null))
+		{
 			tja[player].DeActivate();
 			tja[player].ReleaseManagedResource();
 			tja[player].ReleaseUnmanagedResource();
 			app.listTopLevelActivities.Remove(tja[player]);
 		}
 		tja[player] = value;
-		if ((tja[player] != null) && (app != null)) {
+		if ((tja[player] != null) && (app != null))
+		{
 			app.listTopLevelActivities.Add(tja[player]);
 		}
 	}
@@ -95,162 +107,198 @@ internal class OpenNijiiroRW : Game {
 
 	public static CSongReplay[] ReplayInstances = new CSongReplay[5];
 
-	public static CFPS FPS {
+	public static CFPS FPS
+	{
 		get;
 		private set;
 	}
-	public static CInputManager InputManager {
+	public static CInputManager InputManager
+	{
 		get;
 		private set;
 	}
-	public static CPad Pad {
+	public static CPad Pad
+	{
 		get;
 		private set;
 	}
-	public static Random Random {
+	public static Random Random
+	{
 		get;
 		private set;
 	}
-	public static CSkin Skin {
+	public static CSkin Skin
+	{
 		get;
 		private set;
 	}
-	public static CSongs管理 Songs管理 {
+	public static CSongs管理 Songs管理
+	{
 		get;
 		set;    // 2012.1.26 yyagi private解除 CStage起動でのdesirialize読み込みのため
 	}
-	public static CEnumSongs EnumSongs {
+	public static CEnumSongs EnumSongs
+	{
 		get;
 		private set;
 	}
-	public static CActEnumSongs actEnumSongs {
+	public static CActEnumSongs actEnumSongs
+	{
 		get;
 		private set;
 	}
-	public static CActScanningLoudness actScanningLoudness {
-		get;
-		private set;
-	}
-
-	public static SoundManager SoundManager {
-		get;
-		private set;
-	}
-
-	public static SongGainController SongGainController {
+	public static CActScanningLoudness actScanningLoudness
+	{
 		get;
 		private set;
 	}
 
-	public static SoundGroupLevelController SoundGroupLevelController {
+	public static SoundManager SoundManager
+	{
 		get;
 		private set;
 	}
 
-	public static CNamePlate NamePlate {
+	public static SongGainController SongGainController
+	{
 		get;
 		private set;
 	}
 
-	public static NamePlateConfig NamePlateConfig {
+	public static SoundGroupLevelController SoundGroupLevelController
+	{
 		get;
 		private set;
 	}
 
-	public static Favorites Favorites {
+	public static CNamePlate NamePlate
+	{
 		get;
 		private set;
 	}
 
-	public static RecentlyPlayedSongs RecentlyPlayedSongs {
+	public static NamePlateConfig NamePlateConfig
+	{
 		get;
 		private set;
 	}
 
-	public static Databases Databases {
+	public static Favorites Favorites
+	{
 		get;
 		private set;
 	}
 
-	public static CSystemError SystemError {
-		get;
-		private set;
-	}
-	public static CStage起動 stageStartup {
-		get;
-		private set;
-	}
-	public static CStageTitle stageTitle {
-		get;
-		private set;
-	}
-	public static CStageコンフィグ stageConfig {
-		get;
-		private set;
-	}
-	public static CStageSongSelect stageSongSelect {
-		get;
-		private set;
-	}
-	public static CStage段位選択 stageDanSongSelect {
-		get;
-		private set;
-	}
-	public static CStageHeya stageHeya {
+	public static RecentlyPlayedSongs RecentlyPlayedSongs
+	{
 		get;
 		private set;
 	}
 
-	public static CStageOnlineLounge stageOnlineLounge {
+	public static Databases Databases
+	{
 		get;
 		private set;
 	}
 
-	public static CStageTowerSelect stageTowerSelect {
+	public static CSystemError SystemError
+	{
+		get;
+		private set;
+	}
+	public static CStage起動 stageStartup
+	{
+		get;
+		private set;
+	}
+	public static CStageTitle stageTitle
+	{
+		get;
+		private set;
+	}
+	public static CStageコンフィグ stageConfig
+	{
+		get;
+		private set;
+	}
+	public static CStageSongSelect stageSongSelect
+	{
+		get;
+		private set;
+	}
+	public static CStage段位選択 stageDanSongSelect
+	{
+		get;
+		private set;
+	}
+	public static CStageHeya stageHeya
+	{
 		get;
 		private set;
 	}
 
-	public static CStageCutScene stageCutScene {
+	public static CStageOnlineLounge stageOnlineLounge
+	{
 		get;
 		private set;
 	}
 
-	public static CStage曲読み込み stageSongLoading {
+	public static CStageTowerSelect stageTowerSelect
+	{
 		get;
 		private set;
 	}
-	public static CStage演奏ドラム画面 stageGameScreen {
+
+	public static CStageCutScene stageCutScene
+	{
 		get;
 		private set;
 	}
-	public static CStage結果 stageResults {
+
+	public static CStage曲読み込み stageSongLoading
+	{
 		get;
 		private set;
 	}
-	public static CStageChangeSkin stageChangeSkin {
+	public static CStage演奏ドラム画面 stageGameScreen
+	{
 		get;
 		private set;
 	}
-	public static CStage終了 stageExit {
+	public static CStage結果 stageResults
+	{
+		get;
+		private set;
+	}
+	public static CStageChangeSkin stageChangeSkin
+	{
+		get;
+		private set;
+	}
+	public static CStage終了 stageExit
+	{
 		get;
 		private set;
 	}
 	public static CStage rCurrentStage = null;
 	public static CStage rPreviousStage = null;
-	public static string strEXEのあるフォルダ {
+	public static string strEXEのあるフォルダ
+	{
 		get;
 		private set;
 	}
-	public static CTimer Timer {
+	public static CTimer Timer
+	{
 		get;
 		private set;
 	}
-	public bool bSwitchVSyncAtTheNextFrame {
+	public bool bSwitchVSyncAtTheNextFrame
+	{
 		get;
 		set;
 	}
-	public bool bSwitchFullScreenAtNextFrame {
+	public bool bSwitchFullScreenAtNextFrame
+	{
 		get;
 		set;
 	}
@@ -261,8 +309,10 @@ internal class OpenNijiiroRW : Game {
 
 	public static SaveFile[] SaveFileInstances = new SaveFile[5];
 
-	public static SaveFile PrimarySaveFile {
-		get {
+	public static SaveFile PrimarySaveFile
+	{
+		get
+		{
 			return SaveFileInstances[SaveFile];
 		}
 	}
@@ -271,19 +321,22 @@ internal class OpenNijiiroRW : Game {
 	public static int PlayerSide = 0;
 
 	// Modal manager
-	public static CModalManager ModalManager {
+	public static CModalManager ModalManager
+	{
 		get;
 		private set;
 	}
 
 	// Unlockables factory
-	public static CUnlockConditionFactory UnlockConditionFactory {
+	public static CUnlockConditionFactory UnlockConditionFactory
+	{
 		get;
 		private set;
 	}
 
 
-	public static int GetActualPlayer(int player) {
+	public static int GetActualPlayer(int player)
+	{
 		if (SaveFile == 0 || player > 1)
 			return player;
 		if (player == 0)
@@ -291,7 +344,8 @@ internal class OpenNijiiroRW : Game {
 		return 0;
 	}
 
-	public static bool P1IsBlue() {
+	public static bool P1IsBlue()
+	{
 		return (OpenNijiiroRW.PlayerSide == 1 && OpenNijiiroRW.ConfigIni.nPlayerCount == 1);
 	}
 
@@ -299,20 +353,25 @@ internal class OpenNijiiroRW : Game {
 
 	// Constructor
 
-	public OpenNijiiroRW() : base("OpenNijiiroRW.ico") {
+	public OpenNijiiroRW() : base("OpenNijiiroRW.ico")
+	{
 		OpenNijiiroRW.app = this;
 	}
 
 	public static string sEncType = "Shift_JIS";
 
-	public static string LargeImageKey {
-		get {
+	public static string LargeImageKey
+	{
+		get
+		{
 			return "opentaiko";
 		}
 	}
 
-	public static string LargeImageText {
-		get {
+	public static string LargeImageText
+	{
+		get
+		{
 			return "Ver." + Assembly.GetExecutingAssembly().GetName().Version.ToString() + "(" + RuntimeInformation.RuntimeIdentifier + ")";
 		}
 	}
@@ -325,36 +384,44 @@ internal class OpenNijiiroRW : Game {
 	/// </summary>
 	public static bool ConfigIsNew;
 
-	public void MountStage(CStage Stage) {
+	public void MountStage(CStage Stage)
+	{
 		Stage.Activate();
-		if (!ConfigIni.PreAssetsLoading) {
+		if (!ConfigIni.PreAssetsLoading)
+		{
 			Stage.CreateManagedResource();
 			Stage.CreateUnmanagedResource();
 		}
 	}
 
-	public void UnmountStage(CStage Stage) {
-		if (Stage != null) {
+	public void UnmountStage(CStage Stage)
+	{
+		if (Stage != null)
+		{
 			Stage.DeActivate();
-			if (!ConfigIni.PreAssetsLoading) {
+			if (!ConfigIni.PreAssetsLoading)
+			{
 				Stage.ReleaseManagedResource();
 				Stage.ReleaseUnmanagedResource();
 			}
 		}
 	}
 
-	public void UnmountCurrentStage() {
+	public void UnmountCurrentStage()
+	{
 		UnmountStage(rCurrentStage);
 	}
 
-	public void ChangeStage(CStage Stage) {
+	public void ChangeStage(CStage Stage)
+	{
 		UnmountCurrentStage();
 		MountStage(Stage);
 		rPreviousStage = rCurrentStage;
 		rCurrentStage = Stage;
 	}
 
-	public void TriggerSystemError(CSystemError.Errno errno) {
+	public void TriggerSystemError(CSystemError.Errno errno)
+	{
 		SystemError.LoadError(errno);
 		ChangeStage(SystemError);
 	}
@@ -369,21 +436,28 @@ internal class OpenNijiiroRW : Game {
 	/// リザルト画像のキャプチャと保存。
 	/// </summary>
 	/// <param name="strFilename">保存するファイル名(フルパス)</param>
-	public bool SaveResultScreen(string strFullPath) {
+	public bool SaveResultScreen(string strFullPath)
+	{
 		bool success = true;
 
-		void save(SKBitmap sKBitmap) {
+		void save(SKBitmap sKBitmap)
+		{
 			string strSavePath = Path.GetDirectoryName(strFullPath);
-			if (!Directory.Exists(strSavePath)) {
-				try {
+			if (!Directory.Exists(strSavePath))
+			{
+				try
+				{
 					Directory.CreateDirectory(strSavePath);
-				} catch {
+				}
+				catch
+				{
 					Trace.TraceError(ToString());
 					Trace.TraceError("例外が発生しましたが処理を継続します。 (0bfe6bff-2a56-4df4-9333-2df26d9b765b)");
 					success = false;
 				}
 			}
-			if (!File.Exists(strFullPath)) {
+			if (!File.Exists(strFullPath))
+			{
 				using FileStream stream = File.OpenWrite(strFullPath);
 				sKBitmap.Encode(stream, SKEncodedImageFormat.Png, 80);
 			}
@@ -398,7 +472,8 @@ internal class OpenNijiiroRW : Game {
 	// Game 実装
 
 
-	protected override void Configuration() {
+	protected override void Configuration()
+	{
 		#region [ strEXEのあるフォルダを決定する ]
 		//-----------------
 		strEXEのあるフォルダ = Environment.CurrentDirectory + Path.DirectorySeparatorChar;
@@ -409,35 +484,49 @@ internal class OpenNijiiroRW : Game {
 		ConfigIni = new CConfigIni();
 
 		string path = strEXEのあるフォルダ + "Config.ini";
-		if (File.Exists(path)) {
-			try {
+		if (File.Exists(path))
+		{
+			try
+			{
 				// Load config info
 				ConfigIni.LoadFromFile(path);
-			} catch (Exception e) {
+			}
+			catch (Exception e)
+			{
 				Trace.TraceError(e.ToString());
 				Trace.TraceError("例外が発生しましたが処理を継続します。 (b8d93255-bbe4-4ca3-8264-7ee5175b19f3)");
 			}
-		} else {
+		}
+		else
+		{
 			ConfigIsNew = true;
 		}
 
-		if (ConfigIsNew) {
+		if (ConfigIsNew)
+		{
 			GraphicsDeviceType_ = Silk.NET.GLFW.AnglePlatformType.OpenGL;
 
-			if (OperatingSystem.IsWindows()) {
+			if (OperatingSystem.IsWindows())
+			{
 				GraphicsDeviceType_ = Silk.NET.GLFW.AnglePlatformType.OpenGL;
 				ConfigIni.nGraphicsDeviceType = 0;
 			}
 			// While we aren't able to support MacOS, this check is included just in case this changes.
-			else if (OperatingSystem.IsMacOS()) {
+			else if (OperatingSystem.IsMacOS())
+			{
 				GraphicsDeviceType_ = Silk.NET.GLFW.AnglePlatformType.Metal;
 				ConfigIni.nGraphicsDeviceType = 3;
-			} else if (OperatingSystem.IsLinux()) {
+			}
+			else if (OperatingSystem.IsLinux())
+			{
 				GraphicsDeviceType_ = Silk.NET.GLFW.AnglePlatformType.Vulkan;
 				ConfigIni.nGraphicsDeviceType = 2;
 			}
-		} else {
-			switch (ConfigIni.nGraphicsDeviceType) {
+		}
+		else
+		{
+			switch (ConfigIni.nGraphicsDeviceType)
+			{
 				case 0:
 					GraphicsDeviceType_ = Silk.NET.GLFW.AnglePlatformType.OpenGL;
 					break;
@@ -454,7 +543,7 @@ internal class OpenNijiiroRW : Game {
 		}
 
 
-		int monitorHalfWidth  = Silk.NET.Windowing.Monitor.GetMainMonitor(WindowContext).Bounds.Size.X / 2;
+		int monitorHalfWidth = Silk.NET.Windowing.Monitor.GetMainMonitor(WindowContext).Bounds.Size.X / 2;
 		int monitorHalfHeight = Silk.NET.Windowing.Monitor.GetMainMonitor(WindowContext).Bounds.Size.Y / 2;
 
 		WindowPosition = new Silk.NET.Maths.Vector2D<int>(monitorHalfWidth - ConfigIni.nWindowWidth / 2, monitorHalfHeight - ConfigIni.nWindowHeight / 2);
@@ -466,38 +555,55 @@ internal class OpenNijiiroRW : Game {
 		base.Configuration();
 	}
 
-	protected override void Initialize() {
+	protected override void Initialize()
+	{
 		this.tStartupProcess();
 	}
 
-	protected override void LoadContent() {
-		if (ConfigIni.bWindowMode) {
-			if (!this.bマウスカーソル表示中) {
+	protected override void LoadContent()
+	{
+		if (ConfigIni.bWindowMode)
+		{
+			if (!this.bマウスカーソル表示中)
+			{
 				this.bマウスカーソル表示中 = true;
 			}
-		} else if (this.bマウスカーソル表示中) {
+		}
+		else if (this.bマウスカーソル表示中)
+		{
 			this.bマウスカーソル表示中 = false;
 		}
 
-		if (this.listTopLevelActivities != null) {
+		if (this.listTopLevelActivities != null)
+		{
 			foreach (CActivity activity in this.listTopLevelActivities)
 				activity.CreateUnmanagedResource();
 		}
 	}
-	protected override void UnloadContent() {
-		if (this.listTopLevelActivities != null) {
+	protected override void UnloadContent()
+	{
+		if (this.listTopLevelActivities != null)
+		{
 			foreach (CActivity activity in this.listTopLevelActivities)
 				activity.ReleaseUnmanagedResource();
 		}
 	}
-	protected override void OnExiting() {
+	protected override void OnExiting()
+	{
 		this.tExitProcess();
 		base.OnExiting();
 	}
-	protected override void Update() {
+	protected override void Update()
+	{
 		InputManager?.Polling();
+
+		if (InputManager.Keyboard.KeyPressed((int)SlimDXKeys.Key.F11) || (InputManager.Keyboard.KeyPressing((int)SlimDXKeys.Key.LeftAlt) && InputManager.Keyboard.KeyPressed((int)SlimDXKeys.Key.Return)))
+		{
+			ToggleFullScreen();
+		}
 	}
-	protected override void Draw() {
+	protected override void Draw()
+	{
 #if !DEBUG
 		try
 #endif
@@ -506,14 +612,16 @@ internal class OpenNijiiroRW : Game {
 			SoundManager.PlayTimer?.Update();
 			FPS?.Update();
 
-			if (BeatScaling != null) {
+			if (BeatScaling != null)
+			{
 				BeatScaling.Tick();
 				if (BeatScaling.CurrentValue == BeatScaling.EndValue) BeatScaling = null;
 			}
 
 			// #xxxxx 2013.4.8 yyagi; sleepの挿入位置を、EndScnene～Present間から、BeginScene前に移動。描画遅延を小さくするため。
 
-			if (rCurrentStage != null) {
+			if (rCurrentStage != null)
+			{
 				OpenNijiiroRW.NamePlate?.lcNamePlate.Update();
 				this.nDrawLoopReturnValue = (rCurrentStage != null) ? rCurrentStage.Draw() : 0;
 
@@ -523,19 +631,23 @@ internal class OpenNijiiroRW : Game {
 
 				actEnumSongs?.Draw();                            // "Enumerating Songs..." icon
 
-				switch (rCurrentStage.eStageID) {
+				switch (rCurrentStage.eStageID)
+				{
 					case CStage.EStage.Title:
 					case CStage.EStage.Config:
 					case CStage.EStage.SongSelect:
 					case CStage.EStage.SongLoading:
-						if (EnumSongs != null) {
+						if (EnumSongs != null)
+						{
 							#region [ (特定条件時) 曲検索スレッドの起動_開始 ]
 							if (rCurrentStage.eStageID == CStage.EStage.Title &&
 								rPreviousStage.eStageID == CStage.EStage.StartUp &&
 								this.nDrawLoopReturnValue == (int)CStageTitle.EReturnValue.継続 &&
-								!EnumSongs.IsSongListEnumStarted) {
+								!EnumSongs.IsSongListEnumStarted)
+							{
 								actEnumSongs.Activate();
-								if (!ConfigIni.PreAssetsLoading) {
+								if (!ConfigIni.PreAssetsLoading)
+								{
 									actEnumSongs.CreateManagedResource();
 									actEnumSongs.CreateUnmanagedResource();
 								}
@@ -546,13 +658,16 @@ internal class OpenNijiiroRW : Game {
 							#endregion
 
 							#region [ 曲検索の中断と再開 ]
-							if (rCurrentStage.eStageID == CStage.EStage.SongSelect && !EnumSongs.IsSongListEnumCompletelyDone) {
-								switch (this.nDrawLoopReturnValue) {
+							if (rCurrentStage.eStageID == CStage.EStage.SongSelect && !EnumSongs.IsSongListEnumCompletelyDone)
+							{
+								switch (this.nDrawLoopReturnValue)
+								{
 									case 0:     // 何もない
 										EnumSongs.Resume();
 										EnumSongs.IsSlowdown = false;
 										actEnumSongs.Activate();
-										if (!ConfigIni.PreAssetsLoading) {
+										if (!ConfigIni.PreAssetsLoading)
+										{
 											actEnumSongs.CreateManagedResource();
 											actEnumSongs.CreateUnmanagedResource();
 										}
@@ -561,7 +676,8 @@ internal class OpenNijiiroRW : Game {
 									case 2:     // 曲決定
 										EnumSongs.Suspend();                        // #27060 バックグラウンドの曲検索を一時停止
 										actEnumSongs.DeActivate();
-										if (!ConfigIni.PreAssetsLoading) {
+										if (!ConfigIni.PreAssetsLoading)
+										{
 											actEnumSongs.ReleaseManagedResource();
 											actEnumSongs.ReleaseUnmanagedResource();
 										}
@@ -580,9 +696,11 @@ internal class OpenNijiiroRW : Game {
 
 							#region [ 曲検索が完了したら、実際の曲リストに反映する ]
 							// CStage選曲.On活性化() に回した方がいいかな？
-							if (EnumSongs.IsSongListEnumerated) {
+							if (EnumSongs.IsSongListEnumerated)
+							{
 								actEnumSongs.DeActivate();
-								if (!ConfigIni.PreAssetsLoading) {
+								if (!ConfigIni.PreAssetsLoading)
+								{
 									actEnumSongs.ReleaseManagedResource();
 									actEnumSongs.ReleaseUnmanagedResource();
 								}
@@ -598,7 +716,8 @@ internal class OpenNijiiroRW : Game {
 				}
 				#endregion
 
-				switch (rCurrentStage.eStageID) {
+				switch (rCurrentStage.eStageID)
+				{
 					case CStage.EStage.None:
 						break;
 
@@ -608,7 +727,8 @@ internal class OpenNijiiroRW : Game {
 					case CStage.EStage.StartUp:
 						#region [ *** ]
 						//-----------------------------
-						if (this.nDrawLoopReturnValue != 0) {
+						if (this.nDrawLoopReturnValue != 0)
+						{
 							ChangeStage(stageTitle);
 							Trace.TraceInformation("----------------------");
 							Trace.TraceInformation("■ Title");
@@ -622,7 +742,8 @@ internal class OpenNijiiroRW : Game {
 					case CStage.EStage.Title:
 						#region [ *** ]
 						//-----------------------------
-						switch (this.nDrawLoopReturnValue) {
+						switch (this.nDrawLoopReturnValue)
+						{
 							case (int)CStageTitle.EReturnValue.GAMESTART:
 								#region [ Song select ]
 								//-----------------------------
@@ -724,8 +845,10 @@ internal class OpenNijiiroRW : Game {
 					case CStage.EStage.Config:
 						#region [ *** ]
 						//-----------------------------
-						if (this.nDrawLoopReturnValue != 0) {
-							switch (rPreviousStage.eStageID) {
+						if (this.nDrawLoopReturnValue != 0)
+						{
+							switch (rPreviousStage.eStageID)
+							{
 								case CStage.EStage.Title:
 									#region [ *** ]
 									//-----------------------------
@@ -760,7 +883,8 @@ internal class OpenNijiiroRW : Game {
 					case CStage.EStage.SongSelect:
 						#region [ *** ]
 						//-----------------------------
-						switch (this.nDrawLoopReturnValue) {
+						switch (this.nDrawLoopReturnValue)
+						{
 							case (int)CStageSongSelect.EReturnValue.BackToTitle:
 								#region [ *** ]
 								//-----------------------------
@@ -771,7 +895,8 @@ internal class OpenNijiiroRW : Game {
 								CSongSelectSongManager.stopSong();
 								CSongSelectSongManager.enable();
 
-								if (ConfigIni.bAIBattleMode == true) {
+								if (ConfigIni.bAIBattleMode == true)
+								{
 									ConfigIni.nPlayerCount = ConfigIni.nPreviousPlayerCount;
 									ConfigIni.bAIBattleMode = false;
 								}
@@ -846,7 +971,8 @@ internal class OpenNijiiroRW : Game {
 
 					case CStage.EStage.DanDojoSelect:
 						#region [ *** ]
-						switch (this.nDrawLoopReturnValue) {
+						switch (this.nDrawLoopReturnValue)
+						{
 							case (int)CStageSongSelect.EReturnValue.BackToTitle:
 								#region [ *** ]
 								//-----------------------------
@@ -880,7 +1006,8 @@ internal class OpenNijiiroRW : Game {
 
 					case CStage.EStage.Heya:
 						#region [ *** ]
-						switch (this.nDrawLoopReturnValue) {
+						switch (this.nDrawLoopReturnValue)
+						{
 							case (int)CStageSongSelect.EReturnValue.BackToTitle:
 								#region [ *** ]
 								//-----------------------------
@@ -901,7 +1028,8 @@ internal class OpenNijiiroRW : Game {
 
 					case CStage.EStage.CutScene:
 						#region [ *** ]
-						switch (this.nDrawLoopReturnValue) {
+						switch (this.nDrawLoopReturnValue)
+						{
 							case (int)CStageCutScene.EReturnValue.IntroFinished:
 								ChangeStage(stageSongLoading);
 								Trace.TraceInformation("----------------------");
@@ -923,13 +1051,16 @@ internal class OpenNijiiroRW : Game {
 					case CStage.EStage.SongLoading:
 						#region [ *** ]
 						//-----------------------------
-						if (this.nDrawLoopReturnValue != 0) {
+						if (this.nDrawLoopReturnValue != 0)
+						{
 							OpenNijiiroRW.Pad.detectedDevice.Clear();
 							UnmountCurrentStage();
 							#region [ If ESC is pressed, cancel the loading and go back to song select ]
-							if (this.nDrawLoopReturnValue == (int)ESongLoadingScreenReturnValue.LoadCanceled) {
+							if (this.nDrawLoopReturnValue == (int)ESongLoadingScreenReturnValue.LoadCanceled)
+							{
 
-								if (TJA != null) {
+								if (TJA != null)
+								{
 									TJA.DeActivate();
 									TJA.ReleaseManagedResource();
 									TJA.ReleaseUnmanagedResource();
@@ -963,7 +1094,8 @@ internal class OpenNijiiroRW : Game {
 					case CStage.EStage.Game:
 						#region [ *** ]
 
-						switch (this.nDrawLoopReturnValue) {
+						switch (this.nDrawLoopReturnValue)
+						{
 							case (int)EGameplayScreenReturnValue.ReloadAndReplay:
 								#region [ Restart play ]
 								TJA.tStopAllChips();
@@ -971,12 +1103,14 @@ internal class OpenNijiiroRW : Game {
 								TJA.ReleaseManagedResource();
 								TJA.ReleaseUnmanagedResource();
 								rCurrentStage.DeActivate();
-								if (!ConfigIni.PreAssetsLoading) {
+								if (!ConfigIni.PreAssetsLoading)
+								{
 									rCurrentStage.ReleaseManagedResource();
 									rCurrentStage.ReleaseUnmanagedResource();
 								}
 								stageSongLoading.Activate();
-								if (!ConfigIni.PreAssetsLoading) {
+								if (!ConfigIni.PreAssetsLoading)
+								{
 									stageSongLoading.CreateManagedResource();
 									stageSongLoading.CreateUnmanagedResource();
 								}
@@ -999,7 +1133,8 @@ internal class OpenNijiiroRW : Game {
 								TJA.ReleaseManagedResource();
 								TJA.ReleaseUnmanagedResource();
 								rCurrentStage.DeActivate();
-								if (!ConfigIni.PreAssetsLoading) {
+								if (!ConfigIni.PreAssetsLoading)
+								{
 									rCurrentStage.ReleaseManagedResource();
 									rCurrentStage.ReleaseUnmanagedResource();
 								}
@@ -1007,7 +1142,8 @@ internal class OpenNijiiroRW : Game {
 								Trace.TraceInformation("----------------------");
 								Trace.TraceInformation("■ Return to song select menu");
 								OpenNijiiroRW.latestSongSelect.Activate();
-								if (!ConfigIni.PreAssetsLoading) {
+								if (!ConfigIni.PreAssetsLoading)
+								{
 									OpenNijiiroRW.latestSongSelect.CreateManagedResource();
 									OpenNijiiroRW.latestSongSelect.CreateUnmanagedResource();
 								}
@@ -1031,7 +1167,8 @@ internal class OpenNijiiroRW : Game {
 								TJA.ReleaseManagedResource();
 								TJA.ReleaseUnmanagedResource();
 								rCurrentStage.DeActivate();
-								if (!ConfigIni.PreAssetsLoading) {
+								if (!ConfigIni.PreAssetsLoading)
+								{
 									rCurrentStage.ReleaseManagedResource();
 									rCurrentStage.ReleaseUnmanagedResource();
 								}
@@ -1039,7 +1176,8 @@ internal class OpenNijiiroRW : Game {
 								Trace.TraceInformation("----------------------");
 								Trace.TraceInformation("■ Song Select");
 								stageSongSelect.Activate();
-								if (!ConfigIni.PreAssetsLoading) {
+								if (!ConfigIni.PreAssetsLoading)
+								{
 									stageSongSelect.CreateManagedResource();
 									stageSongSelect.CreateUnmanagedResource();
 								}
@@ -1060,7 +1198,8 @@ internal class OpenNijiiroRW : Game {
 								stageGameScreen.t演奏結果を格納する(out c演奏記録_Drums);
 
 								rCurrentStage.DeActivate();
-								if (!ConfigIni.PreAssetsLoading) {
+								if (!ConfigIni.PreAssetsLoading)
+								{
 									rCurrentStage.ReleaseManagedResource();
 									rCurrentStage.ReleaseUnmanagedResource();
 								}
@@ -1068,7 +1207,8 @@ internal class OpenNijiiroRW : Game {
 								Trace.TraceInformation("■ Results");
 								stageResults.st演奏記録.Drums = c演奏記録_Drums;
 								stageResults.Activate();
-								if (!ConfigIni.PreAssetsLoading) {
+								if (!ConfigIni.PreAssetsLoading)
+								{
 									stageResults.CreateManagedResource();
 									stageResults.CreateUnmanagedResource();
 								}
@@ -1086,20 +1226,23 @@ internal class OpenNijiiroRW : Game {
 					case CStage.EStage.Results:
 						#region [ *** ]
 						//-----------------------------
-						if (this.nDrawLoopReturnValue != 0) {
+						if (this.nDrawLoopReturnValue != 0)
+						{
 							//DTX.t全チップの再生一時停止();
 							TJA.t全チップの再生停止とミキサーからの削除();
 							TJA.DeActivate();
 							TJA.ReleaseManagedResource();
 							TJA.ReleaseUnmanagedResource();
 							rCurrentStage.DeActivate();
-							if (!ConfigIni.PreAssetsLoading) {
+							if (!ConfigIni.PreAssetsLoading)
+							{
 								rCurrentStage.ReleaseManagedResource();
 								rCurrentStage.ReleaseUnmanagedResource();
 							}
 							this.tExecuteGarbageCollection();
 
-							if (stageCutScene.LoadCutScenes(rCurrentStage)) {
+							if (stageCutScene.LoadCutScenes(rCurrentStage))
+							{
 								//-----------------------------
 								this.MountStage(stageCutScene);
 								Trace.TraceInformation("----------------------");
@@ -1107,7 +1250,9 @@ internal class OpenNijiiroRW : Game {
 
 								rPreviousStage = rCurrentStage;
 								rCurrentStage = stageCutScene;
-							} else {
+							}
+							else
+							{
 								this.ReturnToSongSelection(rCurrentStage);
 							}
 						}
@@ -1118,7 +1263,8 @@ internal class OpenNijiiroRW : Game {
 
 					case CStage.EStage.TaikoTowers:
 						#region [ *** ]
-						switch (this.nDrawLoopReturnValue) {
+						switch (this.nDrawLoopReturnValue)
+						{
 							case (int)CStageSongSelect.EReturnValue.BackToTitle:
 								#region [ *** ]
 								//-----------------------------
@@ -1154,7 +1300,8 @@ internal class OpenNijiiroRW : Game {
 					case CStage.EStage.ChangeSkin:
 						#region [ *** ]
 						//-----------------------------
-						if (this.nDrawLoopReturnValue != 0) {
+						if (this.nDrawLoopReturnValue != 0)
+						{
 							ChangeStage(stageSongSelect);
 							Trace.TraceInformation("----------------------");
 							Trace.TraceInformation("■ Song Select");
@@ -1168,7 +1315,8 @@ internal class OpenNijiiroRW : Game {
 					case CStage.EStage.End:
 						#region [ *** ]
 						//-----------------------------
-						if (this.nDrawLoopReturnValue != 0) {
+						if (this.nDrawLoopReturnValue != 0)
+						{
 							base.Exit();
 							return;
 						}
@@ -1178,7 +1326,8 @@ internal class OpenNijiiroRW : Game {
 
 					default:
 						#region [ *** ]
-						switch (this.nDrawLoopReturnValue) {
+						switch (this.nDrawLoopReturnValue)
+						{
 							case (int)CStageSongSelect.EReturnValue.BackToTitle:
 								#region [ *** ]
 								//-----------------------------
@@ -1200,10 +1349,13 @@ internal class OpenNijiiroRW : Game {
 
 				actScanningLoudness?.Draw();
 
-				if (!ConfigIni.bTokkunMode && rCurrentStage.eStageID != CStage.EStage.CRASH) {
-					if (OpenNijiiroRW.TJA != null) {
+				if (!ConfigIni.bTokkunMode && rCurrentStage.eStageID != CStage.EStage.CRASH)
+				{
+					if (OpenNijiiroRW.TJA != null)
+					{
 						//object rendering
-						foreach (KeyValuePair<string, CSongObject> pair in OpenNijiiroRW.TJA.listObj) {
+						foreach (KeyValuePair<string, CSongObject> pair in OpenNijiiroRW.TJA.listObj)
+						{
 							pair.Value.tDraw();
 						}
 					}
@@ -1212,10 +1364,13 @@ internal class OpenNijiiroRW : Game {
 				if (rCurrentStage != null
 					&& rCurrentStage.eStageID != CStage.EStage.StartUp
 					&& rCurrentStage.eStageID != CStage.EStage.CRASH
-					&& OpenNijiiroRW.Tx.Network_Connection != null) {
-					if (Math.Abs(SoundManager.PlayTimer.SystemTimeMs - this.PreviousSystemTimeMs) > 10000) {
+					&& OpenNijiiroRW.Tx.Network_Connection != null)
+				{
+					if (Math.Abs(SoundManager.PlayTimer.SystemTimeMs - this.PreviousSystemTimeMs) > 10000)
+					{
 						this.PreviousSystemTimeMs = SoundManager.PlayTimer.SystemTimeMs;
-						Task.Factory.StartNew(() => {
+						Task.Factory.StartNew(() =>
+						{
 							//IPv4 8.8.8.8にPingを送信する(timeout 5000ms)
 							PingReply reply = new Ping().Send("8.8.8.8", 5000);
 							this.bInternetConnectionSuccess = reply.Status == IPStatus.Success;
@@ -1234,28 +1389,36 @@ internal class OpenNijiiroRW : Game {
 				if (rCurrentStage != null
 					&& rCurrentStage.eStageID != CStage.EStage.StartUp
 					&& rCurrentStage.eStageID != CStage.EStage.CRASH
-					&& OpenNijiiroRW.Tx.Overlay != null) {
+					&& OpenNijiiroRW.Tx.Overlay != null)
+				{
 					OpenNijiiroRW.Tx.Overlay.t2D描画(0, 0);
 				}
 			}
 
-			if (OpenNijiiroRW.ConfigIni.KeyAssign.KeyIsPressed(OpenNijiiroRW.ConfigIni.KeyAssign.System.Capture)) {
+			if (OpenNijiiroRW.ConfigIni.KeyAssign.KeyIsPressed(OpenNijiiroRW.ConfigIni.KeyAssign.System.Capture))
+			{
 #if DEBUG
-				if (OpenNijiiroRW.InputManager.Keyboard.KeyPressing((int)SlimDXKeys.Key.LeftControl)) {
-					if (rCurrentStage.eStageID != CStage.EStage.Game) {
+				if (OpenNijiiroRW.InputManager.Keyboard.KeyPressing((int)SlimDXKeys.Key.LeftControl))
+				{
+					if (rCurrentStage.eStageID != CStage.EStage.Game)
+					{
 						RefreshSkin();
 						rCurrentStage.DeActivate();
-						if (!ConfigIni.PreAssetsLoading) {
+						if (!ConfigIni.PreAssetsLoading)
+						{
 							rCurrentStage.ReleaseManagedResource();
 							rCurrentStage.ReleaseUnmanagedResource();
 						}
 						rCurrentStage.Activate();
-						if (!ConfigIni.PreAssetsLoading) {
+						if (!ConfigIni.PreAssetsLoading)
+						{
 							rCurrentStage.CreateManagedResource();
 							rCurrentStage.CreateUnmanagedResource();
 						}
 					}
-				} else {
+				}
+				else
+				{
 					// Debug.WriteLine( "capture: " + string.Format( "{0:2x}", (int) e.KeyCode ) + " " + (int) e.KeyCode );
 					string strFullPath =
 						Path.Combine(OpenNijiiroRW.strEXEのあるフォルダ, "Capture_img");
@@ -1271,14 +1434,16 @@ internal class OpenNijiiroRW : Game {
 			}
 
 			#region [ Fullscreen Toggle ]
-			if (this.bSwitchFullScreenAtNextFrame) {
+			if (this.bSwitchFullScreenAtNextFrame)
+			{
 				ConfigIni.bFullScreen = !ConfigIni.bFullScreen;
-				app.ToggleWindowMode();
+				app.ToggleFullScreen();
 				this.bSwitchFullScreenAtNextFrame = false;
 			}
 			#endregion
 			#region [ VSync Toggle ]
-			if (this.bSwitchVSyncAtTheNextFrame) {
+			if (this.bSwitchVSyncAtTheNextFrame)
+			{
 				VSync = ConfigIni.bEnableVSync;
 				this.bSwitchVSyncAtTheNextFrame = false;
 			}
@@ -1297,7 +1462,8 @@ internal class OpenNijiiroRW : Game {
 #endif
 	}
 
-	private void ReturnToSongSelection(CStage fromStage) {
+	private void ReturnToSongSelection(CStage fromStage)
+	{
 		Trace.TraceInformation("----------------------");
 		Trace.TraceInformation("■ Return to song select menu");
 		this.MountStage(OpenNijiiroRW.latestSongSelect);
@@ -1315,64 +1481,89 @@ internal class OpenNijiiroRW : Game {
 
 	#region [ 汎用ヘルパー ]
 	//-----------------
-	public static CTexture tテクスチャの生成(string fileName) {
+	public static CTexture tテクスチャの生成(string fileName)
+	{
 		return tテクスチャの生成(fileName, false);
 	}
-	public static CTexture tテクスチャの生成(string fileName, bool b黒を透過する) {
-		if (app == null) {
+	public static CTexture tテクスチャの生成(string fileName, bool b黒を透過する)
+	{
+		if (app == null)
+		{
 			return null;
 		}
-		try {
+		try
+		{
 			return new CTexture(fileName, b黒を透過する);
-		} catch (CTextureCreateFailedException e) {
+		}
+		catch (CTextureCreateFailedException e)
+		{
 			Trace.TraceError(e.ToString());
 			Trace.TraceError("Texture generation has failed. ({0})", fileName);
 			return null;
-		} catch (FileNotFoundException) {
+		}
+		catch (FileNotFoundException)
+		{
 			Trace.TraceWarning("Could not find specified texture file. ({0})", fileName);
 			return null;
 		}
 	}
-	public static void tテクスチャの解放(ref CTexture tx) {
+	public static void tテクスチャの解放(ref CTexture tx)
+	{
 		OpenNijiiroRW.tDisposeSafely(ref tx);
 	}
-	public static void tテクスチャの解放(ref CTextureAf tx) {
+	public static void tテクスチャの解放(ref CTextureAf tx)
+	{
 		OpenNijiiroRW.tDisposeSafely(ref tx);
 	}
-	public static CTexture tテクスチャの生成(SKBitmap bitmap) {
+	public static CTexture tテクスチャの生成(SKBitmap bitmap)
+	{
 		return tテクスチャの生成(bitmap, false);
 	}
-	public static CTexture tテクスチャの生成(SKBitmap bitmap, bool b黒を透過する) {
-		if (app == null) {
+	public static CTexture tテクスチャの生成(SKBitmap bitmap, bool b黒を透過する)
+	{
+		if (app == null)
+		{
 			return null;
 		}
-		if (bitmap == null) {
+		if (bitmap == null)
+		{
 			Trace.TraceError("Texture generation has failed. (bitmap==null)");
 			return null;
 		}
-		try {
+		try
+		{
 			return new CTexture(bitmap, b黒を透過する);
-		} catch (CTextureCreateFailedException e) {
+		}
+		catch (CTextureCreateFailedException e)
+		{
 			Trace.TraceError(e.ToString());
 			Trace.TraceError("Texture generation has failed. (txData)");
 			return null;
 		}
 	}
 
-	public static CTextureAf tテクスチャの生成Af(string fileName) {
+	public static CTextureAf tテクスチャの生成Af(string fileName)
+	{
 		return tテクスチャの生成Af(fileName, false);
 	}
-	public static CTextureAf tテクスチャの生成Af(string fileName, bool b黒を透過する) {
-		if (app == null) {
+	public static CTextureAf tテクスチャの生成Af(string fileName, bool b黒を透過する)
+	{
+		if (app == null)
+		{
 			return null;
 		}
-		try {
+		try
+		{
 			return new CTextureAf(fileName, b黒を透過する);
-		} catch (CTextureCreateFailedException e) {
+		}
+		catch (CTextureCreateFailedException e)
+		{
 			Trace.TraceError(e.ToString());
 			Trace.TraceError("Texture generation has failed. ({0})", fileName);
 			return null;
-		} catch (FileNotFoundException e) {
+		}
+		catch (FileNotFoundException e)
+		{
 			Trace.TraceError(e.ToString());
 			Trace.TraceError("Texture generation has failed. ({0})", fileName);
 			return null;
@@ -1380,7 +1571,8 @@ internal class OpenNijiiroRW : Game {
 	}
 
 	/// <summary>プロパティ、インデクサには ref は使用できないので注意。</summary>
-	public static void tDisposeSafely<T>(ref T obj) {
+	public static void tDisposeSafely<T>(ref T obj)
+	{
 		if (obj == null)
 			return;
 
@@ -1394,11 +1586,13 @@ internal class OpenNijiiroRW : Game {
 
 	public static void t安全にDisposeする<T>(ref T[] array) where T : class, IDisposable //2020.08.01 Mr-Ojii twopointzero氏のソースコードをもとに追加
 	{
-		if (array == null) {
+		if (array == null)
+		{
 			return;
 		}
 
-		for (var i = 0; i < array.Length; i++) {
+		for (var i = 0; i < array.Length; i++)
+		{
 			array[i]?.Dispose();
 			array[i] = null;
 		}
@@ -1407,9 +1601,11 @@ internal class OpenNijiiroRW : Game {
 	/// <summary>
 	/// そのフォルダの連番画像の最大値を返す。
 	/// </summary>
-	public static int t連番画像の枚数を数える(string ディレクトリ名, string プレフィックス = "", string 拡張子 = ".png") {
+	public static int t連番画像の枚数を数える(string ディレクトリ名, string プレフィックス = "", string 拡張子 = ".png")
+	{
 		int num = 0;
-		while (File.Exists(ディレクトリ名 + プレフィックス + num + 拡張子)) {
+		while (File.Exists(ディレクトリ名 + プレフィックス + num + 拡張子))
+		{
 			num++;
 		}
 		return num;
@@ -1421,7 +1617,8 @@ internal class OpenNijiiroRW : Game {
 	/// <param name="cTexture">曲名テクスチャ。</param>
 	/// <param name="samePixel">等倍で表示するピクセル数の最大値(デフォルト値:645)</param>
 	/// <returns>曲名テクスチャの縮小倍率。そのテクスチャがnullならば一倍(1f)を返す。</returns>
-	public static float GetSongNameXScaling(ref CTexture cTexture, int samePixel = 660) {
+	public static float GetSongNameXScaling(ref CTexture cTexture, int samePixel = 660)
+	{
 		if (cTexture == null) return 1f;
 		float scalingRate = (float)samePixel / (float)cTexture.szTextureSize.Width;
 		if (cTexture.szTextureSize.Width <= samePixel)
@@ -1434,8 +1631,10 @@ internal class OpenNijiiroRW : Game {
 	/// </summary>
 	/// <param name="number">難易度を表す数字。</param>
 	/// <returns>Difficulty 列挙体</returns>
-	public static Difficulty DifficultyNumberToEnum(int number) {
-		switch (number) {
+	public static Difficulty DifficultyNumberToEnum(int number)
+	{
+		switch (number)
+		{
 			case 0:
 				return Difficulty.Easy;
 			case 1:
@@ -1470,12 +1669,14 @@ internal class OpenNijiiroRW : Game {
 
 	public List<CActivity> listTopLevelActivities;
 	private int nDrawLoopReturnValue;
-	public static DateTime StartupTime {
+	public static DateTime StartupTime
+	{
 		get;
 		private set;
 	}
 
-	private void tStartupProcess() {
+	private void tStartupProcess()
+	{
 
 		// Load System error beforehand
 		this.listTopLevelActivities = new List<CActivity>();
@@ -1506,7 +1707,8 @@ internal class OpenNijiiroRW : Game {
 		Databases = new Databases();
 		Databases.tDatabases();
 
-		if (!File.Exists("Saves.db3")) {
+		if (!File.Exists("Saves.db3"))
+		{
 			File.Copy(@$".init{Path.DirectorySeparatorChar}Saves.db3", "Saves.db3");
 		}
 		// Add a condition here (if old Saves\ format save files exist) to port them to database (?)
@@ -1518,10 +1720,13 @@ internal class OpenNijiiroRW : Game {
 		#region [ Log output initialisation ]
 		//---------------------
 		Trace.AutoFlush = true;
-		if (ConfigIni.bOutputLogs) {
-			try {
+		if (ConfigIni.bOutputLogs)
+		{
+			try
+			{
 				Trace.Listeners.Add(new CTraceLogListener(new StreamWriter(System.IO.Path.Combine(strEXEのあるフォルダ, "OpenNijiiroRW.log"), false, Encoding.UTF8)));
-			} catch (System.UnauthorizedAccessException)            // #24481 2011.2.20 yyagi
+			}
+			catch (System.UnauthorizedAccessException)            // #24481 2011.2.20 yyagi
 			{
 				int c = (CultureInfo.CurrentUICulture.TwoLetterISOLanguageName == "ja") ? 0 : 1;
 				string[] mes_writeErr = {
@@ -1543,7 +1748,8 @@ internal class OpenNijiiroRW : Game {
 		Trace.TraceInformation("Processors: " + Environment.ProcessorCount.ToString());
 		Trace.TraceInformation("CLR Version: " + Environment.Version.ToString());
 
-		if (ConfigIsNew) {
+		if (ConfigIsNew)
+		{
 			Trace.TraceInformation("----------------------");
 			Trace.TraceInformation("No Config.ini file was found. This usually means you've launched the game for the first time. A Config.ini file will be generated after safely closing the game.");
 			Trace.TraceInformation("Thanks for joining us! (≧∇≦)ﾉ");
@@ -1589,10 +1795,13 @@ internal class OpenNijiiroRW : Game {
 		//---------------------
 		Trace.TraceInformation("Initializing timer...");
 		Trace.Indent();
-		try {
+		try
+		{
 			Timer = new CTimer(CTimer.TimerType.MultiMedia);
 			Trace.TraceInformation("Timer successfully initialized.");
-		} finally {
+		}
+		finally
+		{
 			Trace.Unindent();
 		}
 		//---------------------
@@ -1603,10 +1812,13 @@ internal class OpenNijiiroRW : Game {
 		//---------------------
 		Trace.TraceInformation("Initializing FPS counter...");
 		Trace.Indent();
-		try {
+		try
+		{
 			FPS = new CFPS();
 			Trace.TraceInformation("FPS counter initialized.");
-		} finally {
+		}
+		finally
+		{
 			Trace.Unindent();
 		}
 		//---------------------
@@ -1616,7 +1828,8 @@ internal class OpenNijiiroRW : Game {
 		//---------------------
 		Trace.TraceInformation("Initializing console...");
 		Trace.Indent();
-		try {
+		try
+		{
 			actTextConsole = new CTextConsole();
 			Trace.TraceInformation("Console initialized.");
 			actTextConsole.Activate();
@@ -1624,10 +1837,14 @@ internal class OpenNijiiroRW : Game {
 			actTextConsole.CreateUnmanagedResource();
 			Trace.TraceInformation("Console has been activated.");
 			Trace.TraceInformation("Console has finished being initialized.");
-		} catch (Exception exception) {
+		}
+		catch (Exception exception)
+		{
 			Trace.TraceError(exception.ToString());
 			Trace.TraceError("Console failed to initialize.");
-		} finally {
+		}
+		finally
+		{
 			Trace.Unindent();
 		}
 		//---------------------
@@ -1637,35 +1854,50 @@ internal class OpenNijiiroRW : Game {
 		//---------------------
 		Trace.TraceInformation("Initializing DirectInput and MIDI input...");
 		Trace.Indent();
-		try {
+		try
+		{
 			InputManager = new CInputManager(WindowContext, OpenNijiiroRW.ConfigIni.bBufferedInputs, true, OpenNijiiroRW.ConfigIni.nControllerDeadzone / 100.0f);
-			foreach (IInputDevice device in InputManager.InputDevices) {
-				if ((device.CurrentType == InputDeviceType.Joystick) && !ConfigIni.dicJoystick.ContainsValue(device.GUID)) {
+			foreach (IInputDevice device in InputManager.InputDevices)
+			{
+				if ((device.CurrentType == InputDeviceType.Joystick) && !ConfigIni.dicJoystick.ContainsValue(device.GUID))
+				{
 					int key = 0;
-					while (ConfigIni.dicJoystick.ContainsKey(key)) {
+					while (ConfigIni.dicJoystick.ContainsKey(key))
+					{
 						key++;
 					}
 					ConfigIni.dicJoystick.Add(key, device.GUID);
-				} else if ((device.CurrentType == InputDeviceType.Gamepad) && !ConfigIni.dicGamepad.ContainsValue(device.GUID)) {
+				}
+				else if ((device.CurrentType == InputDeviceType.Gamepad) && !ConfigIni.dicGamepad.ContainsValue(device.GUID))
+				{
 					int key = 0;
-					while (ConfigIni.dicGamepad.ContainsKey(key)) {
+					while (ConfigIni.dicGamepad.ContainsKey(key))
+					{
 						key++;
 					}
 					ConfigIni.dicGamepad.Add(key, device.GUID);
 				}
 			}
-			foreach (IInputDevice device2 in InputManager.InputDevices) {
-				if (device2.CurrentType == InputDeviceType.Joystick) {
-					foreach (KeyValuePair<int, string> pair in ConfigIni.dicJoystick) {
-						if (device2.GUID.Equals(pair.Value)) {
+			foreach (IInputDevice device2 in InputManager.InputDevices)
+			{
+				if (device2.CurrentType == InputDeviceType.Joystick)
+				{
+					foreach (KeyValuePair<int, string> pair in ConfigIni.dicJoystick)
+					{
+						if (device2.GUID.Equals(pair.Value))
+						{
 							((CInputJoystick)device2).SetID(pair.Key);
 							break;
 						}
 					}
 					continue;
-				} else if (device2.CurrentType == InputDeviceType.Gamepad) {
-					foreach (KeyValuePair<int, string> pair in ConfigIni.dicGamepad) {
-						if (device2.GUID.Equals(pair.Value)) {
+				}
+				else if (device2.CurrentType == InputDeviceType.Gamepad)
+				{
+					foreach (KeyValuePair<int, string> pair in ConfigIni.dicGamepad)
+					{
+						if (device2.GUID.Equals(pair.Value))
+						{
 							((CInputGamepad)device2).SetID(pair.Key);
 							break;
 						}
@@ -1674,12 +1906,16 @@ internal class OpenNijiiroRW : Game {
 				}
 			}
 			Trace.TraceInformation("DirectInput has been initialized.");
-		} catch (Exception exception2) {
+		}
+		catch (Exception exception2)
+		{
 			Trace.TraceError("DirectInput and MIDI input failed to initialize.");
 			TriggerSystemError(CSystemError.Errno.ENO_INPUTINITFAILED);
 			return;
 			//throw;
-		} finally {
+		}
+		finally
+		{
 			Trace.Unindent();
 		}
 		//---------------------
@@ -1689,15 +1925,20 @@ internal class OpenNijiiroRW : Game {
 		//---------------------
 		Trace.TraceInformation("Initialize pad...");
 		Trace.Indent();
-		try {
+		try
+		{
 			Pad = new CPad(ConfigIni, InputManager);
 			Trace.TraceInformation("Pad has been initialized.");
-		} catch (Exception exception3) {
+		}
+		catch (Exception exception3)
+		{
 			Trace.TraceError(exception3.ToString());
 			Trace.TraceError("Pad failed to initialize.");
 			TriggerSystemError(CSystemError.Errno.ENO_PADINITFAILED);
 			return;
-		} finally {
+		}
+		finally
+		{
 			Trace.Unindent();
 		}
 		//---------------------
@@ -1707,9 +1948,11 @@ internal class OpenNijiiroRW : Game {
 		//---------------------
 		Trace.TraceInformation("Initializing sound device...");
 		Trace.Indent();
-		try {
+		try
+		{
 			ESoundDeviceType soundDeviceType;
-			switch (OpenNijiiroRW.ConfigIni.nSoundDeviceType) {
+			switch (OpenNijiiroRW.ConfigIni.nSoundDeviceType)
+			{
 				case 0:
 					soundDeviceType = ESoundDeviceType.Bass;
 					break;
@@ -1741,10 +1984,12 @@ internal class OpenNijiiroRW : Game {
 
 			Trace.TraceInformation("Initializing loudness scanning, song gain control, and sound group level control...");
 			Trace.Indent();
-			try {
+			try
+			{
 				actScanningLoudness = new CActScanningLoudness();
 				actScanningLoudness.Activate();
-				if (!ConfigIni.PreAssetsLoading) {
+				if (!ConfigIni.PreAssetsLoading)
+				{
 					actScanningLoudness.CreateManagedResource();
 					actScanningLoudness.CreateUnmanagedResource();
 				}
@@ -1757,7 +2002,9 @@ internal class OpenNijiiroRW : Game {
 
 				SoundGroupLevelController = new SoundGroupLevelController(CSound.SoundInstances);
 				ConfigIniToSoundGroupLevelControllerBinder.Bind(ConfigIni, SoundGroupLevelController);
-			} finally {
+			}
+			finally
+			{
 				Trace.Unindent();
 				Trace.TraceInformation("Initialized loudness scanning, song gain control, and sound group level control.");
 			}
@@ -1766,11 +2013,15 @@ internal class OpenNijiiroRW : Game {
 			FDK.SoundManager.bIsTimeStretch = OpenNijiiroRW.ConfigIni.bTimeStretch;
 			SoundManager.nMasterVolume = OpenNijiiroRW.ConfigIni.nMasterVolume;
 			Trace.TraceInformation("サウンドデバイスの初期化を完了しました。");
-		} catch (Exception e) {
+		}
+		catch (Exception e)
+		{
 			TriggerSystemError(CSystemError.Errno.ENO_NOAUDIODEVICE);
 			return;
 			// throw new NullReferenceException("No sound devices are enabled. Please check your audio settings.", e);
-		} finally {
+		}
+		finally
+		{
 			Trace.Unindent();
 		}
 		//---------------------
@@ -1780,18 +2031,23 @@ internal class OpenNijiiroRW : Game {
 		//---------------------
 		Trace.TraceInformation("Initializing song list...");
 		Trace.Indent();
-		try {
+		try
+		{
 			Songs管理 = new CSongs管理();
 			//				Songs管理_裏読 = new CSongs管理();
 			EnumSongs = new CEnumSongs();
 			actEnumSongs = new CActEnumSongs();
 			Trace.TraceInformation("Song list initialized.");
-		} catch (Exception e) {
+		}
+		catch (Exception e)
+		{
 			Trace.TraceError(e.ToString());
 			Trace.TraceError("Song list failed to initialize.");
 			TriggerSystemError(CSystemError.Errno.ENO_SONGLISTINITFAILED);
 			return;
-		} finally {
+		}
+		finally
+		{
 			Trace.Unindent();
 		}
 		//---------------------
@@ -1853,11 +2109,13 @@ internal class OpenNijiiroRW : Game {
 		DiscordClient = new DiscordRpcClient("939341030141096007");
 		DiscordClient?.Initialize();
 		StartupTime = DateTime.UtcNow;
-		DiscordClient?.SetPresence(new RichPresence() {
+		DiscordClient?.SetPresence(new RichPresence()
+		{
 			Details = "",
 			State = "Startup",
 			Timestamps = new Timestamps(OpenNijiiroRW.StartupTime),
-			Assets = new Assets() {
+			Assets = new Assets()
+			{
 				LargeImageKey = OpenNijiiroRW.LargeImageKey,
 				LargeImageText = OpenNijiiroRW.LargeImageText,
 			}
@@ -1876,17 +2134,21 @@ internal class OpenNijiiroRW : Game {
 		#endregion
 	}
 
-	public void ShowWindowTitle() {
+	public void ShowWindowTitle()
+	{
 		string delay = "";
-		if (SoundManager.GetCurrentSoundDeviceType() != "DirectSound") {
+		if (SoundManager.GetCurrentSoundDeviceType() != "DirectSound")
+		{
 			delay = "(" + SoundManager.GetSoundDelay() + "ms)";
 		}
 		AssemblyName asmApp = Assembly.GetExecutingAssembly().GetName();
 		base.WindowTitle = asmApp.Name + " Ver." + VERSION + " - (" + GraphicsDeviceType_ + ") - (" + SoundManager.GetCurrentSoundDeviceType() + delay + ")";
 	}
 
-	private void tExitProcess() {
-		if (!this.b終了処理完了済み) {
+	private void tExitProcess()
+	{
+		if (!this.b終了処理完了済み)
+		{
 			Trace.TraceInformation("----------------------");
 			Trace.TraceInformation("■ Shutdown");
 
@@ -1899,17 +2161,23 @@ internal class OpenNijiiroRW : Game {
 			#region [ 曲検索の終了処理 ]
 			//---------------------
 
-			if (actEnumSongs != null) {
+			if (actEnumSongs != null)
+			{
 				Trace.TraceInformation("Ending enumeration of songs...");
 				Trace.Indent();
-				try {
+				try
+				{
 					actEnumSongs.DeActivate();
 					actEnumSongs = null;
 					Trace.TraceInformation("Enumeration of songs closed down successfully.");
-				} catch (Exception e) {
+				}
+				catch (Exception e)
+				{
 					Trace.TraceError(e.ToString());
 					Trace.TraceError("Song enumeration could not close.");
-				} finally {
+				}
+				finally
+				{
 					Trace.Unindent();
 				}
 			}
@@ -1921,14 +2189,18 @@ internal class OpenNijiiroRW : Game {
 			{
 				Trace.TraceInformation("Exiting stage...");
 				Trace.Indent();
-				try {
+				try
+				{
 					rCurrentStage.DeActivate();
-					if (!ConfigIni.PreAssetsLoading) {
+					if (!ConfigIni.PreAssetsLoading)
+					{
 						rCurrentStage.ReleaseManagedResource();
 						rCurrentStage.ReleaseUnmanagedResource();
 					}
 					Trace.TraceInformation("Stage exited.");
-				} finally {
+				}
+				finally
+				{
 					Trace.Unindent();
 				}
 			}
@@ -1940,12 +2212,15 @@ internal class OpenNijiiroRW : Game {
 			#endregion
 			#region [ 曲リストの終了処理 ]
 			//---------------------
-			if (Songs管理 != null) {
+			if (Songs管理 != null)
+			{
 				Trace.TraceInformation("Ending song list...");
 				Trace.Indent();
-				try {
+				try
+				{
 #pragma warning disable SYSLIB0011
-					if (EnumSongs.IsSongListEnumCompletelyDone) {
+					if (EnumSongs.IsSongListEnumCompletelyDone)
+					{
 						BinaryFormatter songlistdb_ = new BinaryFormatter();
 						using Stream songlistdb = File.OpenWrite($"{OpenNijiiroRW.strEXEのあるフォルダ}songlist.db");
 						songlistdb_.Serialize(songlistdb, Songs管理.listSongsDB);
@@ -1954,10 +2229,14 @@ internal class OpenNijiiroRW : Game {
 
 					Songs管理 = null;
 					Trace.TraceInformation("Song list terminated.");
-				} catch (Exception exception) {
+				}
+				catch (Exception exception)
+				{
 					Trace.TraceError(exception.ToString());
 					Trace.TraceError("Song list failed to terminate.");
-				} finally {
+				}
+				finally
+				{
 					Trace.Unindent();
 				}
 			}
@@ -1968,17 +2247,23 @@ internal class OpenNijiiroRW : Game {
 			#endregion
 			#region [ スキンの終了処理 ]
 			//---------------------
-			if (Skin != null) {
+			if (Skin != null)
+			{
 				Trace.TraceInformation("Terminating skin...");
 				Trace.Indent();
-				try {
+				try
+				{
 					Skin.Dispose();
 					Skin = null;
 					Trace.TraceInformation("Skin has been terminated.");
-				} catch (Exception exception2) {
+				}
+				catch (Exception exception2)
+				{
 					Trace.TraceError(exception2.ToString());
 					Trace.TraceError("Skin failed to terminate.");
-				} finally {
+				}
+				finally
+				{
 					Trace.Unindent();
 				}
 			}
@@ -1986,17 +2271,23 @@ internal class OpenNijiiroRW : Game {
 			#endregion
 			#region [ DirectSoundの終了処理 ]
 			//---------------------
-			if (SoundManager != null) {
+			if (SoundManager != null)
+			{
 				Trace.TraceInformation("Ending DirectSound devices...");
 				Trace.Indent();
-				try {
+				try
+				{
 					SoundManager.Dispose();
 					SoundManager = null;
 					Trace.TraceInformation("DirectSound devices have been terminated.");
-				} catch (Exception exception3) {
+				}
+				catch (Exception exception3)
+				{
 					Trace.TraceError(exception3.ToString());
 					Trace.TraceError("DirectSound devices failed to terminate.");
-				} finally {
+				}
+				finally
+				{
 					Trace.Unindent();
 				}
 			}
@@ -2004,16 +2295,22 @@ internal class OpenNijiiroRW : Game {
 			#endregion
 			#region [ パッドの終了処理 ]
 			//---------------------
-			if (Pad != null) {
+			if (Pad != null)
+			{
 				Trace.TraceInformation("Ending pads...");
 				Trace.Indent();
-				try {
+				try
+				{
 					Pad = null;
 					Trace.TraceInformation("Pads have been terminated.");
-				} catch (Exception exception4) {
+				}
+				catch (Exception exception4)
+				{
 					Trace.TraceError(exception4.ToString());
 					Trace.TraceError("Pads failed to terminate。");
-				} finally {
+				}
+				finally
+				{
 					Trace.Unindent();
 				}
 			}
@@ -2021,17 +2318,23 @@ internal class OpenNijiiroRW : Game {
 			#endregion
 			#region [ DirectInput, MIDI入力の終了処理 ]
 			//---------------------
-			if (InputManager != null) {
+			if (InputManager != null)
+			{
 				Trace.TraceInformation("Ending DirectInput and MIDI devices...");
 				Trace.Indent();
-				try {
+				try
+				{
 					InputManager.Dispose();
 					InputManager = null;
 					Trace.TraceInformation("DirectInput and MIDI devices terminated.");
-				} catch (Exception exception5) {
+				}
+				catch (Exception exception5)
+				{
 					Trace.TraceError(exception5.ToString());
 					Trace.TraceError("DirectInput and MIDI devices failed to terminate.");
-				} finally {
+				}
+				finally
+				{
 					Trace.Unindent();
 				}
 			}
@@ -2039,19 +2342,25 @@ internal class OpenNijiiroRW : Game {
 			#endregion
 			#region [ 文字コンソールの終了処理 ]
 			//---------------------
-			if (actTextConsole != null) {
+			if (actTextConsole != null)
+			{
 				Trace.TraceInformation("Ending console...");
 				Trace.Indent();
-				try {
+				try
+				{
 					actTextConsole.DeActivate();
 					actTextConsole.ReleaseManagedResource();
 					actTextConsole.ReleaseUnmanagedResource();
 					actTextConsole = null;
 					Trace.TraceInformation("Console terminated.");
-				} catch (Exception exception6) {
+				}
+				catch (Exception exception6)
+				{
 					Trace.TraceError(exception6.ToString());
 					Trace.TraceError("Console failed to terminate.");
-				} finally {
+				}
+				finally
+				{
 					Trace.Unindent();
 				}
 			}
@@ -2061,12 +2370,16 @@ internal class OpenNijiiroRW : Game {
 			//---------------------
 			Trace.TraceInformation("Ending FPS counter...");
 			Trace.Indent();
-			try {
-				if (FPS != null) {
+			try
+			{
+				if (FPS != null)
+				{
 					FPS = null;
 				}
 				Trace.TraceInformation("FPS counter terminated.");
-			} finally {
+			}
+			finally
+			{
 				Trace.Unindent();
 			}
 			//---------------------
@@ -2075,15 +2388,21 @@ internal class OpenNijiiroRW : Game {
 			//---------------------
 			Trace.TraceInformation("Ending timer...");
 			Trace.Indent();
-			try {
-				if (Timer != null) {
+			try
+			{
+				if (Timer != null)
+				{
 					Timer.Dispose();
 					Timer = null;
 					Trace.TraceInformation("Timer terminated.");
-				} else {
+				}
+				else
+				{
 					Trace.TraceInformation("There are no existing timers.");
 				}
-			} finally {
+			}
+			finally
+			{
 				Trace.Unindent();
 			}
 			//---------------------
@@ -2094,29 +2413,38 @@ internal class OpenNijiiroRW : Game {
 			Trace.TraceInformation("This only needs to be done once, unless you have deleted the file!");
 			string str = strEXEのあるフォルダ + "Config.ini";
 			Trace.Indent();
-			try {
+			try
+			{
 				ConfigIni.t書き出し(str);
 				Trace.TraceInformation("Saved succesfully. ({0})", str);
-			} catch (Exception e) {
+			}
+			catch (Exception e)
+			{
 				Trace.TraceError(e.ToString());
 				Trace.TraceError("Config.ini failed to create. ({0})", str);
-			} finally {
+			}
+			finally
+			{
 				Trace.Unindent();
 			}
 
 			Trace.TraceInformation("Deinitializing loudness scanning, song gain control, and sound group level control...");
 			Trace.Indent();
-			try {
+			try
+			{
 				SoundGroupLevelController = null;
 				SongGainController = null;
 				LoudnessMetadataScanner.StopBackgroundScanning(joinImmediately: true);
 				actScanningLoudness?.DeActivate();
-				if (!ConfigIni.PreAssetsLoading) {
+				if (!ConfigIni.PreAssetsLoading)
+				{
 					actScanningLoudness?.ReleaseManagedResource();
 					actScanningLoudness?.ReleaseUnmanagedResource();
 				}
 				actScanningLoudness = null;
-			} finally {
+			}
+			finally
+			{
 				Trace.Unindent();
 				Trace.TraceInformation("Deinitialized loudness scanning, song gain control, and sound group level control.");
 			}
@@ -2130,20 +2458,23 @@ internal class OpenNijiiroRW : Game {
 		}
 	}
 
-	private void tExecuteGarbageCollection() {
+	private void tExecuteGarbageCollection()
+	{
 		GC.Collect(GC.MaxGeneration);
 		GC.WaitForPendingFinalizers();
 		GC.Collect(GC.MaxGeneration);
 	}
 
-	private void ChangeResolution(int nWidth, int nHeight) {
+	private void ChangeResolution(int nWidth, int nHeight)
+	{
 		//RenderSurfaceSize.Width = nWidth;
 		//RenderSurfaceSize.Height = nHeight;
 
 		//WindowSize = new Silk.NET.Maths.Vector2D<int>(nWidth, nHeight);
 	}
 
-	public void RefreshSkin() {
+	public void RefreshSkin()
+	{
 		Trace.TraceInformation("Skin Change:" + OpenNijiiroRW.Skin.GetCurrentSkinSubfolderFullName(false));
 
 		OpenNijiiroRW.actTextConsole.DeActivate();

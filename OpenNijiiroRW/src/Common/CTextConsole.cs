@@ -3,8 +3,10 @@ using FDK;
 
 namespace OpenNijiiroRW;
 
-internal class CTextConsole : CActivity {
-	public enum EFontType {
+internal class CTextConsole : CActivity
+{
+	public enum EFontType
+	{
 		White,
 		Cyan,
 		Gray,
@@ -18,19 +20,27 @@ internal class CTextConsole : CActivity {
 
 	/// Print text with initial cursor position at (x, y) and set cursor to xLineBegin on line wraps
 	/// Returns (x, y) of final cursor position
-	public (int x, int y) Print(int x, int y, int xLineBegin, EFontType font, string alphanumericString) {
-		if (base.IsDeActivated || string.IsNullOrEmpty(alphanumericString)) {
+	public (int x, int y) Print(int x, int y, int xLineBegin, EFontType font, string alphanumericString)
+	{
+		if (base.IsDeActivated || string.IsNullOrEmpty(alphanumericString))
+		{
 			return (x, y);
 		}
 
-		foreach (var ch in alphanumericString) {
-			if (ch == '\n') {
+		foreach (var ch in alphanumericString)
+		{
+			if (ch == '\n')
+			{
 				x = xLineBegin;
 				y += this.fontHeight;
-			} else {
+			}
+			else
+			{
 				int index = printableCharacters.IndexOf(ch);
-				if (index >= 0) {
-					if (this.fontTextures[(int)((int)font / (int)EFontType.WhiteSlim)] != null) {
+				if (index >= 0)
+				{
+					if (this.fontTextures[(int)((int)font / (int)EFontType.WhiteSlim)] != null)
+					{
 						this.fontTextures[(int)((int)font / (int)EFontType.WhiteSlim)].t2D描画(x, y, this.characterRectangles[(int)((int)font % (int)EFontType.WhiteSlim), index]);
 					}
 				}
@@ -41,15 +51,18 @@ internal class CTextConsole : CActivity {
 		return (x, y);
 	}
 
-	public override void DeActivate() {
+	public override void DeActivate()
+	{
 		if (this.characterRectangles != null)
 			this.characterRectangles = null;
 
 		base.DeActivate();
 	}
 
-	public override void CreateManagedResource() {
-		if (base.IsDeActivated) {
+	public override void CreateManagedResource()
+	{
+		if (base.IsDeActivated)
+		{
 			return;
 		}
 
@@ -60,8 +73,10 @@ internal class CTextConsole : CActivity {
 		this.fontHeight = this.fontTextures[0].szTextureSize.Height / 16;
 
 		this.characterRectangles = new Rectangle[3, printableCharacters.Length];
-		for (int i = 0; i < 3; i++) {
-			for (int j = 0; j < printableCharacters.Length; j++) {
+		for (int i = 0; i < 3; i++)
+		{
+			for (int j = 0; j < printableCharacters.Length; j++)
+			{
 				int regionX = this.fontWidth * 16, regionY = this.fontHeight * 8;
 				this.characterRectangles[i, j].X = ((i / 2) * regionX) + ((j % 16) * this.fontWidth);
 				this.characterRectangles[i, j].Y = ((i % 2) * regionY) + ((j / 16) * this.fontHeight);
@@ -73,13 +88,17 @@ internal class CTextConsole : CActivity {
 		base.CreateManagedResource();
 	}
 
-	public override void ReleaseManagedResource() {
-		if (base.IsDeActivated) {
+	public override void ReleaseManagedResource()
+	{
+		if (base.IsDeActivated)
+		{
 			return;
 		}
 
-		for (int i = 0; i < 2; i++) {
-			if (this.fontTextures[i] == null) {
+		for (int i = 0; i < 2; i++)
+		{
+			if (this.fontTextures[i] == null)
+			{
 				continue;
 			}
 

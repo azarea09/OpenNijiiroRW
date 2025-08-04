@@ -3,7 +3,8 @@
 /// <summary>
 /// ゲージ増加量の種類。
 /// </summary>
-public enum GaugeIncreaseMode {
+public enum GaugeIncreaseMode
+{
 	/// <summary>
 	/// 切り捨てる。Floorと同義。
 	/// </summary>

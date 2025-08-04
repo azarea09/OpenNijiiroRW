@@ -1,17 +1,21 @@
 ﻿namespace FDK;
 
-public class CFPS {
+public class CFPS
+{
 	// Properties
 
-	public int NowFPS {
+	public int NowFPS
+	{
 		get;
 		private set;
 	}
-	public double DeltaTime {
+	public double DeltaTime
+	{
 		get;
 		private set;
 	}
-	public bool ChangedFPS {
+	public bool ChangedFPS
+	{
 		get;
 		private set;
 	}
@@ -19,7 +23,8 @@ public class CFPS {
 
 	// Constructor
 
-	public CFPS() {
+	public CFPS()
+	{
 		this.NowFPS = 0;
 		this.DeltaTime = 0;
 		this.FPSTimer = new CTimer(CTimer.TimerType.MultiMedia);
@@ -31,14 +36,16 @@ public class CFPS {
 
 	// メソッド
 
-	public void Update() {
+	public void Update()
+	{
 		this.FPSTimer.Update();
 		this.ChangedFPS = false;
 
 		const long INTERVAL = 1000;
 		this.DeltaTime = (this.FPSTimer.NowTimeMs - this.PrevFrameTime) / 1000.0;
 		PrevFrameTime = this.FPSTimer.NowTimeMs;
-		while ((this.FPSTimer.NowTimeMs - this.BeginTime) >= INTERVAL) {
+		while ((this.FPSTimer.NowTimeMs - this.BeginTime) >= INTERVAL)
+		{
 			this.NowFPS = this.CoreFPS;
 			this.CoreFPS = 0;
 			this.ChangedFPS = true;

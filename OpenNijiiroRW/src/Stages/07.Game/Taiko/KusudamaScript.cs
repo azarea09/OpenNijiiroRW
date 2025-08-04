@@ -2,47 +2,63 @@ using NLua;
 
 namespace OpenNijiiroRW;
 
-internal class KusudamaScript : ScriptBG {
+internal class KusudamaScript : ScriptBG
+{
 	private LuaFunction LuaKusuIn;
 	private LuaFunction LuaKusuBroke;
 	private LuaFunction LuaKusuMiss;
 
-	public KusudamaScript(string filePath) : base(filePath) {
-		if (LuaScript != null) {
+	public KusudamaScript(string filePath) : base(filePath)
+	{
+		if (LuaScript != null)
+		{
 			LuaKusuIn = LuaScript.GetFunction("kusuIn");
 			LuaKusuBroke = LuaScript.GetFunction("kusuBroke");
 			LuaKusuMiss = LuaScript.GetFunction("kusuMiss");
 		}
 	}
 
-	public new void Dispose() {
+	public new void Dispose()
+	{
 		base.Dispose();
 		LuaKusuIn?.Dispose();
 		LuaKusuBroke?.Dispose();
 		LuaKusuMiss?.Dispose();
 	}
 
-	public void KusuIn() {
+	public void KusuIn()
+	{
 		if (LuaScript == null) return;
-		try {
+		try
+		{
 			LuaKusuIn.Call();
-		} catch (Exception ex) {
+		}
+		catch (Exception ex)
+		{
 		}
 	}
 
-	public void KusuBroke() {
+	public void KusuBroke()
+	{
 		if (LuaScript == null) return;
-		try {
+		try
+		{
 			LuaKusuBroke.Call();
-		} catch (Exception ex) {
+		}
+		catch (Exception ex)
+		{
 		}
 	}
 
-	public void KusuMiss() {
+	public void KusuMiss()
+	{
 		if (LuaScript == null) return;
-		try {
+		try
+		{
 			LuaKusuMiss.Call();
-		} catch (Exception ex) {
+		}
+		catch (Exception ex)
+		{
 		}
 	}
 }

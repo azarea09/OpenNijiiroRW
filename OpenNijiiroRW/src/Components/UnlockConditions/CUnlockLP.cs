@@ -1,30 +1,40 @@
 ﻿using static OpenNijiiroRW.BestPlayRecords;
 
-namespace OpenNijiiroRW {
-	internal class CUnlockLP : CUnlockCondition {
+namespace OpenNijiiroRW
+{
+	internal class CUnlockLP : CUnlockCondition
+	{
 
 
-		public CUnlockLP(CUnlockConditionFactory.UnlockConditionJsonRaw rawJson) : base(rawJson) {
+		public CUnlockLP(CUnlockConditionFactory.UnlockConditionJsonRaw rawJson) : base(rawJson)
+		{
 			this.RequiredArgCount = 3;
 			this.ConditionId = "lp";
 		}
 
-		public override (bool, string?) tConditionMet(int player, EScreen screen = EScreen.MyRoom) {
-			if (this.Values.Length == this.RequiredArgCount) {
+		public override (bool, string?) tConditionMet(int player, EScreen screen = EScreen.MyRoom)
+		{
+			if (this.Values.Length == this.RequiredArgCount)
+			{
 				int _satisfactoryPlays = this.tGetCountChartsPassingCondition(player);
 
 				bool fulfiled = this.tValueRequirementMet(_satisfactoryPlays, this.Values[2]);
 
-				if (screen == EScreen.Internal) {
+				if (screen == EScreen.Internal)
+				{
 					return (fulfiled, "");
-				} else {
+				}
+				else
+				{
 					return (fulfiled, null);
 				}
-			} else
+			}
+			else
 				return (false, CLangManager.LangInstance.GetString("UNLOCK_CONDITION_ERROR", this.ConditionId, this.RequiredArgCount.ToString()));
 		}
 
-		public override string tConditionMessage(EScreen screen = EScreen.MyRoom) {
+		public override string tConditionMessage(EScreen screen = EScreen.MyRoom)
+		{
 			if (this.Values.Length < this.RequiredArgCount)
 				return CLangManager.LangInstance.GetString("UNLOCK_CONDITION_ERROR", this.ConditionId, this.RequiredArgCount);
 
@@ -48,7 +58,8 @@ namespace OpenNijiiroRW {
 			return CLangManager.LangInstance.GetString("UNLOCK_CONDITION_PLAYLEVEL", statusString, this.Values[2], _aimedDifficulty, _count);
 		}
 
-		protected override int tGetCountChartsPassingCondition(int player) {
+		protected override int tGetCountChartsPassingCondition(int player)
+		{
 			var _aimedDifficulty = this.Values[0]; // Difficulty if dp, Level if lp
 			var _aimedStatus = this.Values[1];
 

@@ -3,7 +3,8 @@
 
 namespace SevenZip.Compression.LZMA;
 
-public static class SevenZipHelper {
+public static class SevenZipHelper
+{
 
 	static int dictionary = 1 << 23;
 
@@ -43,13 +44,16 @@ public static class SevenZipHelper {
 	};
 
 
-	public static byte[] Compress(byte[] inputBytes) {
+	public static byte[] Compress(byte[] inputBytes)
+	{
 		byte[] retVal = null;
 		SevenZip.Compression.LZMA.Encoder encoder = new SevenZip.Compression.LZMA.Encoder();
 		encoder.SetCoderProperties(propIDs, properties);
 
-		using (System.IO.MemoryStream strmInStream = new System.IO.MemoryStream(inputBytes)) {
-			using (System.IO.MemoryStream strmOutStream = new System.IO.MemoryStream()) {
+		using (System.IO.MemoryStream strmInStream = new System.IO.MemoryStream(inputBytes))
+		{
+			using (System.IO.MemoryStream strmOutStream = new System.IO.MemoryStream())
+			{
 				encoder.WriteCoderProperties(strmOutStream);
 				long fileSize = strmInStream.Length;
 				for (int i = 0; i < 8; i++)
@@ -65,13 +69,16 @@ public static class SevenZipHelper {
 	} // End Function Compress
 
 
-	public static byte[] Compress(string inFileName) {
+	public static byte[] Compress(string inFileName)
+	{
 		byte[] retVal = null;
 		SevenZip.Compression.LZMA.Encoder encoder = new SevenZip.Compression.LZMA.Encoder();
 		encoder.SetCoderProperties(propIDs, properties);
 
-		using (System.IO.Stream strmInStream = new System.IO.FileStream(inFileName, System.IO.FileMode.Open, System.IO.FileAccess.Read)) {
-			using (System.IO.MemoryStream strmOutStream = new System.IO.MemoryStream()) {
+		using (System.IO.Stream strmInStream = new System.IO.FileStream(inFileName, System.IO.FileMode.Open, System.IO.FileAccess.Read))
+		{
+			using (System.IO.MemoryStream strmOutStream = new System.IO.MemoryStream())
+			{
 				encoder.WriteCoderProperties(strmOutStream);
 				long fileSize = strmInStream.Length;
 				for (int i = 0; i < 8; i++)
@@ -87,13 +94,16 @@ public static class SevenZipHelper {
 	} // End Function Compress
 
 
-	public static void Compress(string inFileName, string outFileName) {
+	public static void Compress(string inFileName, string outFileName)
+	{
 		SevenZip.Compression.LZMA.Encoder encoder = new SevenZip.Compression.LZMA.Encoder();
 		encoder.SetCoderProperties(propIDs, properties);
 
-		using (System.IO.Stream strmInStream = new System.IO.FileStream(inFileName, System.IO.FileMode.Open, System.IO.FileAccess.Read)) {
+		using (System.IO.Stream strmInStream = new System.IO.FileStream(inFileName, System.IO.FileMode.Open, System.IO.FileAccess.Read))
+		{
 
-			using (System.IO.Stream strmOutStream = new System.IO.FileStream(outFileName, System.IO.FileMode.Create)) {
+			using (System.IO.Stream strmOutStream = new System.IO.FileStream(outFileName, System.IO.FileMode.Create))
+			{
 				encoder.WriteCoderProperties(strmOutStream);
 				long fileSize = strmInStream.Length;
 				for (int i = 0; i < 8; i++)
@@ -112,21 +122,25 @@ public static class SevenZipHelper {
 
 
 
-	public static byte[] Decompress(string inFileName) {
+	public static byte[] Decompress(string inFileName)
+	{
 		byte[] retVal = null;
 
 		SevenZip.Compression.LZMA.Decoder decoder = new SevenZip.Compression.LZMA.Decoder();
 
-		using (System.IO.Stream strmInStream = new System.IO.FileStream(inFileName, System.IO.FileMode.Open, System.IO.FileAccess.Read)) {
+		using (System.IO.Stream strmInStream = new System.IO.FileStream(inFileName, System.IO.FileMode.Open, System.IO.FileAccess.Read))
+		{
 			strmInStream.Seek(0, 0);
 
-			using (System.IO.MemoryStream strmOutStream = new System.IO.MemoryStream()) {
+			using (System.IO.MemoryStream strmOutStream = new System.IO.MemoryStream())
+			{
 				byte[] properties2 = new byte[5];
 				if (strmInStream.Read(properties2, 0, 5) != 5)
 					throw (new System.Exception("input .lzma is too short"));
 
 				long outSize = 0;
-				for (int i = 0; i < 8; i++) {
+				for (int i = 0; i < 8; i++)
+				{
 					int v = strmInStream.ReadByte();
 					if (v < 0)
 						throw (new System.Exception("Can't Read 1"));
@@ -147,19 +161,23 @@ public static class SevenZipHelper {
 	} // End Function Decompress
 
 
-	public static void Decompress(string inFileName, string outFileName) {
+	public static void Decompress(string inFileName, string outFileName)
+	{
 		SevenZip.Compression.LZMA.Decoder decoder = new SevenZip.Compression.LZMA.Decoder();
 
-		using (System.IO.Stream strmInStream = new System.IO.FileStream(inFileName, System.IO.FileMode.Open, System.IO.FileAccess.Read)) {
+		using (System.IO.Stream strmInStream = new System.IO.FileStream(inFileName, System.IO.FileMode.Open, System.IO.FileAccess.Read))
+		{
 			strmInStream.Seek(0, 0);
 
-			using (System.IO.Stream strmOutStream = new System.IO.FileStream(outFileName, System.IO.FileMode.Create)) {
+			using (System.IO.Stream strmOutStream = new System.IO.FileStream(outFileName, System.IO.FileMode.Create))
+			{
 				byte[] properties2 = new byte[5];
 				if (strmInStream.Read(properties2, 0, 5) != 5)
 					throw (new System.Exception("input .lzma is too short"));
 
 				long outSize = 0;
-				for (int i = 0; i < 8; i++) {
+				for (int i = 0; i < 8; i++)
+				{
 					int v = strmInStream.ReadByte();
 					if (v < 0)
 						throw (new System.Exception("Can't Read 1"));
@@ -180,21 +198,25 @@ public static class SevenZipHelper {
 	} // End Function Decompress
 
 
-	public static byte[] Decompress(byte[] inputBytes) {
+	public static byte[] Decompress(byte[] inputBytes)
+	{
 		byte[] retVal = null;
 
 		SevenZip.Compression.LZMA.Decoder decoder = new SevenZip.Compression.LZMA.Decoder();
 
-		using (System.IO.MemoryStream strmInStream = new System.IO.MemoryStream(inputBytes)) {
+		using (System.IO.MemoryStream strmInStream = new System.IO.MemoryStream(inputBytes))
+		{
 			strmInStream.Seek(0, 0);
 
-			using (System.IO.MemoryStream strmOutStream = new System.IO.MemoryStream()) {
+			using (System.IO.MemoryStream strmOutStream = new System.IO.MemoryStream())
+			{
 				byte[] properties2 = new byte[5];
 				if (strmInStream.Read(properties2, 0, 5) != 5)
 					throw (new System.Exception("input .lzma is too short"));
 
 				long outSize = 0;
-				for (int i = 0; i < 8; i++) {
+				for (int i = 0; i < 8; i++)
+				{
 					int v = strmInStream.ReadByte();
 					if (v < 0)
 						throw (new System.Exception("Can't Read 1"));

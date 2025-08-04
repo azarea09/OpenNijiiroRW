@@ -1,8 +1,10 @@
 ﻿// Minimalist menu class to use for custom menus
 namespace OpenNijiiroRW;
 
-class CStageTemplate : CStage {
-	public CStageTemplate() {
+class CStageTemplate : CStage
+{
+	public CStageTemplate()
+	{
 		base.eStageID = EStage.TEMPLATE;
 		base.ePhaseID = CStage.EPhase.Common_NORMAL;
 
@@ -13,7 +15,8 @@ class CStageTemplate : CStage {
 
 	}
 
-	public override void Activate() {
+	public override void Activate()
+	{
 		// On activation
 
 		if (base.IsActivated)
@@ -27,34 +30,40 @@ class CStageTemplate : CStage {
 		base.Activate();
 	}
 
-	public override void DeActivate() {
+	public override void DeActivate()
+	{
 		// On de-activation
 
 		base.DeActivate();
 	}
 
-	public override void CreateManagedResource() {
+	public override void CreateManagedResource()
+	{
 		// Ressource allocation
 
 		base.CreateManagedResource();
 	}
 
-	public override void ReleaseManagedResource() {
+	public override void ReleaseManagedResource()
+	{
 		// Ressource freeing
 
 		base.ReleaseManagedResource();
 	}
 
-	public override int Draw() {
+	public override int Draw()
+	{
 
 
 
 
 
 		// Menu exit fade out transition
-		switch (base.ePhaseID) {
+		switch (base.ePhaseID)
+		{
 			case CStage.EPhase.Common_FADEOUT:
-				if (this.actFOtoTitle.Draw() == 0) {
+				if (this.actFOtoTitle.Draw() == 0)
+				{
 					break;
 				}
 				return (int)this.eフェードアウト完了時の戻り値;

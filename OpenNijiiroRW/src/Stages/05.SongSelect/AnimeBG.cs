@@ -2,23 +2,31 @@
 
 namespace OpenNijiiroRW;
 
-internal class AnimeBG : ScriptBG {
+internal class AnimeBG : ScriptBG
+{
 	private LuaFunction LuaPlayAnimation;
-	public AnimeBG(string filePath) : base(filePath) {
-		if (LuaScript != null) {
+	public AnimeBG(string filePath) : base(filePath)
+	{
+		if (LuaScript != null)
+		{
 			LuaPlayAnimation = LuaScript.GetFunction("playAnime");
 		}
 	}
-	public new void Dispose() {
+	public new void Dispose()
+	{
 		base.Dispose();
 		LuaPlayAnimation?.Dispose();
 	}
 
-	public void PlayAnimation() {
+	public void PlayAnimation()
+	{
 		if (LuaScript == null) return;
-		try {
+		try
+		{
 			LuaPlayAnimation.Call();
-		} catch (Exception ex) {
+		}
+		catch (Exception ex)
+		{
 		}
 	}
 }

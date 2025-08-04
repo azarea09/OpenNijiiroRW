@@ -4,12 +4,15 @@
 /// 段位認定を管理するクラス。
 /// </summary>
 [Serializable]
-public class Dan_C {
-	public Dan_C() {
+public class Dan_C
+{
+	public Dan_C()
+	{
 
 	}
 
-	public Dan_C(Dan_C dan_C) : this(dan_C.ExamType, dan_C.GetValue(), dan_C.ExamRange) {
+	public Dan_C(Dan_C dan_C) : this(dan_C.ExamType, dan_C.GetValue(), dan_C.ExamRange)
+	{
 
 	}
 
@@ -19,7 +22,8 @@ public class Dan_C {
 	/// <param name="examType">条件の種別。</param>
 	/// <param name="value">条件の合格量。</param>
 	/// <param name="examRange">条件の合格の範囲。</param>
-	public Dan_C(Exam.Type examType, ReadOnlySpan<int> value, Exam.Range examRange) {
+	public Dan_C(Exam.Type examType, ReadOnlySpan<int> value, Exam.Range examRange)
+	{
 		IsEnable = true;
 		ReachStatus = Exam.ReachStatus.Unknown;
 		ExamType = examType;
@@ -31,7 +35,8 @@ public class Dan_C {
 	/// 条件と現在の値を評価して、クリアしたかどうかを判断します。
 	/// </summary>
 	/// <param name="nowValue">その条件の現在の値。</param>
-	public bool Update(int nowValue) {
+	public bool Update(int nowValue)
+	{
 		if (!ExamIsEnable || nowValue < 0)
 			return false;
 		bool isChangedAmount = (ExamRange == Exam.Range.Less && nowValue > Amount && Amount > GetValue()[0]) ? false // n未満でその数を超えたらfalseを返す。
@@ -52,7 +57,8 @@ public class Dan_C {
 	/// </summary>
 	/// <param name="redValue">赤合格条件</param>
 	/// <param name="goldValue">金合格条件</param>
-	public void SetValue(int redValue, int goldValue) {
+	public void SetValue(int redValue, int goldValue)
+	{
 		if (redValue != -1) this.Value[0] = redValue;
 		if (goldValue != -1) this.Value[1] = goldValue;
 	}
@@ -96,11 +102,15 @@ public class Dan_C {
 	/// <summary>
 	/// 条件と現在の値をチェックして、合格もしくは金合格をしてるか否かを更新する。
 	/// </summary>
-	private void UpdateCleared() {
-		if (ExamRange != Exam.Range.Less) {
+	private void UpdateCleared()
+	{
+		if (ExamRange != Exam.Range.Less)
+		{
 			IsCleared[0] = (Amount >= GetValue()[0]);
 			IsCleared[1] = (IsCleared[0] && Amount >= GetValue()[1]);
-		} else {
+		}
+		else
+		{
 			IsCleared[0] = (Amount < GetValue()[0]);
 			IsCleared[1] = (IsCleared[0] && Amount < GetValue()[1]);
 		}
@@ -110,15 +120,18 @@ public class Dan_C {
 	/// ゲージの描画のための百分率を返す。
 	/// </summary>
 	/// <returns>Amountの百分率。</returns>
-	public int GetAmountToPercent() {
-		if (GetValue()[0] == 0 || this.GetDisplayedAmount() == 0) {
+	public int GetAmountToPercent()
+	{
+		if (GetValue()[0] == 0 || this.GetDisplayedAmount() == 0)
+		{
 			return 0;
 		}
 		double ratio = (double)this.GetDisplayedAmount() / GetValue()[0];
 		return (int)double.Clamp(ratio * 100.0, 1, 100.0);
 	}
 
-	public double GetBetterAmountToPercent() {
+	public double GetBetterAmountToPercent()
+	{
 		if (this.Type is Exam.Type.Accuracy)
 			return 0; // uses its own rules
 		if (GetValue()[1] - GetValue()[0] <= 0)
@@ -127,7 +140,8 @@ public class Dan_C {
 		return double.Clamp(ratio * 100.0, 0.0, 100.0);
 	}
 
-	public int GetDisplayedAmount() {
+	public int GetDisplayedAmount()
+	{
 		int amount = (this.ExamRange != Exam.Range.Less) ? this.Amount : this.GetValue()[0] - this.Amount;
 		return Math.Max(0, amount);
 	}
@@ -137,7 +151,8 @@ public class Dan_C {
 	/// ToString()のオーバーライドメソッド。段位認定モードの各条件の現在状況をString型で返します。
 	/// </summary>
 	/// <returns>段位認定モードの各条件の現在状況。</returns>
-	public override string ToString() {
+	public override string ToString()
+	{
 		return String.Format("Type: {0} / Value: {1}/{2} / Range: {3} / Amount: {4} / Clear: {5} / Percent: {6} / ReachStatus: {7}",
 			ExamType, GetValue()[0], GetValue()[1], ExamRange,
 			Amount, GetExamStatus(), GetAmountToPercent(), ReachStatus);
@@ -186,11 +201,13 @@ public class Dan_C {
 	[NonSerialized] public Exam.ReachStatus ReachStatus = Exam.ReachStatus.Low;
 }
 
-public static class Exam {
+public static class Exam
+{
 	/// <summary>
 	/// 段位認定の条件の種別。
 	/// </summary>
-	public enum Type {
+	public enum Type
+	{
 		Gauge,
 		JudgePerfect,
 		JudgeGood,
@@ -208,7 +225,8 @@ public static class Exam {
 	/// <summary>
 	/// 段位認定の合格範囲。
 	/// </summary>
-	public enum Range {
+	public enum Range
+	{
 		/// <summary>
 		/// 以上
 		/// </summary>
@@ -222,7 +240,8 @@ public static class Exam {
 	/// <summary>
 	/// ステータス。
 	/// </summary>
-	public enum Status {
+	public enum Status
+	{
 		/// <summary>
 		/// 不合格
 		/// </summary>
@@ -237,7 +256,8 @@ public static class Exam {
 		Better_Success
 	}
 
-	public enum ReachStatus {
+	public enum ReachStatus
+	{
 		Unknown, // no transition
 		Failure, // grey (transparent)
 		Danger, // blinking red
@@ -251,7 +271,8 @@ public static class Exam {
 		Better_Success, // rainbow
 	}
 
-	public static ReachStatus ToReachStatus(Status status) => status switch {
+	public static ReachStatus ToReachStatus(Status status) => status switch
+	{
 		Status.Success => ReachStatus.Success_Or_Better,
 		Status.Better_Success => ReachStatus.Better_Success,
 		_ => ReachStatus.Failure,

@@ -1,6 +1,7 @@
 ﻿namespace FDK;
 
-public class CInputMIDI : IInputDevice, IDisposable {
+public class CInputMIDI : IInputDevice, IDisposable
+{
 	// Properties
 
 	public IntPtr MidiInPtr;
@@ -8,7 +9,8 @@ public class CInputMIDI : IInputDevice, IDisposable {
 
 	// Constructor
 
-	public CInputMIDI(uint nID) {
+	public CInputMIDI(uint nID)
+	{
 		this.Device = null;
 		this.MidiInPtr = IntPtr.Zero;
 		this.EventBuffers = new List<STInputEvent>(32);
@@ -23,7 +25,8 @@ public class CInputMIDI : IInputDevice, IDisposable {
 
 	// メソッド
 
-	public void tメッセージからMIDI信号のみ受信(uint wMsg, IntPtr dwInstance, IntPtr dwParam1, IntPtr dwParam2, long n受信システム時刻) {
+	public void tメッセージからMIDI信号のみ受信(uint wMsg, IntPtr dwInstance, IntPtr dwParam1, IntPtr dwParam2, long n受信システム時刻)
+	{
 		/*
 		if (wMsg == CWin32.MIM_DATA)
 		{
@@ -68,27 +71,34 @@ public class CInputMIDI : IInputDevice, IDisposable {
 	public string strDeviceName { get; set; }
 	public bool useBufferInput { get; set; }
 
-	public void Polling() {
+	public void Polling()
+	{
 		// always buffered input
 		// this.list入力イベント = new List<STInputEvent>( 32 );
 		this.InputEvents.Clear();                                // #xxxxx 2012.6.11 yyagi; To optimize, I removed new();
 		(this.InputEvents, this.EventBuffers) = (this.EventBuffers, this.InputEvents); // swap buffer
 	}
-	public bool KeyPressed(int nKey) {
-		foreach (STInputEvent event2 in this.InputEvents) {
-			if ((event2.nKey == nKey) && event2.Pressed) {
+	public bool KeyPressed(int nKey)
+	{
+		foreach (STInputEvent event2 in this.InputEvents)
+		{
+			if ((event2.nKey == nKey) && event2.Pressed)
+			{
 				return true;
 			}
 		}
 		return false;
 	}
-	public bool KeyPressing(int nKey) {
+	public bool KeyPressing(int nKey)
+	{
 		return false;
 	}
-	public bool KeyReleased(int nKey) {
+	public bool KeyReleased(int nKey)
+	{
 		return false;
 	}
-	public bool KeyReleasing(int nKey) {
+	public bool KeyReleasing(int nKey)
+	{
 		return false;
 	}
 	//-----------------
@@ -96,7 +106,8 @@ public class CInputMIDI : IInputDevice, IDisposable {
 
 	#region [ IDisposable 実装 ]
 	//-----------------
-	public void Dispose() {
+	public void Dispose()
+	{
 		this.EventBuffers.Clear();
 		this.InputEvents.Clear();
 	}

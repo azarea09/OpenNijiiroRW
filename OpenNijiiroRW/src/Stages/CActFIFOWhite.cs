@@ -2,14 +2,17 @@
 
 namespace OpenNijiiroRW;
 
-internal class CActFIFOWhite : CActivity {
+internal class CActFIFOWhite : CActivity
+{
 	// メソッド
 
-	public void tフェードアウト開始() {
+	public void tフェードアウト開始()
+	{
 		this.mode = EFIFOMode.FadeOut;
 		this.counter = new CCounter(0, 100, 3, OpenNijiiroRW.Timer);
 	}
-	public void tフェードイン開始() {
+	public void tフェードイン開始()
+	{
 		this.mode = EFIFOMode.FadeIn;
 		this.counter = new CCounter(0, 100, 3, OpenNijiiroRW.Timer);
 	}
@@ -20,28 +23,35 @@ internal class CActFIFOWhite : CActivity {
 
 	// CActivity 実装
 
-	public override void DeActivate() {
-		if (!base.IsDeActivated) {
+	public override void DeActivate()
+	{
+		if (!base.IsDeActivated)
+		{
 			//CDTXMania.tテクスチャの解放( ref this.tx白タイル64x64 );
 			base.DeActivate();
 		}
 	}
-	public override void CreateManagedResource() {
+	public override void CreateManagedResource()
+	{
 		//this.tx白タイル64x64 = CDTXMania.tテクスチャの生成( CSkin.Path( @"Graphics\Tile white 64x64.png" ), false );
 		base.CreateManagedResource();
 	}
 
-	public override void ReleaseUnmanagedResource() {
+	public override void ReleaseUnmanagedResource()
+	{
 		base.ReleaseUnmanagedResource();
 	}
-	public override int Draw() {
-		if (base.IsDeActivated || (this.counter == null)) {
+	public override int Draw()
+	{
+		if (base.IsDeActivated || (this.counter == null))
+		{
 			return 0;
 		}
 		this.counter.Tick();
 
 		// Size clientSize = CDTXMania.app.Window.ClientSize;	// #23510 2010.10.31 yyagi: delete as of no one use this any longer.
-		if (OpenNijiiroRW.Tx.Tile_Black != null) {
+		if (OpenNijiiroRW.Tx.Tile_Black != null)
+		{
 			OpenNijiiroRW.Tx.Tile_Black.Opacity = (this.mode == EFIFOMode.FadeIn) ? (((100 - this.counter.CurrentValue) * 0xff) / 100) : ((this.counter.CurrentValue * 0xff) / 100);
 			for (int i = 0; i <= (RenderSurfaceSize.Width / OpenNijiiroRW.Tx.Tile_Black.szTextureSize.Width); i++)        // #23510 2010.10.31 yyagi: change "clientSize.Width" to "640" to fix FIFO drawing size
 			{
@@ -51,7 +61,8 @@ internal class CActFIFOWhite : CActivity {
 				}
 			}
 		}
-		if (this.counter.CurrentValue != 100) {
+		if (this.counter.CurrentValue != 100)
+		{
 			return 0;
 		}
 		return 1;

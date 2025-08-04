@@ -2,7 +2,8 @@
 
 namespace OpenNijiiroRW;
 
-public enum Difficulty {
+public enum Difficulty
+{
 	Easy,
 	Normal,
 	Hard,
@@ -13,19 +14,22 @@ public enum Difficulty {
 	Total
 }
 
-public enum EScrollMode {
+public enum EScrollMode
+{
 	Normal,
 	BMScroll,
 	HBScroll
 }
 
-public enum EGame {
+public enum EGame
+{
 	Off = 0,
 	Survival = 1,
 	SurvivalHard = 2
 }
 
-public enum EDifficultyDisplayType {
+public enum EDifficultyDisplayType
+{
 	Off = 0,
 	TextOnNthSong = 1,
 	ImageOnMTaiko = 2,
@@ -216,7 +220,8 @@ public enum EPadFlag        // #24063 2011.1.16 yyagi コマンド入力用 パ�
 	RBlue2P = 64,
 	Unknown = 4096
 }
-public enum ERandomMode {
+public enum ERandomMode
+{
 	Off,
 	Random,
 	Mirror,
@@ -224,14 +229,16 @@ public enum ERandomMode {
 	MirrorRandom
 }
 
-public enum EFunMods {
+public enum EFunMods
+{
 	None,
 	Avalanche,
 	Minesweeper,
 	Total,
 }
 
-public enum EGameType {
+public enum EGameType
+{
 	Taiko = 0,
 	Konga = 1,
 }
@@ -254,7 +261,8 @@ public enum EKeyConfigPart  // : E楽器パート
 	Unknown = EInstrumentPad.Unknown
 }
 
-internal enum EInputDevice {
+internal enum EInputDevice
+{
 	Keyboard = 0,
 	MIDIInput = 1,
 	Joypad = 2,
@@ -262,7 +270,8 @@ internal enum EInputDevice {
 	Gamepad = 4,
 	Unknown = -1
 }
-public enum ENoteJudge {
+public enum ENoteJudge
+{
 	Perfect = 0,
 	Great = 1,
 	Good = 2,
@@ -273,19 +282,22 @@ public enum ENoteJudge {
 	ADLIB = 7,
 	Mine = 8,
 }
-internal enum EJudgeTextDisplayPosition {
+internal enum EJudgeTextDisplayPosition
+{
 	OFF,
 	AboveLane,
 	OnJudgeLine,
 	BelowCombo
 }
 
-internal enum EFIFOMode {
+internal enum EFIFOMode
+{
 	FadeIn,
 	FadeOut
 }
 
-internal enum EGameplayScreenReturnValue {
+internal enum EGameplayScreenReturnValue
+{
 	Continue,
 	PerformanceInterrupted,
 	StageFailed,
@@ -293,13 +305,15 @@ internal enum EGameplayScreenReturnValue {
 	ReloadAndReplay,
 	Replay
 }
-internal enum ESongLoadingScreenReturnValue {
+internal enum ESongLoadingScreenReturnValue
+{
 	Continue = 0,
 	LoadComplete,
 	LoadCanceled
 }
 
-public enum ENoteState {
+public enum ENoteState
+{
 	None,
 	Wait,
 	Perfect,
@@ -307,7 +321,8 @@ public enum ENoteState {
 	Bad
 }
 
-public enum ERollState {
+public enum ERollState
+{
 	None,
 	Roll,
 	RollB,
@@ -315,7 +330,8 @@ public enum ERollState {
 	Potato
 }
 
-public enum EStealthMode {
+public enum EStealthMode
+{
 	Off = 0,
 	Doron = 1,
 	Stealth = 2
@@ -324,7 +340,8 @@ public enum EStealthMode {
 /// <summary>
 /// 透明チップの種類
 /// </summary>
-public enum EInvisible {
+public enum EInvisible
+{
 	Off,        // チップを透明化しない
 	Semi,       // Poor/Miss時だけ、一時的に透明解除する
 	Full        // チップを常に透明化する
@@ -340,16 +357,21 @@ public struct STDGBVALUE<T>         // indexはE楽器パートと一致させ�
 {
 	public T Drums { get => Taiko; set => Taiko = value; }
 	public T Taiko;
-	public T this[int index] {
-		get {
-			return index switch {
+	public T this[int index]
+	{
+		get
+		{
+			return index switch
+			{
 				(int)EInstrumentPad.Drums or (int)EInstrumentPad.Taiko => this.Taiko,
 				(int)EInstrumentPad.Guitar or (int)EInstrumentPad.Bass or (int)EInstrumentPad.Unknown => default,
 				_ => throw new IndexOutOfRangeException()
 			};
 		}
-		set {
-			switch (index) {
+		set
+		{
+			switch (index)
+			{
 				case (int)EInstrumentPad.Drums or (int)EInstrumentPad.Taiko:
 					this.Taiko = value;
 					return;
@@ -362,24 +384,28 @@ public struct STDGBVALUE<T>         // indexはE楽器パートと一致させ�
 	}
 }
 
-public enum EReturnValue : int {
+public enum EReturnValue : int
+{
 	Continuation,
 	ReturnToTitle,
 	SongChoosen
 }
 
 #region[Ver.K追加]
-public enum ELaneType {
+public enum ELaneType
+{
 	TypeA,
 	TypeB,
 	TypeC,
 	TypeD
 }
-public enum EMirror {
+public enum EMirror
+{
 	TypeA,
 	TypeB
 }
-public enum EClipDispType {
+public enum EClipDispType
+{
 	BackgroundOnly = 1,
 	WindowOnly = 2,
 	Both = 3,

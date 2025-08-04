@@ -10,14 +10,18 @@ namespace OpenNijiiroRW;
 /// ConfigIni or SongGainController having awareness of one another.
 /// See those classes properties, methods, and events for more details.
 /// </summary>
-internal static class ConfigIniToSongGainControllerBinder {
-	internal static void Bind(CConfigIni configIni, SongGainController songGainController) {
+internal static class ConfigIniToSongGainControllerBinder
+{
+	internal static void Bind(CConfigIni configIni, SongGainController songGainController)
+	{
 		songGainController.ApplyLoudnessMetadata = configIni.ApplyLoudnessMetadata;
 		songGainController.TargetLoudness = new Lufs(configIni.TargetLoudness);
 		songGainController.ApplySongVol = configIni.ApplySongVol;
 
-		configIni.PropertyChanged += (sender, args) => {
-			switch (args.PropertyName) {
+		configIni.PropertyChanged += (sender, args) =>
+		{
+			switch (args.PropertyName)
+			{
 				case nameof(CConfigIni.ApplyLoudnessMetadata):
 					songGainController.ApplyLoudnessMetadata = configIni.ApplyLoudnessMetadata;
 					break;

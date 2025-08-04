@@ -10,47 +10,68 @@ namespace OpenNijiiroRW;
 /// 難易度選択画面。
 /// この難易度選択画面はAC7～AC14のような方式であり、WiiまたはAC15移行の方式とは異なる。
 /// </summary>
-internal class CActSelect難易度選択画面 : CActivity {
+internal class CActSelect難易度選択画面 : CActivity
+{
 	// Properties
 
 	public bool bIsDifficltSelect;
 
 	// Constructor
 
-	public CActSelect難易度選択画面() {
-		for (int i = 0; i < 10; i++) {
+	public CActSelect難易度選択画面()
+	{
+		for (int i = 0; i < 10; i++)
+		{
 			st小文字位置[i].ptX = i * 18;
 			st小文字位置[i].ch = i.ToString().ToCharArray()[0];
 		}
 		base.IsDeActivated = true;
 	}
 
-	public void t次に移動(int player) {
-		if (n現在の選択行[player] < 5) {
+	public void t次に移動(int player)
+	{
+		if (n現在の選択行[player] < 5)
+		{
 			ctBarAnime[player].Start(0, 180, 1, OpenNijiiroRW.Timer);
-			if (!b裏譜面) {
+			if (!b裏譜面)
+			{
 				n現在の選択行[player]++;
-			} else {
-				if (n現在の選択行[player] == 4) {
+			}
+			else
+			{
+				if (n現在の選択行[player] == 4)
+				{
 					n現在の選択行[player] += 2;
-				} else {
+				}
+				else
+				{
 					n現在の選択行[player]++;
 				}
 			}
-		} else if (n現在の選択行[player] >= 5) {
+		}
+		else if (n現在の選択行[player] >= 5)
+		{
 			if (OpenNijiiroRW.stageSongSelect.r現在選択中のスコア.譜面情報.nレベル[4] < 0 || OpenNijiiroRW.stageSongSelect.r現在選択中のスコア.譜面情報.nレベル[3] < 0)
 				return;
 
-			if (nスイッチカウント < 0) {
+			if (nスイッチカウント < 0)
+			{
 				nスイッチカウント++;
-			} else if (nスイッチカウント == 0) {
-				for (int i = 0; i < 5; i++) {
-					if (!bSelect[i]) {
-						if (n現在の選択行[i] == 5) {
+			}
+			else if (nスイッチカウント == 0)
+			{
+				for (int i = 0; i < 5; i++)
+				{
+					if (!bSelect[i])
+					{
+						if (n現在の選択行[i] == 5)
+						{
 							// Extreme to Extra
 							OpenNijiiroRW.stageSongSelect.actExExtraTransAnime.BeginAnime(true);
 							n現在の選択行[i] = 6;
-						} else if (n現在の選択行[i] == 6) {
+						}
+						else if (n現在の選択行[i] == 6)
+						{
 							//Extra to Extreme
 							OpenNijiiroRW.stageSongSelect.actExExtraTransAnime.BeginAnime(false);
 							n現在の選択行[i] = 5;
@@ -64,8 +85,10 @@ internal class CActSelect難易度選択画面 : CActivity {
 		}
 	}
 
-	public void t前に移動(int player) {
-		if (n現在の選択行[player] - 1 >= 0) {
+	public void t前に移動(int player)
+	{
+		if (n現在の選択行[player] - 1 >= 0)
+		{
 			ctBarAnime[player].Start(0, 180, 1, OpenNijiiroRW.Timer);
 			nスイッチカウント = 0;
 			if (n現在の選択行[player] == 6)
@@ -75,7 +98,8 @@ internal class CActSelect難易度選択画面 : CActivity {
 		}
 	}
 
-	public void t選択画面初期化() {
+	public void t選択画面初期化()
+	{
 		this.txTitle = OpenNijiiroRW.tテクスチャの生成(pfTitle.DrawText(OpenNijiiroRW.stageSongSelect.rNowSelectedSong.ldTitle.GetString(""), Color.White, Color.Black, null, 30));
 		this.txSubTitle = OpenNijiiroRW.tテクスチャの生成(pfSubTitle.DrawText(OpenNijiiroRW.stageSongSelect.rNowSelectedSong.ldSubtitle.GetString(""), Color.White, Color.Black, null, 30));
 
@@ -93,7 +117,8 @@ internal class CActSelect難易度選択画面 : CActivity {
 
 	// CActivity 実装
 
-	public override void Activate() {
+	public override void Activate()
+	{
 		if (this.IsActivated)
 			return;
 		ctBarAnime = new CCounter[5];
@@ -105,7 +130,8 @@ internal class CActSelect難易度選択画面 : CActivity {
 
 		base.Activate();
 	}
-	public override void DeActivate() {
+	public override void DeActivate()
+	{
 		if (this.IsDeActivated)
 			return;
 
@@ -113,7 +139,8 @@ internal class CActSelect難易度選択画面 : CActivity {
 
 		base.DeActivate();
 	}
-	public override void CreateManagedResource() {
+	public override void CreateManagedResource()
+	{
 		this.pfTitle = HPrivateFastFont.tInstantiateMainFont(OpenNijiiroRW.Skin.SongSelect_MusicName_Scale);
 		this.pfSubTitle = HPrivateFastFont.tInstantiateMainFont(OpenNijiiroRW.Skin.SongSelect_Subtitle_Scale);
 
@@ -121,7 +148,8 @@ internal class CActSelect難易度選択画面 : CActivity {
 
 		base.CreateManagedResource();
 	}
-	public override void ReleaseManagedResource() {
+	public override void ReleaseManagedResource()
+	{
 		pfTitle.Dispose();
 		pfSubTitle.Dispose();
 
@@ -129,13 +157,15 @@ internal class CActSelect難易度選択画面 : CActivity {
 
 		base.ReleaseManagedResource();
 	}
-	public override int Draw() {
+	public override int Draw()
+	{
 		if (this.IsDeActivated)
 			return 0;
 
 		#region [ 初めての進行描画 ]
 		//-----------------
-		if (this.IsFirstDraw) {
+		if (this.IsFirstDraw)
+		{
 			ctBarAnimeIn = new CCounter(0, 170, 4, OpenNijiiroRW.Timer);
 			// this.soundSelectAnnounce?.tサウンドを再生する();
 			//TJAPlayer3.Skin.soundSelectAnnounce.t再生する();
@@ -146,7 +176,8 @@ internal class CActSelect難易度選択画面 : CActivity {
 		#endregion
 
 		ctBarAnimeIn.Tick();
-		for (int i = 0; i < OpenNijiiroRW.ConfigIni.nPlayerCount; i++) {
+		for (int i = 0; i < OpenNijiiroRW.ConfigIni.nPlayerCount; i++)
+		{
 			ctBarAnime[i].Tick();
 		}
 
@@ -165,10 +196,12 @@ internal class CActSelect難易度選択画面 : CActivity {
 			bool cancelMenu = (OpenNijiiroRW.Pad.bPressedDGB(EPad.Cancel) || OpenNijiiroRW.InputManager.Keyboard.KeyPressed((int)SlimDXKeys.Key.Escape));
 
 			// per-player key input
-			for (int i = 0; i < OpenNijiiroRW.ConfigIni.nPlayerCount; i++) {
+			for (int i = 0; i < OpenNijiiroRW.ConfigIni.nPlayerCount; i++)
+			{
 				if (!bSelect[i] && !isOnOption() &&
 					!(OpenNijiiroRW.ConfigIni.bAIBattleMode && i == 1)
-					) {
+					)
+				{
 					bool right = rightMenu;
 					bool left = leftMenu;
 					bool decide = decideMenu;
@@ -179,7 +212,8 @@ internal class CActSelect難易度選択画面 : CActivity {
 					decideMenu = false;
 					cancelMenu = false;
 
-					switch (i) {
+					switch (i)
+					{
 						case 0:
 							right = right || OpenNijiiroRW.Pad.bPressed(EInstrumentPad.Drums, EPad.RBlue);
 							left = left || OpenNijiiroRW.Pad.bPressed(EInstrumentPad.Drums, EPad.LBlue);
@@ -207,23 +241,33 @@ internal class CActSelect難易度選択画面 : CActivity {
 							break;
 					}
 
-					if (right) {
+					if (right)
+					{
 						OpenNijiiroRW.Skin.soundChangeSFX.tPlay();
 						this.t次に移動(i);
-					} else if (left) {
+					}
+					else if (left)
+					{
 						OpenNijiiroRW.Skin.soundChangeSFX.tPlay();
 						this.t前に移動(i);
 					}
-					if (decide) {
-						if (n現在の選択行[i] == 0) {
+					if (decide)
+					{
+						if (n現在の選択行[i] == 0)
+						{
 							OpenNijiiroRW.Skin.soundDecideSFX.tPlay();
 							OpenNijiiroRW.stageSongSelect.actSongList.ctBarOpen.Start(100, 260, 2, OpenNijiiroRW.Timer);
 							this.bIsDifficltSelect = false;
-						} else if (n現在の選択行[i] == 1) {
+						}
+						else if (n現在の選択行[i] == 1)
+						{
 							OpenNijiiroRW.Skin.soundDecideSFX.tPlay();
 							bOption[i] = true;
-						} else {
-							if (OpenNijiiroRW.stageSongSelect.r現在選択中のスコア.譜面情報.nレベル[n現在の選択行[i] - 2] >= 0) {
+						}
+						else
+						{
+							if (OpenNijiiroRW.stageSongSelect.r現在選択中のスコア.譜面情報.nレベル[n現在の選択行[i] - 2] >= 0)
+							{
 								//TJAPlayer3.stage選曲.ctChara_Jump[0].t開始(0, SongSelect_Chara_Jump.Length - 1, 1000 / 45, TJAPlayer3.Timer);
 
 
@@ -231,45 +275,63 @@ internal class CActSelect難易度選択画面 : CActivity {
 
 								bool allPlayerSelected = true;
 
-								for (int i2 = 0; i2 < OpenNijiiroRW.ConfigIni.nPlayerCount; i2++) {
+								for (int i2 = 0; i2 < OpenNijiiroRW.ConfigIni.nPlayerCount; i2++)
+								{
 									if (OpenNijiiroRW.ConfigIni.bAIBattleMode && i2 == 1) break;
 
-									if (!bSelect[i2]) {
+									if (!bSelect[i2])
+									{
 										allPlayerSelected = false;
 										break;
 									}
 								}
 
-								if (allPlayerSelected) {
-									if (OpenNijiiroRW.Skin.soundSongDecide_AI.bLoadedSuccessfuly && OpenNijiiroRW.ConfigIni.bAIBattleMode) {
+								if (allPlayerSelected)
+								{
+									if (OpenNijiiroRW.Skin.soundSongDecide_AI.bLoadedSuccessfuly && OpenNijiiroRW.ConfigIni.bAIBattleMode)
+									{
 										OpenNijiiroRW.Skin.soundSongDecide_AI.tPlay();
-									} else if (OpenNijiiroRW.Skin.sound曲決定音.bLoadedSuccessfuly) {
+									}
+									else if (OpenNijiiroRW.Skin.sound曲決定音.bLoadedSuccessfuly)
+									{
 										OpenNijiiroRW.Skin.sound曲決定音.tPlay();
-									} else {
+									}
+									else
+									{
 										OpenNijiiroRW.Skin.soundDecideSFX.tPlay();
 									}
 
-									for (int i2 = 0; i2 < OpenNijiiroRW.ConfigIni.nPlayerCount; i2++) {
-										if (OpenNijiiroRW.ConfigIni.bAIBattleMode) {
+									for (int i2 = 0; i2 < OpenNijiiroRW.ConfigIni.nPlayerCount; i2++)
+									{
+										if (OpenNijiiroRW.ConfigIni.bAIBattleMode)
+										{
 											OpenNijiiroRW.Skin.voiceMenuSongDecide_AI[OpenNijiiroRW.GetActualPlayer(i2)]?.tPlay();
-										} else {
+										}
+										else
+										{
 											OpenNijiiroRW.Skin.voiceMenuSongDecide[OpenNijiiroRW.GetActualPlayer(i2)]?.tPlay();
 										}
 										CMenuCharacter.tMenuResetTimer(i2, CMenuCharacter.ECharacterAnimation.START);
-										if (OpenNijiiroRW.ConfigIni.bAIBattleMode) {
+										if (OpenNijiiroRW.ConfigIni.bAIBattleMode)
+										{
 											OpenNijiiroRW.stageSongSelect.t曲を選択する(n現在の選択行[0] - 2, i2);
-										} else {
+										}
+										else
+										{
 											OpenNijiiroRW.stageSongSelect.t曲を選択する(n現在の選択行[i2] - 2, i2);
 										}
 									}
-								} else {
+								}
+								else
+								{
 									CMenuCharacter.tMenuResetTimer(i, CMenuCharacter.ECharacterAnimation.WAIT);
 									OpenNijiiroRW.Skin.soundDecideSFX.tPlay();
 								}
 							}
 						}
 					}
-					if (cancel) {
+					if (cancel)
+					{
 						OpenNijiiroRW.Skin.soundDecideSFX.tPlay();
 						OpenNijiiroRW.stageSongSelect.actSongList.ctBarOpen.Start(100, 260, 2, OpenNijiiroRW.Timer);
 						this.bIsDifficltSelect = false;
@@ -303,7 +365,8 @@ internal class CActSelect難易度選択画面 : CActivity {
 
 		difficulty_back.t2D中心基準描画(OpenNijiiroRW.Skin.SongSelect_Difficulty_Back[0], OpenNijiiroRW.Skin.SongSelect_Difficulty_Back[1]);
 
-		for (int i = 0; i < OpenNijiiroRW.ConfigIni.nPlayerCount; i++) {
+		for (int i = 0; i < OpenNijiiroRW.ConfigIni.nPlayerCount; i++)
+		{
 			if (OpenNijiiroRW.ConfigIni.bAIBattleMode && i == 1) break;
 
 			/*
@@ -323,7 +386,8 @@ internal class CActSelect難易度選択画面 : CActivity {
 
 		OpenNijiiroRW.Tx.Difficulty_Bar.color4 = new Color4(1.0f, 1.0f, 1.0f, 1.0f);
 		//Difficulty_Bar.t2D描画(255, 270, new RectangleF(0, 0, 171, 236));    //閉じる、演奏オプション
-		for (int i = 0; i < 2; i++) {
+		for (int i = 0; i < 2; i++)
+		{
 			OpenNijiiroRW.Tx.Difficulty_Bar.t2D描画(OpenNijiiroRW.Skin.SongSelect_Difficulty_Bar_X[i], OpenNijiiroRW.Skin.SongSelect_Difficulty_Bar_Y[i],
 				new RectangleF(OpenNijiiroRW.Skin.SongSelect_Difficulty_Bar_Rect[i][0],
 					OpenNijiiroRW.Skin.SongSelect_Difficulty_Bar_Rect[i][1],
@@ -333,7 +397,8 @@ internal class CActSelect難易度選択画面 : CActivity {
 
 		exextraAnimation = OpenNijiiroRW.stageSongSelect.actExExtraTransAnime.Draw();
 
-		for (int i = 0; i <= (int)Difficulty.Edit; i++) {
+		for (int i = 0; i <= (int)Difficulty.Edit; i++)
+		{
 			if (i == (int)Difficulty.Edit && (!uraExists || !b裏譜面))
 				break;
 			else if (i == (int)Difficulty.Oni && (!omoteExists && uraExists || b裏譜面))
@@ -361,7 +426,8 @@ internal class CActSelect難易度選択画面 : CActivity {
 				continue;
 
 
-			for (int j = 0; j < OpenNijiiroRW.ConfigIni.nPlayerCount; j++) {
+			for (int j = 0; j < OpenNijiiroRW.ConfigIni.nPlayerCount; j++)
+			{
 				if (j >= 2) continue;
 
 				if (OpenNijiiroRW.ConfigIni.bAIBattleMode && i == 1) break;
@@ -406,12 +472,17 @@ internal class CActSelect難易度選択画面 : CActivity {
 					OpenNijiiroRW.stageSongSelect.r現在選択中のスコア.譜面情報.nLevelIcon[i]
 				);
 
-			if (!(i >= (int)Difficulty.Oni && exextraAnimation > 0)) {
-				for (int g = 0; g < 10; g++) {
-					if (level > g + 10) {
+			if (!(i >= (int)Difficulty.Oni && exextraAnimation > 0))
+			{
+				for (int g = 0; g < 10; g++)
+				{
+					if (level > g + 10)
+					{
 						OpenNijiiroRW.Tx.Difficulty_Star.color4 = new Color4(1f, 0.2f, 0.2f, 1.0f);
 						OpenNijiiroRW.Tx.Difficulty_Star?.t2D描画(OpenNijiiroRW.Skin.SongSelect_Difficulty_Star_X[i] + (int)(g * OpenNijiiroRW.Skin.SongSelect_Difficulty_Star_Interval[0]), OpenNijiiroRW.Skin.SongSelect_Difficulty_Star_Y[i] + (int)(g * OpenNijiiroRW.Skin.SongSelect_Difficulty_Star_Interval[1]));
-					} else if (level > g) {
+					}
+					else if (level > g)
+					{
 						OpenNijiiroRW.Tx.Difficulty_Star.color4 = new Color4(1f, 1f, 1f, 1.0f);
 						OpenNijiiroRW.Tx.Difficulty_Star?.t2D描画(OpenNijiiroRW.Skin.SongSelect_Difficulty_Star_X[i] + (int)(g * OpenNijiiroRW.Skin.SongSelect_Difficulty_Star_Interval[0]), OpenNijiiroRW.Skin.SongSelect_Difficulty_Star_Y[i] + (int)(g * OpenNijiiroRW.Skin.SongSelect_Difficulty_Star_Interval[1]));
 					}
@@ -432,7 +503,8 @@ internal class CActSelect難易度選択画面 : CActivity {
 
 		#region [ バーの描画 ]
 
-		for (int i = 0; i < OpenNijiiroRW.ConfigIni.nPlayerCount; i++) {
+		for (int i = 0; i < OpenNijiiroRW.ConfigIni.nPlayerCount; i++)
+		{
 			if (OpenNijiiroRW.ConfigIni.bAIBattleMode && i == 1) break;
 
 			/*
@@ -447,9 +519,11 @@ internal class CActSelect難易度選択画面 : CActivity {
 			int overlapCount = 0;
 			int nowOverlapIndex = 0;
 
-			for (int j = 0; j < OpenNijiiroRW.ConfigIni.nPlayerCount; j++) {
+			for (int j = 0; j < OpenNijiiroRW.ConfigIni.nPlayerCount; j++)
+			{
 				if (n現在の選択行[i] == n現在の選択行[j] && j != i) overlapCount++;
-				if (j == i) {
+				if (j == i)
+				{
 					nowOverlapIndex = overlapCount;
 				}
 			}
@@ -466,7 +540,8 @@ internal class CActSelect難易度選択画面 : CActivity {
 			float moveX = OpenNijiiroRW.Skin.SongSelect_Difficulty_Select_Bar_Move[0] * (nowOverlapIndex - (overlapCount / 2.0f)) * (2.0f / Math.Max(overlapCount, 1));
 			float moveY = OpenNijiiroRW.Skin.SongSelect_Difficulty_Select_Bar_Move[1] * (nowOverlapIndex - (overlapCount / 2.0f)) * (2.0f / Math.Max(overlapCount, 1));
 
-			if (!consideMultiPlay) {
+			if (!consideMultiPlay)
+			{
 				moveX = 0;
 				moveY = 0;
 			}
@@ -521,16 +596,19 @@ internal class CActSelect難易度選択画面 : CActivity {
 	private CSound soundSelectAnnounce;
 
 	[StructLayout(LayoutKind.Sequential)]
-	private struct STレベル数字 {
+	private struct STレベル数字
+	{
 		public char ch;
 		public int ptX;
 	}
 	private STレベル数字[] st小文字位置 = new STレベル数字[10];
 
-	private void t小文字表示(int num, float x, float y, int diff, CTja.ELevelIcon icon) {
+	private void t小文字表示(int num, float x, float y, int diff, CTja.ELevelIcon icon)
+	{
 		int[] nums = CConversion.SeparateDigits(num);
 		float[] icon_coords = new float[2] { -999, -999 };
-		for (int j = 0; j < nums.Length; j++) {
+		for (int j = 0; j < nums.Length; j++)
+		{
 			float offset = j - (nums.Length / 2.0f);
 			float _x = x - (OpenNijiiroRW.Skin.SongSelect_Difficulty_Number_Interval[0] * offset);
 			float _y = y - (OpenNijiiroRW.Skin.SongSelect_Difficulty_Number_Interval[1] * offset);
@@ -543,7 +621,8 @@ internal class CActSelect難易度選択画面 : CActivity {
 
 			OpenNijiiroRW.Tx.Difficulty_Number.t2D描画(_x, _y, new Rectangle(width * nums[j], 0, width, height));
 
-			if (OpenNijiiroRW.Tx.Difficulty_Number_Colored != null) {
+			if (OpenNijiiroRW.Tx.Difficulty_Number_Colored != null)
+			{
 				OpenNijiiroRW.Tx.Difficulty_Number_Colored.color4 = CConversion.ColorToColor4(OpenNijiiroRW.Skin.SongSelect_Difficulty_Colors[diff]);
 				OpenNijiiroRW.Tx.Difficulty_Number_Colored.t2D描画(_x, _y, new RectangleF(width * nums[j], 0, width, height));
 			}
@@ -551,7 +630,8 @@ internal class CActSelect難易度選択画面 : CActivity {
 		OpenNijiiroRW.stageSongSelect.actSongList.tDisplayLevelIcon((int)icon_coords[0], (int)icon_coords[1], icon, OpenNijiiroRW.Tx.Difficulty_Number_Icon);
 	}
 
-	private bool isOnOption() {
+	private bool isOnOption()
+	{
 		return bOption[0] || bOption[1] || bOption[2] || bOption[3] || bOption[4];
 	}
 

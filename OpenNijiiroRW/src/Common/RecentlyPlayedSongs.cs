@@ -1,7 +1,9 @@
 ﻿namespace OpenNijiiroRW;
 
-internal class RecentlyPlayedSongs {
-	public void tRecentlyPlayedSongs() {
+internal class RecentlyPlayedSongs
+{
+	public void tRecentlyPlayedSongs()
+	{
 		if (!File.Exists("RecentlyPlayedSongs.json"))
 			tSaveFile();
 
@@ -10,7 +12,8 @@ internal class RecentlyPlayedSongs {
 
 	#region [Auxiliary methods]
 
-	public void tAddChart(string chartID) {
+	public void tAddChart(string chartID)
+	{
 		if (!data.recentlyplayedsongs[OpenNijiiroRW.SaveFile].Contains(chartID))
 			data.recentlyplayedsongs[OpenNijiiroRW.SaveFile].Enqueue(chartID);
 
@@ -22,7 +25,8 @@ internal class RecentlyPlayedSongs {
 
 	#endregion
 
-	public class Data {
+	public class Data
+	{
 		public Queue<string>[] recentlyplayedsongs = new Queue<string>[2] { new Queue<string>(), new Queue<string>() };
 	}
 
@@ -30,11 +34,13 @@ internal class RecentlyPlayedSongs {
 
 	#region [private]
 
-	private void tSaveFile() {
+	private void tSaveFile()
+	{
 		ConfigManager.SaveConfig(data, "RecentlyPlayedSongs.json");
 	}
 
-	private void tLoadFile() {
+	private void tLoadFile()
+	{
 		data = ConfigManager.GetConfig<Data>(@"RecentlyPlayedSongs.json");
 	}
 

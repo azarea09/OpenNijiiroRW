@@ -1,21 +1,25 @@
-﻿using System.Diagnostics;
-using FDK;
+﻿using FDK;
 
 namespace OpenNijiiroRW;
 
-internal class CActCutScenePauseMenu : CActSelectPopupMenu {
+internal class CActCutScenePauseMenu : CActSelectPopupMenu
+{
 	// コンストラクタ
 
-	public CActCutScenePauseMenu() {
+	public CActCutScenePauseMenu()
+	{
 		CActCutScenePauseMenuMain();
 	}
 
-	private void CActCutScenePauseMenuMain() {
+	private void CActCutScenePauseMenuMain()
+	{
 		this.bEsc有効 = false;
 		lci = new List<List<List<CItemBase>>>();                                    // この画面に来る度に、メニューを作り直す。
-		for (int nConfSet = 0; nConfSet < 2; nConfSet++) {
+		for (int nConfSet = 0; nConfSet < 2; nConfSet++)
+		{
 			lci.Add(new List<List<CItemBase>>());                                   // ConfSet用の3つ分の枠。
-			for (int nInst = 0; nInst < 3; nInst++) {
+			for (int nInst = 0; nInst < 3; nInst++)
+			{
 				lci[nConfSet].Add(null);                                        // Drum/Guitar/Bassで3つ分、枠を作っておく
 				lci[nConfSet][nInst] = MakeListCItemBase(nConfSet, nInst);
 			}
@@ -23,7 +27,8 @@ internal class CActCutScenePauseMenu : CActSelectPopupMenu {
 		base.Initialize(lci[nCurrentConfigSet][0], true, CLangManager.LangInstance.GetString("PAUSE_TITLE"), 0);    // ConfSet=0, nInst=Drums
 	}
 
-	private List<CItemBase> MakeListCItemBase(int nConfigSet, int nInst) {
+	private List<CItemBase> MakeListCItemBase(int nConfigSet, int nInst)
+	{
 		List<CItemBase> l = new List<CItemBase>();
 
 		#region [ 共通 SET切り替え/More/Return ]
@@ -35,7 +40,8 @@ internal class CActCutScenePauseMenu : CActSelectPopupMenu {
 	}
 
 	// メソッド
-	public override void tActivatePopupMenu(EInstrumentPad einst) {
+	public override void tActivatePopupMenu(EInstrumentPad einst)
+	{
 		this.CActCutScenePauseMenuMain();
 		CActSelectPopupMenu.b選択した = false;
 		base.tActivatePopupMenu(einst);
@@ -45,8 +51,10 @@ internal class CActCutScenePauseMenu : CActSelectPopupMenu {
 	//	base.tDeativatePopupMenu();
 	//}
 
-	public override void tEnter押下Main(int nSortOrder) {
-		switch (n現在の選択行) {
+	public override void tEnter押下Main(int nSortOrder)
+	{
+		switch (n現在の選択行)
+		{
 			case (int)EOrder.Continue:
 				OpenNijiiroRW.stageCutScene.Resume();
 				CActSelectPopupMenu.b選択した = true;
@@ -63,27 +71,33 @@ internal class CActCutScenePauseMenu : CActSelectPopupMenu {
 		}
 	}
 
-	public override void tCancel() {
+	public override void tCancel()
+	{
 	}
 
 	// CActivity 実装
 
-	public override void Activate() {
+	public override void Activate()
+	{
 		base.Activate();
 		this.bGotoDetailConfig = false;
 	}
-	public override void DeActivate() {
+	public override void DeActivate()
+	{
 		base.DeActivate();
 	}
-	public override void CreateManagedResource() {
+	public override void CreateManagedResource()
+	{
 		string pathパネル本体 = CSkin.Path(@$"Graphics{Path.DirectorySeparatorChar}ScreenSelect popup auto settings.png");
-		if (File.Exists(pathパネル本体)) {
+		if (File.Exists(pathパネル本体))
+		{
 			this.txパネル本体 = OpenNijiiroRW.tテクスチャの生成(pathパネル本体, true);
 		}
 
 		base.CreateManagedResource();
 	}
-	public override void ReleaseManagedResource() {
+	public override void ReleaseManagedResource()
+	{
 		OpenNijiiroRW.tテクスチャの解放(ref this.txパネル本体);
 		OpenNijiiroRW.tテクスチャの解放(ref this.tx文字列パネル);
 		base.ReleaseManagedResource();
@@ -94,7 +108,8 @@ internal class CActCutScenePauseMenu : CActSelectPopupMenu {
 	private int nCurrentTarget = 0;
 	private int nCurrentConfigSet = 0;
 	private List<List<List<CItemBase>>> lci;
-	private enum EOrder : int {
+	private enum EOrder : int
+	{
 		Continue,
 		Skip,
 		END,

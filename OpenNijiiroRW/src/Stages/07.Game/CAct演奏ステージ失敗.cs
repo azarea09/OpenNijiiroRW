@@ -4,10 +4,12 @@ using FDK;
 
 namespace OpenNijiiroRW;
 
-internal class CAct演奏ステージ失敗 : CActivity {
+internal class CAct演奏ステージ失敗 : CActivity
+{
 	// コンストラクタ
 
-	public CAct演奏ステージ失敗() {
+	public CAct演奏ステージ失敗()
+	{
 		ST文字位置[] st文字位置Array = new ST文字位置[11];
 
 		ST文字位置 st文字位置 = new ST文字位置();
@@ -61,10 +63,12 @@ internal class CAct演奏ステージ失敗 : CActivity {
 
 	// メソッド
 
-	public void Start() {
+	public void Start()
+	{
 		this.dbFailedTime = OpenNijiiroRW.Timer.NowTimeMs;
 		this.ct進行 = new CCounter(0, 300, 22, OpenNijiiroRW.Timer);
-		if (OpenNijiiroRW.ConfigIni.eGameMode != EGame.Off) {
+		if (OpenNijiiroRW.ConfigIni.eGameMode != EGame.Off)
+		{
 			this.ct進行 = new CCounter(0, 4000, 2, OpenNijiiroRW.Timer);
 		}
 	}
@@ -72,21 +76,25 @@ internal class CAct演奏ステージ失敗 : CActivity {
 
 	// CActivity 実装
 
-	public override void Activate() {
+	public override void Activate()
+	{
 		this.sd効果音 = null;
 		this.b効果音再生済み = false;
 		this.ct進行 = new CCounter();
 		base.Activate();
 	}
-	public override void DeActivate() {
+	public override void DeActivate()
+	{
 		this.ct進行 = null;
-		if (this.sd効果音 != null) {
+		if (this.sd効果音 != null)
+		{
 			OpenNijiiroRW.SoundManager.tDisposeSound(this.sd効果音);
 			this.sd効果音 = null;
 		}
 		base.DeActivate();
 	}
-	public override void CreateManagedResource() {
+	public override void CreateManagedResource()
+	{
 		this.failedSongPlayed = false;
 		//            this.txBlack = CDTXMania.tテクスチャの生成( CSkin.Path( @"Graphics\Tile black 64x64.png" ) );
 		//this.txStageFailed = CDTXMania.tテクスチャの生成( CSkin.Path( @"Graphics\7_stage_failed.jpg" ) );
@@ -95,7 +103,8 @@ internal class CAct演奏ステージ失敗 : CActivity {
 		this.soundFailed = OpenNijiiroRW.SoundManager.tCreateSound(CSkin.Path(@$"Sounds{Path.DirectorySeparatorChar}Failed.ogg"), ESoundGroup.SoundEffect);
 		base.CreateManagedResource();
 	}
-	public override void ReleaseManagedResource() {
+	public override void ReleaseManagedResource()
+	{
 		//CDTXMania.tテクスチャの解放( ref this.txStageFailed );
 		//CDTXMania.tテクスチャの解放( ref this.txGameFailed );
 		//            CDTXMania.tテクスチャの解放( ref this.txBlack );
@@ -107,25 +116,30 @@ internal class CAct演奏ステージ失敗 : CActivity {
 
 	#region [Effect]
 
-	private void showEndEffect_Failed(int i) {
+	private void showEndEffect_Failed(int i)
+	{
 		int[] y = new int[] { 0, 176 };
 
 	}
 
 	#endregion
 
-	public override int Draw() {
-		if (base.IsDeActivated) {
+	public override int Draw()
+	{
+		if (base.IsDeActivated)
+		{
 			return 0;
 		}
-		if ((this.ct進行 == null) || this.ct進行.IsStoped) {
+		if ((this.ct進行 == null) || this.ct進行.IsStoped)
+		{
 			return 0;
 		}
 		this.ct進行.Tick();
 
 		#region [Failed screen]
 
-		if (this.soundFailed != null && !this.failedSongPlayed) {
+		if (this.soundFailed != null && !this.failedSongPlayed)
+		{
 			this.soundFailed.PlayStart();
 			this.failedSongPlayed = true;
 		}
@@ -197,7 +211,8 @@ internal class CAct演奏ステージ失敗 : CActivity {
 
 		*/
 
-		if (!this.ct進行.IsEnded) {
+		if (!this.ct進行.IsEnded)
+		{
 			return 0;
 		}
 		return 1;
@@ -223,24 +238,32 @@ internal class CAct演奏ステージ失敗 : CActivity {
 	private ST文字位置[] st文字位置;
 
 	[StructLayout(LayoutKind.Sequential)]
-	public struct ST文字位置 {
+	public struct ST文字位置
+	{
 		public char ch;
 		public Point pt;
-		public ST文字位置(char ch, Point pt) {
+		public ST文字位置(char ch, Point pt)
+		{
 			this.ch = ch;
 			this.pt = pt;
 		}
 	}
 
-	private void t文字表示(int x, int y, string str) {
-		foreach (char ch in str) {
-			for (int i = 0; i < this.st文字位置.Length; i++) {
-				if (this.st文字位置[i].ch == ch) {
+	private void t文字表示(int x, int y, string str)
+	{
+		foreach (char ch in str)
+		{
+			for (int i = 0; i < this.st文字位置.Length; i++)
+			{
+				if (this.st文字位置[i].ch == ch)
+				{
 					Rectangle rectangle = new Rectangle(this.st文字位置[i].pt.X, this.st文字位置[i].pt.Y, 62, 80);
-					if (ch == '%') {
+					if (ch == '%')
+					{
 						rectangle.Width = 80;
 					}
-					if (OpenNijiiroRW.Tx.Balloon_Number_Roll != null) {
+					if (OpenNijiiroRW.Tx.Balloon_Number_Roll != null)
+					{
 						OpenNijiiroRW.Tx.Balloon_Number_Roll.t2D描画(x - (62 * str.Length / 2), y, rectangle);
 					}
 					break;

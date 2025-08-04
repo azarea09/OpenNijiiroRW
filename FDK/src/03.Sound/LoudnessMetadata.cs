@@ -6,11 +6,13 @@
 /// loudness.
 /// </summary>
 [Serializable]
-public struct LoudnessMetadata {
+public struct LoudnessMetadata
+{
 	public readonly Lufs Integrated;
 	public readonly Lufs? TruePeak;
 
-	public LoudnessMetadata(Lufs integrated, Lufs? truePeak) {
+	public LoudnessMetadata(Lufs integrated, Lufs? truePeak)
+	{
 		Integrated = integrated;
 		TruePeak = truePeak;
 	}

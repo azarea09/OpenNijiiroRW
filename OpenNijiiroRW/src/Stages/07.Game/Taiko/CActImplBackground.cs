@@ -1,20 +1,22 @@
 ﻿using FDK;
-using static OpenNijiiroRW.CActSelect曲リスト;
 using Color = System.Drawing.Color;
 using Rectangle = System.Drawing.Rectangle;
 
 namespace OpenNijiiroRW;
 
-internal class CActImplBackground : CActivity {
+internal class CActImplBackground : CActivity
+{
 	// 本家っぽい背景を表示させるメソッド。
 	//
 	// 拡張性とかないんで。はい、ヨロシクゥ!
 	//
-	public CActImplBackground() {
+	public CActImplBackground()
+	{
 		base.IsDeActivated = true;
 	}
 
-	public void tFadeIn(int player) {
+	public void tFadeIn(int player)
+	{
 		//this.ct上背景クリアインタイマー[player] = new CCounter(0, 100, 2, TJAPlayer3.Timer);
 		this.eFadeMode = EFIFOMode.FadeIn;
 	}
@@ -25,7 +27,8 @@ internal class CActImplBackground : CActivity {
 	//    this.eFadeMode = EFIFOモード.フェードアウト;
 	//}
 
-	public void ClearIn(int player) {
+	public void ClearIn(int player)
+	{
 		/*this.ct上背景クリアインタイマー[player] = new CCounter(0, 100, 2, TJAPlayer3.Timer);
         this.ct上背景クリアインタイマー[player].n現在の値 = 0;
         this.ct上背景FIFOタイマー = new CCounter(0, 100, 2, TJAPlayer3.Timer);
@@ -34,30 +37,40 @@ internal class CActImplBackground : CActivity {
 		DownScript?.ClearIn(player);
 	}
 
-	public void ClearOut(int player) {
+	public void ClearOut(int player)
+	{
 		UpScript?.ClearOut(player);
 		DownScript?.ClearOut(player);
 	}
 
-	public override void Activate() {
+	public override void Activate()
+	{
 		if (!this.IsDeActivated)
 			return;
 
 		var bgOrigindir = CSkin.Path($"{TextureLoader.BASE}{TextureLoader.GAME}{TextureLoader.BACKGROUND}");
 		var preset = HScenePreset.GetBGPreset();
-		if (OpenNijiiroRW.stageSongSelect.nChoosenSongDifficulty[0] == (int)Difficulty.Tower) {
+		if (OpenNijiiroRW.stageSongSelect.nChoosenSongDifficulty[0] == (int)Difficulty.Tower)
+		{
 			bgOrigindir += "Tower";
-		} else if (OpenNijiiroRW.stageSongSelect.nChoosenSongDifficulty[0] == (int)Difficulty.Dan) {
+		}
+		else if (OpenNijiiroRW.stageSongSelect.nChoosenSongDifficulty[0] == (int)Difficulty.Dan)
+		{
 			bgOrigindir += "Dan";
-		} else if (OpenNijiiroRW.ConfigIni.bAIBattleMode) {
+		}
+		else if (OpenNijiiroRW.ConfigIni.bAIBattleMode)
+		{
 			bgOrigindir += "AI";
-		} else {
+		}
+		else
+		{
 			bgOrigindir += "Normal";
 		}
 
 		Random random = new Random();
 
-		if (System.IO.Directory.Exists($@"{bgOrigindir}{Path.DirectorySeparatorChar}Up")) {
+		if (System.IO.Directory.Exists($@"{bgOrigindir}{Path.DirectorySeparatorChar}Up"))
+		{
 			var upDirs = System.IO.Directory.GetDirectories($@"{bgOrigindir}{Path.DirectorySeparatorChar}Up");
 
 			// If there is a preset upper background and this preset exists on the skin use it, else random upper background
@@ -70,11 +83,14 @@ internal class CActImplBackground : CActivity {
 			UpScript.Init();
 
 			IsUpNotFound = false;
-		} else {
+		}
+		else
+		{
 			IsUpNotFound = true;
 		}
 
-		if (System.IO.Directory.Exists($@"{bgOrigindir}{Path.DirectorySeparatorChar}Down")) {
+		if (System.IO.Directory.Exists($@"{bgOrigindir}{Path.DirectorySeparatorChar}Down"))
+		{
 			var downDirs = System.IO.Directory.GetDirectories($@"{bgOrigindir}{Path.DirectorySeparatorChar}Down");
 
 			// If there is a preset lower background and this preset exists on the skin use it, else random upper background
@@ -87,7 +103,9 @@ internal class CActImplBackground : CActivity {
 			DownScript?.Init();
 
 			if (DownScript.Exists()) IsDownNotFound = false;
-		} else {
+		}
+		else
+		{
 			IsDownNotFound = true;
 		}
 
@@ -115,39 +133,48 @@ internal class CActImplBackground : CActivity {
 		float resolutionScaleY = OpenNijiiroRW.Skin.Resolution[1] / (float)OpenNijiiroRW.Skin.Characters_Resolution[currentCharacter][1];
 
 		// Scale tower chara
-		foreach (CTexture texture in OpenNijiiroRW.Tx.Characters_Tower_Standing[currentCharacter]) {
+		foreach (CTexture texture in OpenNijiiroRW.Tx.Characters_Tower_Standing[currentCharacter])
+		{
 			texture.Scale.X = resolutionScaleX;
 			texture.Scale.Y = resolutionScaleY;
 		}
-		foreach (CTexture texture in OpenNijiiroRW.Tx.Characters_Tower_Climbing[currentCharacter]) {
+		foreach (CTexture texture in OpenNijiiroRW.Tx.Characters_Tower_Climbing[currentCharacter])
+		{
 			texture.Scale.X = resolutionScaleX;
 			texture.Scale.Y = resolutionScaleY;
 		}
-		foreach (CTexture texture in OpenNijiiroRW.Tx.Characters_Tower_Running[currentCharacter]) {
+		foreach (CTexture texture in OpenNijiiroRW.Tx.Characters_Tower_Running[currentCharacter])
+		{
 			texture.Scale.X = resolutionScaleX;
 			texture.Scale.Y = resolutionScaleY;
 		}
-		foreach (CTexture texture in OpenNijiiroRW.Tx.Characters_Tower_Clear[currentCharacter]) {
+		foreach (CTexture texture in OpenNijiiroRW.Tx.Characters_Tower_Clear[currentCharacter])
+		{
 			texture.Scale.X = resolutionScaleX;
 			texture.Scale.Y = resolutionScaleY;
 		}
-		foreach (CTexture texture in OpenNijiiroRW.Tx.Characters_Tower_Fail[currentCharacter]) {
+		foreach (CTexture texture in OpenNijiiroRW.Tx.Characters_Tower_Fail[currentCharacter])
+		{
 			texture.Scale.X = resolutionScaleX;
 			texture.Scale.Y = resolutionScaleY;
 		}
-		foreach (CTexture texture in OpenNijiiroRW.Tx.Characters_Tower_Standing_Tired[currentCharacter]) {
+		foreach (CTexture texture in OpenNijiiroRW.Tx.Characters_Tower_Standing_Tired[currentCharacter])
+		{
 			texture.Scale.X = resolutionScaleX;
 			texture.Scale.Y = resolutionScaleY;
 		}
-		foreach (CTexture texture in OpenNijiiroRW.Tx.Characters_Tower_Climbing_Tired[currentCharacter]) {
+		foreach (CTexture texture in OpenNijiiroRW.Tx.Characters_Tower_Climbing_Tired[currentCharacter])
+		{
 			texture.Scale.X = resolutionScaleX;
 			texture.Scale.Y = resolutionScaleY;
 		}
-		foreach (CTexture texture in OpenNijiiroRW.Tx.Characters_Tower_Running_Tired[currentCharacter]) {
+		foreach (CTexture texture in OpenNijiiroRW.Tx.Characters_Tower_Running_Tired[currentCharacter])
+		{
 			texture.Scale.X = resolutionScaleX;
 			texture.Scale.Y = resolutionScaleY;
 		}
-		foreach (CTexture texture in OpenNijiiroRW.Tx.Characters_Tower_Clear_Tired[currentCharacter]) {
+		foreach (CTexture texture in OpenNijiiroRW.Tx.Characters_Tower_Clear_Tired[currentCharacter])
+		{
 			texture.Scale.X = resolutionScaleX;
 			texture.Scale.Y = resolutionScaleY;
 		}
@@ -169,7 +196,8 @@ internal class CActImplBackground : CActivity {
 		base.Activate();
 	}
 
-	public override void DeActivate() {
+	public override void DeActivate()
+	{
 		if (this.IsDeActivated)
 			return;
 
@@ -181,15 +209,18 @@ internal class CActImplBackground : CActivity {
 		base.DeActivate();
 	}
 
-	public override void CreateManagedResource() {
+	public override void CreateManagedResource()
+	{
 		base.CreateManagedResource();
 	}
 
-	public override void ReleaseManagedResource() {
+	public override void ReleaseManagedResource()
+	{
 		base.ReleaseManagedResource();
 	}
 
-	public override int Draw() {
+	public override int Draw()
+	{
 		if (base.IsDeActivated)
 			return 0;
 
@@ -207,10 +238,12 @@ internal class CActImplBackground : CActivity {
 
 		#region [Upper background]
 
-		if (!IsUpNotFound) {
+		if (!IsUpNotFound)
+		{
 			if (!OpenNijiiroRW.stageGameScreen.bPAUSE) UpScript?.Update();
 			UpScript?.Draw();
-			if (OpenNijiiroRW.stageSongSelect.nChoosenSongDifficulty[0] == (int)Difficulty.Tower) {
+			if (OpenNijiiroRW.stageSongSelect.nChoosenSongDifficulty[0] == (int)Difficulty.Tower)
+			{
 				#region [Tower animations variables]
 
 				this.bFloorChanged = CFloorManagement.LastRegisteredFloor > 0 && (CFloorManagement.LastRegisteredFloor < OpenNijiiroRW.stageGameScreen.actPlayInfo.NowMeasure[0] + 1);
@@ -224,7 +257,8 @@ internal class CActImplBackground : CActivity {
 
 				#region [Tower background informations]
 
-				if (OpenNijiiroRW.stageSongSelect.nChoosenSongDifficulty[0] == (int)Difficulty.Tower) {
+				if (OpenNijiiroRW.stageSongSelect.nChoosenSongDifficulty[0] == (int)Difficulty.Tower)
+				{
 					TitleTextureKey.ResolveTitleTexture(ttkTouTatsuKaiSuu).t2D描画(OpenNijiiroRW.Skin.Game_Tower_Font_TouTatsuKaiSuu[0], OpenNijiiroRW.Skin.Game_Tower_Font_TouTatsuKaiSuu[1]);
 					TitleTextureKey.ResolveTitleTexture(ttkKai).t2D描画(OpenNijiiroRW.Skin.Game_Tower_Font_Kai[0], OpenNijiiroRW.Skin.Game_Tower_Font_Kai[1]);
 
@@ -246,7 +280,8 @@ internal class CActImplBackground : CActivity {
 					OpenNijiiroRW.Tx.Taiko_Combo[0].Scale.X = 1.4f;
 					OpenNijiiroRW.Tx.Taiko_Combo[0].Scale.Y = 1.4f;
 
-					for (int idx = len - 1; idx >= 0; idx--) {
+					for (int idx = len - 1; idx >= 0; idx--)
+					{
 						int currentNum = int.Parse(floorStr[idx].ToString());
 
 						OpenNijiiroRW.Tx.Taiko_Combo[0].t2D描画(OpenNijiiroRW.Skin.Game_Tower_Floor_Number[0] - ((digitLength - 8) * (len - idx) * 1.4f),
@@ -271,7 +306,8 @@ internal class CActImplBackground : CActivity {
 
 					#region [Life number]
 
-					if (CFloorManagement.MaxNumberOfLives <= 0) {
+					if (CFloorManagement.MaxNumberOfLives <= 0)
+					{
 						CFloorManagement.MaxNumberOfLives = 5;
 						CFloorManagement.CurrentNumberOfLives = 5;
 					}
@@ -291,7 +327,8 @@ internal class CActImplBackground : CActivity {
 					OpenNijiiroRW.Tx.Taiko_Combo[0].Scale.X = 1.1f;
 					OpenNijiiroRW.Tx.Taiko_Combo[0].Scale.Y = 1.1f;
 
-					for (int idx = 0; idx < len; idx++) {
+					for (int idx = 0; idx < len; idx++)
+					{
 						int currentNum = int.Parse(lifeStr[len - idx - 1].ToString());
 
 						OpenNijiiroRW.Tx.Taiko_Combo[0].t2D描画(OpenNijiiroRW.Skin.Game_Tower_Life_Number[0] + ((digitLength - 8) * (len - idx) * 1.1f),
@@ -315,7 +352,8 @@ internal class CActImplBackground : CActivity {
 		#region [Lower background]
 
 
-		if (OpenNijiiroRW.stageSongSelect.nChoosenSongDifficulty[0] == (int)Difficulty.Tower) {
+		if (OpenNijiiroRW.stageSongSelect.nChoosenSongDifficulty[0] == (int)Difficulty.Tower)
+		{
 			int maxFloor = OpenNijiiroRW.stageSongSelect.rChoosenSong.score[5].譜面情報.nTotalFloor;
 
 			OpenNijiiroRW.actTextConsole.Print(0, 0, CTextConsole.EFontType.White, maxFloor.ToString());
@@ -396,7 +434,8 @@ internal class CActImplBackground : CActivity {
 					OpenNijiiroRW.Skin.Game_Tower_Floors_Body[0] - OpenNijiiroRW.Skin.Game_Tower_Floors_Move[0] + widthChange,
 					OpenNijiiroRW.Skin.Game_Tower_Floors_Body[1] - OpenNijiiroRW.Skin.Game_Tower_Floors_Move[1] + heightChange,
 					new Rectangle(0, originY, OpenNijiiroRW.Tx.Tower_Base[currentTower][nextTowerBase].szTextureSize.Width, OpenNijiiroRW.Tx.Tower_Base[currentTower][nextTowerBase].szTextureSize.Height - originY));
-			else if (OpenNijiiroRW.stageGameScreen.actPlayInfo.NowMeasure[0] + 1 == maxFloor) {
+			else if (OpenNijiiroRW.stageGameScreen.actPlayInfo.NowMeasure[0] + 1 == maxFloor)
+			{
 				OpenNijiiroRW.Tx.Tower_Top[currentTower]?.t2D下中央基準描画(
 					OpenNijiiroRW.Skin.Game_Tower_Floors_Body[0] - OpenNijiiroRW.Skin.Game_Tower_Floors_Move[0] + widthChange,
 					OpenNijiiroRW.Skin.Game_Tower_Floors_Body[1] - OpenNijiiroRW.Skin.Game_Tower_Floors_Move[1] + heightChange,
@@ -418,7 +457,8 @@ internal class CActImplBackground : CActivity {
 
 			bool stageEnded = OpenNijiiroRW.stageGameScreen.ePhaseID == CStage.EPhase.Game_EndStage || OpenNijiiroRW.stageGameScreen.ePhaseID == CStage.EPhase.Game_STAGE_CLEAR_FadeOut || CFloorManagement.CurrentNumberOfLives == 0;
 
-			if (bFloorChanged == true) {
+			if (bFloorChanged == true)
+			{
 				float floorBPM = (float)CTja.TjaBeatSpeedToGameBeatSpeed(OpenNijiiroRW.stageGameScreen.actPlayInfo.dbBPM[0]);
 				ctClimbDuration.Start(0, 1500, 120f / floorBPM, OpenNijiiroRW.Timer);
 				ctStandingAnimation.Start(0, 1000, (60000f / floorBPM) * OpenNijiiroRW.Skin.Characters_Beat_Tower_Standing[currentCharacter] / OpenNijiiroRW.Skin.Characters_Tower_Standing_Ptn[currentCharacter], OpenNijiiroRW.Timer);
@@ -431,7 +471,8 @@ internal class CActImplBackground : CActivity {
 
 			bool isClimbing = ctClimbDuration.CurrentValue > 0 && ctClimbDuration.CurrentValue < 1500;
 
-			if (stageEnded && !TowerFinished && !isClimbing) {
+			if (stageEnded && !TowerFinished && !isClimbing)
+			{
 				float floorBPM = (float)CTja.TjaBeatSpeedToGameBeatSpeed(OpenNijiiroRW.stageGameScreen.actPlayInfo.dbBPM[0]);
 				ctClearAnimation.Start(0, 20000, (60000f / floorBPM) * OpenNijiiroRW.Skin.Characters_Beat_Tower_Clear[currentCharacter] / OpenNijiiroRW.Skin.Characters_Tower_Clear_Ptn[currentCharacter], OpenNijiiroRW.Timer);
 				ctClearTiredAnimation.Start(0, 20000, (60000f / floorBPM) * OpenNijiiroRW.Skin.Characters_Beat_Tower_Clear_Tired[currentCharacter] / OpenNijiiroRW.Skin.Characters_Tower_Clear_Tired_Ptn[currentCharacter], OpenNijiiroRW.Timer);
@@ -439,52 +480,62 @@ internal class CActImplBackground : CActivity {
 				TowerFinished = true;
 			}
 
-			if (isClimbing) {
+			if (isClimbing)
+			{
 				// Tired Climb
-				if (ctIsTired && (ctClimbDuration.CurrentValue <= 1000) && OpenNijiiroRW.Skin.Characters_Tower_Climbing_Tired_Ptn[currentCharacter] > 0) {
+				if (ctIsTired && (ctClimbDuration.CurrentValue <= 1000) && OpenNijiiroRW.Skin.Characters_Tower_Climbing_Tired_Ptn[currentCharacter] > 0)
+				{
 					int animChar = ctClimbTiredAnimation.CurrentValue % OpenNijiiroRW.Skin.Characters_Tower_Climbing_Ptn[currentCharacter];
 					int distDonX = (int)(ctClimbDuration.CurrentValue * (OpenNijiiroRW.Skin.Game_Tower_Don_Move[0] / 1000f));
 					int distDonY = (int)(ctClimbDuration.CurrentValue * (OpenNijiiroRW.Skin.Game_Tower_Don_Move[1] / 1000f));
 					OpenNijiiroRW.Tx.Characters_Tower_Climbing_Tired[currentCharacter][animChar]?.t2D拡大率考慮下中心基準描画(OpenNijiiroRW.Skin.Game_Tower_Don[0] + distDonX, OpenNijiiroRW.Skin.Game_Tower_Don[1] + distDonY);
 				}
 				// Tired Run
-				else if (ctIsTired && (ctClimbDuration.CurrentValue > 1000 && ctClimbDuration.CurrentValue < 1500) && OpenNijiiroRW.Skin.Characters_Tower_Running_Tired_Ptn[currentCharacter] > 0) {
+				else if (ctIsTired && (ctClimbDuration.CurrentValue > 1000 && ctClimbDuration.CurrentValue < 1500) && OpenNijiiroRW.Skin.Characters_Tower_Running_Tired_Ptn[currentCharacter] > 0)
+				{
 					int animChar = ctRunTiredAnimation.CurrentValue % OpenNijiiroRW.Skin.Characters_Tower_Running_Ptn[currentCharacter];
 					int distDonX = (int)((1500 - ctClimbDuration.CurrentValue) * (OpenNijiiroRW.Skin.Game_Tower_Don_Move[0] / 500f));
 					int distDonY = (int)((1500 - ctClimbDuration.CurrentValue) * (OpenNijiiroRW.Skin.Game_Tower_Don_Move[1] / 500f));
 					OpenNijiiroRW.Tx.Characters_Tower_Running_Tired[currentCharacter][animChar]?.t2D拡大率考慮下中心基準描画(OpenNijiiroRW.Skin.Game_Tower_Don[0] + distDonX, OpenNijiiroRW.Skin.Game_Tower_Don[1] + distDonY);
 				}
 				// Climb
-				else if ((ctClimbDuration.CurrentValue <= 1000) && OpenNijiiroRW.Skin.Characters_Tower_Climbing_Ptn[currentCharacter] > 0) {
+				else if ((ctClimbDuration.CurrentValue <= 1000) && OpenNijiiroRW.Skin.Characters_Tower_Climbing_Ptn[currentCharacter] > 0)
+				{
 					int animChar = ctClimbingAnimation.CurrentValue % OpenNijiiroRW.Skin.Characters_Tower_Climbing_Ptn[currentCharacter];
 					int distDonX = (int)(ctClimbDuration.CurrentValue * (OpenNijiiroRW.Skin.Game_Tower_Don_Move[0] / 1000f));
 					int distDonY = (int)(ctClimbDuration.CurrentValue * (OpenNijiiroRW.Skin.Game_Tower_Don_Move[1] / 1000f));
 					OpenNijiiroRW.Tx.Characters_Tower_Climbing[currentCharacter][animChar]?.t2D拡大率考慮下中心基準描画(OpenNijiiroRW.Skin.Game_Tower_Don[0] + distDonX, OpenNijiiroRW.Skin.Game_Tower_Don[1] + distDonY);
 				}
 				// Run
-				else if ((ctClimbDuration.CurrentValue > 1000 && ctClimbDuration.CurrentValue < 1500) && OpenNijiiroRW.Skin.Characters_Tower_Running_Ptn[currentCharacter] > 0) {
+				else if ((ctClimbDuration.CurrentValue > 1000 && ctClimbDuration.CurrentValue < 1500) && OpenNijiiroRW.Skin.Characters_Tower_Running_Ptn[currentCharacter] > 0)
+				{
 					int animChar = ctRunningAnimation.CurrentValue % OpenNijiiroRW.Skin.Characters_Tower_Running_Ptn[currentCharacter];
 					int distDonX = (int)((1500 - ctClimbDuration.CurrentValue) * (OpenNijiiroRW.Skin.Game_Tower_Don_Move[0] / 500f));
 					int distDonY = (int)((1500 - ctClimbDuration.CurrentValue) * (OpenNijiiroRW.Skin.Game_Tower_Don_Move[1] / 500f));
 					OpenNijiiroRW.Tx.Characters_Tower_Running[currentCharacter][animChar]?.t2D拡大率考慮下中心基準描画(OpenNijiiroRW.Skin.Game_Tower_Don[0] + distDonX, OpenNijiiroRW.Skin.Game_Tower_Don[1] + distDonY);
 				}
-			} else {
+			}
+			else
+			{
 				// Fail
-				if (OpenNijiiroRW.Skin.Characters_Tower_Fail_Ptn[currentCharacter] > 0 && CFloorManagement.CurrentNumberOfLives == 0) {
+				if (OpenNijiiroRW.Skin.Characters_Tower_Fail_Ptn[currentCharacter] > 0 && CFloorManagement.CurrentNumberOfLives == 0)
+				{
 					int animChar = OpenNijiiroRW.Skin.Characters_Tower_Fail_IsLooping[currentCharacter] ?
 						ctFailAnimation.CurrentValue % OpenNijiiroRW.Skin.Characters_Tower_Fail_Ptn[currentCharacter] :
 						Math.Min(ctFailAnimation.CurrentValue, OpenNijiiroRW.Skin.Characters_Tower_Fail_Ptn[currentCharacter] - 1);
 					OpenNijiiroRW.Tx.Characters_Tower_Fail[currentCharacter][animChar]?.t2D拡大率考慮下中心基準描画(OpenNijiiroRW.Skin.Game_Tower_Don[0], OpenNijiiroRW.Skin.Game_Tower_Don[1]);
 				}
 				// Tired Clear
-				else if (ctIsTired && stageEnded && OpenNijiiroRW.Skin.Characters_Tower_Clear_Tired_Ptn[currentCharacter] > 0 && CFloorManagement.CurrentNumberOfLives > 0) {
+				else if (ctIsTired && stageEnded && OpenNijiiroRW.Skin.Characters_Tower_Clear_Tired_Ptn[currentCharacter] > 0 && CFloorManagement.CurrentNumberOfLives > 0)
+				{
 					int animChar = OpenNijiiroRW.Skin.Characters_Tower_Clear_Tired_IsLooping[currentCharacter] ?
 						ctClearTiredAnimation.CurrentValue % OpenNijiiroRW.Skin.Characters_Tower_Clear_Tired_Ptn[currentCharacter] :
 						Math.Min(ctClearTiredAnimation.CurrentValue, OpenNijiiroRW.Skin.Characters_Tower_Clear_Tired_Ptn[currentCharacter] - 1);
 					OpenNijiiroRW.Tx.Characters_Tower_Clear_Tired[currentCharacter][animChar]?.t2D拡大率考慮下中心基準描画(OpenNijiiroRW.Skin.Game_Tower_Don[0], OpenNijiiroRW.Skin.Game_Tower_Don[1]);
 				}
 				// Clear
-				else if (stageEnded && OpenNijiiroRW.Skin.Characters_Tower_Clear_Ptn[currentCharacter] > 0 && CFloorManagement.CurrentNumberOfLives > 0) {
+				else if (stageEnded && OpenNijiiroRW.Skin.Characters_Tower_Clear_Ptn[currentCharacter] > 0 && CFloorManagement.CurrentNumberOfLives > 0)
+				{
 					int animChar = OpenNijiiroRW.Skin.Characters_Tower_Clear_IsLooping[currentCharacter] ?
 						ctClearAnimation.CurrentValue % OpenNijiiroRW.Skin.Characters_Tower_Clear_Ptn[currentCharacter] :
 						Math.Min(ctClearAnimation.CurrentValue, OpenNijiiroRW.Skin.Characters_Tower_Clear_Ptn[currentCharacter] - 1);
@@ -492,12 +543,14 @@ internal class CActImplBackground : CActivity {
 				}
 
 				// Tired Stand
-				else if (ctIsTired && OpenNijiiroRW.Skin.Characters_Tower_Standing_Tired_Ptn[currentCharacter] > 0) {
+				else if (ctIsTired && OpenNijiiroRW.Skin.Characters_Tower_Standing_Tired_Ptn[currentCharacter] > 0)
+				{
 					int animChar = ctStandTiredAnimation.CurrentValue % OpenNijiiroRW.Skin.Characters_Tower_Standing_Tired_Ptn[currentCharacter];
 					OpenNijiiroRW.Tx.Characters_Tower_Standing_Tired[currentCharacter][animChar]?.t2D拡大率考慮下中心基準描画(OpenNijiiroRW.Skin.Game_Tower_Don[0], OpenNijiiroRW.Skin.Game_Tower_Don[1]); // Center X - 50
 				}
 				// Stand
-				else if (OpenNijiiroRW.Skin.Characters_Tower_Standing_Ptn[currentCharacter] > 0) {
+				else if (OpenNijiiroRW.Skin.Characters_Tower_Standing_Ptn[currentCharacter] > 0)
+				{
 					int animChar = ctStandingAnimation.CurrentValue % OpenNijiiroRW.Skin.Characters_Tower_Standing_Ptn[currentCharacter];
 					OpenNijiiroRW.Tx.Characters_Tower_Standing[currentCharacter][animChar]?.t2D拡大率考慮下中心基準描画(OpenNijiiroRW.Skin.Game_Tower_Don[0], OpenNijiiroRW.Skin.Game_Tower_Don[1]); // Center X - 50
 				}
@@ -507,7 +560,8 @@ internal class CActImplBackground : CActivity {
 
 			#region [Miss icon]
 
-			if (CFloorManagement.InvincibilityFrames != null && CFloorManagement.InvincibilityFrames.CurrentValue < CFloorManagement.InvincibilityDurationSpeedDependent) {
+			if (CFloorManagement.InvincibilityFrames != null && CFloorManagement.InvincibilityFrames.CurrentValue < CFloorManagement.InvincibilityDurationSpeedDependent)
+			{
 				if (OpenNijiiroRW.Tx.Tower_Miss != null)
 					OpenNijiiroRW.Tx.Tower_Miss.Opacity = Math.Min(255, 1000 - CFloorManagement.InvincibilityFrames.CurrentValue);
 				OpenNijiiroRW.Tx.Tower_Miss?.t2D下中央基準描画(OpenNijiiroRW.Skin.Game_Tower_Miss[0], OpenNijiiroRW.Skin.Game_Tower_Miss[1]);
@@ -528,8 +582,11 @@ internal class CActImplBackground : CActivity {
 			ctFailAnimation?.Tick();
 
 			#endregion
-		} else if (!OpenNijiiroRW.stageGameScreen.isMultiPlay && OpenNijiiroRW.stageSongSelect.nChoosenSongDifficulty[0] != (int)Difficulty.Dan) {
-			if (!IsDownNotFound) {
+		}
+		else if (!OpenNijiiroRW.stageGameScreen.isMultiPlay && OpenNijiiroRW.stageSongSelect.nChoosenSongDifficulty[0] != (int)Difficulty.Dan)
+		{
+			if (!IsDownNotFound)
+			{
 				if (!OpenNijiiroRW.stageGameScreen.bPAUSE) DownScript?.Update();
 				DownScript?.Draw();
 			}

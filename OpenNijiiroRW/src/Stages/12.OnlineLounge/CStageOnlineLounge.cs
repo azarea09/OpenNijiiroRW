@@ -2,13 +2,14 @@
 using System.Drawing;
 using System.Text;
 using FDK;
-using static OpenNijiiroRW.CActSelect曲リスト;
 
 namespace OpenNijiiroRW;
 
-class CStageOnlineLounge : CStage {
+class CStageOnlineLounge : CStage
+{
 
-	public CStageOnlineLounge() {
+	public CStageOnlineLounge()
+	{
 		base.eStageID = EStage.OnlineLounge;
 		base.ePhaseID = CStage.EPhase.Common_NORMAL;
 
@@ -19,8 +20,10 @@ class CStageOnlineLounge : CStage {
 
 	}
 
-	private static string GetMenuName(int menu) {
-		switch (menu) {
+	private static string GetMenuName(int menu)
+	{
+		switch (menu)
+		{
 			case (int)ECurrentMenu.RETURN:
 			default:
 				return CLangManager.LangInstance.GetString("ONLINE_EXIT");
@@ -41,7 +44,8 @@ class CStageOnlineLounge : CStage {
 		}
 	}
 
-	public override void Activate() {
+	public override void Activate()
+	{
 		// On activation
 
 		if (base.IsActivated)
@@ -88,7 +92,8 @@ class CStageOnlineLounge : CStage {
 
 		this.ttkCDNSelectOpt[0] = new TitleTextureKey(GetMenuName((int)ECurrentMenu.MAIN), this.pfOLFont, Color.White, Color.DarkRed, 1000);
 
-		for (int i = 0; i < keyCount; i++) {
+		for (int i = 0; i < keyCount; i++)
+		{
 			this.ttkCDNSelectOpt[i + 1] = new TitleTextureKey(dbCDN.data.ElementAt(i).Key, this.pfOLFont, Color.White, Color.DarkRed, 1000);
 		}
 
@@ -117,7 +122,8 @@ class CStageOnlineLounge : CStage {
 		base.Activate();
 	}
 
-	public override void DeActivate() {
+	public override void DeActivate()
+	{
 		// On de-activation
 
 		OpenNijiiroRW.tDisposeSafely(ref Background);
@@ -127,7 +133,8 @@ class CStageOnlineLounge : CStage {
 		base.DeActivate();
 	}
 
-	public override void CreateManagedResource() {
+	public override void CreateManagedResource()
+	{
 		// Ressource allocation
 
 		this.pfOLFont = HPrivateFastFont.tInstantiateMainFont(OpenNijiiroRW.Skin.OnlineLounge_Font_OLFont);
@@ -136,7 +143,8 @@ class CStageOnlineLounge : CStage {
 		base.CreateManagedResource();
 	}
 
-	public override void ReleaseManagedResource() {
+	public override void ReleaseManagedResource()
+	{
 		// Ressource freeing
 		this.pfOLFont?.Dispose();
 		this.pfOLFontLarge?.Dispose();
@@ -144,7 +152,8 @@ class CStageOnlineLounge : CStage {
 		base.ReleaseManagedResource();
 	}
 
-	public override int Draw() {
+	public override int Draw()
+	{
 		Background.Update();
 		Background.Draw();
 
@@ -158,10 +167,13 @@ class CStageOnlineLounge : CStage {
 		TitleTextureKey[] _ref = this.ttkMainMenuOpt;
 		int _selector = mainMenuIndex;
 
-		if (currentMenu == ECurrentMenu.CDN_SELECT) {
+		if (currentMenu == ECurrentMenu.CDN_SELECT)
+		{
 			_ref = this.ttkCDNSelectOpt;
 			_selector = CDNSelectIndex;
-		} else if (currentMenu == ECurrentMenu.CDN_OPTION) {
+		}
+		else if (currentMenu == ECurrentMenu.CDN_OPTION)
+		{
 			_ref = this.ttkCDNOptionOpt;
 			_selector = cdnOptMenuIndex;
 		}
@@ -169,17 +181,22 @@ class CStageOnlineLounge : CStage {
 
 		if (currentMenu == ECurrentMenu.MAIN
 			|| currentMenu == ECurrentMenu.CDN_SELECT
-			|| currentMenu == ECurrentMenu.CDN_OPTION) {
+			|| currentMenu == ECurrentMenu.CDN_OPTION)
+		{
 			int baseX = OpenNijiiroRW.Skin.OnlineLounge_Side_Menu[0] - _ref.Length * (OpenNijiiroRW.Skin.OnlineLounge_Side_Menu_Move[0] / 2);
 			int baseY = OpenNijiiroRW.Skin.OnlineLounge_Side_Menu[1] - _ref.Length * (OpenNijiiroRW.Skin.OnlineLounge_Side_Menu_Move[1] / 2);
 
-			for (int i = 0; i < _ref.Length; i++) {
+			for (int i = 0; i < _ref.Length; i++)
+			{
 				CTexture tmpTex = TitleTextureKey.ResolveTitleTexture(_ref[i]);
 
-				if (_selector != i) {
+				if (_selector != i)
+				{
 					tmpTex.color4 = CConversion.ColorToColor4(Color.DarkGray);
 					OpenNijiiroRW.Tx.OnlineLounge_Side_Menu?.tUpdateColor4(CConversion.ColorToColor4(Color.DarkGray));
-				} else {
+				}
+				else
+				{
 					tmpTex.color4 = CConversion.ColorToColor4(Color.White);
 					OpenNijiiroRW.Tx.OnlineLounge_Side_Menu?.tUpdateColor4(CConversion.ColorToColor4(Color.White));
 				}
@@ -196,14 +213,16 @@ class CStageOnlineLounge : CStage {
 
 		#region [Song list menu]
 
-		if (currentMenu == ECurrentMenu.CDN_SONGS) {
+		if (currentMenu == ECurrentMenu.CDN_SONGS)
+		{
 			_ref = this.ttkCDNSongList;
 			_selector = cdnSongListIndex;
 
 			int baseX = OpenNijiiroRW.Skin.OnlineLounge_Song[0];
 			int baseY = OpenNijiiroRW.Skin.OnlineLounge_Song[1];
 
-			for (int i = -4; i < 4; i++) {
+			for (int i = -4; i < 4; i++)
+			{
 				int pos = (_ref.Length * 5 + _selector + i) % _ref.Length;
 
 				CTexture tmpTex = TitleTextureKey.ResolveTitleTexture(_ref[pos]);
@@ -213,7 +232,8 @@ class CStageOnlineLounge : CStage {
 
 				if (i == 0)
 					_color = CConversion.ColorToColor4(Color.White);
-				if (pos > 0 && i != 0) {
+				if (pos > 0 && i != 0)
+				{
 					var song = apiMethods.FetchedSongsList[pos - 1];
 					var downloadLink = GetDownloadLink(song);
 
@@ -228,10 +248,13 @@ class CStageOnlineLounge : CStage {
 				int x = baseX + OpenNijiiroRW.Skin.OnlineLounge_Song_Move[0] * i;
 				int y = baseY + OpenNijiiroRW.Skin.OnlineLounge_Song_Move[1] * i;
 
-				if (pos == 0) {
+				if (pos == 0)
+				{
 					OpenNijiiroRW.Tx.OnlineLounge_Return_Box?.tUpdateColor4(_color);
 					OpenNijiiroRW.Tx.OnlineLounge_Return_Box?.t2D拡大率考慮上中央基準描画(x, y);
-				} else {
+				}
+				else
+				{
 					OpenNijiiroRW.Tx.OnlineLounge_Song_Box?.tUpdateColor4(_color);
 					OpenNijiiroRW.Tx.OnlineLounge_Song_Box?.t2D拡大率考慮上中央基準描画(x, y);
 				}
@@ -240,7 +263,8 @@ class CStageOnlineLounge : CStage {
 				tmpTex.t2D拡大率考慮上中央基準描画(x + OpenNijiiroRW.Skin.OnlineLounge_Song_Title_Offset[0], y + OpenNijiiroRW.Skin.OnlineLounge_Song_Title_Offset[1]);
 				tmpSubtitle.t2D拡大率考慮上中央基準描画(x + OpenNijiiroRW.Skin.OnlineLounge_Song_SubTitle_Offset[0], y + OpenNijiiroRW.Skin.OnlineLounge_Song_SubTitle_Offset[1]);
 
-				if (pos != 0 && i == 0) {
+				if (pos != 0 && i == 0)
+				{
 					OpenNijiiroRW.Tx.OnlineLounge_Context.t2D描画(0, 0);
 
 					var song_ = apiMethods.FetchedSongsList[pos - 1];
@@ -258,7 +282,8 @@ class CStageOnlineLounge : CStage {
 
 					#region [Charter Name]
 
-					if (song_.charter != null && song_.charter.charter_name != null && song_.charter.charter_name != "") {
+					if (song_.charter != null && song_.charter.charter_name != null && song_.charter.charter_name != "")
+					{
 						var charter_ = TitleTextureKey.ResolveTitleTexture(
 							new TitleTextureKey("Charter : " + song_.charter.charter_name, this.pfOLFontLarge, Color.White, Color.Black, 1000));
 						charter_?.t2D中心基準描画(OpenNijiiroRW.Skin.OnlineLounge_Context_Charter[0], OpenNijiiroRW.Skin.OnlineLounge_Context_Charter[1]);
@@ -268,7 +293,8 @@ class CStageOnlineLounge : CStage {
 
 					#region [Song Genre]
 
-					if (song_.Genre != null && song_.Genre.genre != null && song_.Genre.genre != "") {
+					if (song_.Genre != null && song_.Genre.genre != null && song_.Genre.genre != "")
+					{
 						var genre_ = TitleTextureKey.ResolveTitleTexture(
 							new TitleTextureKey(song_.Genre.genre, this.pfOLFontLarge, Color.White, Color.Black, 1000));
 						genre_?.t2D中心基準描画(OpenNijiiroRW.Skin.OnlineLounge_Context_Genre[0], OpenNijiiroRW.Skin.OnlineLounge_Context_Genre[1]);
@@ -278,13 +304,15 @@ class CStageOnlineLounge : CStage {
 
 					#region [Difficulties]
 
-					for (int k = 0; k < (int)Difficulty.Total; k++) {
+					for (int k = 0; k < (int)Difficulty.Total; k++)
+					{
 						int diff = diffs[k];
 
 						int column = (k >= 3) ? OpenNijiiroRW.Skin.OnlineLounge_Context_Couse_Move[0] : 0;
 						int row = OpenNijiiroRW.Skin.OnlineLounge_Context_Couse_Move[1] * (k % 3);
 
-						if (diff > 0) {
+						if (diff > 0)
+						{
 							OpenNijiiroRW.Tx.Couse_Symbol[k]?.t2D中心基準描画(
 								OpenNijiiroRW.Skin.OnlineLounge_Context_Couse_Symbol[0] + column,
 								OpenNijiiroRW.Skin.OnlineLounge_Context_Couse_Symbol[1] + row);
@@ -306,7 +334,8 @@ class CStageOnlineLounge : CStage {
 
 		#endregion
 
-		if (IsDownloading) {
+		if (IsDownloading)
+		{
 			OpenNijiiroRW.Tx.OnlineLounge_Box.t2D描画(0, 0);
 
 			var text = TitleTextureKey.ResolveTitleTexture(
@@ -323,35 +352,49 @@ class CStageOnlineLounge : CStage {
 		//if (!IsDownloading)
 		{
 			if (OpenNijiiroRW.InputManager.Keyboard.KeyPressed((int)SlimDXKeys.Key.RightArrow) ||
-				OpenNijiiroRW.Pad.bPressed(EInstrumentPad.Drums, EPad.RightChange)) {
-				if (this.tMove(1)) {
+				OpenNijiiroRW.Pad.bPressed(EInstrumentPad.Drums, EPad.RightChange))
+			{
+				if (this.tMove(1))
+				{
 					OpenNijiiroRW.Skin.soundChangeSFX.tPlay();
 				}
-			} else if (OpenNijiiroRW.InputManager.Keyboard.KeyPressed((int)SlimDXKeys.Key.LeftArrow) ||
-					   OpenNijiiroRW.Pad.bPressed(EInstrumentPad.Drums, EPad.LeftChange)) {
-				if (this.tMove(-1)) {
+			}
+			else if (OpenNijiiroRW.InputManager.Keyboard.KeyPressed((int)SlimDXKeys.Key.LeftArrow) ||
+					   OpenNijiiroRW.Pad.bPressed(EInstrumentPad.Drums, EPad.LeftChange))
+			{
+				if (this.tMove(-1))
+				{
 					OpenNijiiroRW.Skin.soundChangeSFX.tPlay();
 				}
-			} else if (OpenNijiiroRW.InputManager.Keyboard.KeyPressed((int)SlimDXKeys.Key.Escape) ||
-					   OpenNijiiroRW.Pad.bPressed(EInstrumentPad.Drums, EPad.Cancel)) {
+			}
+			else if (OpenNijiiroRW.InputManager.Keyboard.KeyPressed((int)SlimDXKeys.Key.Escape) ||
+					   OpenNijiiroRW.Pad.bPressed(EInstrumentPad.Drums, EPad.Cancel))
+			{
 
 				#region [Fast return (Escape)]
 
 				OpenNijiiroRW.Skin.soundCancelSFX.tPlay();
 
-				if (currentMenu == ECurrentMenu.MAIN) {
+				if (currentMenu == ECurrentMenu.MAIN)
+				{
 					// Return to title screen
 					OpenNijiiroRW.Skin.soundOnlineLoungeBGM?.tStop();
 					this.eフェードアウト完了時の戻り値 = EReturnValue.ReturnToTitle;
 					this.actFOtoTitle.tフェードアウト開始();
 					base.ePhaseID = CStage.EPhase.Common_FADEOUT;
-				} else if (currentMenu == ECurrentMenu.CDN_SELECT || currentMenu == ECurrentMenu.MULTI_SELECT) {
+				}
+				else if (currentMenu == ECurrentMenu.CDN_SELECT || currentMenu == ECurrentMenu.MULTI_SELECT)
+				{
 					// Return to base menu
 					currentMenu = ECurrentMenu.MAIN;
-				} else if (currentMenu == ECurrentMenu.CDN_OPTION) {
+				}
+				else if (currentMenu == ECurrentMenu.CDN_OPTION)
+				{
 					// Return to CDN select menu
 					currentMenu = ECurrentMenu.CDN_SELECT;
-				} else if (currentMenu == ECurrentMenu.CDN_SONGS || currentMenu == ECurrentMenu.CDN_CHARACTERS || currentMenu == ECurrentMenu.CDN_PUCHICHARAS) {
+				}
+				else if (currentMenu == ECurrentMenu.CDN_SONGS || currentMenu == ECurrentMenu.CDN_CHARACTERS || currentMenu == ECurrentMenu.CDN_PUCHICHARAS)
+				{
 					// Return to CDN select option
 					currentMenu = ECurrentMenu.CDN_OPTION;
 				}
@@ -359,45 +402,63 @@ class CStageOnlineLounge : CStage {
 				return 0;
 
 				#endregion
-			} else if (OpenNijiiroRW.InputManager.Keyboard.KeyPressed((int)SlimDXKeys.Key.Return) ||
-					   OpenNijiiroRW.Pad.bPressed(EInstrumentPad.Drums, EPad.Decide)) {
+			}
+			else if (OpenNijiiroRW.InputManager.Keyboard.KeyPressed((int)SlimDXKeys.Key.Return) ||
+					   OpenNijiiroRW.Pad.bPressed(EInstrumentPad.Drums, EPad.Decide))
+			{
 
 				#region [Decide]
 
-				if (currentMenu == ECurrentMenu.MAIN) {
-					if (mainMenu[mainMenuIndex] == ECurrentMenu.CDN_SELECT || !IsDownloading) {
+				if (currentMenu == ECurrentMenu.MAIN)
+				{
+					if (mainMenu[mainMenuIndex] == ECurrentMenu.CDN_SELECT || !IsDownloading)
+					{
 						// Base menu
 						currentMenu = mainMenu[mainMenuIndex];
-						if (currentMenu == ECurrentMenu.RETURN) {
+						if (currentMenu == ECurrentMenu.RETURN)
+						{
 							// Quit
 							OpenNijiiroRW.Skin.soundCancelSFX.tPlay();
 							OpenNijiiroRW.Skin.soundOnlineLoungeBGM?.tStop();
 							this.eフェードアウト完了時の戻り値 = EReturnValue.ReturnToTitle;
 							this.actFOtoTitle.tフェードアウト開始();
 							base.ePhaseID = CStage.EPhase.Common_FADEOUT;
-						} else {
+						}
+						else
+						{
 							OpenNijiiroRW.Skin.soundDecideSFX.tPlay();
 						}
-					} else {
+					}
+					else
+					{
 						OpenNijiiroRW.Skin.soundError.tPlay();
 					}
-				} else if (currentMenu == ECurrentMenu.CDN_SELECT) {
+				}
+				else if (currentMenu == ECurrentMenu.CDN_SELECT)
+				{
 					// CDN Select Menu
-					if (CDNSelectIndex > 0) {
+					if (CDNSelectIndex > 0)
+					{
 						currentMenu = ECurrentMenu.CDN_OPTION;
 						dbCDNData = dbCDN.data.ElementAt(CDNSelectIndex - 1).Value;
 						OpenNijiiroRW.Skin.soundDecideSFX.tPlay();
-					} else {
+					}
+					else
+					{
 						currentMenu = ECurrentMenu.MAIN;
 						OpenNijiiroRW.Skin.soundCancelSFX.tPlay();
 					}
-				} else if (currentMenu == ECurrentMenu.CDN_OPTION) {
+				}
+				else if (currentMenu == ECurrentMenu.CDN_OPTION)
+				{
 					// CDN Option Menu
 					currentMenu = cdnOptMenu[cdnOptMenuIndex];
 					if (currentMenu == ECurrentMenu.CDN_SELECT)
 						OpenNijiiroRW.Skin.soundCancelSFX.tPlay();
-					else {
-						if (currentMenu == ECurrentMenu.CDN_SONGS) {
+					else
+					{
+						if (currentMenu == ECurrentMenu.CDN_SONGS)
+						{
 							apiMethods = new API(dbCDNData);
 							apiMethods.tLoadSongsFromInternalCDN();
 
@@ -411,7 +472,8 @@ class CStageOnlineLounge : CStage {
 							this.ttkCDNSongList[0] = new TitleTextureKey(GetMenuName((int)ECurrentMenu.MAIN), this.pfOLFont, Color.White, Color.DarkRed, 1000);
 							this.ttkCDNSongSubtitles[0] = new TitleTextureKey("", this.pfOLFont, Color.White, Color.DarkRed, 1000);
 
-							for (int i = 0; i < apiMethods.FetchedSongsList.Length; i++) {
+							for (int i = 0; i < apiMethods.FetchedSongsList.Length; i++)
+							{
 								this.ttkCDNSongList[i + 1] = new TitleTextureKey(apiMethods.FetchedSongsList[i].SongTitle, this.pfOLFont, Color.White, Color.DarkRed, 1000);
 
 								string subtitle_ = apiMethods.FetchedSongsList[i].SongSubtitle;
@@ -427,19 +489,28 @@ class CStageOnlineLounge : CStage {
 						OpenNijiiroRW.Skin.soundDecideSFX.tPlay();
 					}
 
-				} else if (currentMenu == ECurrentMenu.CDN_SONGS) {
-					if (this.cdnSongListIndex == 0) {
+				}
+				else if (currentMenu == ECurrentMenu.CDN_SONGS)
+				{
+					if (this.cdnSongListIndex == 0)
+					{
 						OpenNijiiroRW.Skin.soundCancelSFX.tPlay();
 						currentMenu = ECurrentMenu.CDN_OPTION;
-					} else {
-						if (this.cdnSongListIndex < apiMethods.FetchedSongsList.Length) {
+					}
+					else
+					{
+						if (this.cdnSongListIndex < apiMethods.FetchedSongsList.Length)
+						{
 							var song = apiMethods.FetchedSongsList[this.cdnSongListIndex - 1];
 							//var zipPath = $@"Cache{Path.DirectorySeparatorChar}{song.Md5}.zip";
 							var downloadLink = GetDownloadLink(song);
 
-							if (CSongDict.tContainsSongUrl(downloadLink) || song.DownloadNow) {
+							if (CSongDict.tContainsSongUrl(downloadLink) || song.DownloadNow)
+							{
 								OpenNijiiroRW.Skin.soundError.tPlay();
-							} else {
+							}
+							else
+							{
 								OpenNijiiroRW.Skin.soundDecideSFX.tPlay();
 								System.Threading.Thread download =
 									new System.Threading.Thread(new System.Threading.ThreadStart(DownloadSong));
@@ -458,9 +529,11 @@ class CStageOnlineLounge : CStage {
 		// Menu exit fade out transition
 		#region [FadeOut]
 
-		switch (base.ePhaseID) {
+		switch (base.ePhaseID)
+		{
 			case CStage.EPhase.Common_FADEOUT:
-				if (this.actFOtoTitle.Draw() == 0) {
+				if (this.actFOtoTitle.Draw() == 0)
+				{
 					break;
 				}
 				return (int)this.eフェードアウト完了時の戻り値;
@@ -472,23 +545,31 @@ class CStageOnlineLounge : CStage {
 		return 0;
 	}
 
-	public bool tMove(int val) {
-		if (currentMenu == ECurrentMenu.MAIN) {
+	public bool tMove(int val)
+	{
+		if (currentMenu == ECurrentMenu.MAIN)
+		{
 			if (mainMenuIndex + val < 0 || mainMenuIndex + val >= mainMenu.Length)
 				return false;
 
 			mainMenuIndex += val;
-		} else if (currentMenu == ECurrentMenu.CDN_SELECT) {
+		}
+		else if (currentMenu == ECurrentMenu.CDN_SELECT)
+		{
 			if (CDNSelectIndex + val < 0 || CDNSelectIndex + val >= ttkCDNSelectOpt.Length)
 				return false;
 
 			CDNSelectIndex += val;
-		} else if (currentMenu == ECurrentMenu.CDN_OPTION) {
+		}
+		else if (currentMenu == ECurrentMenu.CDN_OPTION)
+		{
 			if (cdnOptMenuIndex + val < 0 || cdnOptMenuIndex + val >= cdnOptMenu.Length)
 				return false;
 
 			cdnOptMenuIndex += val;
-		} else if (currentMenu == ECurrentMenu.CDN_SONGS) {
+		}
+		else if (currentMenu == ECurrentMenu.CDN_SONGS)
+		{
 			cdnSongListIndex = (ttkCDNSongList.Length + cdnSongListIndex + val) % ttkCDNSongList.Length;
 		}
 
@@ -497,25 +578,30 @@ class CStageOnlineLounge : CStage {
 
 	#region [Song Downloading]
 
-	public string ReplaceInvalidChars(string filename, string substitute = "_") {
+	public string ReplaceInvalidChars(string filename, string substitute = "_")
+	{
 		return string.Join(substitute, filename.Split(Path.GetInvalidFileNameChars()));
 	}
 
-	public string TruncateString(string s, int length) {
+	public string TruncateString(string s, int length)
+	{
 		return s.Substring(0, Math.Min(length, s.Length));
 	}
 
-	private string GetAssignedLanguageValue(Dictionary<string, string> ens) {
+	private string GetAssignedLanguageValue(Dictionary<string, string> ens)
+	{
 		if (ens.ContainsKey(OpenNijiiroRW.ConfigIni.sLang))
 			return ens[OpenNijiiroRW.ConfigIni.sLang];
 		return ens["default"];
 	}
 
-	private string GetDownloadLink(API.APISongData song) {
+	private string GetDownloadLink(API.APISongData song)
+	{
 		return $"{dbCDNData.BaseUrl}{GetAssignedLanguageValue(dbCDNData.Download)}{song.Id}";
 	}
 
-	private void DownloadSong() {
+	private void DownloadSong()
+	{
 		IsDownloading = true;
 
 		// Create Cache folder if does not exist
@@ -528,10 +614,12 @@ class CStageOnlineLounge : CStage {
 		var zipPath = $@"Cache{Path.DirectorySeparatorChar}{zipName}.zip";
 		var downloadLink = GetDownloadLink(song);
 
-		try {
+		try
+		{
 			// Download zip from cdn
 
-			if (!File.Exists(zipPath)) {
+			if (!File.Exists(zipPath))
+			{
 				System.Net.WebClient wc = new System.Net.WebClient();
 
 				wc.DownloadFile(downloadLink, zipPath);
@@ -540,8 +628,10 @@ class CStageOnlineLounge : CStage {
 
 			// Fetch closest Download folder node
 			CSongListNode downloadBox = null;
-			for (int i = 0; i < OpenNijiiroRW.Songs管理.list曲ルート.Count; i++) {
-				if (OpenNijiiroRW.Songs管理.list曲ルート[i].songGenre == "Download") {
+			for (int i = 0; i < OpenNijiiroRW.Songs管理.list曲ルート.Count; i++)
+			{
+				if (OpenNijiiroRW.Songs管理.list曲ルート[i].songGenre == "Download")
+				{
 					downloadBox = OpenNijiiroRW.Songs管理.list曲ルート[i];
 					if (downloadBox.rParentNode != null) downloadBox = downloadBox.rParentNode;
 					break;
@@ -549,17 +639,20 @@ class CStageOnlineLounge : CStage {
 			}
 
 			// If there is at least one download folder, transfer the zip contents in it
-			if (downloadBox != null) {
+			if (downloadBox != null)
+			{
 				var path = downloadBox.score[0].ファイル情報.フォルダの絶対パス;
 				var genredPath = $@"{path}{Path.DirectorySeparatorChar}{song.Genre.genre}{Path.DirectorySeparatorChar}";
 
-				if (!Directory.Exists(genredPath)) {
+				if (!Directory.Exists(genredPath))
+				{
 					// Create Genre sub-folder if does not exist
 					Directory.CreateDirectory(genredPath);
 
 					// Search a corresponding box-def if exists
 					CSongListNode correspondingBox = null;
-					for (int i = 0; i < OpenNijiiroRW.Songs管理.list曲ルート.Count; i++) {
+					for (int i = 0; i < OpenNijiiroRW.Songs管理.list曲ルート.Count; i++)
+					{
 						if (OpenNijiiroRW.Songs管理.list曲ルート[i].songGenre == song.Genre.genre
 							&& OpenNijiiroRW.Songs管理.list曲ルート[i].nodeType == CSongListNode.ENodeType.BOX)
 							correspondingBox = OpenNijiiroRW.Songs管理.list曲ルート[i];
@@ -567,7 +660,8 @@ class CStageOnlineLounge : CStage {
 
 					var newBoxDef = $@"{genredPath}{Path.DirectorySeparatorChar}box.def";
 
-					if (correspondingBox == null) {
+					if (correspondingBox == null)
+					{
 						// Generate box.def if none available
 
 						//File.Create(newBoxDef);
@@ -585,7 +679,9 @@ class CStageOnlineLounge : CStage {
 						sw.WriteLine($@"#BGTYPE:1");
 						sw.WriteLine($@"#BOXCHARA:0");
 						sw.Close();
-					} else {
+					}
+					else
+					{
 						// Copy the existing box.def if available
 						var corPath = correspondingBox.score[0].ファイル情報.フォルダの絶対パス;
 
@@ -602,7 +698,8 @@ class CStageOnlineLounge : CStage {
 
 				// Generate Unique ID with URL
 				var idPath = songPath;
-				while (1 == 1) {
+				while (1 == 1)
+				{
 					var directories = Directory.GetDirectories(idPath);
 					if (directories.Length < 1)
 						break;
@@ -617,7 +714,9 @@ class CStageOnlineLounge : CStage {
 			}
 
 			//System.IO.Compression.ZipFile.ExtractToDirectory(zipPath, $@"Songs{Path.DirectorySeparatorChar}S3 Download{Path.DirectorySeparatorChar}{song.Md5}");
-		} catch (Exception e) {
+		}
+		catch (Exception e)
+		{
 			Trace.TraceInformation(e.ToString());
 			OpenNijiiroRW.Skin.soundError.tPlay();
 		}
@@ -631,7 +730,8 @@ class CStageOnlineLounge : CStage {
 
 	#region [Enums]
 
-	public enum ECurrentMenu : int {
+	public enum ECurrentMenu : int
+	{
 		RETURN,         // Return button
 		MAIN,           // Choice between select CDN and Online multiplayer
 		CDN_SELECT,     // Select a registered CDN
@@ -684,8 +784,10 @@ class CStageOnlineLounge : CStage {
 
 	private bool IsDownloading;
 
-	private class CMenuInfo {
-		public CMenuInfo(string ttl) {
+	private class CMenuInfo
+	{
+		public CMenuInfo(string ttl)
+		{
 			title = ttl;
 		}
 

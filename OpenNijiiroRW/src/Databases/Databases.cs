@@ -1,7 +1,9 @@
 ﻿namespace OpenNijiiroRW;
 
-class Databases {
-	public void tDatabases() {
+class Databases
+{
+	public void tDatabases()
+	{
 		DBCDN = new DBCDN();
 		DBEncyclopediaMenus = new DBEncyclopediaMenus();
 		DBNameplateUnlockables = new DBNameplateUnlockables();

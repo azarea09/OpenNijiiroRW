@@ -1,14 +1,17 @@
 ﻿namespace OpenNijiiroRW;
 
-internal class HEasingMethods {
-	public enum EEaseType {
+internal class HEasingMethods
+{
+	public enum EEaseType
+	{
 		IN = 0,
 		OUT,
 		INOUT,
 		OUTIN
 	}
 
-	public enum EEaseFunction {
+	public enum EEaseFunction
+	{
 		LINEAR = 0,
 		SINE,
 		QUAD,
@@ -22,7 +25,8 @@ internal class HEasingMethods {
 		BOUNCE
 	}
 
-	private static readonly Dictionary<EEaseFunction, Func<double, double>> _easeMethods = new Dictionary<EEaseFunction, Func<double, double>>() {
+	private static readonly Dictionary<EEaseFunction, Func<double, double>> _easeMethods = new Dictionary<EEaseFunction, Func<double, double>>()
+	{
 		[EEaseFunction.LINEAR] = _easeLinear,
 		[EEaseFunction.SINE] = _easeSine,
 		[EEaseFunction.QUAD] = _easeQuad,
@@ -36,55 +40,68 @@ internal class HEasingMethods {
 		[EEaseFunction.BOUNCE] = _easeBounce,
 	};
 
-	private static double _easeOut(Func<double, double> f, double x) {
+	private static double _easeOut(Func<double, double> f, double x)
+	{
 		return 1.0 - f(1 - x);
 	}
 
-	private static double _easeInOut(Func<double, double> f, double x) {
+	private static double _easeInOut(Func<double, double> f, double x)
+	{
 		return (x < 0.5) ? 0.5 * f(x * 2) : 0.5 * (1 - f((1 - x) * 2)) + 0.5;
 	}
 
-	private static double _easeOutIn(Func<double, double> f, double x) {
+	private static double _easeOutIn(Func<double, double> f, double x)
+	{
 		return (x < 0.5) ? 0.5 * (1 - f((1 - x) * 2)) : 0.5 * (1 - (1 - f(1 - (1 - x) * 2))) + 0.5;
 	}
 
-	private static double _easeLinear(double x) {
+	private static double _easeLinear(double x)
+	{
 		return x;
 	}
 
-	private static double _easeQuad(double x) {
+	private static double _easeQuad(double x)
+	{
 		return x * x;
 	}
 
-	private static double _easeCubic(double x) {
+	private static double _easeCubic(double x)
+	{
 		return x * x * x;
 	}
 
-	private static double _easeQuart(double x) {
+	private static double _easeQuart(double x)
+	{
 		return x * x * x * x;
 	}
 
-	private static double _easeQuint(double x) {
+	private static double _easeQuint(double x)
+	{
 		return x * x * x * x * x;
 	}
 
-	private static double _easeExpo(double x) {
+	private static double _easeExpo(double x)
+	{
 		return x == 0 ? 0 : Math.Pow(2, 10 * (x - 1));
 	}
 
-	private static double _easeSine(double x) {
+	private static double _easeSine(double x)
+	{
 		return 1.0 - Math.Cos((x * Math.PI) / 2.0);
 	}
 
-	private static double _easeCirc(double x) {
+	private static double _easeCirc(double x)
+	{
 		return 1.0 - Math.Sqrt(1 - Math.Pow(x, 2));
 	}
 
-	private static double _easeBack(double x) {
+	private static double _easeBack(double x)
+	{
 		return x * x * (2.7 * x - 1.7);
 	}
 
-	private static double _easeElastic(double x) {
+	private static double _easeElastic(double x)
+	{
 		if (x == 0 || x == 1) return x;
 
 		const double c4 = (2 * Math.PI) / 3;
@@ -92,7 +109,8 @@ internal class HEasingMethods {
 		return -Math.Pow(2, 10 * x - 10) * Math.Sin((x * 10 - 10.75) * c4);
 	}
 
-	private static double _easeBounce(double x) {
+	private static double _easeBounce(double x)
+	{
 		const double c1 = 2.75;
 		const double c2 = 7.5625;
 		double c3 = x * x;
@@ -318,8 +336,10 @@ internal class HEasingMethods {
 
 	#endregion
 
-	public static double tCalculateEaseNorm(EEaseType type, EEaseFunction function, double ratio) {
-		switch (type) {
+	public static double tCalculateEaseNorm(EEaseType type, EEaseFunction function, double ratio)
+	{
+		switch (type)
+		{
 			case EEaseType.IN:
 			default:
 				return _easeMethods[function](ratio);
@@ -332,7 +352,8 @@ internal class HEasingMethods {
 		}
 	}
 
-	public static double tCalculateEase(EEaseType type, EEaseFunction function, double timeStart, double timeEnd, double timeCurrent, double valueStart = 0, double valueEnd = 1) {
+	public static double tCalculateEase(EEaseType type, EEaseFunction function, double timeStart, double timeEnd, double timeCurrent, double valueStart = 0, double valueEnd = 1)
+	{
 		if (timeStart == timeEnd) return valueEnd;
 		double ratio = (timeCurrent - timeStart) / (timeEnd - timeStart);
 		double ratio_eased = tCalculateEaseNorm(type, function, ratio);//_easeMethods[function](type, ratio);

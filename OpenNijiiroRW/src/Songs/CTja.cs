@@ -10,13 +10,15 @@ using Color = System.Drawing.Color;
 
 namespace OpenNijiiroRW;
 
-internal class CTja : CActivity {
+internal class CTja : CActivity
+{
 	// 定数
 
 	private int nNowReadLine;
 	// Class
 
-	public class CBPM {
+	public class CBPM
+	{
 		public double dbBPM値;
 		public double bpm_change_time;
 		public double bpm_change_bmscroll_time;
@@ -24,11 +26,15 @@ internal class CTja : CActivity {
 		public int n内部番号;
 		public int n表記上の番号;
 
-		public override string ToString() {
+		public override string ToString()
+		{
 			StringBuilder builder = new StringBuilder(0x80);
-			if (this.n内部番号 != this.n表記上の番号) {
+			if (this.n内部番号 != this.n表記上の番号)
+			{
 				builder.Append(string.Format("CBPM{0}(内部{1})", CTja.tZZ(this.n表記上の番号), this.n内部番号));
-			} else {
+			}
+			else
+			{
 				builder.Append(string.Format("CBPM{0}", CTja.tZZ(this.n表記上の番号)));
 			}
 			builder.Append(string.Format(", BPM:{0}", this.dbBPM値));
@@ -38,7 +44,8 @@ internal class CTja : CActivity {
 	/// <summary>
 	/// 判定ライン移動命令
 	/// </summary>
-	public class CJPOSSCROLL {
+	public class CJPOSSCROLL
+	{
 		public double msMoveDt;
 		public double pxOrigX;
 		public double pxOrigY;
@@ -48,11 +55,15 @@ internal class CTja : CActivity {
 		public int n表記上の番号;
 		public CChip? chip;
 
-		public override string ToString() {
+		public override string ToString()
+		{
 			StringBuilder builder = new StringBuilder(0x80);
-			if (this.n内部番号 != this.n表記上の番号) {
+			if (this.n内部番号 != this.n表記上の番号)
+			{
 				builder.Append(string.Format("CJPOSSCROLL{0}(内部{1})", CTja.tZZ(this.n表記上の番号), this.n内部番号));
-			} else {
+			}
+			else
+			{
 				builder.Append(string.Format("CJPOSSCROLL{0}", CTja.tZZ(this.n表記上の番号)));
 			}
 			builder.Append(string.Format(", JPOSSCROLL:{0}", this.msMoveDt / 1000));
@@ -60,14 +71,16 @@ internal class CTja : CActivity {
 		}
 	}
 
-	public enum EBranchConditionType {
+	public enum EBranchConditionType
+	{
 		Accuracy,
 		Drumroll,
 		Score,
 		Accuracy_BigNotesOnly
 	}
 
-	public class CWAV : IDisposable {
+	public class CWAV : IDisposable
+	{
 		public bool bBGMとして使う;
 		public List<int> listこのWAVを使用するチャンネル番号の集合 = new List<int>(16);
 		public int nチップサイズ = 100;
@@ -82,11 +95,14 @@ internal class CTja : CActivity {
 		public CSound[] rSound = new CSound[OpenNijiiroRW.ConfigIni.nPoliphonicSounds];     // 4
 		public string strコメント文 = "";
 		public string strファイル名 = "";
-		public bool bBGMとして使わない {
-			get {
+		public bool bBGMとして使わない
+		{
+			get
+			{
 				return !this.bBGMとして使う;
 			}
-			set {
+			set
+			{
 				this.bBGMとして使う = !value;
 			}
 		}
@@ -96,12 +112,16 @@ internal class CTja : CActivity {
 		public bool bIsSESound = false;
 		public bool bIsBGMSound = false;
 
-		public override string ToString() {
+		public override string ToString()
+		{
 			var sb = new StringBuilder(128);
 
-			if (this.n表記上の番号 == this.n内部番号) {
+			if (this.n表記上の番号 == this.n内部番号)
+			{
 				sb.Append(string.Format("CWAV{0}: ", CTja.tZZ(this.n表記上の番号)));
-			} else {
+			}
+			else
+			{
 				sb.Append(string.Format("CWAV{0}(内部{1}): ", CTja.tZZ(this.n表記上の番号), this.n内部番号));
 			}
 			sb.Append(
@@ -112,15 +132,18 @@ internal class CTja : CActivity {
 
 		#region [ Dispose-Finalize パターン実装 ]
 		//-----------------
-		public void Dispose() {
+		public void Dispose()
+		{
 			this.Dispose(true);
 			GC.SuppressFinalize(this);
 		}
-		public void Dispose(bool bManagedリソースの解放も行う) {
+		public void Dispose(bool bManagedリソースの解放も行う)
+		{
 			if (this.bDisposed済み)
 				return;
 
-			if (bManagedリソースの解放も行う) {
+			if (bManagedリソースの解放も行う)
+			{
 				for (int i = 0; i < OpenNijiiroRW.ConfigIni.nPoliphonicSounds; i++) // 4
 				{
 					if (this.rSound[i] != null)
@@ -134,7 +157,8 @@ internal class CTja : CActivity {
 
 			this.bDisposed済み = true;
 		}
-		~CWAV() {
+		~CWAV()
+		{
 			this.Dispose(false);
 		}
 		//-----------------
@@ -148,7 +172,8 @@ internal class CTja : CActivity {
 	}
 
 	[Serializable]
-	public class DanSongs {
+	public class DanSongs
+	{
 		[NonSerialized]
 		public CTexture TitleTex;
 		[NonSerialized]
@@ -169,7 +194,8 @@ internal class CTja : CActivity {
 		public CWAV Wave;
 	}
 
-	public struct STLYRIC {
+	public struct STLYRIC
+	{
 		public long Time;
 		public SKBitmap TextTex;
 		public string Text;
@@ -179,23 +205,27 @@ internal class CTja : CActivity {
 
 	// 構造体
 
-	public struct STチップがある {
+	public struct STチップがある
+	{
 		public bool Drums;
 		public bool Branch;
 	}
-	public enum ECourse {
+	public enum ECourse
+	{
 		eNormal,
 		eExpert,
 		eMaster
 	}
 
-	public enum ELevelIcon {
+	public enum ELevelIcon
+	{
 		eMinus,
 		eNone,
 		ePlus
 	}
 
-	public enum ESide {
+	public enum ESide
+	{
 		eNormal,
 		eEx
 	}
@@ -203,7 +233,8 @@ internal class CTja : CActivity {
 	// Properties
 
 
-	public class CBranchStartInfo {
+	public class CBranchStartInfo
+	{
 		public int nMeasureCount;
 		public double dbTime;
 		public double dbBPM;
@@ -221,7 +252,8 @@ internal class CTja : CActivity {
 	/// </summary>
 	public CBranchStartInfo cBranchStart = new CBranchStartInfo();
 
-	public int nBGMAdjust {
+	public int nBGMAdjust
+	{
 		get;
 		private set;
 	}
@@ -400,14 +432,16 @@ internal class CTja : CActivity {
 
 	#region [ OpenTaiko-Exclusive TJA Extension Data ]
 
-	public enum ECutSceneRepeatMode {
+	public enum ECutSceneRepeatMode
+	{
 		UntilFirstUnmet = -1,
 		FirstMet = 0,
 		EverytimeMet = 1,
 	}
 
 	[Serializable]
-	public class CutSceneDef {
+	public class CutSceneDef
+	{
 		public required string FullPath;
 		public BestPlayRecords.EClearStatus ClearRequirement = BestPlayRecords.EClearStatus.NONE;
 		public string RequirementRange = "me";
@@ -435,7 +469,8 @@ internal class CTja : CActivity {
 #endif
 	// Constructor
 
-	public CTja() {
+	public CTja()
+	{
 		this.nPlayerSide = 0;
 		this.TITLE.SetString("default", "");
 		this.SUBTITLE.SetString("default", "");
@@ -478,7 +513,8 @@ internal class CTja : CActivity {
 		this.dbDTXVPlaySpeed = 1.0f;
 
 		//this.nScoreModeTmp = 1;
-		for (int y = 0; y < (int)Difficulty.Total; y++) {
+		for (int y = 0; y < (int)Difficulty.Total; y++)
+		{
 			this.nScoreInit[0, y] = 300;
 			this.nScoreInit[1, y] = 1000;
 			this.nScoreDiff[y] = 120;
@@ -508,12 +544,14 @@ internal class CTja : CActivity {
 		this.CutSceneOutros = new();
 	}
 	public CTja(string strファイル名, bool bヘッダのみ, int nBGMAdjust, int difficulty)
-		: this() {
+		: this()
+	{
 		this.Activate();
 		this.t入力(strファイル名, bヘッダのみ, nBGMAdjust, 0, false, difficulty);
 	}
 	public CTja(string strファイル名, bool bヘッダのみ, int nBGMAdjust, int nPlayerSide, bool bSession, int difficulty)
-		: this() {
+		: this()
+	{
 		this.Activate();
 		this.t入力(strファイル名, bヘッダのみ, nBGMAdjust, nPlayerSide, bSession, difficulty);
 	}
@@ -521,10 +559,14 @@ internal class CTja : CActivity {
 
 	// メソッド
 
-	public void tAVIの読み込み() {
-		if (!this.bHeaderOnly) {
-			if (this.listVD != null) {
-				foreach (CVideoDecoder cvd in this.listVD.Values) {
+	public void tAVIの読み込み()
+	{
+		if (!this.bHeaderOnly)
+		{
+			if (this.listVD != null)
+			{
+				foreach (CVideoDecoder cvd in this.listVD.Values)
+				{
 					cvd.InitRead();
 					cvd.dbPlaySpeed = OpenNijiiroRW.ConfigIni.SongPlaybackSpeed;
 				}
@@ -532,23 +574,33 @@ internal class CTja : CActivity {
 		}
 	}
 
-	public void tWave再生位置自動補正() {
-		foreach (CWAV cwav in this.listWAV.Values) {
+	public void tWave再生位置自動補正()
+	{
+		foreach (CWAV cwav in this.listWAV.Values)
+		{
 			this.tWave再生位置自動補正(cwav);
 		}
 	}
-	public void tWave再生位置自動補正(CWAV wc) {
-		if (wc.rSound[0] != null && wc.rSound[0].TotalPlayTime >= 5000) {
-			for (int i = 0; i < nPolyphonicSounds; i++) {
-				if ((wc.rSound[i] != null) && (wc.rSound[i].IsPlaying)) {
+	public void tWave再生位置自動補正(CWAV wc)
+	{
+		if (wc.rSound[0] != null && wc.rSound[0].TotalPlayTime >= 5000)
+		{
+			for (int i = 0; i < nPolyphonicSounds; i++)
+			{
+				if ((wc.rSound[i] != null) && (wc.rSound[i].IsPlaying))
+				{
 					long nCurrentTime = SoundManager.PlayTimer.SystemTimeMs;
-					if (nCurrentTime > wc.n再生開始時刻[i]) {
+					if (nCurrentTime > wc.n再生開始時刻[i])
+					{
 						long nAbsTimeFromStartPlaying = nCurrentTime - wc.n再生開始時刻[i];
 						// WASAPI/ASIO用↓
-						if (!OpenNijiiroRW.stageGameScreen.bPAUSE) {
+						if (!OpenNijiiroRW.stageGameScreen.bPAUSE)
+						{
 							if (wc.rSound[i].IsPaused) wc.rSound[i].Resume(nAbsTimeFromStartPlaying);
 							else wc.rSound[i].tSetPositonToBegin(nAbsTimeFromStartPlaying);
-						} else {
+						}
+						else
+						{
 							wc.rSound[i].Pause();
 						}
 					}
@@ -556,27 +608,37 @@ internal class CTja : CActivity {
 			}
 		}
 	}
-	public void tWavの再生停止(int nWaveの内部番号) {
+	public void tWavの再生停止(int nWaveの内部番号)
+	{
 		tWavの再生停止(nWaveの内部番号, false);
 	}
-	public void tWavの再生停止(int nWaveの内部番号, bool bミキサーからも削除する) {
-		if (this.listWAV.TryGetValue(nWaveの内部番号, out CWAV cwav)) {
-			for (int i = 0; i < nPolyphonicSounds; i++) {
-				if (cwav.rSound[i] != null && cwav.rSound[i].IsPlaying) {
-					if (bミキサーからも削除する) {
+	public void tWavの再生停止(int nWaveの内部番号, bool bミキサーからも削除する)
+	{
+		if (this.listWAV.TryGetValue(nWaveの内部番号, out CWAV cwav))
+		{
+			for (int i = 0; i < nPolyphonicSounds; i++)
+			{
+				if (cwav.rSound[i] != null && cwav.rSound[i].IsPlaying)
+				{
+					if (bミキサーからも削除する)
+					{
 						cwav.rSound[i].tStopSoundAndRemoveSoundFromMixer();
-					} else {
+					}
+					else
+					{
 						cwav.rSound[i].Stop();
 					}
 				}
 			}
 		}
 	}
-	public void tWAVの読み込み(CWAV cwav) {
+	public void tWAVの読み込み(CWAV cwav)
+	{
 		string str = string.IsNullOrEmpty(this.PATH_WAV) ? this.strFolderPath : this.PATH_WAV;
 		str = str + cwav.strファイル名;
 
-		try {
+		try
+		{
 			#region [ 同時発音数を、チャンネルによって変える ]
 
 			int nPoly = nPolyphonicSounds;
@@ -593,29 +655,38 @@ internal class CTja : CActivity {
 
 			#endregion
 
-			for (int i = 0; i < nPoly; i++) {
-				try {
+			for (int i = 0; i < nPoly; i++)
+			{
+				try
+				{
 					cwav.rSound[i] = OpenNijiiroRW.SoundManager.tCreateSound(str, ESoundGroup.SongPlayback);
 
-					if (!OpenNijiiroRW.ConfigIni.bDynamicBassMixerManagement) {
+					if (!OpenNijiiroRW.ConfigIni.bDynamicBassMixerManagement)
+					{
 						cwav.rSound[i].AddBassSoundFromMixer();
 					}
 
-					if (OpenNijiiroRW.ConfigIni.bOutputCreationReleaseLog) {
+					if (OpenNijiiroRW.ConfigIni.bOutputCreationReleaseLog)
+					{
 						Trace.TraceInformation("サウンドを作成しました。({3})({0})({1})({2}bytes)", cwav.strコメント文, str,
 							cwav.rSound[0].SoundBufferSize, cwav.rSound[0].IsStreamPlay ? "Stream" : "OnMemory");
 					}
-				} catch (Exception e) {
+				}
+				catch (Exception e)
+				{
 					cwav.rSound[i] = null;
 					Trace.TraceError("サウンドの作成に失敗しました。({0})({1})", cwav.strコメント文, str);
 					Trace.TraceError(e.ToString());
 				}
 			}
-		} catch (Exception exception) {
+		}
+		catch (Exception exception)
+		{
 			Trace.TraceError("サウンドの生成に失敗しました。({0})({1})", cwav.strコメント文, str);
 			Trace.TraceError(exception.ToString());
 
-			for (int j = 0; j < nPolyphonicSounds; j++) {
+			for (int j = 0; j < nPolyphonicSounds; j++)
+			{
 				cwav.rSound[j] = null;
 			}
 
@@ -623,7 +694,8 @@ internal class CTja : CActivity {
 		}
 	}
 
-	public static string tZZ(int n) {
+	public static string tZZ(int n)
+	{
 		if (n < 0 || n >= 36 * 36)
 			return "!!";    // オーバー／アンダーフロー。
 
@@ -633,7 +705,8 @@ internal class CTja : CActivity {
 		return new string(new char[] { str[n / 36], str[n % 36] });
 	}
 
-	public void tApplyFunMods(int player = 0) {
+	public void tApplyFunMods(int player = 0)
+	{
 		Random rnd = new System.Random();
 
 		var eFun = OpenNijiiroRW.ConfigIni.nFunMods[OpenNijiiroRW.GetActualPlayer(player)];
@@ -642,16 +715,20 @@ internal class CTja : CActivity {
 		var bombFactor = Math.Max(1, Math.Min(100, chara.effect.BombFactor));
 		var fuseRollFactor = Math.Max(0, Math.Min(100, chara.effect.FuseRollFactor));
 
-		switch (eFun) {
+		switch (eFun)
+		{
 			case EFunMods.Minesweeper:
-				foreach (var chip in this.listChip) {
-					if (NotesManager.IsMissableNote(chip)) {
+				foreach (var chip in this.listChip)
+				{
+					if (NotesManager.IsMissableNote(chip))
+					{
 						int n = rnd.Next(100);
 
 						if (n < bombFactor) chip.nChannelNo = 0x1C;
 					}
 
-					if (NotesManager.IsBalloon(chip)) {
+					if (NotesManager.IsBalloon(chip))
+					{
 						int n = rnd.Next(100);
 
 						if (n < fuseRollFactor) chip.nChannelNo = 0x1D;
@@ -660,7 +737,8 @@ internal class CTja : CActivity {
 				}
 				break;
 			case EFunMods.Avalanche:
-				foreach (var chip in this.listChip) {
+				foreach (var chip in this.listChip)
+				{
 					int n = rnd.Next(100);
 
 
@@ -673,21 +751,26 @@ internal class CTja : CActivity {
 		}
 	}
 
-	public void tInitLocalStores(int player = 0) {
+	public void tInitLocalStores(int player = 0)
+	{
 		LocalCounters = new CLocalCounters(player);
 		LocalTriggers = new CLocalTriggers(player);
 	}
 
-	public void tRandomizeTaikoChips(int player = 0) {
+	public void tRandomizeTaikoChips(int player = 0)
+	{
 		//2016.02.11 kairera0467
 		Random rnd = new System.Random();
 
 		var eRandom = OpenNijiiroRW.ConfigIni.eRandom[OpenNijiiroRW.GetActualPlayer(player)];
 
-		switch (eRandom) {
+		switch (eRandom)
+		{
 			case ERandomMode.Mirror:
-				foreach (var chip in this.listChip) {
-					switch (chip.nChannelNo) {
+				foreach (var chip in this.listChip)
+				{
+					switch (chip.nChannelNo)
+					{
 						case 0x11:
 							chip.nChannelNo = 0x12;
 							break;
@@ -706,11 +789,14 @@ internal class CTja : CActivity {
 				}
 				break;
 			case ERandomMode.Random:
-				foreach (var chip in this.listChip) {
+				foreach (var chip in this.listChip)
+				{
 					int n = rnd.Next(100);
 
-					if (n >= 0 && n <= 20) {
-						switch (chip.nChannelNo) {
+					if (n >= 0 && n <= 20)
+					{
+						switch (chip.nChannelNo)
+						{
 							case 0x11:
 								chip.nChannelNo = 0x12;
 								break;
@@ -730,11 +816,14 @@ internal class CTja : CActivity {
 				}
 				break;
 			case ERandomMode.SuperRandom:
-				foreach (var chip in this.listChip) {
+				foreach (var chip in this.listChip)
+				{
 					int n = rnd.Next(100);
 
-					if (n >= 0 && n <= 50) {
-						switch (chip.nChannelNo) {
+					if (n >= 0 && n <= 50)
+					{
+						switch (chip.nChannelNo)
+						{
 							case 0x11:
 								chip.nChannelNo = 0x12;
 								break;
@@ -754,11 +843,14 @@ internal class CTja : CActivity {
 				}
 				break;
 			case ERandomMode.MirrorRandom:
-				foreach (var chip in this.listChip) {
+				foreach (var chip in this.listChip)
+				{
 					int n = rnd.Next(100);
 
-					if (n >= 0 && n <= 80) {
-						switch (chip.nChannelNo) {
+					if (n >= 0 && n <= 80)
+					{
+						switch (chip.nChannelNo)
+						{
 							case 0x11:
 								chip.nChannelNo = 0x12;
 								break;
@@ -782,15 +874,19 @@ internal class CTja : CActivity {
 				break;
 		}
 
-		if (OpenNijiiroRW.Tx.Puchichara[PuchiChara.tGetPuchiCharaIndexByName(OpenNijiiroRW.GetActualPlayer(nPlayerSide))].effect.AllPurple) {
-			foreach (var chip in this.listChip) {
-				if (chip.nChannelNo is 0x13 or 0x1A or 0x14 or 0x1B) {
+		if (OpenNijiiroRW.Tx.Puchichara[PuchiChara.tGetPuchiCharaIndexByName(OpenNijiiroRW.GetActualPlayer(nPlayerSide))].effect.AllPurple)
+		{
+			foreach (var chip in this.listChip)
+			{
+				if (chip.nChannelNo is 0x13 or 0x1A or 0x14 or 0x1B)
+				{
 					chip.nChannelNo = 0x101;
 				}
 			}
 		}
 
-		if (eRandom != ERandomMode.Off) {
+		if (eRandom != ERandomMode.Off)
+		{
 			#region[ list作成 ]
 			//ひとまずチップだけのリストを作成しておく。
 			List<CChip> list音符のみのリスト;
@@ -798,8 +894,10 @@ internal class CTja : CActivity {
 			int nCount = 0;
 			int dkdkCount = 0;
 
-			foreach (CChip chip in this.listChip) {
-				if (chip.nChannelNo >= 0x11 && chip.nChannelNo < 0x18) {
+			foreach (CChip chip in this.listChip)
+			{
+				if (chip.nChannelNo >= 0x11 && chip.nChannelNo < 0x18)
+				{
 					list音符のみのリスト.Add(chip);
 				}
 			}
@@ -810,19 +908,24 @@ internal class CTja : CActivity {
 	}
 
 	#region [ チップの再生と停止 ]
-	public void tチップの再生(CChip pChip, long n再生開始システム時刻ms) {
+	public void tチップの再生(CChip pChip, long n再生開始システム時刻ms)
+	{
 		if (OpenNijiiroRW.ConfigIni.bNoAudioIfNot1xSpeed && OpenNijiiroRW.ConfigIni.nSongSpeed != 20)
 			return;
 
-		if (pChip.n整数値_内部番号 >= 0) {
-			if (this.listWAV.TryGetValue(pChip.n整数値_内部番号, out CWAV wc)) {
+		if (pChip.n整数値_内部番号 >= 0)
+		{
+			if (this.listWAV.TryGetValue(pChip.n整数値_内部番号, out CWAV wc))
+			{
 				int index = wc.n現在再生中のサウンド番号 = (wc.n現在再生中のサウンド番号 + 1) % nPolyphonicSounds;
 				if ((wc.rSound[0] != null) &&
-					(wc.rSound[0].IsStreamPlay || wc.rSound[index] == null)) {
+					(wc.rSound[0].IsStreamPlay || wc.rSound[index] == null))
+				{
 					index = wc.n現在再生中のサウンド番号 = 0;
 				}
 				CSound sound = wc.rSound[index];
-				if (sound != null) {
+				if (sound != null)
+				{
 					sound.PlaySpeed = OpenNijiiroRW.ConfigIni.SongPlaybackSpeed;
 					// 再生速度によって、WASAPI/ASIOで使う使用mixerが決まるため、付随情報の設定(音量/PAN)は、再生速度の設定後に行う
 
@@ -839,10 +942,12 @@ internal class CTja : CActivity {
 			}
 		}
 	}
-	public void t各自動再生音チップの再生時刻を変更する(int nBGMAdjustの増減値) {
+	public void t各自動再生音チップの再生時刻を変更する(int nBGMAdjustの増減値)
+	{
 		this.nBGMAdjust += nBGMAdjustの増減値;
 
-		for (int i = 0; i < this.listChip.Count; i++) {
+		for (int i = 0; i < this.listChip.Count; i++)
+		{
 			int nChannelNumber = this.listChip[i].nChannelNo;
 			if (((
 					 (nChannelNumber == 1) ||
@@ -851,51 +956,68 @@ internal class CTja : CActivity {
 				 ((0x70 <= nChannelNumber) && (nChannelNumber <= 0x79))
 				) ||
 				(((0x80 <= nChannelNumber) && (nChannelNumber <= 0x89)) || ((0x90 <= nChannelNumber) && (nChannelNumber <= 0x92)))
-			   ) {
+			   )
+			{
 				this.listChip[i].n発声時刻ms += nBGMAdjustの増減値;
 			}
 		}
-		foreach (CWAV cwav in this.listWAV.Values) {
-			for (int j = 0; j < nPolyphonicSounds; j++) {
-				if ((cwav.rSound[j] != null) && cwav.rSound[j].IsPlaying) {
+		foreach (CWAV cwav in this.listWAV.Values)
+		{
+			for (int j = 0; j < nPolyphonicSounds; j++)
+			{
+				if ((cwav.rSound[j] != null) && cwav.rSound[j].IsPlaying)
+				{
 					cwav.n再生開始時刻[j] += nBGMAdjustの増減値;
 				}
 			}
 		}
 	}
-	public void t全チップの再生一時停止() {
-		foreach (CWAV cwav in this.listWAV.Values) {
-			for (int i = 0; i < nPolyphonicSounds; i++) {
-				if ((cwav.rSound[i] != null) && cwav.rSound[i].IsPlaying) {
+	public void t全チップの再生一時停止()
+	{
+		foreach (CWAV cwav in this.listWAV.Values)
+		{
+			for (int i = 0; i < nPolyphonicSounds; i++)
+			{
+				if ((cwav.rSound[i] != null) && cwav.rSound[i].IsPlaying)
+				{
 					cwav.rSound[i].Pause();
 					cwav.n一時停止時刻[i] = SoundManager.PlayTimer.SystemTimeMs;
 				}
 			}
 		}
 	}
-	public void t全チップの再生再開() {
-		foreach (CWAV cwav in this.listWAV.Values) {
-			for (int i = 0; i < nPolyphonicSounds; i++) {
-				if ((cwav.rSound[i] != null) && cwav.rSound[i].IsPaused) {
+	public void t全チップの再生再開()
+	{
+		foreach (CWAV cwav in this.listWAV.Values)
+		{
+			for (int i = 0; i < nPolyphonicSounds; i++)
+			{
+				if ((cwav.rSound[i] != null) && cwav.rSound[i].IsPaused)
+				{
 					cwav.rSound[i].Resume(cwav.n一時停止時刻[i] - cwav.n再生開始時刻[i]);
 					cwav.n再生開始時刻[i] += SoundManager.PlayTimer.SystemTimeMs - cwav.n一時停止時刻[i];
 				}
 			}
 		}
 	}
-	public void tStopAllChips() {
-		foreach (CWAV cwav in this.listWAV.Values) {
+	public void tStopAllChips()
+	{
+		foreach (CWAV cwav in this.listWAV.Values)
+		{
 			this.tWavの再生停止(cwav.n内部番号);
 		}
 	}
-	public void t全チップの再生停止とミキサーからの削除() {
-		foreach (CWAV cwav in this.listWAV.Values) {
+	public void t全チップの再生停止とミキサーからの削除()
+	{
+		foreach (CWAV cwav in this.listWAV.Values)
+		{
 			this.tWavの再生停止(cwav.n内部番号, true);
 		}
 	}
 	#endregion
 
-	public void t入力(string file_name, bool header_only, int nBGMAdjust, int nPlayerSide, bool bSession, int difficulty) {
+	public void t入力(string file_name, bool header_only, int nBGMAdjust, int nPlayerSide, bool bSession, int difficulty)
+	{
 		this.bHeaderOnly = header_only;
 		this.strFullPath = Path.GetFullPath(file_name);
 		this.strFileName = Path.GetFileName(this.strFullPath);
@@ -904,20 +1026,26 @@ internal class CTja : CActivity {
 		// Unique ID parsing/generation
 		this.uniqueID = new CSongUniqueID(this.strFolderPath + @$"{Path.DirectorySeparatorChar}uniqueID.json");
 
-		try {
+		try
+		{
 			this.nPlayerSide = nPlayerSide;
 			this.bSession譜面を読み込む = bSession;
 			this.tProcessAllText(CJudgeTextEncoding.ReadTextFile(file_name), nBGMAdjust, difficulty);
-		} catch (Exception ex) {
+		}
+		catch (Exception ex)
+		{
 			Trace.TraceError("Oh? It seems there was an error. Oh brother.");
 			Trace.TraceError(ex.ToString());
 			Trace.TraceError("An exception occurred, but processing will continue. (79ff8639-9b3c-477f-bc4a-f2eea9784860)");
 		}
 	}
-	public void tProcessAllText(string str全入力文字列, int nBGMAdjust, int Difficulty) {
-		if (!string.IsNullOrEmpty(str全入力文字列)) {
+	public void tProcessAllText(string str全入力文字列, int nBGMAdjust, int Difficulty)
+	{
+		if (!string.IsNullOrEmpty(str全入力文字列))
+		{
 			#region [ 初期化 ]
-			for (int j = 0; j < 36 * 36; j++) {
+			for (int j = 0; j < 36 * 36; j++)
+			{
 				this.n無限管理WAV[j] = -j;
 				this.n無限管理BPM[j] = -j;
 				this.n無限管理PAN[j] = -10000 - j;
@@ -928,7 +1056,8 @@ internal class CTja : CActivity {
 			this.bstackIFからENDIFをスキップする = new Stack<bool>();
 			this.bstackIFからENDIFをスキップする.Push(false);
 			this.n現在の乱数 = 0;
-			for (int k = 0; k < 7; k++) {
+			for (int k = 0; k < 7; k++)
+			{
 				this.nRESULTIMAGE用優先順位[k] = 0;
 				this.nRESULTMOVIE用優先順位[k] = 0;
 				this.nRESULTSOUND用優先順位[k] = 0;
@@ -946,25 +1075,32 @@ internal class CTja : CActivity {
 			this.n無限管理BPM = null;
 			this.n無限管理PAN = null;
 			this.n無限管理SIZE = null;
-			if (!this.bHeaderOnly) {
+			if (!this.bHeaderOnly)
+			{
 				#region [ CWAV初期化 ]
-				foreach (CWAV cwav in this.listWAV.Values) {
-					if (cwav.nチップサイズ < 0) {
+				foreach (CWAV cwav in this.listWAV.Values)
+				{
+					if (cwav.nチップサイズ < 0)
+					{
 						cwav.nチップサイズ = 100;
 					}
-					if (cwav.n位置 <= -10000) {
+					if (cwav.n位置 <= -10000)
+					{
 						cwav.n位置 = 0;
 					}
 				}
 				#endregion
 				#region [ チップ倍率設定 ]						// #28145 2012.4.22 yyagi 二重ループを1重ループに変更して高速化)
-				foreach (CChip chip in this.listChip) {
-					if (this.listWAV.TryGetValue(chip.n整数値_内部番号, out CWAV cwav)) {
+				foreach (CChip chip in this.listChip)
+				{
+					if (this.listWAV.TryGetValue(chip.n整数値_内部番号, out CWAV cwav))
+					{
 						chip.dbChipSizeRatio = ((double)cwav.nチップサイズ) / 100.0;
 					}
 				}
 				#endregion
-				if (this.listChip.Count > 0) {
+				if (this.listChip.Count > 0)
+				{
 					this.listChip = this.listChip.OrderBy(x => x).ToList();
 					// 高速化のためにはこれを削りたいが、listChipの最後がn発声位置の終端である必要があるので、
 					// 保守性確保を優先してここでのソートは残しておく
@@ -985,17 +1121,22 @@ internal class CTja : CActivity {
 				//   (also affect notes' time in TaikoJiro 2 (?))
 				// * Truncate movement of unfinished JPosScrolls and calculate resulting source coordination for deterministic behavior
 				CJPOSSCROLL? lastJPosScroll = null;
-				foreach (CChip chip in this.listChip) {
+				foreach (CChip chip in this.listChip)
+				{
 					int ch = chip.nChannelNo;
 
-					switch (ch) {
-						case 0x01: {
+					switch (ch)
+					{
+						case 0x01:
+							{
 								if (this.isOFFSET_Negative == false)
 									chip.n発声時刻ms += this.msOFFSET_Abs;
 
 								#region[listlyric2の時間合わせ]
-								for (int ind = 0; ind < listLyric2.Count; ind++) {
-									if (listLyric2[ind].index == BGM番号) {
+								for (int ind = 0; ind < listLyric2.Count; ind++)
+								{
+									if (listLyric2[ind].index == BGM番号)
+									{
 										STLYRIC lyrictmp = this.listLyric2[ind];
 
 										lyrictmp.Time += chip.n発声時刻ms;
@@ -1010,13 +1151,13 @@ internal class CTja : CActivity {
 								continue;
 							}
 						case 0x02:  // BarLength
-						{
+							{
 								if (this.isOFFSET_Negative)
 									chip.n発声時刻ms += this.msOFFSET_Abs;
 								continue;
 							}
 						case 0x03:  // Initial BPM
-						{
+							{
 								if (this.isOFFSET_Negative)
 									chip.n発声時刻ms += this.msOFFSET_Abs;
 								// this.dbNowBPM has already been initialized
@@ -1032,14 +1173,18 @@ internal class CTja : CActivity {
 						case 0x19:
 						case 0x1D:
 						case 0x20:
-						case 0x21: {
-								if (this.isOFFSET_Negative) {
+						case 0x21:
+							{
+								if (this.isOFFSET_Negative)
+								{
 									chip.n発声時刻ms += this.msOFFSET_Abs;
 								}
 								continue;
 							}
-						case 0x18: {
-								if (this.isOFFSET_Negative) {
+						case 0x18:
+							{
+								if (this.isOFFSET_Negative)
+								{
 									chip.n発声時刻ms += this.msOFFSET_Abs;
 								}
 								continue;
@@ -1053,7 +1198,8 @@ internal class CTja : CActivity {
 						case 0x60:
 							break;
 
-						case 0x50: {
+						case 0x50:
+							{
 								if (this.isOFFSET_Negative)
 									chip.n発声時刻ms += this.msOFFSET_Abs;
 								continue;
@@ -1067,87 +1213,106 @@ internal class CTja : CActivity {
 						case 0x5d:  // 未定義
 						case 0x5e:  // 未定義
 						case 0x5f:  // 未定義
-						{
+							{
 								continue;
 							}
 						case 0x08:  // 拡張BPM
-						{
+							{
 								if (this.isOFFSET_Negative)
 									chip.n発声時刻ms += this.msOFFSET_Abs;
-								if (this.listBPM.TryGetValue(chip.n整数値_内部番号, out CBPM cBPM)) {
+								if (this.listBPM.TryGetValue(chip.n整数値_内部番号, out CBPM cBPM))
+								{
 									bpm = (cBPM.n表記上の番号 == 0 ? 0.0 : this.BASEBPM) + cBPM.dbBPM値;
 									this.dbNowBPM = bpm;
 								}
 								continue;
 							}
 						case 0x54:  // 動画再生
-						{
+							{
 								if (this.isOFFSET_Negative == false)
 									chip.n発声時刻ms += this.msOFFSET_Abs;
 								continue;
 							}
 						case 0x97:
 						case 0x98:
-						case 0x99: {
-								if (this.isOFFSET_Negative) {
+						case 0x99:
+							{
+								if (this.isOFFSET_Negative)
+								{
 									chip.n発声時刻ms += this.msOFFSET_Abs;
 								}
 								continue;
 							}
-						case 0x9A: {
+						case 0x9A:
+							{
 
-								if (this.isOFFSET_Negative) {
+								if (this.isOFFSET_Negative)
+								{
 									chip.n発声時刻ms += this.msOFFSET_Abs;
 								}
 								continue;
 							}
-						case 0x9D: {
+						case 0x9D:
+							{
 								continue;
 							}
-						case 0xDC: {
+						case 0xDC:
+							{
 								if (this.isOFFSET_Negative)
 									chip.n発声時刻ms += this.msOFFSET_Abs;
 								continue;
 							}
-						case 0xDE: {
-								if (this.isOFFSET_Negative) {
+						case 0xDE:
+							{
+								if (this.isOFFSET_Negative)
+								{
 									chip.n発声時刻ms += this.msOFFSET_Abs;
 									chip.n分岐時刻ms += this.msOFFSET_Abs;
 								}
 								this.n現在のコース = chip.nBranch;
 								continue;
 							}
-						case 0x52: {
-								if (this.isOFFSET_Negative) {
+						case 0x52:
+							{
+								if (this.isOFFSET_Negative)
+								{
 									chip.n発声時刻ms += this.msOFFSET_Abs;
 									chip.n分岐時刻ms += this.msOFFSET_Abs;
 								}
 								this.n現在のコース = chip.nBranch;
 								continue;
 							}
-						case 0xDF: {
+						case 0xDF:
+							{
 								if (this.isOFFSET_Negative)
 									chip.n発声時刻ms += this.msOFFSET_Abs;
 								continue;
 							}
-						case 0xE0: {
+						case 0xE0:
+							{
 								continue;
 							}
-						case 0xE2: { // #JPOSSCROLL
+						case 0xE2:
+							{ // #JPOSSCROLL
 								if (this.isOFFSET_Negative)
 									chip.n発声時刻ms += this.msOFFSET_Abs;
 
 								// calculate accumulated movement by time order (not definition order)
 								CJPOSSCROLL jposs = this.listJPOSSCROLL[chip.n整数値_内部番号];
-								if (lastJPosScroll == null) {
+								if (lastJPosScroll == null)
+								{
 									jposs.pxOrigX = 0;
 									jposs.pxOrigY = 0;
-								} else {
-									if (lastJPosScroll.msMoveDt > 0) {
+								}
+								else
+								{
+									if (lastJPosScroll.msMoveDt > 0)
+									{
 										double msLastMoveDt = lastJPosScroll.msMoveDt;
 										double msCanMove = double.Max(0, chip.n発声時刻ms - lastJPosScroll.chip!.n発声時刻ms);
 										// truncate movement of last JPosScroll if unfinished
-										if (msCanMove < msLastMoveDt) {
+										if (msCanMove < msLastMoveDt)
+										{
 											double lastMoveRate = msCanMove / msLastMoveDt;
 											lastJPosScroll.msMoveDt = msCanMove;
 											lastJPosScroll.pxMoveDx *= lastMoveRate;
@@ -1160,7 +1325,8 @@ internal class CTja : CActivity {
 								lastJPosScroll = jposs;
 								continue;
 							}
-						default: {
+						default:
+							{
 								if (this.isOFFSET_Negative)
 									chip.n発声時刻ms += this.msOFFSET_Abs;
 								chip.dbBPM = this.dbNowBPM;
@@ -1179,12 +1345,15 @@ internal class CTja : CActivity {
 				this.t各自動再生音チップの再生時刻を変更する(nBGMAdjust);
 
 				#region [ チップの種類を分類し、対応するフラグを立てる ]
-				foreach (CChip chip in this.listChip) {
-					if ((chip.nChannelNo == 0x01 && this.listWAV.TryGetValue(chip.n整数値_内部番号, out CWAV cwav)) && !cwav.listこのWAVを使用するチャンネル番号の集合.Contains(chip.nChannelNo)) {
+				foreach (CChip chip in this.listChip)
+				{
+					if ((chip.nChannelNo == 0x01 && this.listWAV.TryGetValue(chip.n整数値_内部番号, out CWAV cwav)) && !cwav.listこのWAVを使用するチャンネル番号の集合.Contains(chip.nChannelNo))
+					{
 						cwav.listこのWAVを使用するチャンネル番号の集合.Add(chip.nChannelNo);
 
 						int c = chip.nChannelNo >> 4;
-						switch (c) {
+						switch (c)
+						{
 							case 0x01:
 								cwav.bIsDrumsSound = true; break;
 							case 0x02:
@@ -1197,7 +1366,8 @@ internal class CTja : CActivity {
 							case 0x09:
 								cwav.bIsSESound = true; break;
 							case 0x00:
-								if (chip.nChannelNo == 0x01) {
+								if (chip.nChannelNo == 0x01)
+								{
 									cwav.bIsBGMSound = true; break;
 								}
 								break;
@@ -1213,20 +1383,25 @@ internal class CTja : CActivity {
 
 				#endregion
 				#region [ bLogDTX詳細ログ出力 ]
-				if (OpenNijiiroRW.ConfigIni.bOutputDetailedDTXLog) {
-					foreach (CWAV cwav in this.listWAV.Values) {
+				if (OpenNijiiroRW.ConfigIni.bOutputDetailedDTXLog)
+				{
+					foreach (CWAV cwav in this.listWAV.Values)
+					{
 						Trace.TraceInformation(cwav.ToString());
 					}
-					foreach (CBPM cbpm3 in this.listBPM.Values) {
+					foreach (CBPM cbpm3 in this.listBPM.Values)
+					{
 						Trace.TraceInformation(cbpm3.ToString());
 					}
-					foreach (CChip chip in this.listChip) {
+					foreach (CChip chip in this.listChip)
+					{
 						Trace.TraceInformation(chip.ToString());
 					}
 				}
 				#endregion
 				int n整数値管理 = 0;
-				foreach (CChip chip in this.listChip) {
+				foreach (CChip chip in this.listChip)
+				{
 					if (chip.nChannelNo != 0x54)
 						chip.n整数値 = n整数値管理;
 					n整数値管理++;
@@ -1241,27 +1416,39 @@ internal class CTja : CActivity {
 	/// <paramref name="nMode"/> == 1: preserve notechart symbols, commands, and EXAM headers
 	/// </summary>
 	/// <returns>A single TJA line without certain commands and headers, or null if nothing left</returns>
-	private static string? RemoveCommandFromTJALine(string input, int nMode) {
+	private static string? RemoveCommandFromTJALine(string input, int nMode)
+	{
 		// 18/11/11 AioiLight 譜面にSpace、スペース、Tab等が入っているとおかしくなるので修正。
 		// 多分コマンドもスペースが抜かれちゃっているが、コマンド行を除く譜面を返すので大丈夫(たぶん)。
 		string line = input.Trim();
 
-		if (nMode == 0) {
-			if (!string.IsNullOrEmpty(line) && NotesManager.FastFlankedParsing(line)) {
-				if (line.StartsWith("BALLOON") || line.StartsWith("BPM")) {
+		if (nMode == 0)
+		{
+			if (!string.IsNullOrEmpty(line) && NotesManager.FastFlankedParsing(line))
+			{
+				if (line.StartsWith("BALLOON") || line.StartsWith("BPM"))
+				{
 					//A～Fで始まる命令が削除されない不具合の対策
-				} else {
+				}
+				else
+				{
 					return line;
 				}
 			}
-		} else if (nMode == 1) {
+		}
+		else if (nMode == 1)
+		{
 			if (!string.IsNullOrEmpty(line) &&
 				(line.Substring(0, 1) == "#"
 					|| line.StartsWith("EXAM")
-					|| NotesManager.FastFlankedParsing(line))) {
-				if (line.StartsWith("BALLOON") || line.StartsWith("BPM")) {
+					|| NotesManager.FastFlankedParsing(line)))
+			{
+				if (line.StartsWith("BALLOON") || line.StartsWith("BPM"))
+				{
 					//A～Fで始まる命令が削除されない不具合の対策
-				} else {
+				}
+				else
+				{
 					return line;
 				}
 			}
@@ -1277,11 +1464,15 @@ internal class CTja : CActivity {
 	/// </summary>
 	/// <param name="strTja"></param>
 	/// <returns></returns>
-	private string preprocessTjaStr(string strTja) {
+	private string preprocessTjaStr(string strTja)
+	{
 		// replace each tab with a space
-		unsafe {
-			fixed (char* s = strTja) {
-				for (int i = 0; i < strTja.Length; i++) {
+		unsafe
+		{
+			fixed (char* s = strTja)
+			{
+				for (int i = 0; i < strTja.Length; i++)
+				{
 					if (s[i] == '\t')
 						s[i] = ' ';
 				}
@@ -1291,7 +1482,8 @@ internal class CTja : CActivity {
 		// Rebuild string
 		var sb = new StringBuilder();
 		// .NET 9+: foreach (Range range in span.Split(dlmtEnter))
-		for (int off = 0, eol; off < strTja.Length; off = eol + 1) {
+		for (int off = 0, eol; off < strTja.Length; off = eol + 1)
+		{
 			eol = strTja.IndexOf(dlmtEnter, off);
 			if (eol < 0)
 				eol = strTja.Length;
@@ -1331,13 +1523,16 @@ internal class CTja : CActivity {
 	/// </summary>
 	/// <param name="strTJA"></param>
 	/// <returns>各コースの譜面(string[5])</returns>
-	private string[] tコースで譜面を分割する(string strTJA) {
+	private string[] tコースで譜面を分割する(string strTJA)
+	{
 		string[] strCourseTJA = new string[(int)Difficulty.Total];
 
 		string[] courseSections = CourseSplitRegex.Split(strTJA);
-		if (courseSections.Length > 1) {
+		if (courseSections.Length > 1)
+		{
 			//tja内に「COURSE」があればここを使う。
-			for (int n = 1; n < courseSections.Length; n++) {
+			for (int n = 1; n < courseSections.Length; n++)
+			{
 				if (string.IsNullOrEmpty(courseSections[n]))
 					continue;
 
@@ -1350,11 +1545,14 @@ internal class CTja : CActivity {
 
 				string strCourse = courseSections[n].Substring(valueStart, eol - valueStart);
 				int nCourse = this.strConvertCourse(strCourse);
-				if (nCourse != -1) {
+				if (nCourse != -1)
+				{
 					strCourseTJA[nCourse] = courseSections[n];
 				}
 			}
-		} else {
+		}
+		else
+		{
 			strCourseTJA[3] = strTJA;
 		}
 
@@ -1366,7 +1564,8 @@ internal class CTja : CActivity {
 		@"^(?!(TITLE|LEVEL|BPM|WAVE|OFFSET|BALLOON|EXAM1|EXAM2|EXAM3|EXAM4|EXAM5|EXAM6|EXAM7|DANTICK|DANTICKCOLOR|RENREN22|RENREN23|RENREN32|RENREN33|RENREN42|RENREN43|BALLOONNOR|BALLOONEXP|BALLOONMAS|SONGVOL|SEVOL|SCOREINIT|SCOREDIFF|COURSE|STYLE|TOWERTYPE|GAME|LIFE|DEMOSTART|SIDE|SUBTITLE|SCOREMODE|GENRE|MAKER|SELECTBG|MOVIEOFFSET|BGIMAGE|BGMOVIE|HIDDENBRANCH|GAUGEINCR|LYRICFILE|#HBSCROLL|#BMSCROLL)).+\n",
 		RegexOptions.Multiline | RegexOptions.Compiled);
 
-	public int nInstanceDifficulty {
+	public int nInstanceDifficulty
+	{
 		get => this.n参照中の難易度;
 	}
 
@@ -1378,7 +1577,8 @@ internal class CTja : CActivity {
 	///
 	/// </summary>
 	/// <param name="strInput">譜面のデータ</param>
-	private void t入力_V4(string strInput, int difficulty) {
+	private void t入力_V4(string strInput, int difficulty)
+	{
 		if (!String.IsNullOrEmpty(strInput)) //空なら通さない
 		{
 			strInput = this.preprocessTjaStr(strInput);
@@ -1393,27 +1593,35 @@ internal class CTja : CActivity {
 			var strSplitした譜面 = this.tコースで譜面を分割する(strInput);
 			string strTest = "";
 			//存在するかのフラグ作成。
-			for (int i = 0; i < strSplitした譜面.Length; i++) {
-				if (!String.IsNullOrEmpty(strSplitした譜面[i])) {
+			for (int i = 0; i < strSplitした譜面.Length; i++)
+			{
+				if (!String.IsNullOrEmpty(strSplitした譜面[i]))
+				{
 					this.b譜面が存在する[i] = true;
 					n譜面数++;
-				} else
+				}
+				else
 					this.b譜面が存在する[i] = false;
 			}
 
 			#region[ 読み込ませるコースを決定 ]
-			if (this.b譜面が存在する[difficulty] == false) {
+			if (this.b譜面が存在する[difficulty] == false)
+			{
 				n読み込むコース = difficulty;
 				n読み込むコース++;
-				for (int n = 1; n < (int)Difficulty.Total; n++) {
-					if (this.b譜面が存在する[n読み込むコース] == false) {
+				for (int n = 1; n < (int)Difficulty.Total; n++)
+				{
+					if (this.b譜面が存在する[n読み込むコース] == false)
+					{
 						n読み込むコース++;
 						if (n読み込むコース > (int)Difficulty.Total - 1)
 							n読み込むコース = 0;
-					} else
+					}
+					else
 						break;
 				}
-			} else
+			}
+			else
 				n読み込むコース = difficulty;
 			this.n参照中の難易度 = n読み込むコース;
 			#endregion
@@ -1426,8 +1634,10 @@ internal class CTja : CActivity {
 
 			//ここで1行の文字数をカウント。配列にして返す。
 			int divPerMeasure = 0;
-			try {
-				if (n譜面数 > 0) {
+			try
+			{
+				if (n譜面数 > 0)
+				{
 					//2017.07.22 kairera0467 譜面が2つ以上ある場合はCOURSE以下のBALLOON命令を使う
 					this.listBalloon.Clear();
 					foreach (var listBalloon in this.listBalloon_Branch)
@@ -1438,8 +1648,10 @@ internal class CTja : CActivity {
 
 				{
 					using StringReader reader = new(strCourse);
-					for (string? line; (line = reader.ReadLine()) != null;) {
-						if (!String.IsNullOrEmpty(line)) {
+					for (string? line; (line = reader.ReadLine()) != null;)
+					{
+						if (!String.IsNullOrEmpty(line))
+						{
 							this.TryParsePlayerSideHeader(line);
 						}
 					}
@@ -1447,20 +1659,26 @@ internal class CTja : CActivity {
 
 				{
 					using StringReader reader = new(strCourse);
-					for (string? line; (line = reader.ReadLine()) != null;) {
+					for (string? line; (line = reader.ReadLine()) != null;)
+					{
 						line = RemoveCommandFromTJALine(line, 0);
 						if (String.IsNullOrEmpty(line))
 							continue;
-						if (line.IndexOf(',', 0) == -1 && !String.IsNullOrEmpty(line)) {
+						if (line.IndexOf(',', 0) == -1 && !String.IsNullOrEmpty(line))
+						{
 							divPerMeasure += line.Count(c => !char.IsWhiteSpace(c));
-						} else {
+						}
+						else
+						{
 							this.divsPerMeasureAllBranches.Add(divPerMeasure + line.Count(c => !char.IsWhiteSpace(c)) - 1);
 							divPerMeasure = 0;
 						}
 					}
 				}
 				this.divsPerMeasureAllBranches.Add(divPerMeasure); // after last comma
-			} catch (Exception ex) {
+			}
+			catch (Exception ex)
+			{
 				Trace.TraceError(ex.ToString());
 				Trace.TraceError("例外が発生しましたが処理を継続します。 (9e401212-0b78-4073-88d0-f7e791f36a91)");
 			}
@@ -1469,10 +1687,12 @@ internal class CTja : CActivity {
 			//0:ヘッダー情報 1:#START以降 となる。個数の定義は後からされるため、ここでは省略。
 			this.n現在の小節数 = 1;
 			this.iNowMeasureAllBranches = 0;
-			try {
+			try
+			{
 				{
 					using StringReader reader = new(strCourse);
-					for (string? line; (line = reader.ReadLine()) != null;) {
+					for (string? line; (line = reader.ReadLine()) != null;)
+					{
 						line = RemoveCommandFromTJALine(line, 1);
 						if (String.IsNullOrEmpty(line))
 							continue;
@@ -1482,15 +1702,20 @@ internal class CTja : CActivity {
 				}
 
 				// Retrieve all the global exams (non individual) at the end
-				if (List_DanSongs.Count > 0) {
-					for (int i = 0; i < CExamInfo.cMaxExam; i++) {
-						if (Dan_C[i] != null && List_DanSongs[0].Dan_C[i] == null) {
+				if (List_DanSongs.Count > 0)
+				{
+					for (int i = 0; i < CExamInfo.cMaxExam; i++)
+					{
+						if (Dan_C[i] != null && List_DanSongs[0].Dan_C[i] == null)
+						{
 							List_DanSongs[0].Dan_C[i] = Dan_C[i];
 						}
 					}
 				}
 
-			} catch (Exception ex) {
+			}
+			catch (Exception ex)
+			{
 				Trace.TraceError(ex.ToString());
 				Trace.TraceError("例外が発生しましたが処理を継続します。 (2da1e880-6b63-4e82-b018-bf18c3568335)");
 			}
@@ -1507,27 +1732,36 @@ internal class CTja : CActivity {
 	private static readonly Regex FormatExceptionMessageRegex =
 		new Regex(@"^The input string '(.*)' was not in a correct format.$", RegexOptions.Compiled);
 
-	private static string GetTjaErrorReason(Exception ex) {
-		switch (ex) {
+	private static string GetTjaErrorReason(Exception ex)
+	{
+		switch (ex)
+		{
 			case IndexOutOfRangeException:
 				return "Too few arguments";
 			case FormatException:
 				{
 					string? expectedType = null;
-					if (ex.TargetSite?.Name == "ParseComplex") {
+					if (ex.TargetSite?.Name == "ParseComplex")
+					{
 						expectedType = "Complex Number";
-					} else if (ex.TargetSite?.DeclaringType?.FullName?.StartsWith("System.") ?? false) {
+					}
+					else if (ex.TargetSite?.DeclaringType?.FullName?.StartsWith("System.") ?? false)
+					{
 						expectedType = ex.TargetSite.DeclaringType.FullName.Substring("System.".Length);
 					}
 
 					var match = FormatExceptionMessageRegex.Match(ex.Message);
 					StringBuilder sb = new();
-					if (!string.IsNullOrEmpty(expectedType)) {
+					if (!string.IsNullOrEmpty(expectedType))
+					{
 						sb.Append($"Bad {expectedType} format");
-					} else {
+					}
+					else
+					{
 						sb.Append("Bad format");
 					}
-					if (match.Success) {
+					if (match.Success)
+					{
 						sb.Append($": [{match.Groups[1]}]");
 					}
 					return sb.ToString();
@@ -1538,28 +1772,36 @@ internal class CTja : CActivity {
 		}
 	}
 
-	private void AddWarn(string msg, Exception? ex = null) {
+	private void AddWarn(string msg, Exception? ex = null)
+	{
 		LogNotification.PopWarning($"[{strFileName}]: {msg}");
 		if (ex != null)
 			Trace.TraceWarning($"TJA file: '{strFullPath}', at {(Difficulty)this.n参照中の難易度}, line {nNowReadLine}, Error: {ex.ToString()}");
 	}
-	private void AddCommandError(string command, string argument, string reason, Exception? ex = null) {
+	private void AddCommandError(string command, string argument, string reason, Exception? ex = null)
+	{
 		this.AddWarn($"Bad {command} arguments: [{argument}]: {reason}", ex);
 	}
-	private void AddCommandError(string command, string argument, Exception ex) {
+	private void AddCommandError(string command, string argument, Exception ex)
+	{
 		this.AddWarn($"Bad {command} arguments: [{argument}]: {GetTjaErrorReason(ex)}", ex);
 	}
 
-	private string[] SplitComma(string input) {
+	private string[] SplitComma(string input)
+	{
 		var result = new List<string>();
 		var workingIndex = 0;
-		for (int i = 0; i < input.Length; i++) {
+		for (int i = 0; i < input.Length; i++)
+		{
 			if (input[i].Equals(',')) // カンマにぶち当たった
 			{
-				if (i - 1 >= 0 && input[i - 1].Equals('\\')) {
+				if (i - 1 >= 0 && input[i - 1].Equals('\\'))
+				{
 					input = input.Remove(i - 1, 1);
 					--i;
-				} else {
+				}
+				else
+				{
 					// workingIndexから今の位置までをリストにブチ込む
 					result.Add(input.Substring(workingIndex, i - workingIndex));
 					// workingIndexに今の位置+1を代入
@@ -1574,10 +1816,12 @@ internal class CTja : CActivity {
 		return result.ToArray();
 	}
 
-	private void TryParseCommand(string InputText) {
+	private void TryParseCommand(string InputText)
+	{
 		#region [Split comma and arguments values]
 		var match = CommandAndArgumentRegex.Match(InputText);
-		if (!match.Success) {
+		if (!match.Success)
+		{
 			return;
 		}
 
@@ -1591,9 +1835,12 @@ internal class CTja : CActivity {
 		var argument = argumentFull.TrimEnd([',', ' ']);
 		#endregion
 
-		try {
+		try
+		{
 			this.ParseCommand(command, argument, argumentFull);
-		} catch (Exception ex) {
+		}
+		catch (Exception ex)
+		{
 			this.AddCommandError(command, argumentFull, ex);
 		}
 	}
@@ -1602,15 +1849,22 @@ internal class CTja : CActivity {
 	/// 譜面読み込みメソッドV4で使用。
 	/// </summary>
 	/// <param name="InputText"></param>
-	private void ParseCommand(string command, string argument, string argumentFull) {
-		if (command == "#START") {
+	private void ParseCommand(string command, string argument, string argumentFull)
+	{
+		if (command == "#START")
+		{
 			InitializeChartDefinitionBody();
-		} else if (command == "#END") {
+		}
+		else if (command == "#END")
+		{
 			// TaikoJiro compatibility: #END ends unended rolls
-			for (int i = 0; i < 3; i++) {
-				if (this.nNowRollCountBranch[i] >= 0) {
+			for (int i = 0; i < 3; i++)
+			{
+				if (this.nNowRollCountBranch[i] >= 0)
+				{
 					ECourse branch = (ECourse)i;
-					if (branch == ECourse.eNormal || this.bHasBranch[this.n参照中の難易度]) {
+					if (branch == ECourse.eNormal || this.bHasBranch[this.n参照中の難易度])
+					{
 						this.AddWarn(this.bHasBranch[this.n参照中の難易度] ?
 							$"An unended roll in branch {branch} is ended by #END."
 							: $"An unended roll is ended by #END."
@@ -1626,21 +1880,28 @@ internal class CTja : CActivity {
 			chip.n発声時刻ms = (int)(this.dbNowTime + 1000); //2016.07.16 kairera0467 終了時から1秒後に設置するよう変更。
 														 // チップを配置。
 
-			if (n参照中の難易度 == (int)Difficulty.Dan) {
+			if (n参照中の難易度 == (int)Difficulty.Dan)
+			{
 				Array.Resize(ref this.pDan_LastChip, List_DanSongs.Count);
-				if (List_DanSongs.Count > 0) {
+				if (List_DanSongs.Count > 0)
+				{
 					this.pDan_LastChip[List_DanSongs.Count - 1] = this.FindLastHittableOrChip(chip);
 				}
 			}
 
 			this.listChip.Add(chip);
-		} else if (command == "#BPMCHANGE") {
+		}
+		else if (command == "#BPMCHANGE")
+		{
 			double dbBPM = double.Parse(argument);
 			this.dbNowBPM = dbBPM;
 
-			if (dbBPM > MaxBPM) {
+			if (dbBPM > MaxBPM)
+			{
 				MaxBPM = dbBPM;
-			} else if (dbBPM < MinBPM) {
+			}
+			else if (dbBPM < MinBPM)
+			{
 				MinBPM = dbBPM;
 			}
 
@@ -1650,7 +1911,9 @@ internal class CTja : CActivity {
 			this.listChip.Add(this.NewEventChipAtDefCursor(0x9C, this.n内部番号BPM1to - 1));
 
 			this.n内部番号BPM1to++;
-		} else if (command == "#SCROLL") {
+		}
+		else if (command == "#SCROLL")
+		{
 			double[] dbComplexNum = new double[2];
 			//2016.08.13 kairera0467 複素数スクロールもどきのテスト
 			//iが入っていた場合、複素数スクロールとみなす。
@@ -1672,7 +1935,9 @@ internal class CTja : CActivity {
 			// チップを配置。
 
 			this.listChip.Add(chip);
-		} else if (command == "#MEASURE") {
+		}
+		else if (command == "#MEASURE")
+		{
 			var strArray = argument.Split(new char[] { '/' });
 			WarnSplitLength("#MEASURE subsplit", strArray, 2);
 
@@ -1685,7 +1950,9 @@ internal class CTja : CActivity {
 			this.fNow_Measure_s = (float)dbLength[0];
 
 			this.listChip.Add(this.NewEventChipAtDefCursor(0x02, 1, argDb: db小節長倍率));
-		} else if (command == "#DELAY") {
+		}
+		else if (command == "#DELAY")
+		{
 			double nDELAY = double.Parse(argument);
 			nDELAY *= 1000;
 
@@ -1698,13 +1965,19 @@ internal class CTja : CActivity {
 			this.dbNowBMScollTime += nDELAY * this.dbNowBPM / 15000;
 
 			this.listChip.Add(chip);
-		} else if (command == "#GOGOSTART") {
+		}
+		else if (command == "#GOGOSTART")
+		{
 			this.bGOGOTIME = true;
 			this.listChip.Add(this.NewEventChipAtDefCursor(0x9E, 1));
-		} else if (command == "#GOGOEND") {
+		}
+		else if (command == "#GOGOEND")
+		{
 			this.bGOGOTIME = false;
 			this.listChip.Add(this.NewEventChipAtDefCursor(0x9F, 1));
-		} else if (command == "#BGAON") {
+		}
+		else if (command == "#BGAON")
+		{
 			var commandData = argument.Split(' ', StringSplitOptions.RemoveEmptyEntries);
 			string listvdIndex = commandData[0];
 			var bgaStartTime = commandData[1];
@@ -1713,58 +1986,86 @@ internal class CTja : CActivity {
 			var chip = this.NewEventChipAtDefCursor(0x54, index, index);
 			chip.VideoStartTimeMs = (int)(float.Parse(bgaStartTime) * 1000);
 			this.listChip.Add(chip);
-		} else if (command == "#BGAOFF") {
+		}
+		else if (command == "#BGAOFF")
+		{
 			int index = (10 * int.Parse(argument[0].ToString())) + int.Parse(argument[1].ToString()) + 2;
 			this.listChip.Add(this.NewEventChipAtDefCursor(0x55, index, index));
-		} else if (command == "#CAMVMOVESTART") {
+		}
+		else if (command == "#CAMVMOVESTART")
+		{
 			//starts vertical camera moving: <start x> to <end y>
 			this.ParseArgCamStartCommand(command, argument, 0xA0, ref this.currentCamVMoveChip,
 				(chip, start) => chip.fCamScrollStartY = start, (chip, end) => chip.fCamScrollEndY = end,
 				"#CAMVMOVEEND");
-		} else if (command == "#CAMVMOVEEND") {
+		}
+		else if (command == "#CAMVMOVEEND")
+		{
 			//ends vertical camera moving
 			this.ParseArgCamEndCommand(command, argument, 0xA1, ref this.currentCamVMoveChip, "#CAMVMOVESTART");
-		} else if (command == "#CAMHMOVESTART") {
+		}
+		else if (command == "#CAMHMOVESTART")
+		{
 			//starts horizontal camera moving: <start x> to <end x>
 			this.ParseArgCamStartCommand(command, argument, 0xA2, ref this.currentCamHMoveChip,
 				(chip, start) => chip.fCamScrollStartX = start, (chip, end) => chip.fCamScrollEndX = end,
 				"#CAMHMOVEEND");
-		} else if (command == "#CAMHMOVEEND") {
+		}
+		else if (command == "#CAMHMOVEEND")
+		{
 			//ends horizontal camera moving
 			this.ParseArgCamEndCommand(command, argument, 0xA3, ref this.currentCamHMoveChip, "#CAMHMOVESTART");
-		} else if (command == "#CAMZOOMSTART") {
+		}
+		else if (command == "#CAMZOOMSTART")
+		{
 			//starts zooming in/out the screen: <start value> to <end value>
 			this.ParseArgCamStartCommand(command, argument, 0xA4, ref this.currentCamZoomChip,
 				(chip, start) => chip.fCamZoomStart = start, (chip, end) => chip.fCamZoomEnd = end,
 				"#CAMZOOMEND");
-		} else if (command == "#CAMZOOMEND") {
+		}
+		else if (command == "#CAMZOOMEND")
+		{
 			//stops zooming
 			this.ParseArgCamEndCommand(command, argument, 0xA5, ref this.currentCamZoomChip, "#CAMZOOMSTART");
-		} else if (command == "#CAMROTATIONSTART") {
+		}
+		else if (command == "#CAMROTATIONSTART")
+		{
 			//starts rotating the screen: <start degrees> to <end degrees>
 			this.ParseArgCamStartCommand(command, argument, 0xA6, ref this.currentCamRotateChip,
 				(chip, start) => chip.fCamRotationStart = start, (chip, end) => chip.fCamRotationEnd = end,
 				"#CAMROTATIONEND");
-		} else if (command == "#CAMROTATIONEND") {
+		}
+		else if (command == "#CAMROTATIONEND")
+		{
 			//stops screen rotation
 			this.ParseArgCamEndCommand(command, argument, 0xA7, ref this.currentCamRotateChip, "#CAMROTATIONSTART");
-		} else if (command == "#CAMVSCALESTART") {
+		}
+		else if (command == "#CAMVSCALESTART")
+		{
 			//starts rotating the screen: <start degrees> to <end degrees>
 			this.ParseArgCamStartCommand(command, argument, 0xA8, ref this.currentCamVScaleChip,
 				(chip, start) => chip.fCamScaleStartY = start, (chip, end) => chip.fCamScaleEndY = end,
 				"#CAMVSCALEEND");
-		} else if (command == "#CAMVSCALEEND") {
+		}
+		else if (command == "#CAMVSCALEEND")
+		{
 			//ends vertical camera scaling
 			this.ParseArgCamEndCommand(command, argument, 0xA9, ref this.currentCamVScaleChip, "#CAMVSCALESTART");
-		} else if (command == "#CAMHSCALESTART") {
+		}
+		else if (command == "#CAMHSCALESTART")
+		{
 			//starts horizontal camera scale changing: <start scale> to <end scale>
 			this.ParseArgCamStartCommand(command, argument, 0xB0, ref this.currentCamHScaleChip,
 				(chip, start) => chip.fCamScaleStartX = start, (chip, end) => chip.fCamScaleEndX = end,
 				"#CAMHSCALEEND");
-		} else if (command == "#CAMHSCALEEND") {
+		}
+		else if (command == "#CAMHSCALEEND")
+		{
 			//ends horizontal camera scaling
 			this.ParseArgCamEndCommand(command, argument, 0xB1, ref this.currentCamHScaleChip, "#CAMHSCALESTART");
-		} else if (command == "#BORDERCOLOR") {
+		}
+		else if (command == "#BORDERCOLOR")
+		{
 			//sets border color
 			//arguments: <r>,<g>,<b>
 			var chip = this.NewEventChipAtDefCursor(0xB2, 1);
@@ -1774,37 +2075,51 @@ internal class CTja : CActivity {
 
 			// チップを配置。
 			this.listChip.Add(chip);
-		} else if (command == "#CAMHOFFSET") {
+		}
+		else if (command == "#CAMHOFFSET")
+		{
 			//sets camera x offset: <offset>
 			this.ParseArgCamSetCommand(command, argument, 0xB3, this.currentCamHMoveChip,
 				(chip, value) => chip.fCamScrollStartX = chip.fCamScrollEndX = value,
 				"#CAMHMOVEEND");
-		} else if (command == "#CAMVOFFSET") {
+		}
+		else if (command == "#CAMVOFFSET")
+		{
 			//sets camera y offset: <offset>
 			this.ParseArgCamSetCommand(command, argument, 0xB4, this.currentCamVMoveChip,
 				(chip, value) => chip.fCamScrollStartY = chip.fCamScrollEndY = value,
 				"#CAMVMOVEEND");
-		} else if (command == "#CAMZOOM") {
+		}
+		else if (command == "#CAMZOOM")
+		{
 			//sets camera zoom factor: <zoom factor>
 			this.ParseArgCamSetCommand(command, argument, 0xB5, this.currentCamZoomChip,
 				(chip, value) => chip.fCamZoomStart = chip.fCamZoomEnd = value,
 				"#CAMZOOMEND");
-		} else if (command == "#CAMROTATION") {
+		}
+		else if (command == "#CAMROTATION")
+		{
 			//sets camera rotation: <degrees>
 			this.ParseArgCamSetCommand(command, argument, 0xB6, this.currentCamRotateChip,
 				(chip, value) => chip.fCamRotationStart = chip.fCamRotationEnd = value,
 				"#CAMROTATIONEND");
-		} else if (command == "#CAMHSCALE") {
+		}
+		else if (command == "#CAMHSCALE")
+		{
 			//sets camera x scale: <scale>
 			this.ParseArgCamSetCommand(command, argument, 0xB7, this.currentCamHScaleChip,
 				(chip, value) => chip.fCamScaleStartX = chip.fCamScaleEndX = value,
 				"#CAMHSCALEEND");
-		} else if (command == "#CAMVSCALE") {
+		}
+		else if (command == "#CAMVSCALE")
+		{
 			//sets camera y scale: <scale>
 			this.ParseArgCamSetCommand(command, argument, 0xB8, this.currentCamVScaleChip,
 				(chip, value) => chip.fCamScaleStartY = chip.fCamScaleEndY = value,
 				"#CAMVSCALEEND");
-		} else if (command == "#CAMRESET") {
+		}
+		else if (command == "#CAMRESET")
+		{
 			//resets camera properties
 			var chip = this.NewEventChipAtDefCursor(0xB9, 1);
 
@@ -1827,11 +2142,17 @@ internal class CTja : CActivity {
 
 			// チップを配置。
 			this.listChip.Add(chip);
-		} else if (command == "#ENABLEDORON") {
+		}
+		else if (command == "#ENABLEDORON")
+		{
 			this.listChip.Add(this.NewEventChipAtDefCursor(0xBA, 1));
-		} else if (command == "#DISABLEDORON") {
+		}
+		else if (command == "#DISABLEDORON")
+		{
 			this.listChip.Add(this.NewEventChipAtDefCursor(0xBB, 1));
-		} else if (command == "#ADDOBJECT") {
+		}
+		else if (command == "#ADDOBJECT")
+		{
 			//adds object
 			var chip = this.NewEventChipAtDefCursor(0xBC, 1);
 
@@ -1842,47 +2163,76 @@ internal class CTja : CActivity {
 			chip.fObjY = float.Parse(args[2]);
 			var txPath = this.strFolderPath + args[3];
 			Trace.TraceInformation("" + this.bSession譜面を読み込む);
-			if (this.bSession譜面を読み込む) {
+			if (this.bSession譜面を読み込む)
+			{
 				var obj = new CSongObject(chip.strObjName, chip.fObjX, chip.fObjY, txPath);
 				this.listObj.Add(args[0], obj);
 			}
 
 			// チップを配置。
 			this.listChip.Add(chip);
-		} else if (command == "#REMOVEOBJECT") {
+		}
+		else if (command == "#REMOVEOBJECT")
+		{
 			//removes object
 			var chip = this.NewEventChipAtDefCursor(0xBD, 1);
 			chip.strObjName = argument;
 			this.listChip.Add(chip);
-		} else if (command == "#OBJVMOVESTART") {
+		}
+		else if (command == "#OBJVMOVESTART")
+		{
 			//starts vertical object movement: <start y> to <end y>
 			this.ParseArgObjStartCommand(command, argument, 0xBE, "vmove", "#OBJVMOVEEND");
-		} else if (command == "#OBJVMOVEEND") {
+		}
+		else if (command == "#OBJVMOVEEND")
+		{
 			//ends vertical camera moving
 			this.ParseArgObjEndCommand(command, argument, 0xBF, "vmove", "#OBJVMOVESTART");
-		} else if (command == "#OBJHMOVESTART") {
+		}
+		else if (command == "#OBJHMOVESTART")
+		{
 			//starts horizontal object movement: <start x> to <end x>
 			this.ParseArgObjStartCommand(command, argument, 0xC0, "hmove", "#OBJHMOVEEND");
-		} else if (command == "#OBJHMOVEEND") {
+		}
+		else if (command == "#OBJHMOVEEND")
+		{
 			//ends horizontal camera moving
 			this.ParseArgObjEndCommand(command, argument, 0xC1, "hmove", "#OBJHMOVESTART");
-		} else if (command == "#OBJVSCALESTART") {
+		}
+		else if (command == "#OBJVSCALESTART")
+		{
 			this.ParseArgObjStartCommand(command, argument, 0xC2, "vscale", "#OBJVSCALEEND");
-		} else if (command == "#OBJVSCALEEND") {
+		}
+		else if (command == "#OBJVSCALEEND")
+		{
 			this.ParseArgObjEndCommand(command, argument, 0xC3, "vscale", "#OBJVSCALESTART");
-		} else if (command == "#OBJHSCALESTART") {
+		}
+		else if (command == "#OBJHSCALESTART")
+		{
 			this.ParseArgObjStartCommand(command, argument, 0xC4, "hscale", "#OBJHSCALEEND");
-		} else if (command == "#OBJHSCALEEND") {
+		}
+		else if (command == "#OBJHSCALEEND")
+		{
 			this.ParseArgObjEndCommand(command, argument, 0xC5, "hscale", "#OBJHSCALESTART");
-		} else if (command == "#OBJROTATIONSTART") {
+		}
+		else if (command == "#OBJROTATIONSTART")
+		{
 			this.ParseArgObjStartCommand(command, argument, 0xC6, "rotation", "#OBJROTATIONEND");
-		} else if (command == "#OBJROTATIONEND") {
+		}
+		else if (command == "#OBJROTATIONEND")
+		{
 			this.ParseArgObjEndCommand(command, argument, 0xC7, "rotation", "#OBJROTATIONSTART");
-		} else if (command == "#OBJOPACITYSTART") {
+		}
+		else if (command == "#OBJOPACITYSTART")
+		{
 			this.ParseArgObjStartCommand(command, argument, 0xC8, "opacity", "#OBJOPACITYEND");
-		} else if (command == "#OBJOPACITYEND") {
+		}
+		else if (command == "#OBJOPACITYEND")
+		{
 			this.ParseArgObjEndCommand(command, argument, 0xC9, "opacity", "#OBJOPACITYSTART");
-		} else if (command == "#OBJCOLOR") {
+		}
+		else if (command == "#OBJCOLOR")
+		{
 			var chip = this.NewEventChipAtDefCursor(0xCA, 1);
 
 			string[] args = argument.Split(',');
@@ -1891,19 +2241,33 @@ internal class CTja : CActivity {
 
 			// チップを配置。
 			this.listChip.Add(chip);
-		} else if (command == "#OBJY") {
+		}
+		else if (command == "#OBJY")
+		{
 			this.ParseArgObjSetCommand(command, argument, 0xCB, "vmove", "#OBJVMOVEEND");
-		} else if (command == "#OBJX") {
+		}
+		else if (command == "#OBJX")
+		{
 			this.ParseArgObjSetCommand(command, argument, 0xCC, "hmove", "#OBJHMOVEEND");
-		} else if (command == "#OBJVSCALE") {
+		}
+		else if (command == "#OBJVSCALE")
+		{
 			this.ParseArgObjSetCommand(command, argument, 0xCD, "vscale", "#OBJVSCALEEND");
-		} else if (command == "#OBJHSCALE") {
+		}
+		else if (command == "#OBJHSCALE")
+		{
 			this.ParseArgObjSetCommand(command, argument, 0xCE, "hscale", "#OBJHSCALEEND");
-		} else if (command == "#OBJROTATION") {
+		}
+		else if (command == "#OBJROTATION")
+		{
 			this.ParseArgObjSetCommand(command, argument, 0xCF, "rotation", "#OBJROTATIONEND");
-		} else if (command == "#OBJOPACITY") {
+		}
+		else if (command == "#OBJOPACITY")
+		{
 			this.ParseArgObjSetCommand(command, argument, 0xD0, "opacity", "#OBJOPACITYEND");
-		} else if (command == "#CHANGETEXTURE") {
+		}
+		else if (command == "#CHANGETEXTURE")
+		{
 			var chip = this.NewEventChipAtDefCursor(0xD1, 1);
 
 			string[] args = argumentFull.Split(',');
@@ -1912,12 +2276,15 @@ internal class CTja : CActivity {
 				.Replace('\\', Path.DirectorySeparatorChar);
 			chip.strNewPath = this.strFolderPath + args[1];
 
-			if (this.bSession譜面を読み込む) {
-				if (!this.listOriginalTextures.ContainsKey(chip.strTargetTxName)) {
+			if (this.bSession譜面を読み込む)
+			{
+				if (!this.listOriginalTextures.ContainsKey(chip.strTargetTxName))
+				{
 					OpenNijiiroRW.Tx.trackedTextures.TryGetValue(chip.strTargetTxName, out CTexture oldTx);
 					this.listOriginalTextures.Add(chip.strTargetTxName, new CTexture(oldTx));
 				}
-				if (!this.listTextures.ContainsKey(chip.strNewPath)) {
+				if (!this.listTextures.ContainsKey(chip.strNewPath))
+				{
 					CTexture tx = OpenNijiiroRW.Tx.TxCSong(chip.strNewPath);
 					this.listTextures.Add(chip.strNewPath, tx);
 				}
@@ -1925,17 +2292,23 @@ internal class CTja : CActivity {
 
 			// チップを配置。
 			this.listChip.Add(chip);
-		} else if (command == "#RESETTEXTURE") {
+		}
+		else if (command == "#RESETTEXTURE")
+		{
 			var chip = this.NewEventChipAtDefCursor(0xD2, 1);
 			chip.strTargetTxName = argument
 				.Replace('/', Path.DirectorySeparatorChar)
 				.Replace('\\', Path.DirectorySeparatorChar);
 			this.listChip.Add(chip);
-		} else if (command == "#SETCONFIG") {
+		}
+		else if (command == "#SETCONFIG")
+		{
 			var chip = this.NewEventChipAtDefCursor(0xD3, 1);
 			chip.strConfigValue = argument;
 			this.listChip.Add(chip);
-		} else if (command == "#OBJANIMSTART") {
+		}
+		else if (command == "#OBJANIMSTART")
+		{
 			var chip = this.NewEventChipAtDefCursor(0xD4, 1);
 
 			string[] args = argument.Split(',');
@@ -1944,7 +2317,9 @@ internal class CTja : CActivity {
 
 			// チップを配置。
 			this.listChip.Add(chip);
-		} else if (command == "#OBJANIMSTARTLOOP") {
+		}
+		else if (command == "#OBJANIMSTARTLOOP")
+		{
 			var chip = this.NewEventChipAtDefCursor(0xD5, 1);
 
 			string[] args = argument.Split(',');
@@ -1953,11 +2328,15 @@ internal class CTja : CActivity {
 
 			// チップを配置。
 			this.listChip.Add(chip);
-		} else if (command == "#OBJANIMEND") {
+		}
+		else if (command == "#OBJANIMEND")
+		{
 			var chip = this.NewEventChipAtDefCursor(0xD6, 1);
 			chip.strObjName = argument;
 			this.listChip.Add(chip);
-		} else if (command == "#OBJFRAME") {
+		}
+		else if (command == "#OBJFRAME")
+		{
 			var chip = this.NewEventChipAtDefCursor(0xD7, 1);
 
 			string[] args = argument.Split(',');
@@ -1966,9 +2345,12 @@ internal class CTja : CActivity {
 
 			// チップを配置。
 			this.listChip.Add(chip);
-		} else if (command == "#GAMETYPE") {
+		}
+		else if (command == "#GAMETYPE")
+		{
 			CChip chip = this.NewEventChipAtDefCursor(0xD8, 1);
-			chip.eGameType = argument switch {
+			chip.eGameType = argument switch
+			{
 				"Taiko" => EGameType.Taiko,
 				"Bongo" or "Konga" => EGameType.Konga,
 				_ => chip.eGameType,
@@ -1976,19 +2358,29 @@ internal class CTja : CActivity {
 
 			// チップを配置。
 			this.listChip.Add(chip);
-		} else if (command == "#SPLITLANE") {
+		}
+		else if (command == "#SPLITLANE")
+		{
 			this.listChip.Add(this.NewEventChipAtDefCursor(0xD9, 1));
-		} else if (command == "#MERGELANE") {
+		}
+		else if (command == "#MERGELANE")
+		{
 			this.listChip.Add(this.NewEventChipAtDefCursor(0xE3, 1));
-		} else if (command == "#BARLINE") {
+		}
+		else if (command == "#BARLINE")
+		{
 			var chip = this.NewEventChipAtDefCursor(0xE4, 1);
 			chip.dbSCROLL_Y = this.dbNowScrollY;
 			chip.bHideBarLine = false;
 			this.listChip.Add(chip);
 			this.listBarLineChip.Add(chip);
-		} else if (command == "#SECTION") {
+		}
+		else if (command == "#SECTION")
+		{
 			this.listChip.Add(this.NewEventChipAtDefCursor(0xDD, 1)); //分岐:条件リセット
-		} else if (command == "#BRANCHSTART") {
+		}
+		else if (command == "#BRANCHSTART")
+		{
 			//分岐:分岐スタート
 			#region [ 譜面分岐のパース方法を作り直し ]
 			this.bチップがある.Branch = true;
@@ -2011,7 +2403,8 @@ internal class CTja : CActivity {
 			nNum[0] = Convert.ToDouble(branchStartArgumentMatch.Groups[2].Value);
 			nNum[1] = Convert.ToDouble(branchStartArgumentMatch.Groups[3].Value);
 
-			var e条件 = branchStartArgumentMatch.Groups[1].Value switch {
+			var e条件 = branchStartArgumentMatch.Groups[1].Value switch
+			{
 				"r" => EBranchConditionType.Drumroll,
 				"s" => EBranchConditionType.Score,
 				"d" => EBranchConditionType.Accuracy_BigNotesOnly,
@@ -2030,7 +2423,8 @@ internal class CTja : CActivity {
 
 			var chip = new CChip();
 
-			if (e条件 == EBranchConditionType.Drumroll) {
+			if (e条件 == EBranchConditionType.Drumroll)
+			{
 				/*
 				c小節前の連打開始位置 = c一小節前の小節線情報を返す(listChip, e条件, true);
 				//連打分岐の位置を再現
@@ -2040,7 +2434,8 @@ internal class CTja : CActivity {
 				*/
 
 				chip.n発声時刻ms = c小節前の小節線情報.n発声時刻ms;
-			} else chip.n発声時刻ms = c小節前の小節線情報.n発声時刻ms;
+			}
+			else chip.n発声時刻ms = c小節前の小節線情報.n発声時刻ms;
 
 			chip.nChannelNo = 0xDE;
 			chip.fNow_Measure_m = c小節前の小節線情報.fNow_Measure_m;
@@ -2063,10 +2458,12 @@ internal class CTja : CActivity {
 			#endregion
 
 			// handle here for the correct dan-i song index
-			if (this.n参照中の難易度 == (int)Difficulty.Dan) {
+			if (this.n参照中の難易度 == (int)Difficulty.Dan)
+			{
 				this.bHasBranchDan[List_DanSongs.Count - 1] = true;
 			}
-		} else if (command == "#N" || command == "#E" || command == "#M")//これCourseを全部集めてあとから分岐させればいい件
+		}
+		else if (command == "#N" || command == "#E" || command == "#M")//これCourseを全部集めてあとから分岐させればいい件
 		{
 			//開始時の情報にセット
 			t現在のチップ情報を記録する(false);
@@ -2077,11 +2474,15 @@ internal class CTja : CActivity {
 				this.n現在のコース = ECourse.eExpert;//分岐:玄人譜面
 			else if (command == "#M")
 				this.n現在のコース = ECourse.eMaster;//分岐:達人譜面
-		} else if (command == "#LEVELHOLD") {
+		}
+		else if (command == "#LEVELHOLD")
+		{
 			var chip = this.NewEventChipAtDefCursor(0xE1, 1);
 			chip.n発声位置 -= 1;
 			this.listChip.Add(chip);
-		} else if (command == "#BRANCHEND") {
+		}
+		else if (command == "#BRANCHEND")
+		{
 			//End用チャンネルをEmptyから引っ張ってきた。
 			var GoBranch = this.NewEventChipAtDefCursor(0x52, 1);
 			GoBranch.n発声位置 -= 1;
@@ -2092,7 +2493,9 @@ internal class CTja : CActivity {
 				IsBranchBarDraw[i] = true;//3コース分の黄色小説線表示㋫ラブ
 
 			IsEndedBranching = true;
-		} else if (command == "#BARLINEOFF") {
+		}
+		else if (command == "#BARLINEOFF")
+		{
 			var chip = this.NewEventChipAtDefCursor(0xE0, 1);
 			chip.n発声位置 -= 1;
 			chip.n発声時刻ms += 1;
@@ -2100,7 +2503,9 @@ internal class CTja : CActivity {
 			this.bBARLINECUE[0] = 1;
 
 			this.listChip.Add(chip);
-		} else if (command == "#BARLINEON") {
+		}
+		else if (command == "#BARLINEON")
+		{
 			var chip = this.NewEventChipAtDefCursor(0xE0, 2);
 			chip.n発声位置 -= 1;
 			chip.n発声時刻ms += 1;
@@ -2108,7 +2513,8 @@ internal class CTja : CActivity {
 			this.bBARLINECUE[0] = 0;
 
 			this.listChip.Add(chip);
-		} else if (command == "#LYRIC" && !usingLyricsFile && OpenNijiiroRW.ConfigIni.nPlayerCount < 4) // Do not parse LYRIC tags if a lyric file is already loaded
+		}
+		else if (command == "#LYRIC" && !usingLyricsFile && OpenNijiiroRW.ConfigIni.nPlayerCount < 4) // Do not parse LYRIC tags if a lyric file is already loaded
 		{
 			if (OpenNijiiroRW.rCurrentStage.eStageID == CStage.EStage.SongLoading)//起動時に重たくなってしまう問題の修正用
 				this.listLyric.Add(this.pf歌詞フォント.DrawText(argumentFull, OpenNijiiroRW.Skin.Game_Lyric_ForeColor, OpenNijiiroRW.Skin.Game_Lyric_BackColor, null, 30));
@@ -2117,7 +2523,9 @@ internal class CTja : CActivity {
 			chip.nBranch = this.n現在のコース;
 			this.listChip.Add(chip);
 			this.bLyrics = true;
-		} else if (command == "#DIRECTION") {
+		}
+		else if (command == "#DIRECTION")
+		{
 			double dbSCROLL = Convert.ToDouble(argument);
 			this.nスクロール方向 = (int)dbSCROLL;
 
@@ -2130,7 +2538,9 @@ internal class CTja : CActivity {
 			// チップを配置。
 
 			this.listChip.Add(chip);
-		} else if (command == "#SUDDEN") {
+		}
+		else if (command == "#SUDDEN")
+		{
 			var strArray = argument.Split(' ', StringSplitOptions.RemoveEmptyEntries);
 			WarnSplitLength("#SUDDEN", strArray, 2);
 			double db出現時刻 = Convert.ToDouble(strArray[0]);
@@ -2148,23 +2558,28 @@ internal class CTja : CActivity {
 			// チップを配置。
 
 			this.listChip.Add(chip);
-		} else if (command == "#JPOSSCROLL") {
+		}
+		else if (command == "#JPOSSCROLL")
+		{
 			var strArray = argument.Split(' ', StringSplitOptions.RemoveEmptyEntries);
 			WarnSplitLength("#JPOSSCROLL", strArray, 2);
 			double msMoveDt = double.Max(0, 1000 * Convert.ToDouble(strArray[0]));
 			double pxMoveDx = 0;
 			double pxMoveDy = 0;
-			if (strArray[1].IndexOf('i') != -1) {
+			if (strArray[1].IndexOf('i') != -1)
+			{
 				double[] dbComplexNum = new double[2];
 				this.tParsedComplexNumber(strArray[1], ref dbComplexNum);
 				pxMoveDx = dbComplexNum[0];
 				pxMoveDy = dbComplexNum[1];
-			} else
+			}
+			else
 				pxMoveDx = Convert.ToDouble(strArray[1]);
 
 
 			int n移動方向 = (strArray.Length >= 3) ? Convert.ToInt32(strArray[2]) : 0;
-			if (n移動方向 == 0) { // same move direction as notes in `#SCROLL x+yi`
+			if (n移動方向 == 0)
+			{ // same move direction as notes in `#SCROLL x+yi`
 				pxMoveDx = -pxMoveDx;
 				pxMoveDy = -pxMoveDy;
 			}
@@ -2175,7 +2590,8 @@ internal class CTja : CActivity {
 			chip.nBranch = this.n現在のコース;
 
 			// チップを配置。
-			this.listJPOSSCROLL.Add(new CJPOSSCROLL() {
+			this.listJPOSSCROLL.Add(new CJPOSSCROLL()
+			{
 				n内部番号 = this.listJPOSSCROLL.Count,
 				n表記上の番号 = 0,
 				msMoveDt = msMoveDt,
@@ -2184,16 +2600,21 @@ internal class CTja : CActivity {
 				chip = chip,
 			});
 			this.listChip.Add(chip);
-		} else if (command == "#SENOTECHANGE") {
+		}
+		else if (command == "#SENOTECHANGE")
+		{
 			FixSENote = int.Parse(argument);
 			IsEnabledFixSENote = true;
-		} else if (command == "#NEXTSONG") {
+		}
+		else if (command == "#NEXTSONG")
+		{
 			var chip = this.NewEventChipAtDefCursor(0x9B, List_DanSongs.Count);
 			chip.n発声位置 -= ((this.n現在の小節数) * 384) - 1;
 			chip.nBranch = this.n現在のコース;
 			this.listChip.Add(chip);
 
-			for (int ib = 0; ib < 3; ++ib) {
+			for (int ib = 0; ib < 3; ++ib)
+			{
 				this.listChip_Branch[ib].Add(chip); // for per-song gen-4 Shin-uchi score calculation
 			}
 
@@ -2205,7 +2626,8 @@ internal class CTja : CActivity {
 
 			// find last note in each branch
 			Array.Resize(ref this.pDan_LastChip, List_DanSongs.Count + 1);
-			if (List_DanSongs.Count > 0) {
+			if (List_DanSongs.Count > 0)
+			{
 				this.pDan_LastChip[List_DanSongs.Count - 1] = this.FindLastHittableOrChip(chip);
 			}
 
@@ -2228,7 +2650,8 @@ internal class CTja : CActivity {
 			dansongs.Difficulty = (strArray.Length > 7 && !string.IsNullOrWhiteSpace(strArray[7])) ? strConvertCourse(strArray[7]) : 3;
 			dansongs.bTitleShow = (strArray.Length > 8 && !string.IsNullOrWhiteSpace(strArray[8])) ? bool.Parse(strArray[8]) : false;
 
-			dansongs.Wave = new CWAV {
+			dansongs.Wave = new CWAV
+			{
 				n内部番号 = this.n内部番号WAV1to,
 				n表記上の番号 = this.n内部番号WAV1to,
 				nチップサイズ = this.n無限管理SIZE[this.n内部番号WAV1to],
@@ -2255,21 +2678,27 @@ internal class CTja : CActivity {
 
 			// チップを配置。
 			this.listChip.Add(this.NewEventChipAtDefCursor(0x01, 1 + List_DanSongs.Count, 0x01));
-		} else if (command == "#NMSCROLL") {
+		}
+		else if (command == "#NMSCROLL")
+		{
 			eScrollMode = EScrollMode.Normal;
 
 			var chip = this.NewEventChipAtDefCursor(0x09);
 			chip.n発声位置 -= 1;
 			chip.nBranch = this.n現在のコース;
 			this.listChip.Add(chip);
-		} else if (command == "#BMSCROLL") {
+		}
+		else if (command == "#BMSCROLL")
+		{
 			eScrollMode = EScrollMode.BMScroll;
 
 			var chip = this.NewEventChipAtDefCursor(0x0A);
 			chip.n発声位置 -= 1;
 			chip.nBranch = this.n現在のコース;
 			this.listChip.Add(chip);
-		} else if (command == "#HBSCROLL") {
+		}
+		else if (command == "#HBSCROLL")
+		{
 			eScrollMode = EScrollMode.HBScroll;
 
 			var chip = this.NewEventChipAtDefCursor(0x0B);
@@ -2279,14 +2708,18 @@ internal class CTja : CActivity {
 		}
 	}
 
-	private CChip FindLastHittableOrChip(CChip chip) {
+	private CChip FindLastHittableOrChip(CChip chip)
+	{
 		CChip[] lastChips = [chip, chip, chip];
 		bool[] lastIsHittables = [false, false, false];
-		for (int i = this.listChip.Count; i-- > 0;) {
+		for (int i = this.listChip.Count; i-- > 0;)
+		{
 			CChip chipI = this.listChip[i];
-			for (int ib = 0; ib < (chipI.IsEndedBranching ? 3 : 1); ++ib) {
+			for (int ib = 0; ib < (chipI.IsEndedBranching ? 3 : 1); ++ib)
+			{
 				int ibReal = (chipI.IsEndedBranching ? ib : (int)chipI.nBranch);
-				if (!lastIsHittables[ibReal]) {
+				if (!lastIsHittables[ibReal])
+				{
 					lastChips[ibReal] = chipI;
 					lastIsHittables[ibReal] = NotesManager.IsHittableNote(chipI);
 				}
@@ -2298,14 +2731,18 @@ internal class CTja : CActivity {
 		return lastChip;
 	}
 
-	private void ParseArgCamSetCommand(string command, string argument, int channelNo, CChip? camChip, Action<CChip, float> setValue, string commandEnd) {
-		if (camChip == null) {
+	private void ParseArgCamSetCommand(string command, string argument, int channelNo, CChip? camChip, Action<CChip, float> setValue, string commandEnd)
+	{
+		if (camChip == null)
+		{
 			var chip = this.NewEventChipAtDefCursor(channelNo, 1);
 			setValue(chip, float.Parse(argument));
 			chip.strCamEaseType = "IN_OUT";
 			// チップを配置。
 			this.listChip.Add(chip);
-		} else {
+		}
+		else
+		{
 			this.AddCommandError(command, argument, $"Missing {commandEnd}");
 		}
 	}
@@ -2313,8 +2750,10 @@ internal class CTja : CActivity {
 	private void ParseArgCamStartCommand(string command, string argument, int channelNo, ref CChip? camChip,
 		Action<CChip, float> setStart, Action<CChip, float> setEnd,
 		string commandEnd
-	) {
-		if (camChip == null) {
+	)
+	{
+		if (camChip == null)
+		{
 			//starts camera attribute changing
 			//arguments: <start value>,<end value>,<easing type>,<calc type>
 			var chip = this.NewEventChipAtDefCursor(channelNo, 0);
@@ -2329,13 +2768,17 @@ internal class CTja : CActivity {
 
 			// チップを配置。
 			this.listChip.Add(chip);
-		} else {
+		}
+		else
+		{
 			this.AddCommandError(command, argument, $"Missing {commandEnd}");
 		}
 	}
 
-	private void ParseArgCamEndCommand(string command, string argument, int channelNo, ref CChip? camChip, string commandStart) {
-		if (camChip != null) {
+	private void ParseArgCamEndCommand(string command, string argument, int channelNo, ref CChip? camChip, string commandStart)
+	{
+		if (camChip != null)
+		{
 			//ends camera attribute changing
 			var chip = this.NewEventChipAtDefCursor(channelNo, 1);
 
@@ -2349,16 +2792,20 @@ internal class CTja : CActivity {
 
 			// チップを配置。
 			this.listChip.Add(chip);
-		} else {
+		}
+		else
+		{
 			this.AddCommandError(command, argument, $"Missing {commandStart}");
 		}
 	}
 
-	private void ParseArgObjSetCommand(string command, string argument, int channelNo, string animationKey, string commandEnd) {
+	private void ParseArgObjSetCommand(string command, string argument, int channelNo, string animationKey, string commandEnd)
+	{
 		string[] args = argument.Split(',');
 		string name = args[0];
 
-		if (!currentObjAnimations.ContainsKey($"{animationKey}_{name}")) {
+		if (!currentObjAnimations.ContainsKey($"{animationKey}_{name}"))
+		{
 			var chip = this.NewEventChipAtDefCursor(channelNo, 0);
 			chip.strObjName = args[0];
 			chip.fObjStart = float.Parse(args[1]);
@@ -2367,16 +2814,20 @@ internal class CTja : CActivity {
 
 			// チップを配置。
 			this.listChip.Add(chip);
-		} else {
+		}
+		else
+		{
 			this.AddCommandError(command, argument, $"Missing {commandEnd}");
 		}
 	}
 
-	private void ParseArgObjStartCommand(string command, string argument, int channelNo, string animationKey, string commandEnd) {
+	private void ParseArgObjStartCommand(string command, string argument, int channelNo, string animationKey, string commandEnd)
+	{
 		string[] args = argument.Split(',');
 		string name = args[0];
 
-		if (!currentObjAnimations.ContainsKey($"{animationKey}_{name}")) {
+		if (!currentObjAnimations.ContainsKey($"{animationKey}_{name}"))
+		{
 			//starts attribute changing
 			//arguments: <start value>,<end value>,<easing type>,<calc type>
 			var chip = this.NewEventChipAtDefCursor(channelNo, 0);
@@ -2390,15 +2841,19 @@ internal class CTja : CActivity {
 
 			// チップを配置。
 			this.listChip.Add(chip);
-		} else {
+		}
+		else
+		{
 			this.AddCommandError(command, argument, $"Missing {commandEnd}");
 		}
 	}
 
-	private void ParseArgObjEndCommand(string command, string argument, int channelNo, string animationKey, string commandStart) {
+	private void ParseArgObjEndCommand(string command, string argument, int channelNo, string animationKey, string commandStart)
+	{
 		string name = argument;
 
-		if (currentObjAnimations.ContainsKey($"{animationKey}_{name}")) {
+		if (currentObjAnimations.ContainsKey($"{animationKey}_{name}"))
+		{
 			//ends attribute changing
 			var chip = this.NewEventChipAtDefCursor(channelNo, 1);
 			chip.strObjName = argument;
@@ -2415,13 +2870,16 @@ internal class CTja : CActivity {
 
 			// チップを配置。
 			this.listChip.Add(chip);
-		} else {
+		}
+		else
+		{
 			this.AddCommandError(command, argument, $"Missing {commandStart}");
 		}
 	}
 
 	private static Easing.CalcType TjaArgToEasingCalcType(string type)
-		=> type switch {
+		=> type switch
+		{
 			"CUBIC" => Easing.CalcType.Cubic,
 			"QUARTIC" => Easing.CalcType.Quartic,
 			"QUINTIC" => Easing.CalcType.Quintic,
@@ -2432,7 +2890,8 @@ internal class CTja : CActivity {
 			"QUADRATIC" or _ => Easing.CalcType.Quadratic,
 		};
 
-	private void InitializeChartDefinitionBody() {
+	private void InitializeChartDefinitionBody()
+	{
 		// apply global offset
 		var msOFFSET_Signed = this.isOFFSET_Negative ? -this.msOFFSET_Abs : this.msOFFSET_Abs;
 		msOFFSET_Signed += OpenNijiiroRW.ConfigIni.nGlobalOffsetMs;
@@ -2469,9 +2928,11 @@ internal class CTja : CActivity {
 		this.listChip.Add(chipMovie);
 	}
 
-	void t現在のチップ情報を記録する(bool bInPut) {
+	void t現在のチップ情報を記録する(bool bInPut)
+	{
 		//2020.04.21 こうなってしまったのは仕方がないな。。
-		if (bInPut) {
+		if (bInPut)
+		{
 			#region [ 記録する ]
 			cBranchStart.dbTime = this.dbNowTime;
 			cBranchStart.dbSCROLL = this.dbNowScroll;
@@ -2484,7 +2945,9 @@ internal class CTja : CActivity {
 			cBranchStart.db移動待機時刻 = this.db移動待機時刻;
 			cBranchStart.db出現時刻 = this.db出現時刻;
 			#endregion
-		} else {
+		}
+		else
+		{
 			#region [ 記録した情報をNow~に適応 ]
 			this.dbNowTime = cBranchStart.dbTime;
 			this.dbNowScroll = cBranchStart.dbSCROLL;
@@ -2505,7 +2968,8 @@ internal class CTja : CActivity {
 	/// </summary>
 	/// <param name="listChips"></param>
 	/// <returns></returns>
-	private CChip c一小節前の小節線情報を返す(List<CChip> listChips, EBranchConditionType e分岐種類, bool b分岐前の連打開始 = false) {
+	private CChip c一小節前の小節線情報を返す(List<CChip> listChips, EBranchConditionType e分岐種類, bool b分岐前の連打開始 = false)
+	{
 		//2020.04.20 c一小節前の小節線情報を返すMethodを追加
 		//連打分岐時は現在の小節以降の連打の終わり部分の時刻を取得する
 
@@ -2513,19 +2977,25 @@ internal class CTja : CActivity {
 
 		//--して取得しないとだめよ～ダメダメ💛
 		//:damedane:
-		for (int i = listChips.Count - 1; i >= 0; i--) {
-			if (b分岐前の連打開始) {
+		for (int i = listChips.Count - 1; i >= 0; i--)
+		{
+			if (b分岐前の連打開始)
+			{
 				//if (listChips[i].nチャンネル番号 == 0x15 || listChips[i].nチャンネル番号 == 0x16)
-				if (NotesManager.IsRoll(listChips[i]) || NotesManager.IsFuzeRoll(listChips[i])) {
+				if (NotesManager.IsRoll(listChips[i]) || NotesManager.IsFuzeRoll(listChips[i]))
+				{
 					if (nReturnChip == null)
 						nReturnChip = i;
 
 					//ReturnChipがnullであったら適応
 				}
-			} else {
+			}
+			else
+			{
 				var Flag = e分岐種類 == EBranchConditionType.Drumroll ? 0x18 : 0x50;
 
-				if (listChips[i].nChannelNo == Flag) {
+				if (listChips[i].nChannelNo == Flag)
+				{
 					if (nReturnChip == null)
 						nReturnChip = i;
 					//ReturnChipがnullであったら適応
@@ -2537,38 +3007,52 @@ internal class CTja : CActivity {
 		return listChips[nReturnChip == null ? listChips.Count - 1 : (int)nReturnChip];
 	}
 
-	private void WarnSplitLength(string name, string[] strArray, int minimumLength) {
-		if (strArray.Length < minimumLength) {
+	private void WarnSplitLength(string name, string[] strArray, int minimumLength)
+	{
+		if (strArray.Length < minimumLength)
+		{
 			this.AddWarn($"Insufficient arguments to command {name}. Needs at least {minimumLength} but got {strArray.Length}.");
 		}
 	}
 
-	private void t入力_行解析譜面_V4(string InputText) {
-		if (!String.IsNullOrEmpty(InputText)) {
+	private void t入力_行解析譜面_V4(string InputText)
+	{
+		if (!String.IsNullOrEmpty(InputText))
+		{
 			int n文字数 = this.divsPerMeasureAllBranches[this.iNowMeasureAllBranches];
 
-			if (InputText.StartsWith("#")) {
+			if (InputText.StartsWith("#"))
+			{
 				// Call orders here
 				this.TryParseCommand(InputText);
 				return;
-			} else if (InputText.StartsWith("EXAM")) {
+			}
+			else if (InputText.StartsWith("EXAM"))
+			{
 				this.TryDanExamLoad(InputText);
 				return;
-			} else {
-				if (this.b小節線を挿入している == false) {
+			}
+			else
+			{
+				if (this.b小節線を挿入している == false)
+				{
 					// 小節線にもやってあげないと
 					// IsEndedBranchingがfalseで1回
 					// trueで3回だよ3回
-					for (int i = 0; i < (IsEndedBranching == true ? 3 : 1); i++) {
+					for (int i = 0; i < (IsEndedBranching == true ? 3 : 1); i++)
+					{
 						CChip chip = this.NewScrolledChipAtDefCursor(0x50, 0, n文字数, IsEndedBranching ? (ECourse)i : n現在のコース);
 						chip.n整数値 = this.n現在の小節数;
 						chip.n整数値_内部番号 = this.n現在の小節数;
 						chip.bHideBarLine = this.bBARLINECUE[0] == 1;
 						#region [ 作り直し ]
-						if (IsEndedBranching) {
+						if (IsEndedBranching)
+						{
 							if (this.IsBranchBarDraw[i])
 								chip.bBranch = true;
-						} else {
+						}
+						else
+						{
 							if (this.IsBranchBarDraw[(int)n現在のコース])
 								chip.bBranch = true;
 						}
@@ -2589,9 +3073,12 @@ internal class CTja : CActivity {
 					this.b小節線を挿入している = true;
 				}
 
-				for (int n = 0; n < InputText.Length; n++) {
-					if (InputText.Substring(n, 1) == ",") {
-						if (n文字数 == 0) {
+				for (int n = 0; n < InputText.Length; n++)
+				{
+					if (InputText.Substring(n, 1) == ",")
+					{
+						if (n文字数 == 0)
+						{
 							this.dbLastTime = this.dbNowTime;
 							this.dbLastBMScrollTime = this.dbNowBMScollTime;
 							this.dbNowTime += (15000.0 / this.dbNowBPM * (this.fNow_Measure_s / this.fNow_Measure_m) * (16.0 / 1));
@@ -2602,34 +3089,42 @@ internal class CTja : CActivity {
 						this.b小節線を挿入している = false;
 						return;
 					}
-					if (string.IsNullOrWhiteSpace(InputText.Substring(n, 1))) {
+					if (string.IsNullOrWhiteSpace(InputText.Substring(n, 1)))
+					{
 						continue; // skip whitespaces
 					}
 
-					if (InputText.Substring(0, 1) == "F") {
+					if (InputText.Substring(0, 1) == "F")
+					{
 						bool bTest = true;
 					}
 
 
 					int nObjectNum = this.CharConvertNote(InputText.Substring(n, 1));
 
-					if (nObjectNum != 0) {
+					if (nObjectNum != 0)
+					{
 						// IsEndedBranchingがfalseで1回
 						// trueで3回だよ3回
-						for (int i = 0; i < (IsEndedBranching == true ? 3 : 1); i++) {
+						for (int i = 0; i < (IsEndedBranching == true ? 3 : 1); i++)
+						{
 							ECourse branch = this.IsEndedBranching ? (ECourse)i : this.n現在のコース;
 							int iBranch = (int)branch;
 
 							// TODO: add judge-by-note-type methods to NotesManager
 							bool isRollHead = (nObjectNum >= 5 && nObjectNum <= 7) || nObjectNum == 9 || nObjectNum == 13 || nObjectNum == 16 || nObjectNum == 17;
-							if (this.nNowRollCountBranch[iBranch] >= 0) {
-								if (isRollHead) {
+							if (this.nNowRollCountBranch[iBranch] >= 0)
+							{
+								if (isRollHead)
+								{
 									// repeated roll head; treated as blank
 									continue; // process this note symbol in the next branch
 								}
-								if (nObjectNum != 8) {
+								if (nObjectNum != 8)
+								{
 									// TaikoJiro compatibility: A non-roll ends an unended roll
-									if (branch == ECourse.eNormal || this.bHasBranch[this.n参照中の難易度]) {
+									if (branch == ECourse.eNormal || this.bHasBranch[this.n参照中の難易度])
+									{
 										this.AddWarn(this.bHasBranch[this.n参照中の難易度] ?
 											$"An unended roll is ended by a non-roll of type {nObjectNum} in branch {branch} at measure {this.n現在の小節数}. Input: {InputText}"
 											: $"An unended roll is ended by a non-roll of type {nObjectNum} at measure {this.n現在の小節数}. Input: {InputText}"
@@ -2640,16 +3135,20 @@ internal class CTja : CActivity {
 								}
 							}
 
-							if (isRollHead) {
+							if (isRollHead)
+							{
 								// real roll head; predict chip index
 								this.nNowRollCountBranch[iBranch] = listChip_Branch[iBranch].Count;
 							}
 
-							if (nObjectNum < 0) {
+							if (nObjectNum < 0)
+							{
 								this.AddWarn(this.bHasBranch[this.n参照中の難易度] ?
 									$"Unknown note symbol {InputText.Substring(n, 1)} treated as a non-roll blank in branch {branch} at measure {this.n現在の小節数}. Input: {InputText}"
 									: $"Unknown note symbol {InputText.Substring(n, 1)} treated as a non-roll blank at measure {this.n現在の小節数}. Input: {InputText}");
-							} else {
+							}
+							else
+							{
 								InsertNoteAtDefCursor(nObjectNum, n, n文字数, branch);
 							}
 						}
@@ -2667,7 +3166,8 @@ internal class CTja : CActivity {
 	}
 
 	private CChip NewEventChipAtDefCursor(int channelNo, int argIndex = default, int argInt = default, double argDb = default)
-		=> new() {
+		=> new()
+		{
 			nChannelNo = channelNo,
 			n発声位置 = (this.n現在の小節数 * 384),
 			dbBPM = this.dbNowBPM,
@@ -2682,7 +3182,8 @@ internal class CTja : CActivity {
 			n整数値_内部番号 = argIndex,
 		};
 
-	private CChip NewScrolledChipAtDefCursor(int channelNo, int iDiv, int divsPerMeasure, ECourse branch) {
+	private CChip NewScrolledChipAtDefCursor(int channelNo, int iDiv, int divsPerMeasure, ECourse branch)
+	{
 		CChip chip = this.NewEventChipAtDefCursor(channelNo);
 		chip.n発声位置 = (int)((this.n現在の小節数 * 384.0) + ((384.0 * iDiv) / divsPerMeasure));
 		chip.n文字数 = divsPerMeasure;
@@ -2695,7 +3196,8 @@ internal class CTja : CActivity {
 		return chip;
 	}
 
-	private void InsertNoteAtDefCursor(int noteType, int iDiv, int divsPerMeasure, ECourse branch) {
+	private void InsertNoteAtDefCursor(int noteType, int iDiv, int divsPerMeasure, ECourse branch)
+	{
 		int iBranch = (int)branch;
 
 		CChip chip = this.NewScrolledChipAtDefCursor(0x10 + noteType, iDiv, divsPerMeasure, branch);
@@ -2713,26 +3215,36 @@ internal class CTja : CActivity {
 		chip.nPlayerSide = this.nPlayerSide;
 		chip.bGOGOTIME = this.bGOGOTIME;
 
-		if (NotesManager.IsKusudama(chip)) {
-			if (IsEndedBranching) {
-			} else {
+		if (NotesManager.IsKusudama(chip))
+		{
+			if (IsEndedBranching)
+			{
+			}
+			else
+			{
 				// Balloon in branches
 				chip.nChannelNo = 0x19;
 			}
 		}
 
-		if (NotesManager.IsGenericBalloon(chip)) {
+		if (NotesManager.IsGenericBalloon(chip))
+		{
 			//this.n現在のコースをswitchで分岐していたため風船の値がうまく割り当てられていない 2020.04.21 akasoko26
 			var listBalloon = this.listBalloon_Branch[iBranch];
-			if (listBalloon.Count == 0) {
+			if (listBalloon.Count == 0)
+			{
 				chip.nBalloon = 5;
-			} else if (listBalloon.Count > this.listBalloon_Branch_数値管理[iBranch]) {
+			}
+			else if (listBalloon.Count > this.listBalloon_Branch_数値管理[iBranch])
+			{
 				chip.nBalloon = listBalloon[this.listBalloon_Branch_数値管理[iBranch]];
 				this.listBalloon_Branch_数値管理[iBranch]++;
 			}
 		}
-		if (NotesManager.IsRollEnd(chip)) {
-			if (this.nNowRollCountBranch[iBranch] < 0) {
+		if (NotesManager.IsRollEnd(chip))
+		{
+			if (this.nNowRollCountBranch[iBranch] < 0)
+			{
 				// stray roll end; treated as blank
 				return; // process this note symbol in the next branch
 			}
@@ -2747,13 +3259,15 @@ internal class CTja : CActivity {
 			this.nNowRollCountBranch[iBranch] = -1;
 		}
 
-		if (IsEnabledFixSENote) {
+		if (IsEnabledFixSENote)
+		{
 			chip.IsFixedSENote = true;
 			chip.nSenote = FixSENote - 1;
 		}
 
 		#region[ 固定される種類のsenotesはここで設定しておく。 ]
-		chip.nSenote = noteType switch {
+		chip.nSenote = noteType switch
+		{
 			3 => 5,
 			4 => 6,
 			5 => 7,
@@ -2770,58 +3284,78 @@ internal class CTja : CActivity {
 		#endregion
 
 
-		if (NotesManager.IsMissableNote(chip)) {
+		if (NotesManager.IsMissableNote(chip))
+		{
 			//譜面分岐がない譜面でも値は加算されてしまうがしゃあない
 			//分岐を開始しない間は共通譜面としてみなす。
 			this.nノーツ数_Branch[iBranch]++;
-			if (branch == (IsEndedBranching ? ECourse.eNormal : ECourse.eMaster)) {
-				if (this.n参照中の難易度 == (int)Difficulty.Dan) {
+			if (branch == (IsEndedBranching ? ECourse.eNormal : ECourse.eMaster))
+			{
+				if (this.n参照中の難易度 == (int)Difficulty.Dan)
+				{
 					this.nDan_NotesCount[List_DanSongs.Count - 1]++;
 					if (NotesManager.IsADLIB(chip))
 						this.nDan_AdLibCount[List_DanSongs.Count - 1]++;
 					else if (NotesManager.IsMine(chip))
 						this.nDan_MineCount[List_DanSongs.Count - 1]++;
 				}
-				if (IsEndedBranching) {
+				if (IsEndedBranching)
+				{
 					this.nノーツ数[3]++;
 				}
 			}
-		} else if (NotesManager.IsGenericBalloon(chip)) {
-			if (branch == (IsEndedBranching ? ECourse.eNormal : ECourse.eMaster) && this.n参照中の難易度 == (int)Difficulty.Dan) {
+		}
+		else if (NotesManager.IsGenericBalloon(chip))
+		{
+			if (branch == (IsEndedBranching ? ECourse.eNormal : ECourse.eMaster) && this.n参照中の難易度 == (int)Difficulty.Dan)
+			{
 				this.nDan_BalloonHitCount[List_DanSongs.Count - 1] += chip.nBalloon;
 			}
-		} else if (NotesManager.IsGenericRoll(chip) && !NotesManager.IsRollEnd(chip)) {
-			if (branch == (IsEndedBranching ? ECourse.eNormal : ECourse.eMaster) && this.n参照中の難易度 == (int)Difficulty.Dan) {
+		}
+		else if (NotesManager.IsGenericRoll(chip) && !NotesManager.IsRollEnd(chip))
+		{
+			if (branch == (IsEndedBranching ? ECourse.eNormal : ECourse.eMaster) && this.n参照中の難易度 == (int)Difficulty.Dan)
+			{
 				this.nDan_BarRollCount[List_DanSongs.Count - 1]++;
 				if (NotesManager.IsFuzeRoll(chip))
 					this.nDan_MineCount[List_DanSongs.Count - 1]++;
 			}
 		}
 
-		if (IsEndedBranching) {
+		if (IsEndedBranching)
+		{
 			this.listChip_Branch[iBranch].Add(chip);
-			if (branch == ECourse.eNormal) {
+			if (branch == ECourse.eNormal)
+			{
 				this.listChip.Add(chip);
 				this.listNoteChip.Add(chip);
 			}
-		} else {
+		}
+		else
+		{
 			this.listChip_Branch[(int)chip.nBranch].Add(chip);
 			this.listChip.Add(chip);
 			this.listNoteChip.Add(chip);
 		}
 	}
 
-	private void TryParsePlayerSideHeader(string InputText) {
+	private void TryParsePlayerSideHeader(string InputText)
+	{
 		// pre-#START commands
-		if (OpenNijiiroRW.actEnumSongs != null && OpenNijiiroRW.actEnumSongs.IsDeActivated) {
-			if (InputText.Equals("#NMSCROLL")) {
+		if (OpenNijiiroRW.actEnumSongs != null && OpenNijiiroRW.actEnumSongs.IsDeActivated)
+		{
+			if (InputText.Equals("#NMSCROLL"))
+			{
 				eScrollMode = EScrollMode.Normal;
 				return;
-			} else if (InputText.Equals("#HBSCROLL")) {
+			}
+			else if (InputText.Equals("#HBSCROLL"))
+			{
 				eScrollMode = EScrollMode.HBScroll;
 				return;
 			}
-			if (InputText.Equals("#BMSCROLL")) {
+			if (InputText.Equals("#BMSCROLL"))
+			{
 				eScrollMode = EScrollMode.BMScroll;
 				return;
 			}
@@ -2831,13 +3365,17 @@ internal class CTja : CActivity {
 		string strCommandName = "";
 		string strCommandParam = "";
 
-		if (strArray.Length == 2) {
+		if (strArray.Length == 2)
+		{
 			strCommandName = strArray[0].Trim();
 			strCommandParam = strArray[1].Trim();
 		}
-		try {
+		try
+		{
 			this.ParsePerPlayerSideHeader(strCommandName, strCommandParam);
-		} catch (Exception ex) {
+		}
+		catch (Exception ex)
+		{
 			this.AddCommandError(strCommandName, strCommandParam, ex);
 		}
 	}
@@ -2847,94 +3385,131 @@ internal class CTja : CActivity {
 	/// (BALLOONなど。)
 	/// </summary>
 	/// <param name="InputText"></param>
-	private void ParsePerPlayerSideHeader(string strCommandName, string strCommandParam) {
-		void ParseOptionalInt16(Action<short> setValue) {
+	private void ParsePerPlayerSideHeader(string strCommandName, string strCommandParam)
+	{
+		void ParseOptionalInt16(Action<short> setValue)
+		{
 			this.ParseOptionalInt16(strCommandName, strCommandParam, setValue);
 		}
 
-		if (strCommandName.Equals("BALLOON") || strCommandName.Equals("BALLOONNOR")) {
+		if (strCommandName.Equals("BALLOON") || strCommandName.Equals("BALLOONNOR"))
+		{
 			ParseBalloon(strCommandName, strCommandParam, ref this.listBalloon_Branch[(int)ECourse.eNormal]);
-		} else if (strCommandName.Equals("BALLOONEXP")) {
+		}
+		else if (strCommandName.Equals("BALLOONEXP"))
+		{
 			ParseBalloon(strCommandName, strCommandParam, ref this.listBalloon_Branch[(int)ECourse.eExpert]);
 			//tbBALLOON.WindowTitle = strCommandParam;
-		} else if (strCommandName.Equals("BALLOONMAS")) {
+		}
+		else if (strCommandName.Equals("BALLOONMAS"))
+		{
 			ParseBalloon(strCommandName, strCommandParam, ref this.listBalloon_Branch[(int)ECourse.eMaster]);
 			//tbBALLOON.WindowTitle = strCommandParam;
-		} else if (strCommandName.Equals("SCOREMODE")) {
+		}
+		else if (strCommandName.Equals("SCOREMODE"))
+		{
 			ParseOptionalInt16(value => this.nScoreMode = value);
-		} else if (strCommandName.Equals("SCOREINIT")) {
-			if (!string.IsNullOrEmpty(strCommandParam)) {
+		}
+		else if (strCommandName.Equals("SCOREINIT"))
+		{
+			if (!string.IsNullOrEmpty(strCommandParam))
+			{
 				string[] scoreinit = strCommandParam.Split(',');
 
-				this.ParseOptionalInt16("SCOREINIT first value", scoreinit[0], value => {
+				this.ParseOptionalInt16("SCOREINIT first value", scoreinit[0], value =>
+				{
 					this.nScoreInit[0, this.n参照中の難易度] = value;
 					this.b配点が指定されている[0, this.n参照中の難易度] = true;
 				});
 
-				if (scoreinit.Length == 2) {
-					this.ParseOptionalInt16("SCOREINIT second value", scoreinit[1], value => {
+				if (scoreinit.Length == 2)
+				{
+					this.ParseOptionalInt16("SCOREINIT second value", scoreinit[1], value =>
+					{
 						this.nScoreInit[1, this.n参照中の難易度] = value;
 						this.b配点が指定されている[2, this.n参照中の難易度] = true;
 					});
 				}
 			}
-		} else if (strCommandName.Equals("SCOREDIFF")) {
-			ParseOptionalInt16(value => {
+		}
+		else if (strCommandName.Equals("SCOREDIFF"))
+		{
+			ParseOptionalInt16(value =>
+			{
 				this.nScoreDiff[this.n参照中の難易度] = value;
 				this.b配点が指定されている[1, this.n参照中の難易度] = true;
 			});
-		} else if (strCommandName.Equals("SCOREMODE")) {
-			if (!string.IsNullOrEmpty(strCommandParam)) {
+		}
+		else if (strCommandName.Equals("SCOREMODE"))
+		{
+			if (!string.IsNullOrEmpty(strCommandParam))
+			{
 				this.nScoreMode = Convert.ToInt16(strCommandParam);
 			}
-		} else if (strCommandName.Equals("SCOREINIT")) {
-			if (!string.IsNullOrEmpty(strCommandParam)) {
+		}
+		else if (strCommandName.Equals("SCOREINIT"))
+		{
+			if (!string.IsNullOrEmpty(strCommandParam))
+			{
 				string[] scoreinit = strCommandParam.Split(',');
 
 				this.nScoreInit[0, this.n参照中の難易度] = Convert.ToInt16(scoreinit[0]);
 				this.b配点が指定されている[0, this.n参照中の難易度] = true;
-				if (scoreinit.Length == 2) {
+				if (scoreinit.Length == 2)
+				{
 					this.nScoreInit[1, this.n参照中の難易度] = Convert.ToInt16(scoreinit[1]);
 					this.b配点が指定されている[2, this.n参照中の難易度] = true;
 				}
 			}
-		} else if (strCommandName.Equals("SCOREDIFF")) {
-			if (!string.IsNullOrEmpty(strCommandParam)) {
+		}
+		else if (strCommandName.Equals("SCOREDIFF"))
+		{
+			if (!string.IsNullOrEmpty(strCommandParam))
+			{
 				this.nScoreDiff[this.n参照中の難易度] = Convert.ToInt16(strCommandParam);
 				this.b配点が指定されている[1, this.n参照中の難易度] = true;
 			}
 		}
 	}
 
-	private void TryDanExamLoad(string input) {
+	private void TryDanExamLoad(string input)
+	{
 		string[] strArray = input.Split(new char[] { ':' }, 2);
 		string strCommandName = "";
 		string strCommandParam = "";
 
-		if (strArray.Length == 2) {
+		if (strArray.Length == 2)
+		{
 			strCommandName = strArray[0].Trim();
 			strCommandParam = strArray[1].Trim();
 		}
 
-		try {
+		try
+		{
 			this.tDanExamLoad(strCommandName, strCommandParam);
-		} catch (Exception ex) {
+		}
+		catch (Exception ex)
+		{
 			this.AddCommandError(strCommandName, strCommandParam, ex);
 		}
 	}
 
-	private void tDanExamLoad(string strCommandName, string strCommandParam) {
+	private void tDanExamLoad(string strCommandName, string strCommandParam)
+	{
 		// Adapt to EXAM until 7, optimise condition
 
-		if (strCommandName.StartsWith("EXAM")) {
-			if (!string.IsNullOrEmpty(strCommandParam)) {
+		if (strCommandName.StartsWith("EXAM"))
+		{
+			if (!string.IsNullOrEmpty(strCommandParam))
+			{
 				int[] examValue;
 				var splitExam = strCommandParam.Split(',');
 				int examNumber = int.Parse(strCommandName.Substring(4)) - 1;
 
 				if (examNumber > CExamInfo.cMaxExam)
 					return;
-				var examType = splitExam[0] switch {
+				var examType = splitExam[0] switch
+				{
 					"jp" => Exam.Type.JudgePerfect,
 					"jg" => Exam.Type.JudgeGood,
 					"jb" => Exam.Type.JudgeBad,
@@ -2949,7 +3524,8 @@ internal class CTja : CActivity {
 				};
 				examValue = new int[] { int.Parse(splitExam[1]), int.Parse(splitExam[2]) };
 
-				var examRange = splitExam[3] switch {
+				var examRange = splitExam[3] switch
+				{
 					"l" => Exam.Range.Less,
 					"m" or _ => Exam.Range.More,
 				};
@@ -2962,30 +3538,40 @@ internal class CTja : CActivity {
 		}
 	}
 
-	private void ParseOptionalInt16(string name, string unparsedValue, Action<short> setValue) {
-		if (string.IsNullOrEmpty(unparsedValue)) {
+	private void ParseOptionalInt16(string name, string unparsedValue, Action<short> setValue)
+	{
+		if (string.IsNullOrEmpty(unparsedValue))
+		{
 			return;
 		}
 
-		if (short.TryParse(unparsedValue, out var value)) {
+		if (short.TryParse(unparsedValue, out var value))
+		{
 			setValue(value);
-		} else {
+		}
+		else
+		{
 			this.AddWarn($"Command {name} has invalid argument: {unparsedValue}");
 		}
 	}
 
 
-	private void ParseBalloon(string strCommandName, string strCommandParam, ref List<int> listBalloon) {
+	private void ParseBalloon(string strCommandName, string strCommandParam, ref List<int> listBalloon)
+	{
 		string[] strParam = strCommandParam.Split(',');
 		var listTmp = new List<int>(strParam.Length);
-		for (int n = 0; n < strParam.Length; n++) {
+		for (int n = 0; n < strParam.Length; n++)
+		{
 			int n打数;
-			try {
+			try
+			{
 				if (strParam[n] == null || strParam[n] == "")
 					break;
 
 				n打数 = Convert.ToInt32(strParam[n]);
-			} catch (Exception ex) {
+			}
+			catch (Exception ex)
+			{
 				this.AddCommandError(strCommandName, strCommandParam, ex);
 				return;
 			}
@@ -2996,8 +3582,10 @@ internal class CTja : CActivity {
 		listBalloon = listTmp;
 	}
 
-	private void TryParseGlobalHeader(string InputText) {
-		if (InputText.StartsWith("#BRANCHSTART")) {
+	private void TryParseGlobalHeader(string InputText)
+	{
+		if (InputText.StartsWith("#BRANCHSTART"))
+		{
 			//2015.08.18 kairera0467
 			//本来はヘッダ命令ではありませんが、難易度ごとに違う項目なのでここで読み込ませます。
 			//Lengthのチェックをされる前ににif文を入れています。
@@ -3010,64 +3598,94 @@ internal class CTja : CActivity {
 		string strCommandParam = "";
 
 		//まずは「:」でSplitして割り当てる。
-		if (strArray.Length == 2) {
+		if (strArray.Length == 2)
+		{
 			strCommandName = strArray[0].Trim();
 			strCommandParam = strArray[1].Trim();
 		}
 
-		try {
+		try
+		{
 			this.ParseGlobalHeader(strCommandName, strCommandParam);
-		} catch (Exception ex) {
+		}
+		catch (Exception ex)
+		{
 			this.AddCommandError(strCommandName, strCommandParam, ex);
 		}
 	}
 
-	private void ParseGlobalHeader(string strCommandName, string strCommandParam) {
-		void ParseOptionalInt16(Action<short> setValue) {
+	private void ParseGlobalHeader(string strCommandName, string strCommandParam)
+	{
+		void ParseOptionalInt16(Action<short> setValue)
+		{
 			this.ParseOptionalInt16(strCommandName, strCommandParam, setValue);
 		}
 
 		//パラメータを分別、そこから割り当てていきます。
-		if (strCommandName.Equals("TITLE")) {
+		if (strCommandName.Equals("TITLE"))
+		{
 			this.TITLE.SetString("default", strCommandParam);
-		} else if (strCommandName.StartsWith("TITLE")) {
+		}
+		else if (strCommandName.StartsWith("TITLE"))
+		{
 			string _lang = strCommandName.Substring(5).ToLowerInvariant();
 			this.TITLE.SetString(_lang, strCommandParam);
-		} else if (strCommandName.Equals("SUBTITLE")) {
+		}
+		else if (strCommandName.Equals("SUBTITLE"))
+		{
 			if (strCommandParam.StartsWith("--") || strCommandParam.StartsWith("++"))
 				this.SUBTITLE.SetString("default", strCommandParam.Substring(2));
 			else
 				this.SUBTITLE.SetString("default", strCommandParam);
-		} else if (strCommandName.StartsWith("SUBTITLE")) {
+		}
+		else if (strCommandName.StartsWith("SUBTITLE"))
+		{
 			string _lang = strCommandName.Substring(8).ToLowerInvariant();
 			this.SUBTITLE.SetString(_lang, strCommandParam);
-		} else if (strCommandName.Equals("LEVEL")) {
+		}
+		else if (strCommandName.Equals("LEVEL"))
+		{
 			var level_dec = Convert.ToDouble(strCommandParam);
 			var level = (int)level_dec;
-			if (strCommandParam != level.ToString()) {
+			if (strCommandParam != level.ToString())
+			{
 				int frac_part = Int32.Parse(level_dec.ToString("0.0", CultureInfo.InvariantCulture).Split('.')[1]);
 				this.LEVELtaikoIcon[this.n参照中の難易度] = (frac_part >= 5) ? ELevelIcon.ePlus : ELevelIcon.eMinus;
 			}
 			this.LEVEL.Drums = (int)level;
 			this.LEVEL.Taiko = (int)level;
 			this.LEVELtaiko[this.n参照中の難易度] = (int)level;
-		} else if (strCommandName.StartsWith("NOTESDESIGNER")) {
+		}
+		else if (strCommandName.StartsWith("NOTESDESIGNER"))
+		{
 			this.NOTESDESIGNER[this.n参照中の難易度] = strCommandParam;
-		} else if (strCommandName.Equals("LIFE")) {
+		}
+		else if (strCommandName.Equals("LIFE"))
+		{
 			// LIFE here
 			var life = (int)Convert.ToDouble(strCommandParam);
 			this.LIFE = life;
-		} else if (strCommandName.Equals("PREIMAGE")) {
+		}
+		else if (strCommandName.Equals("PREIMAGE"))
+		{
 			this.PREIMAGE = strCommandParam;
-		} else if (strCommandName.Equals("TOWERTYPE")) {
+		}
+		else if (strCommandName.Equals("TOWERTYPE"))
+		{
 			this.TOWERTYPE = strCommandParam;
-		} else if (strCommandName.Equals("DANTICK")) {
+		}
+		else if (strCommandName.Equals("DANTICK"))
+		{
 			var tick = (int)Convert.ToDouble(strCommandParam);
 			this.DANTICK = tick;
-		} else if (strCommandName.Equals("DANTICKCOLOR")) {
+		}
+		else if (strCommandName.Equals("DANTICKCOLOR"))
+		{
 			var tickcolor = ColorTranslator.FromHtml(strCommandParam);
 			this.DANTICKCOLOR = tickcolor;
-		} else if (strCommandName.Equals("BPM")) {
+		}
+		else if (strCommandName.Equals("BPM"))
+		{
 			if (strCommandParam.IndexOf(",") != -1)
 				strCommandParam = strCommandParam.Replace(',', '.');
 
@@ -3077,13 +3695,19 @@ internal class CTja : CActivity {
 			this.MinBPM = dbBPM;
 			this.MaxBPM = dbBPM;
 			this.dbNowBPM = dbBPM;
-		} else if (strCommandName.Equals("WAVE")) {
-			if (strBGM_PATH != null) {
+		}
+		else if (strCommandName.Equals("WAVE"))
+		{
+			if (strBGM_PATH != null)
+			{
 				this.AddWarn($"ignoring an extra WAVE header, argument: {strCommandParam}");
-			} else {
+			}
+			else
+			{
 				this.strBGM_PATH = CDTXCompanionFileFinder.FindFileName(this.strFolderPath, strFileName, strCommandParam);
 				//tbWave.WindowTitle = strCommandParam;
-				if (this.listWAV != null) {
+				if (this.listWAV != null)
+				{
 					// 2018-08-27 twopointzero - DO attempt to load (or queue scanning) loudness metadata here.
 					//                           TJAP3 is either launching, enumerating songs, or is about to
 					//                           begin playing a song. If metadata is available, we want it now.
@@ -3091,7 +3715,8 @@ internal class CTja : CActivity {
 					var absoluteBgmPath = Path.Combine(this.strFolderPath, this.strBGM_PATH);
 					this.SongLoudnessMetadata = LoudnessMetadataScanner.LoadForAudioPath(absoluteBgmPath);
 
-					var wav = new CWAV() {
+					var wav = new CWAV()
+					{
 						n内部番号 = this.n内部番号WAV1to,
 						n表記上の番号 = 1,
 						nチップサイズ = this.n無限管理SIZE[this.n内部番号WAV1to],
@@ -3106,14 +3731,18 @@ internal class CTja : CActivity {
 					this.n内部番号WAV1to++;
 				}
 			}
-		} else if (strCommandName.Equals("OFFSET") && !string.IsNullOrEmpty(strCommandParam)) {
+		}
+		else if (strCommandName.Equals("OFFSET") && !string.IsNullOrEmpty(strCommandParam))
+		{
 			this.msOFFSET_Abs = (int)(Convert.ToDouble(strCommandParam) * 1000);
 			this.isOFFSET_Negative = this.msOFFSET_Abs < 0 ? true : false;
 
 			if (this.isOFFSET_Negative == true)
 				this.msOFFSET_Abs = this.msOFFSET_Abs * -1; //OFFSETは秒を加算するので、必ず正の数にすること。
 															//tbOFFSET.WindowTitle = strCommandParam;
-		} else if (strCommandName.Equals("MOVIEOFFSET")) {
+		}
+		else if (strCommandName.Equals("MOVIEOFFSET"))
+		{
 			this.msMOVIEOFFSET_Abs = (int)(Convert.ToDouble(strCommandParam) * 1000);
 			this.isMOVIEOFFSET_Negative = this.msMOVIEOFFSET_Abs < 0 ? true : false;
 
@@ -3122,33 +3751,50 @@ internal class CTja : CActivity {
 																	  //tbOFFSET.WindowTitle = strCommandParam;
 		}
 		#region[移動→不具合が起こるのでここも一応復活させておく]
-		else if (strCommandName.Equals("BALLOON") || strCommandName.Equals("BALLOONNOR")) {
+		else if (strCommandName.Equals("BALLOON") || strCommandName.Equals("BALLOONNOR"))
+		{
 			ParseBalloon(strCommandName, strCommandParam, ref this.listBalloon_Branch[(int)ECourse.eNormal]);
-		} else if (strCommandName.Equals("BALLOONEXP")) {
+		}
+		else if (strCommandName.Equals("BALLOONEXP"))
+		{
 			ParseBalloon(strCommandName, strCommandParam, ref this.listBalloon_Branch[(int)ECourse.eExpert]);
 			//tbBALLOON.WindowTitle = strCommandParam;
-		} else if (strCommandName.Equals("BALLOONMAS")) {
+		}
+		else if (strCommandName.Equals("BALLOONMAS"))
+		{
 			ParseBalloon(strCommandName, strCommandParam, ref this.listBalloon_Branch[(int)ECourse.eMaster]);
 			//tbBALLOON.WindowTitle = strCommandParam;
-		} else if (strCommandName.Equals("SCOREMODE")) {
+		}
+		else if (strCommandName.Equals("SCOREMODE"))
+		{
 			ParseOptionalInt16(value => this.nScoreMode = value);
-		} else if (strCommandName.Equals("SCOREINIT")) {
-			if (!string.IsNullOrEmpty(strCommandParam)) {
+		}
+		else if (strCommandName.Equals("SCOREINIT"))
+		{
+			if (!string.IsNullOrEmpty(strCommandParam))
+			{
 				string[] scoreinit = strCommandParam.Split(',');
 
-				this.ParseOptionalInt16("SCOREINIT first value", scoreinit[0], value => {
+				this.ParseOptionalInt16("SCOREINIT first value", scoreinit[0], value =>
+				{
 					this.nScoreInit[0, this.n参照中の難易度] = value;
 				});
 
-				if (scoreinit.Length == 2) {
-					this.ParseOptionalInt16("SCOREINIT second value", scoreinit[1], value => {
+				if (scoreinit.Length == 2)
+				{
+					this.ParseOptionalInt16("SCOREINIT second value", scoreinit[1], value =>
+					{
 						this.nScoreInit[1, this.n参照中の難易度] = value;
 					});
 				}
 			}
-		} else if (strCommandName.Equals("GAUGEINCR")) {
-			if (!string.IsNullOrEmpty(strCommandParam)) {
-				GaugeIncreaseMode = strCommandParam.ToLower() switch {
+		}
+		else if (strCommandName.Equals("GAUGEINCR"))
+		{
+			if (!string.IsNullOrEmpty(strCommandParam))
+			{
+				GaugeIncreaseMode = strCommandParam.ToLower() switch
+				{
 					"floor" => GaugeIncreaseMode.Floor,
 					"round" => GaugeIncreaseMode.Round,
 					"ceiling" => GaugeIncreaseMode.Ceiling,
@@ -3156,74 +3802,111 @@ internal class CTja : CActivity {
 					"normal" or _ => GaugeIncreaseMode.Normal,
 				};
 			}
-		} else if (strCommandName.Equals("SCOREDIFF")) {
+		}
+		else if (strCommandName.Equals("SCOREDIFF"))
+		{
 			ParseOptionalInt16(value => this.nScoreDiff[this.n参照中の難易度] = value);
 		}
 		#endregion
-		else if (strCommandName.Equals("SONGVOL") && !string.IsNullOrEmpty(strCommandParam)) {
+		else if (strCommandName.Equals("SONGVOL") && !string.IsNullOrEmpty(strCommandParam))
+		{
 			this.SongVol = Convert.ToInt32(strCommandParam).Clamp(CSound.MinimumSongVol, CSound.MaximumSongVol);
 
-			foreach (var kvp in this.listWAV) {
+			foreach (var kvp in this.listWAV)
+			{
 				kvp.Value.SongVol = this.SongVol;
 			}
-		} else if (strCommandName.Equals("SEVOL")) {
+		}
+		else if (strCommandName.Equals("SEVOL"))
+		{
 			//tbSeVol.WindowTitle = strCommandParam;
-		} else if (strCommandName.Equals("COURSE")) {
-			if (!string.IsNullOrEmpty(strCommandParam)) {
+		}
+		else if (strCommandName.Equals("COURSE"))
+		{
+			if (!string.IsNullOrEmpty(strCommandParam))
+			{
 				//this.n参照中の難易度 = Convert.ToInt16( strCommandParam );
 				this.n参照中の難易度 = this.strConvertCourse(strCommandParam);
 			}
-		} else if (strCommandName.Equals("HEADSCROLL")) {
+		}
+		else if (strCommandName.Equals("HEADSCROLL"))
+		{
 			//新定義:初期スクロール速度設定(というよりこのシステムに合わせるには必須。)
 			//どうしても一番最初に1小節挿入されるから、こうするしかなかったんだ___
 
 			this.dbScrollSpeed = Convert.ToDouble(strCommandParam);
-		} else if (strCommandName.Equals("GENRE")) {
+		}
+		else if (strCommandName.Equals("GENRE"))
+		{
 			//2015.03.28 kairera0467
 			//ジャンルの定義。DTXから入力もできるが、tjaからも入力できるようにする。
 			//日本語名だと選曲画面でバグが出るので、そこもどうにかしていく予定。
 
-			if (!string.IsNullOrEmpty(strCommandParam)) {
+			if (!string.IsNullOrEmpty(strCommandParam))
+			{
 				this.GENRE = strCommandParam;
 			}
-		} else if (strCommandName.Equals("MAKER")) {
-			if (!string.IsNullOrEmpty(strCommandParam)) {
+		}
+		else if (strCommandName.Equals("MAKER"))
+		{
+			if (!string.IsNullOrEmpty(strCommandParam))
+			{
 				this.MAKER = strCommandParam;
 			}
-		} else if (strCommandName.Equals("SIDE")) {
+		}
+		else if (strCommandName.Equals("SIDE"))
+		{
 			if (!string.IsNullOrEmpty(strCommandParam) && strCommandParam.Equals("Normal"))
 				this.SIDE = ESide.eNormal;
-		} else if (strCommandName.Equals("EXPLICIT")) {
-			if (!string.IsNullOrEmpty(strCommandParam)) {
+		}
+		else if (strCommandName.Equals("EXPLICIT"))
+		{
+			if (!string.IsNullOrEmpty(strCommandParam))
+			{
 				this.EXPLICIT = CConversion.bONorOFF(strCommandParam[0]);
 			}
-		} else if (strCommandName.Equals("SELECTBG")) {
-			if (!string.IsNullOrEmpty(strCommandParam)) {
+		}
+		else if (strCommandName.Equals("SELECTBG"))
+		{
+			if (!string.IsNullOrEmpty(strCommandParam))
+			{
 				this.SELECTBG = strCommandParam;
 			}
-		} else if (strCommandName.Equals("SCENEPRESET")) {
-			if (!string.IsNullOrEmpty(strCommandParam)) {
+		}
+		else if (strCommandName.Equals("SCENEPRESET"))
+		{
+			if (!string.IsNullOrEmpty(strCommandParam))
+			{
 				this.scenePreset = strCommandParam;
 			}
-		} else if (strCommandName.Equals("DEMOSTART")) {
+		}
+		else if (strCommandName.Equals("DEMOSTART"))
+		{
 			//2015.04.10 kairera0467
 
-			if (!string.IsNullOrEmpty(strCommandParam)) {
+			if (!string.IsNullOrEmpty(strCommandParam))
+			{
 				int nOFFSETms;
-				try {
+				try
+				{
 					nOFFSETms = (int)(Convert.ToDouble(strCommandParam) * 1000.0);
-				} catch {
+				}
+				catch
+				{
 					nOFFSETms = 0;
 				}
 
 
 				this.nデモBGMオフセット = nOFFSETms;
 			}
-		} else if (strCommandName.Equals("BGMOVIE")) {
+		}
+		else if (strCommandName.Equals("BGMOVIE"))
+		{
 			//2016.02.02 kairera0467
 			//背景動画の定義。DTXから入力もできるが、tjaからも入力できるようにする。
 
-			if (!string.IsNullOrEmpty(strCommandParam)) {
+			if (!string.IsNullOrEmpty(strCommandParam))
+			{
 				this.strBGVIDEO_PATH =
 					CDTXCompanionFileFinder.FindFileName(this.strFolderPath, strFileName, strCommandParam);
 			}
@@ -3234,24 +3917,30 @@ internal class CTja : CActivity {
 			else
 				strVideoFilename = this.strFolderPath + this.strBGVIDEO_PATH;
 
-			try {
+			try
+			{
 				CVideoDecoder vd = new CVideoDecoder(strVideoFilename);
 
 				if (this.listVD.ContainsKey(1))
 					this.listVD.Remove(1);
 
 				this.listVD.Add(1, vd);
-			} catch (Exception e) {
+			}
+			catch (Exception e)
+			{
 				this.AddWarn($"{strCommandName}: Exception when generating decoder for video {strVideoFilename}: {e.Message}; continued", e);
 				if (this.listVD.ContainsKey(1))
 					this.listVD.Remove(1);
 			}
-		} else if (strCommandName.Contains("BGA")) {
+		}
+		else if (strCommandName.Contains("BGA"))
+		{
 			//2016.02.02 kairera0467
 			//背景動画の定義。DTXから入力もできるが、tjaからも入力できるようにする。
 
 			string videoPath = "";
-			if (!string.IsNullOrEmpty(strCommandParam)) {
+			if (!string.IsNullOrEmpty(strCommandParam))
+			{
 				videoPath =
 					CDTXCompanionFileFinder.FindFileName(this.strFolderPath, strFileName, strCommandParam);
 			}
@@ -3262,29 +3951,40 @@ internal class CTja : CActivity {
 			else
 				strVideoFilename = this.strFolderPath + videoPath;
 
-			try {
+			try
+			{
 				CVideoDecoder vd = new CVideoDecoder(strVideoFilename);
 
 				var indexText = strCommandName.Remove(0, 3);
 
 				this.listVD.Add((10 * int.Parse(indexText[0].ToString())) + int.Parse(indexText[1].ToString()) + 2, vd);
-			} catch (Exception e) {
+			}
+			catch (Exception e)
+			{
 				this.AddWarn($"{strCommandName}: Exception when generating decoder for video {strVideoFilename}: {e.Message}; continued.", e);
 				if (this.listVD.ContainsKey(1))
 					this.listVD.Remove(1);
 			}
-		} else if (strCommandName.Equals("BGIMAGE")) {
+		}
+		else if (strCommandName.Equals("BGIMAGE"))
+		{
 			//2016.02.02 kairera0467
-			if (!string.IsNullOrEmpty(strCommandParam)) {
+			if (!string.IsNullOrEmpty(strCommandParam))
+			{
 				this.strBGIMAGE_PATH = strCommandParam;
 			}
-		} else if (strCommandName.Equals(".CUTSCENE_INTRO")) { // .CUTSCENE_INTRO:<path>,<repeat?>
+		}
+		else if (strCommandName.Equals(".CUTSCENE_INTRO"))
+		{ // .CUTSCENE_INTRO:<path>,<repeat?>
 			string[] args = SplitComma(strCommandParam);
 			string path = !(0 < args.Length) ? "" : CDTXCompanionFileFinder.FindFileName(this.strFolderPath, strFileName, args[0]);
 
-			if (string.IsNullOrEmpty(path)) {
+			if (string.IsNullOrEmpty(path))
+			{
 				this.CutSceneIntro = null;
-			} else {
+			}
+			else
+			{
 				string fullPath;
 				if (!string.IsNullOrEmpty(this.PATH_WAV))
 					fullPath = this.PATH_WAV + path;
@@ -3292,26 +3992,33 @@ internal class CTja : CActivity {
 					fullPath = this.strFolderPath + path;
 
 				ECutSceneRepeatMode repeatMode = ECutSceneRepeatMode.FirstMet;
-				if (1 < args.Length && !string.IsNullOrEmpty(args[1])) {
-					repeatMode = int.Parse(args[1]) switch {
+				if (1 < args.Length && !string.IsNullOrEmpty(args[1]))
+				{
+					repeatMode = int.Parse(args[1]) switch
+					{
 						< 0 => ECutSceneRepeatMode.UntilFirstUnmet,
 						> 0 => ECutSceneRepeatMode.EverytimeMet,
 						0 or _ => ECutSceneRepeatMode.FirstMet,
 					};
 				}
 
-				this.CutSceneIntro = new() {
+				this.CutSceneIntro = new()
+				{
 					FullPath = fullPath,
 					RepeatMode = repeatMode,
 				};
 			}
-		} else if (strCommandName.Equals(".CUTSCENE_OUTRO")) { // .CUTSCENE_OUTRO:<path>,<clear status>,<scope>,<repeat?>,...
+		}
+		else if (strCommandName.Equals(".CUTSCENE_OUTRO"))
+		{ // .CUTSCENE_OUTRO:<path>,<clear status>,<scope>,<repeat?>,...
 			List<CutSceneDef> outros = new();
 			string[] args = SplitComma(strCommandParam);
-			for (int iArg = 0; iArg < args.Length; iArg += 4) {
+			for (int iArg = 0; iArg < args.Length; iArg += 4)
+			{
 				string path = !(iArg + 0 < args.Length) ? "" : CDTXCompanionFileFinder.FindFileName(this.strFolderPath, strFileName, args[iArg + 0]);
 
-				if (!string.IsNullOrEmpty(path)) {
+				if (!string.IsNullOrEmpty(path))
+				{
 					string fullPath;
 					if (!string.IsNullOrEmpty(this.PATH_WAV))
 						fullPath = this.PATH_WAV + path;
@@ -3319,22 +4026,26 @@ internal class CTja : CActivity {
 						fullPath = this.strFolderPath + path;
 
 					BestPlayRecords.EClearStatus clearRequirement = BestPlayRecords.EClearStatus.NONE;
-					if (iArg + 1 < args.Length && !string.IsNullOrEmpty(args[iArg + 1])) {
+					if (iArg + 1 < args.Length && !string.IsNullOrEmpty(args[iArg + 1]))
+					{
 						clearRequirement = (BestPlayRecords.EClearStatus)int.Parse(args[iArg + 1]);
 					}
 
 					string requirementRange = !(iArg + 2 < args.Length) ? "me" : args[iArg + 2].Trim();
 
 					ECutSceneRepeatMode repeatMode = ECutSceneRepeatMode.FirstMet;
-					if (iArg + 3 < args.Length && !string.IsNullOrEmpty(args[iArg + 3])) {
-						repeatMode = int.Parse(args[iArg + 3]) switch {
+					if (iArg + 3 < args.Length && !string.IsNullOrEmpty(args[iArg + 3]))
+					{
+						repeatMode = int.Parse(args[iArg + 3]) switch
+						{
 							< 0 => ECutSceneRepeatMode.UntilFirstUnmet,
 							> 0 => ECutSceneRepeatMode.EverytimeMet,
 							0 or _ => ECutSceneRepeatMode.FirstMet,
 						};
 					}
 
-					outros.Add(new() {
+					outros.Add(new()
+					{
 						FullPath = fullPath,
 						ClearRequirement = clearRequirement,
 						RequirementRange = requirementRange,
@@ -3343,52 +4054,76 @@ internal class CTja : CActivity {
 				}
 			}
 			this.CutSceneOutros = outros;
-		} else if (strCommandName.Equals("HIDDENBRANCH")) {
+		}
+		else if (strCommandName.Equals("HIDDENBRANCH"))
+		{
 			//2016.04.01 kairera0467 パラメーターは
-			if (!string.IsNullOrEmpty(strCommandParam)) {
+			if (!string.IsNullOrEmpty(strCommandParam))
+			{
 				this.bHIDDENBRANCH = true;
 			}
-		} else if (strCommandName.Equals("LYRICS") && !usingLyricsFile && OpenNijiiroRW.ConfigIni.nPlayerCount < 4) {
-			if (!string.IsNullOrEmpty(strCommandParam)) {
+		}
+		else if (strCommandName.Equals("LYRICS") && !usingLyricsFile && OpenNijiiroRW.ConfigIni.nPlayerCount < 4)
+		{
+			if (!string.IsNullOrEmpty(strCommandParam))
+			{
 				string[] files = SplitComma(strCommandParam);
 				string[] filePaths = new string[files.Length];
-				for (int i = 0; i < files.Length; i++) {
+				for (int i = 0; i < files.Length; i++)
+				{
 					filePaths[i] = this.strFolderPath + files[i];
 
-					if (File.Exists(filePaths[i])) {
-						try {
-							if (OpenNijiiroRW.rCurrentStage.eStageID == CStage.EStage.SongLoading) {
-								if (filePaths[i].EndsWith(".vtt")) {
-									using (VTTParser parser = new VTTParser()) {
+					if (File.Exists(filePaths[i]))
+					{
+						try
+						{
+							if (OpenNijiiroRW.rCurrentStage.eStageID == CStage.EStage.SongLoading)
+							{
+								if (filePaths[i].EndsWith(".vtt"))
+								{
+									using (VTTParser parser = new VTTParser())
+									{
 										this.listLyric2.AddRange(parser.ParseVTTFile(filePaths[i], 0, 0));
 									}
 									this.bLyrics = true;
 									this.usingLyricsFile = true;
-								} else if (filePaths[i].EndsWith(".lrc")) {
+								}
+								else if (filePaths[i].EndsWith(".lrc"))
+								{
 									this.LyricFileParser(filePaths[i], i);
 									this.bLyrics = true;
 									this.usingLyricsFile = true;
 								}
 							}
-						} catch (Exception e) {
+						}
+						catch (Exception e)
+						{
 							this.AddWarn($"{strCommandName}: Something went wrong while parsing a lyric file at {filePaths[i]}: {e.Message}", e);
 						}
 					}
 				}
 			}
-		} else if (strCommandName.Equals("LYRICFILE") && !usingLyricsFile && OpenNijiiroRW.ConfigIni.nPlayerCount < 4) {
-			if (!string.IsNullOrEmpty(strCommandParam)) {
+		}
+		else if (strCommandName.Equals("LYRICFILE") && !usingLyricsFile && OpenNijiiroRW.ConfigIni.nPlayerCount < 4)
+		{
+			if (!string.IsNullOrEmpty(strCommandParam))
+			{
 				string[] strFiles = SplitComma(strCommandParam);
 				string[] strFilePath = new string[strFiles.Length];
-				for (int index = 0; index < strFiles.Length; index++) {
+				for (int index = 0; index < strFiles.Length; index++)
+				{
 					strFilePath[index] = this.strFolderPath + strFiles[index];
-					if (File.Exists(strFilePath[index])) {
-						try {
+					if (File.Exists(strFilePath[index]))
+					{
+						try
+						{
 							if (OpenNijiiroRW.rCurrentStage.eStageID == CStage.EStage.SongLoading)//起動時に重たくなってしまう問題の修正用
 								this.LyricFileParser(strFilePath[index], index);
 							this.bLyrics = true;
 							this.usingLyricsFile = true;
-						} catch {
+						}
+						catch
+						{
 							Console.WriteLine("lrcファイルNo.{0}の読み込みに失敗しましたが、", index);
 							Console.WriteLine("処理を続行します。");
 						}
@@ -3402,7 +4137,8 @@ internal class CTja : CActivity {
 	/// </summary>
 	/// <param name="str"></param>
 	/// <returns></returns>
-	public bool bIsNumber(char Char) {
+	public bool bIsNumber(char Char)
+	{
 		if ((Char >= '0') && (Char <= '9'))
 			return true;
 		else
@@ -3413,11 +4149,13 @@ internal class CTja : CActivity {
 	/// string型からint型に変換する。
 	/// TJAP2から持ってきた。
 	/// </summary>
-	private int CharConvertNote(string str) {
+	private int CharConvertNote(string str)
+	{
 		return (NotesManager.GetNoteValueFromChar(str));
 	}
 
-	private int strConvertCourse(string str) {
+	private int strConvertCourse(string str)
+	{
 		//2016.08.24 kairera0467
 		//正規表現を使っているため、easyでもEASYでもOK。
 
@@ -3425,13 +4163,16 @@ internal class CTja : CActivity {
 		// 相変わらず原始的なやり方だが、正常に動作した。
 		str = str.Trim();
 		string[] Matchptn = new string[7] { "easy", "normal", "hard", "oni", "edit", "tower", "dan" };
-		for (int i = 0; i < Matchptn.Length; i++) {
-			if (string.Equals(str, Matchptn[i], StringComparison.InvariantCultureIgnoreCase)) {
+		for (int i = 0; i < Matchptn.Length; i++)
+		{
+			if (string.Equals(str, Matchptn[i], StringComparison.InvariantCultureIgnoreCase))
+			{
 				return i;
 			}
 		}
 
-		if (int.TryParse(str, out int iDiff) && (iDiff >= 0 && iDiff <= 6)) {
+		if (int.TryParse(str, out int iDiff) && (iDiff >= 0 && iDiff <= 6))
+		{
 			return iDiff;
 		}
 		return 3;
@@ -3449,27 +4190,36 @@ internal class CTja : CActivity {
 		Regex timeRegexO = new Regex(@"^(\[)(\d{2})(:)(\d{2})(\])", RegexOptions.Multiline | RegexOptions.Compiled);
 		List<long> list;
 		using StringReader reader = new(str);
-		for (string? line; (line = reader.ReadLine()) != null;) {
+		for (string? line; (line = reader.ReadLine()) != null;)
+		{
 			list = new List<long>();
-			if (!String.IsNullOrEmpty(line)) {
-				if (line.StartsWith("[")) {
+			if (!String.IsNullOrEmpty(line))
+			{
+				if (line.StartsWith("["))
+				{
 					Match timestring = timeRegex.Match(line), timestringO = timeRegexO.Match(line);
-					while (timestringO.Success || timestring.Success) {
+					while (timestringO.Success || timestring.Success)
+					{
 						long time;
-						if (timestring.Success) {
+						if (timestring.Success)
+						{
 							time = Int32.Parse(timestring.Groups[2].Value) * 60000 + Int32.Parse(timestring.Groups[4].Value) * 1000 + Int32.Parse(timestring.Groups[6].Value) * 10;
 							line = line.Remove(0, 10);
-						} else if (timestringO.Success) {
+						}
+						else if (timestringO.Success)
+						{
 							time = Int32.Parse(timestringO.Groups[2].Value) * 60000 + Int32.Parse(timestringO.Groups[4].Value) * 1000;
 							line = line.Remove(0, 7);
-						} else
+						}
+						else
 							break;
 						list.Add(time);
 						timestring = timeRegex.Match(line);
 						timestringO = timeRegexO.Match(line);
 					}
 
-					for (int listindex = 0; listindex < list.Count; listindex++) {
+					for (int listindex = 0; listindex < list.Count; listindex++)
+					{
 						STLYRIC stlrc;
 						stlrc.Text = line;
 						stlrc.TextTex = this.pf歌詞フォント.DrawText(line, OpenNijiiroRW.Skin.Game_Lyric_ForeColor, OpenNijiiroRW.Skin.Game_Lyric_BackColor, null, 30);
@@ -3486,13 +4236,15 @@ internal class CTja : CActivity {
 	/// <summary>
 	/// 複素数のパースもどき
 	/// </summary>
-	private void tParsedComplexNumber(string strScroll, ref double[] dbScroll) {
+	private void tParsedComplexNumber(string strScroll, ref double[] dbScroll)
+	{
 		var cpx = strScroll.ParseComplex();
 		dbScroll[0] = cpx[0];
 		dbScroll[1] = cpx[1];
 	}
 
-	private void tSetSenotes() {
+	private void tSetSenotes()
+	{
 		#region[ list作成 ]
 		//ひとまずチップだけのリストを作成しておく。
 		List<CChip> list音符のみのリスト;
@@ -3500,8 +4252,10 @@ internal class CTja : CActivity {
 		int nCount = 0;
 		int dkdkCount = 0;
 
-		foreach (CChip chip in this.listChip) {
-			if (NotesManager.IsCommonNote(chip)) {
+		foreach (CChip chip in this.listChip)
+		{
+			if (NotesManager.IsCommonNote(chip))
+			{
 				list音符のみのリスト.Add(chip);
 			}
 		}
@@ -3510,9 +4264,12 @@ internal class CTja : CActivity {
 		//時間判定は、「次のチップの発声時刻」から「現在(過去)のチップの発声時刻」で引く必要がある。
 		//逆にしてしまうと計算がとてつもないことになるので注意。
 
-		try {
+		try
+		{
 			this.tSenotes_Core_V2(list音符のみのリスト, true);
-		} catch (Exception ex) {
+		}
+		catch (Exception ex)
+		{
 			Trace.TraceError(ex.ToString());
 			Trace.TraceError("例外が発生しましたが処理を継続します。 (b67473e4-1930-44f1-b320-4ead5786e74c)");
 		}
@@ -3522,22 +4279,26 @@ internal class CTja : CActivity {
 	/// <summary>
 	/// 譜面分岐がある場合はこちらを使う
 	/// </summary>
-	private void tSetSenotes_branch() {
+	private void tSetSenotes_branch()
+	{
 		#region[ list作成 ]
 		//ひとまずチップだけのリストを作成しておく。
 		List<CChip>[] list音符のみのリスト_Branch = new[] { new List<CChip>(), new List<CChip>(), new List<CChip>() };
 		int nCount = 0;
 		int dkdkCount = 0;
 
-		foreach (CChip chip in this.listChip) {
-			if (NotesManager.IsCommonNote(chip)) {
+		foreach (CChip chip in this.listChip)
+		{
+			if (NotesManager.IsCommonNote(chip))
+			{
 				list音符のみのリスト_Branch[(int)chip.nBranch].Add(chip);
 			}
 		}
 		#endregion
 
 		//forで処理。
-		for (int n = 0; n < list音符のみのリスト_Branch.Length; n++) {
+		for (int n = 0; n < list音符のみのリスト_Branch.Length; n++)
+		{
 			this.tSenotes_Core_V2(list音符のみのリスト_Branch[n], true);
 		}
 
@@ -3547,7 +4308,8 @@ internal class CTja : CActivity {
 	/// コア部分Ver2。TJAP2から移植しただけ。
 	/// </summary>
 	/// <param name="list音符のみのリスト"></param>
-	private void tSenotes_Core_V2(List<CChip> list音符のみのリスト, bool ignoreSENote = false) {
+	private void tSenotes_Core_V2(List<CChip> list音符のみのリスト, bool ignoreSENote = false)
+	{
 		const int DATA = 3;
 		int doco_count = 0;
 		int[] sort = new int[7];
@@ -3555,59 +4317,76 @@ internal class CTja : CActivity {
 		double[] scroll = new double[7];
 		double time_tmp;
 
-		for (int i = 0; i < list音符のみのリスト.Count; i++) {
-			for (int j = 0; j < 7; j++) {
-				if (i + (j - 3) < 0) {
+		for (int i = 0; i < list音符のみのリスト.Count; i++)
+		{
+			for (int j = 0; j < 7; j++)
+			{
+				if (i + (j - 3) < 0)
+				{
 					sort[j] = -1;
 					time[j] = -1000000000;
 					scroll[j] = 1.0;
-				} else if (i + (j - 3) >= list音符のみのリスト.Count) {
+				}
+				else if (i + (j - 3) >= list音符のみのリスト.Count)
+				{
 					sort[j] = -1;
 					time[j] = 1000000000;
 					scroll[j] = 1.0;
-				} else {
+				}
+				else
+				{
 					sort[j] = list音符のみのリスト[i + (j - 3)].nChannelNo;
 					time[j] = list音符のみのリスト[i + (j - 3)].fBMSCROLLTime;
 					scroll[j] = list音符のみのリスト[i + (j - 3)].dbSCROLL;
 				}
 			}
 			time_tmp = time[DATA];
-			for (int j = 0; j < 7; j++) {
+			for (int j = 0; j < 7; j++)
+			{
 				time[j] = (time[j] - time_tmp) * scroll[j];
 				if (time[j] < 0) time[j] *= -1;
 			}
 
 			if (ignoreSENote && list音符のみのリスト[i].IsFixedSENote) continue;
 
-			switch (list音符のみのリスト[i].nChannelNo) {
+			switch (list音符のみのリスト[i].nChannelNo)
+			{
 				case 0x11:
 
 					//（左2より離れている｜）_右2_右ドン_右右4_右右ドン…
-					if ((time[DATA - 1] > 2/* || (sort[DATA-1] != 1 && time[DATA-1] >= 2 && time[DATA-2] >= 4 && time[DATA-3] <= 5)*/) && time[DATA + 1] == 2 && sort[DATA + 1] == 1 && time[DATA + 2] == 4 && sort[DATA + 2] == 0x11 && time[DATA + 3] == 6 && sort[DATA + 3] == 0x11) {
+					if ((time[DATA - 1] > 2/* || (sort[DATA-1] != 1 && time[DATA-1] >= 2 && time[DATA-2] >= 4 && time[DATA-3] <= 5)*/) && time[DATA + 1] == 2 && sort[DATA + 1] == 1 && time[DATA + 2] == 4 && sort[DATA + 2] == 0x11 && time[DATA + 3] == 6 && sort[DATA + 3] == 0x11)
+					{
 						list音符のみのリスト[i].nSenote = 1;
 						doco_count = 1;
 						break;
 					}
 					//ドコドコ中_左2_右2_右ドン
-					else if (doco_count != 0 && time[DATA - 1] == 2 && time[DATA + 1] == 2 && (sort[DATA + 1] == 0x11 || sort[DATA + 1] == 0x11)) {
+					else if (doco_count != 0 && time[DATA - 1] == 2 && time[DATA + 1] == 2 && (sort[DATA + 1] == 0x11 || sort[DATA + 1] == 0x11))
+					{
 						if (doco_count % 2 == 0)
 							list音符のみのリスト[i].nSenote = 1;
 						else
 							list音符のみのリスト[i].nSenote = 2;
 						doco_count++;
 						break;
-					} else {
+					}
+					else
+					{
 						doco_count = 0;
 					}
 
 					//8分ドコドン
-					if ((time[DATA - 2] >= 4.1 && time[DATA - 1] == 2 && time[DATA + 1] == 2 && time[DATA + 2] >= 4.1) && (sort[DATA - 1] == 0x11 && sort[DATA + 1] == 0x11)) {
-						if (list音符のみのリスト[i].dbBPM >= 120.0) {
+					if ((time[DATA - 2] >= 4.1 && time[DATA - 1] == 2 && time[DATA + 1] == 2 && time[DATA + 2] >= 4.1) && (sort[DATA - 1] == 0x11 && sort[DATA + 1] == 0x11))
+					{
+						if (list音符のみのリスト[i].dbBPM >= 120.0)
+						{
 							list音符のみのリスト[i - 1].nSenote = 1;
 							list音符のみのリスト[i].nSenote = 2;
 							list音符のみのリスト[i + 1].nSenote = 0;
 							break;
-						} else if (list音符のみのリスト[i].dbBPM < 120.0) {
+						}
+						else if (list音符のみのリスト[i].dbBPM < 120.0)
+						{
 							list音符のみのリスト[i - 1].nSenote = 0;
 							list音符のみのリスト[i].nSenote = 0;
 							list音符のみのリスト[i + 1].nSenote = 0;
@@ -3618,15 +4397,18 @@ internal class CTja : CActivity {
 					//BPM120以下のみ
 					//8分間隔の「ドドド」→「ドンドンドン」
 
-					if (time[DATA - 1] >= 2 && time[DATA + 1] >= 2) {
-						if (list音符のみのリスト[i].dbBPM < 120.0) {
+					if (time[DATA - 1] >= 2 && time[DATA + 1] >= 2)
+					{
+						if (list音符のみのリスト[i].dbBPM < 120.0)
+						{
 							list音符のみのリスト[i].nSenote = 0;
 							break;
 						}
 					}
 
 					//ドコドコドン
-					if (time[DATA - 3] >= 3.4 && time[DATA - 2] == 2 && time[DATA - 1] == 1 && time[DATA + 1] == 1 && time[DATA + 2] == 2 && time[DATA + 3] >= 3.4 && sort[DATA - 2] == 0x11 && sort[DATA - 1] == 0x11 && sort[DATA + 1] == 0x11 && sort[DATA + 2] == 0x11) {
+					if (time[DATA - 3] >= 3.4 && time[DATA - 2] == 2 && time[DATA - 1] == 1 && time[DATA + 1] == 1 && time[DATA + 2] == 2 && time[DATA + 3] >= 3.4 && sort[DATA - 2] == 0x11 && sort[DATA - 1] == 0x11 && sort[DATA + 1] == 0x11 && sort[DATA + 2] == 0x11)
+					{
 						list音符のみのリスト[i - 2].nSenote = 1;
 						list音符のみのリスト[i - 1].nSenote = 2;
 						list音符のみのリスト[i + 0].nSenote = 1;
@@ -3636,25 +4418,32 @@ internal class CTja : CActivity {
 						//break;
 					}
 					//ドコドン
-					else if (time[DATA - 2] >= 2.4 && time[DATA - 1] == 1 && time[DATA + 1] == 1 && time[DATA + 2] >= 2.4 && sort[DATA - 1] == 0x11 && sort[DATA + 1] == 0x11) {
+					else if (time[DATA - 2] >= 2.4 && time[DATA - 1] == 1 && time[DATA + 1] == 1 && time[DATA + 2] >= 2.4 && sort[DATA - 1] == 0x11 && sort[DATA + 1] == 0x11)
+					{
 						list音符のみのリスト[i].nSenote = 2;
 					}
 					//右の音符が2以上離れている
-					else if (time[DATA + 1] > 2) {
+					else if (time[DATA + 1] > 2)
+					{
 						list音符のみのリスト[i].nSenote = 0;
 					}
 					//右の音符が1.4以上_左の音符が1.4以内
-					else if (time[DATA + 1] >= 1.4 && time[DATA - 1] <= 1.4) {
+					else if (time[DATA + 1] >= 1.4 && time[DATA - 1] <= 1.4)
+					{
 						list音符のみのリスト[i].nSenote = 0;
 					}
 					//右の音符が2以上_右右の音符が3以内
-					else if (time[DATA + 1] >= 2 && time[DATA + 2] <= 3) {
+					else if (time[DATA + 1] >= 2 && time[DATA + 2] <= 3)
+					{
 						list音符のみのリスト[i].nSenote = 0;
 					}
 					//右の音符が2以上_大音符
-					else if (time[DATA + 1] >= 2 && (sort[DATA + 1] == 0x13 || sort[DATA + 1] == 0x14)) {
+					else if (time[DATA + 1] >= 2 && (sort[DATA + 1] == 0x13 || sort[DATA + 1] == 0x14))
+					{
 						list音符のみのリスト[i].nSenote = 0;
-					} else {
+					}
+					else
+					{
 						list音符のみのリスト[i].nSenote = 1;
 					}
 					break;
@@ -3663,29 +4452,37 @@ internal class CTja : CActivity {
 
 					//BPM120以下のみ
 					//8分間隔の「ドドド」→「ドンドンドン」
-					if (time[DATA - 1] == 2 && time[DATA + 1] == 2) {
-						if (list音符のみのリスト[i - 1].dbBPM < 120.0 && list音符のみのリスト[i].dbBPM < 120.0 && list音符のみのリスト[i + 1].dbBPM < 120.0) {
+					if (time[DATA - 1] == 2 && time[DATA + 1] == 2)
+					{
+						if (list音符のみのリスト[i - 1].dbBPM < 120.0 && list音符のみのリスト[i].dbBPM < 120.0 && list音符のみのリスト[i + 1].dbBPM < 120.0)
+						{
 							list音符のみのリスト[i].nSenote = 3;
 							break;
 						}
 					}
 
 					//右の音符が2以上離れている
-					if (time[DATA + 1] > 2) {
+					if (time[DATA + 1] > 2)
+					{
 						list音符のみのリスト[i].nSenote = 3;
 					}
 					//右の音符が1.4以上_左の音符が1.4以内
-					else if (time[DATA + 1] >= 1.4 && time[DATA - 1] <= 1.4) {
+					else if (time[DATA + 1] >= 1.4 && time[DATA - 1] <= 1.4)
+					{
 						list音符のみのリスト[i].nSenote = 3;
 					}
 					//右の音符が2以上_右右の音符が3以内
-					else if (time[DATA + 1] >= 2 && time[DATA + 2] <= 3) {
+					else if (time[DATA + 1] >= 2 && time[DATA + 2] <= 3)
+					{
 						list音符のみのリスト[i].nSenote = 3;
 					}
 					//右の音符が2以上_大音符
-					else if (time[DATA + 1] >= 2 && (sort[DATA + 1] == 0x13 || sort[DATA + 1] == 0x14)) {
+					else if (time[DATA + 1] >= 2 && (sort[DATA + 1] == 0x13 || sort[DATA + 1] == 0x14))
+					{
 						list音符のみのリスト[i].nSenote = 3;
-					} else {
+					}
+					else
+					{
 						list音符のみのリスト[i].nSenote = 4;
 					}
 					break;
@@ -3699,7 +4496,8 @@ internal class CTja : CActivity {
 	/// <summary>
 	/// サウンドミキサーにサウンドを登録_削除する時刻を事前に算出する
 	/// </summary>
-	public void PlanToAddMixerChannel() {
+	public void PlanToAddMixerChannel()
+	{
 		if (OpenNijiiroRW.SoundManager.GetCurrentSoundDeviceType() == "DirectSound") // DShowでの再生の場合はミキシング負荷が高くないため、
 		{                                                                       // チップのライフタイム管理を行わない
 			return;
@@ -3709,8 +4507,10 @@ internal class CTja : CActivity {
 		List<CChip> listRemoveMixerChannel = new List<CChip>(128);
 		List<CChip> listRemoveTiming = new List<CChip>(128);
 
-		foreach (CChip pChip in listChip) {
-			switch (pChip.nChannelNo) {
+		foreach (CChip pChip in listChip)
+		{
+			switch (pChip.nChannelNo)
+			{
 				// BGM, 演奏チャネル, 不可視サウンド, フィルインサウンド, 空打ち音はミキサー管理の対象
 				// BGM:
 				case 0x01:
@@ -3735,13 +4535,16 @@ internal class CTja : CActivity {
 					//case 0x90:	case 0x91:	case 0x92:
 
 					#region [ 発音1秒前のタイミングを算出 ]
-					int n発音前余裕ms = 1000, n発音後余裕ms = 800; {
+					int n発音前余裕ms = 1000, n発音後余裕ms = 800;
+					{
 						int ch = pChip.nChannelNo >> 4;
-						if (ch == 0x02 || ch == 0x0A) {
+						if (ch == 0x02 || ch == 0x0A)
+						{
 							n発音前余裕ms = 800;
 							n発音前余裕ms = 500;
 						}
-						if (ch == 0x06 || ch == 0x07 || ch == 0x08 || ch == 0x09) {
+						if (ch == 0x06 || ch == 0x07 || ch == 0x08 || ch == 0x09)
+						{
 							n発音前余裕ms = 200;
 							n発音前余裕ms = 500;
 						}
@@ -3751,7 +4554,8 @@ internal class CTja : CActivity {
 					int nAddMixer時刻ms, nAddMixer位置 = 0;
 					t発声時刻msと発声位置を取得する(pChip.n発声時刻ms - n発音前余裕ms, out nAddMixer時刻ms, out nAddMixer位置);
 
-					CChip c_AddMixer = new CChip() {
+					CChip c_AddMixer = new CChip()
+					{
 						nChannelNo = 0xDA,
 						n整数値 = pChip.n整数値,
 						n整数値_内部番号 = pChip.n整数値_内部番号,
@@ -3763,7 +4567,8 @@ internal class CTja : CActivity {
 					#endregion
 
 					int duration = 0;
-					if (listWAV.TryGetValue(pChip.n整数値_内部番号, out CTja.CWAV wc)) {
+					if (listWAV.TryGetValue(pChip.n整数値_内部番号, out CTja.CWAV wc))
+					{
 						duration = wc.rSound[0]?.TotalPlayTime ?? 0;
 					}
 					int n新RemoveMixer時刻ms, n新RemoveMixer位置;
@@ -3793,7 +4598,8 @@ internal class CTja : CActivity {
 							listAddMixerChannel.RemoveAt(listAddMixerChannel.Count - 1);    // また、同じチップ音の「mixerへの再追加」は削除する
 																							//Debug.WriteLine( "removed result:" );
 																							//DebugOut_CChipList( listAddMixerChannel );
-						} else                                                            // 逆に、時間軸上、mixer削除後に再発音するような流れの場合は
+						}
+						else                                                            // 逆に、時間軸上、mixer削除後に再発音するような流れの場合は
 						{
 							listRemoveMixerChannel.Add(listRemoveTiming[index]);    // mixer削除を確定させる
 																					//Debug.WriteLine( "listRemoveMixerChannel:" );
@@ -3809,7 +4615,8 @@ internal class CTja : CActivity {
 							n発声位置 = n新RemoveMixer位置
 						};
 						listRemoveTiming[index] = c;
-					} else                                                                // 過去に同じチップを発音していないor
+					}
+					else                                                                // 過去に同じチップを発音していないor
 					{                                                                   // 発音していたが既にmixer削除確定していたなら
 						CChip c = new CChip()                                           // 新しくmixer削除候補として追加する
 						{
@@ -3831,12 +4638,15 @@ internal class CTja : CActivity {
 		listChip.AddRange(listRemoveTiming);
 		listChip = listChip.OrderBy(x => x).ToList();
 	}
-	private void DebugOut_CChipList(List<CChip> c) {
-		for (int i = 0; i < c.Count; i++) {
+	private void DebugOut_CChipList(List<CChip> c)
+	{
+		for (int i = 0; i < c.Count; i++)
+		{
 			Debug.WriteLine(i + ": ch=" + c[i].nChannelNo.ToString("x2") + ", WAV番号=" + c[i].n整数値 + ", time=" + c[i].n発声時刻ms);
 		}
 	}
-	private bool t発声時刻msと発声位置を取得する(int n希望発声時刻ms, out int n新発声時刻ms, out int n新発声位置) {
+	private bool t発声時刻msと発声位置を取得する(int n希望発声時刻ms, out int n新発声時刻ms, out int n新発声位置)
+	{
 		// 発声時刻msから発声位置を逆算することはできないため、近似計算する。
 		// 具体的には、希望発声位置前後の2つのチップの発声位置の中間を取る。
 
@@ -3844,7 +4654,8 @@ internal class CTja : CActivity {
 		for (int i = 0; i < listChip.Count; i++)        // 希望発声位置前後の「前」の方のチップを検索
 		{
 			int n発声時刻ms = listChip[i].n発声時刻ms;
-			if (n発声時刻ms >= n希望発声時刻ms) {
+			if (n発声時刻ms >= n希望発声時刻ms)
+			{
 				if (n発声時刻ms > n希望発声時刻ms)
 					--i; // is max chip
 				index_min = i;
@@ -3853,14 +4664,16 @@ internal class CTja : CActivity {
 			}
 		}
 		CChip? chip_min = listChip.ElementAtOrDefault(index_min);
-		if (index_min < 0 || chip_min?.n発声時刻ms < n希望発声時刻ms) { // not on chip nor exceeding end
+		if (index_min < 0 || chip_min?.n発声時刻ms < n希望発声時刻ms)
+		{ // not on chip nor exceeding end
 			n新発声時刻ms = n希望発声時刻ms;
 			n新発声位置 = chip_min?.n発声位置 ?? 0;
 			return true;
 		}
 
 		bool isOutOfBound = (index_min >= listChip.Count); // 希望発声時刻に至らずに曲が終了してしまう場合
-		if (index_max >= listChip.Count) {
+		if (index_max >= listChip.Count)
+		{
 			// listの最終項目の時刻をそのまま使用する
 			//___のではダメ。BGMが尻切れになる。
 			// そこで、listの最終項目の発声時刻msと発生位置から、希望発声時刻に相当する希望発声位置を比例計算して求める。
@@ -3875,8 +4688,10 @@ internal class CTja : CActivity {
 
 	// CActivity 実装
 	private CCachedFontRenderer pf歌詞フォント;
-	public override void Activate() {
-		if (OpenNijiiroRW.rCurrentStage.eStageID == CStage.EStage.SongLoading) {
+	public override void Activate()
+	{
+		if (OpenNijiiroRW.rCurrentStage.eStageID == CStage.EStage.SongLoading)
+		{
 			//まさかこれが原因で曲の読み込みが停止するとは思わなかった...
 			//どういうことかというとスキンを読み込むときに...いや厳密には
 			//RefleshSkinを呼び出した後一回Disposeしてnullにして解放(その後にまたインスタンスを作成する)するんだけど
@@ -3885,9 +4700,12 @@ internal class CTja : CActivity {
 			//実は曲の読み込みはマルチスレッドで実行されているのでnullにした瞬間に参照される可能性も十分にある
 			//それならアプリが終了するんじゃないかと思ったのだけどtryを使ってい曲の読み込みを続行していた...
 			//いやーマルチスレッドって難しいね!
-			if (!string.IsNullOrEmpty(OpenNijiiroRW.Skin.Game_Lyric_FontName)) {
+			if (!string.IsNullOrEmpty(OpenNijiiroRW.Skin.Game_Lyric_FontName))
+			{
 				this.pf歌詞フォント = new CCachedFontRenderer(OpenNijiiroRW.Skin.Game_Lyric_FontName, OpenNijiiroRW.Skin.Game_Lyric_FontSize);
-			} else {
+			}
+			else
+			{
 				this.pf歌詞フォント = new CCachedFontRenderer(CFontRenderer.DefaultFontName, OpenNijiiroRW.Skin.Game_Lyric_FontSize);
 			}
 		}
@@ -3918,15 +4736,20 @@ internal class CTja : CActivity {
 
 		base.Activate();
 	}
-	public override void DeActivate() {
-		if (this.listWAV != null) {
-			foreach (CWAV cwav in this.listWAV.Values) {
+	public override void DeActivate()
+	{
+		if (this.listWAV != null)
+		{
+			foreach (CWAV cwav in this.listWAV.Values)
+			{
 				cwav.Dispose();
 			}
 			this.listWAV.Clear();
 		}
-		if (this.listVD != null) {
-			foreach (CVideoDecoder cvd in this.listVD.Values) {
+		if (this.listVD != null)
+		{
+			foreach (CVideoDecoder cvd in this.listVD.Values)
+			{
 				cvd.Dispose();
 			}
 			this.listVD.Clear();
@@ -3945,28 +4768,35 @@ internal class CTja : CActivity {
 		this.listLyric?.Clear();
 		this.listLyric2?.Clear();
 
-		if (this.listObj != null) {
-			foreach (KeyValuePair<string, CSongObject> pair in this.listObj) {
+		if (this.listObj != null)
+		{
+			foreach (KeyValuePair<string, CSongObject> pair in this.listObj)
+			{
 				pair.Value.tDispose();
 			}
 			this.listObj.Clear();
 		}
 
-		if (this.listOriginalTextures != null) {
-			foreach (KeyValuePair<string, CTexture> pair in this.listOriginalTextures) {
+		if (this.listOriginalTextures != null)
+		{
+			foreach (KeyValuePair<string, CTexture> pair in this.listOriginalTextures)
+			{
 				string txPath = pair.Key;
 				CTexture originalTx = pair.Value;
 				OpenNijiiroRW.Tx.trackedTextures.TryGetValue(txPath, out CTexture oldTx);
 
-				if (oldTx != originalTx) {
+				if (oldTx != originalTx)
+				{
 					oldTx.UpdateTexture(originalTx, originalTx.sz画像サイズ.Width, originalTx.sz画像サイズ.Height);
 				}
 			}
 			this.listOriginalTextures.Clear();
 		}
 
-		if (this.listTextures != null) {
-			foreach (KeyValuePair<string, CTexture> pair in this.listTextures) {
+		if (this.listTextures != null)
+		{
+			foreach (KeyValuePair<string, CTexture> pair in this.listTextures)
+			{
 				pair.Value.Dispose();
 			}
 			this.listTextures.Clear();
@@ -3974,16 +4804,22 @@ internal class CTja : CActivity {
 
 		base.DeActivate();
 	}
-	public override void CreateManagedResource() {
-		if (!base.IsDeActivated) {
+	public override void CreateManagedResource()
+	{
+		if (!base.IsDeActivated)
+		{
 			this.tAVIの読み込み();
 			base.CreateManagedResource();
 		}
 	}
-	public override void ReleaseManagedResource() {
-		if (!base.IsDeActivated) {
-			if (this.listVD != null) {
-				foreach (CVideoDecoder cvd in this.listVD.Values) {
+	public override void ReleaseManagedResource()
+	{
+		if (!base.IsDeActivated)
+		{
+			if (this.listVD != null)
+			{
+				foreach (CVideoDecoder cvd in this.listVD.Values)
+				{
 					cvd.Dispose();
 				}
 				this.listVD = null;
@@ -4026,7 +4862,8 @@ internal class CTja : CActivity {
 	/// <summary>
 	/// 音源再生前の空白を追加するメソッド。
 	/// </summary>
-	private void AddPreBakedMusicPreTimeMs() {
+	private void AddPreBakedMusicPreTimeMs()
+	{
 		this.dbNowTime += OpenNijiiroRW.ConfigIni.MusicPreTimeMs;
 		this.dbNowBMScollTime += OpenNijiiroRW.ConfigIni.MusicPreTimeMs * this.dbNowBPM / 15000;
 	}
@@ -4065,7 +4902,8 @@ internal class CTja : CActivity {
 		=> GameDurationToTjaDuration((this.n参照中の難易度 == (int)Difficulty.Dan) ?
 			msTime
 			: msTime - OpenNijiiroRW.ConfigIni.MusicPreTimeMs);
-	public double TjaTimeToGameTime(double msTime) {
+	public double TjaTimeToGameTime(double msTime)
+	{
 		msTime = TjaDurationToGameDuration(msTime);
 		return (this.n参照中の難易度 == (int)Difficulty.Dan) ? msTime
 			: msTime + OpenNijiiroRW.ConfigIni.MusicPreTimeMs;
@@ -4084,13 +4922,16 @@ internal class CTja : CActivity {
 	public static double TjaBeatSpeedToGameBeatSpeed(double beatSpeed)
 		=> beatSpeed * OpenNijiiroRW.ConfigIni.SongPlaybackSpeed;
 
-	public int GetListChipIndexOfMeasure(int iMeasure1to) {
-		for (int i = 0; i < this.listChip.Count; i++) {
+	public int GetListChipIndexOfMeasure(int iMeasure1to)
+	{
+		for (int i = 0; i < this.listChip.Count; i++)
+		{
 			CChip pChip = this.listChip[i];
 			if ((iMeasure1to == 0) ? // initial song position
 				pChip.n発声時刻ms >= 0
 				: (pChip.nChannelNo == 0x50 && pChip.n整数値_内部番号 == iMeasure1to)
-				) {
+				)
+			{
 				return i;
 			}
 		}

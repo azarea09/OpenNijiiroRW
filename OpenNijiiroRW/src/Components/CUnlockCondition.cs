@@ -1,15 +1,21 @@
 ﻿using static OpenNijiiroRW.BestPlayRecords;
 
-namespace OpenNijiiroRW {
-	abstract class CUnlockCondition {
-		public CUnlockCondition(CUnlockConditionFactory.UnlockConditionJsonRaw? rawJson) {
+namespace OpenNijiiroRW
+{
+	abstract class CUnlockCondition
+	{
+		public CUnlockCondition(CUnlockConditionFactory.UnlockConditionJsonRaw? rawJson)
+		{
 			// rawJson is nullable only for failed unlock conditions
-			if (rawJson != null) {
+			if (rawJson != null)
+			{
 				Values = rawJson.Values.Copy();
 				Type = rawJson.Type;
 				Reference = rawJson.Reference.Copy();
 				CoinStack = 0;
-			} else {
+			}
+			else
+			{
 				Values = [];
 				Type = "me";
 				Reference = [];
@@ -45,8 +51,10 @@ namespace OpenNijiiroRW {
 		 * m : "More than"
 		 * d : "Different"
 		 */
-		public bool tValueRequirementMet(int val1, int val2) {
-			switch (this.Type) {
+		public bool tValueRequirementMet(int val1, int val2)
+		{
+			switch (this.Type)
+			{
 				case "l":
 					return (val1 < val2);
 				case "le":
@@ -64,8 +72,10 @@ namespace OpenNijiiroRW {
 			}
 		}
 
-		public bool tValueRequirementMet(double val1, double val2) {
-			switch (this.Type) {
+		public bool tValueRequirementMet(double val1, double val2)
+		{
+			switch (this.Type)
+			{
 				case "l":
 					return (val1 < val2);
 				case "le":
@@ -83,8 +93,10 @@ namespace OpenNijiiroRW {
 			}
 		}
 
-		public string GetRequiredClearStatus(int status, bool exact = false) {
-			switch (status) {
+		public string GetRequiredClearStatus(int status, bool exact = false)
+		{
+			switch (status)
+			{
 				case (int)EClearStatus.PERFECT:
 					return CLangManager.LangInstance.GetString(exact ? "UNLOCK_CONDITION_REQUIRE_PERFECT" : "UNLOCK_CONDITION_REQUIRE_PERFECT_MORE");
 				case (int)EClearStatus.FC:
@@ -102,7 +114,8 @@ namespace OpenNijiiroRW {
 
 		public abstract string tConditionMessage(EScreen screen = EScreen.MyRoom);
 
-		public enum EScreen {
+		public enum EScreen
+		{
 			MyRoom,
 			Shop,
 			SongSelect,

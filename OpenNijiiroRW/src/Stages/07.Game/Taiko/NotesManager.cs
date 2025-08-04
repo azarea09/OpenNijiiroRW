@@ -4,11 +4,13 @@ using FDK;
 namespace OpenNijiiroRW;
 
 // Simple class containing functions to simplify readability of CChip elements
-class NotesManager {
+class NotesManager
+{
 
 	#region [Parsing]
 
-	public static Dictionary<string, int> NoteCorrespondanceDictionnary = new Dictionary<string, int>() {
+	public static Dictionary<string, int> NoteCorrespondanceDictionnary = new Dictionary<string, int>()
+	{
 		["0"] = 0, // Empty
 		["1"] = 1, // Small Don (Taiko) | Red (right) hit (Konga)
 		["2"] = 2, // Small Ka (Taiko) | Yellow (left) hit (Konga)
@@ -30,11 +32,13 @@ class NotesManager {
 		["I"] = 17, // Konga yellow roll | Taiko small roll
 	};
 
-	public static bool FastFlankedParsing(string s) {
+	public static bool FastFlankedParsing(string s)
+	{
 		if (s[0] >= '0' && s[0] <= '9')
 			return true;
 
-		for (int i = 0; i < s.Length; i++) {
+		for (int i = 0; i < s.Length; i++)
+		{
 			if (GetNoteValueFromChar(s.Substring(i, 1)) == -1
 				&& s.Substring(i, 1) != ",")
 				return false;
@@ -43,14 +47,17 @@ class NotesManager {
 		return true;
 	}
 
-	public static int GetNoteValueFromChar(string chr) {
+	public static int GetNoteValueFromChar(string chr)
+	{
 		if (NoteCorrespondanceDictionnary.ContainsKey(chr))
 			return NoteCorrespondanceDictionnary[chr];
 		return -1;
 	}
 
-	public static int GetNoteX(double msDTime, double th16DBeat, double bpm, double scroll, EScrollMode eScrollMode) {
-		if (eScrollMode is EScrollMode.BMScroll) {
+	public static int GetNoteX(double msDTime, double th16DBeat, double bpm, double scroll, EScrollMode eScrollMode)
+	{
+		if (eScrollMode is EScrollMode.BMScroll)
+		{
 			scroll = 1.0;
 		}
 		int pxPer4Beats = OpenNijiiroRW.Skin.Game_Notes_Interval;
@@ -59,8 +66,10 @@ class NotesManager {
 		return (int)(n4Beats * pxPer4Beats * scroll * screenScale);
 	}
 
-	public static int GetNoteY(double msDTime, double th16DBeat, double bpm, double scroll, EScrollMode eScrollMode) {
-		if (scroll == 0.0 || eScrollMode is EScrollMode.BMScroll) {
+	public static int GetNoteY(double msDTime, double th16DBeat, double bpm, double scroll, EScrollMode eScrollMode)
+	{
+		if (scroll == 0.0 || eScrollMode is EScrollMode.BMScroll)
+		{
 			return 0;
 		}
 		int pxPer4Beats = OpenNijiiroRW.Skin.Game_Notes_Interval;
@@ -70,7 +79,8 @@ class NotesManager {
 	}
 
 	public static double getN4Beats(double msDTime, double th16DBeat, double bpm, EScrollMode eScrollMode)
-		=> eScrollMode switch {
+		=> eScrollMode switch
+		{
 			EScrollMode.Normal => msDTime * bpm / 240000.0,
 			EScrollMode.BMScroll or EScrollMode.HBScroll => th16DBeat / 16.0,
 			_ => 0,
@@ -80,23 +90,27 @@ class NotesManager {
 
 	#region [Gameplay]
 
-	public static bool IsExpectedPad(int stored, int hit, CChip chip, EGameType gt) {
+	public static bool IsExpectedPad(int stored, int hit, CChip chip, EGameType gt)
+	{
 		var inPad = (EPad)hit;
 		var onPad = (EPad)stored;
 
 		if (chip == null) return false;
 
-		if (IsBigKaTaiko(chip, gt)) {
+		if (IsBigKaTaiko(chip, gt))
+		{
 			return (inPad == EPad.LBlue && onPad == EPad.RBlue)
 				   || (inPad == EPad.RBlue && onPad == EPad.LBlue);
 		}
 
-		if (IsBigDonTaiko(chip, gt)) {
+		if (IsBigDonTaiko(chip, gt))
+		{
 			return (inPad == EPad.LRed && onPad == EPad.RRed)
 				   || (inPad == EPad.RRed && onPad == EPad.LRed);
 		}
 
-		if (IsSwapNote(chip, gt)) {
+		if (IsSwapNote(chip, gt))
+		{
 			bool hitBlue = inPad == EPad.LBlue || inPad == EPad.RBlue;
 			bool hitRed = inPad == EPad.LRed || inPad == EPad.RRed;
 			bool storedBlue = onPad == EPad.LBlue || onPad == EPad.RBlue;
@@ -113,56 +127,67 @@ class NotesManager {
 
 	#region [General]
 
-	public static bool IsCommonNote(CChip chip) {
+	public static bool IsCommonNote(CChip chip)
+	{
 		if (chip == null) return false;
 		return chip.nChannelNo >= 0x11 && chip.nChannelNo < 0x18;
 	}
-	public static bool IsMine(CChip chip) {
+	public static bool IsMine(CChip chip)
+	{
 		if (chip == null) return false;
 		return chip.nChannelNo == 0x1C;
 	}
 
-	public static bool IsDonNote(CChip chip) {
+	public static bool IsDonNote(CChip chip)
+	{
 		if (chip == null) return false;
 		return chip.nChannelNo == 0x11 || chip.nChannelNo == 0x13 || chip.nChannelNo == 0x1A;
 	}
 
-	public static bool IsKaNote(CChip chip) {
+	public static bool IsKaNote(CChip chip)
+	{
 		if (chip == null) return false;
 		return chip.nChannelNo == 0x12 || chip.nChannelNo == 0x14 || chip.nChannelNo == 0x1B;
 	}
 
-	public static bool IsSmallNote(CChip chip, bool blue) {
+	public static bool IsSmallNote(CChip chip, bool blue)
+	{
 		if (chip == null) return false;
 		return blue ? chip.nChannelNo == 0x12 : chip.nChannelNo == 0x11;
 	}
 
-	public static bool IsSmallNote(CChip chip) {
+	public static bool IsSmallNote(CChip chip)
+	{
 		if (chip == null) return false;
 		return chip.nChannelNo == 0x12 || chip.nChannelNo == 0x11;
 	}
 
-	public static bool IsBigNote(CChip chip) {
+	public static bool IsBigNote(CChip chip)
+	{
 		if (chip == null) return false;
 		return (chip.nChannelNo == 0x13 || chip.nChannelNo == 0x14 || chip.nChannelNo == 0x1A || chip.nChannelNo == 0x1B);
 	}
 
-	public static bool IsBigKaTaiko(CChip chip, EGameType gt) {
+	public static bool IsBigKaTaiko(CChip chip, EGameType gt)
+	{
 		if (chip == null) return false;
 		return (chip.nChannelNo == 0x14 || chip.nChannelNo == 0x1B) && gt == EGameType.Taiko;
 	}
 
-	public static bool IsBigDonTaiko(CChip chip, EGameType gt) {
+	public static bool IsBigDonTaiko(CChip chip, EGameType gt)
+	{
 		if (chip == null) return false;
 		return (chip.nChannelNo == 0x13 || chip.nChannelNo == 0x1A) && gt == EGameType.Taiko;
 	}
 
-	public static bool IsClapKonga(CChip chip, EGameType gt) {
+	public static bool IsClapKonga(CChip chip, EGameType gt)
+	{
 		if (chip == null) return false;
 		return (chip.nChannelNo == 0x14 || chip.nChannelNo == 0x1B) && gt == EGameType.Konga;
 	}
 
-	public static bool IsSwapNote(CChip chip, EGameType gt) {
+	public static bool IsSwapNote(CChip chip, EGameType gt)
+	{
 		if (chip == null) return false;
 		return (
 			IsKongaPink(chip, gt)                           // Konga Pink note
@@ -170,79 +195,94 @@ class NotesManager {
 		);
 	}
 
-	public static bool IsKongaPink(CChip chip, EGameType gt) {
+	public static bool IsKongaPink(CChip chip, EGameType gt)
+	{
 		if (chip == null) return false;
 		// Purple notes are treated as Pink in Konga
 		return (chip.nChannelNo == 0x13 || chip.nChannelNo == 0x1A || IsPurpleNote(chip)) && gt == EGameType.Konga;
 	}
-	public static bool IsPurpleNote(CChip chip) {
+	public static bool IsPurpleNote(CChip chip)
+	{
 		if (chip == null) return false;
 		return (chip.nChannelNo == 0x101);
 	}
 
-	public static bool IsYellowRoll(CChip chip) {
+	public static bool IsYellowRoll(CChip chip)
+	{
 		if (chip == null) return false;
 		return chip.nChannelNo == 0x21;
 	}
 
-	public static bool IsClapRoll(CChip chip) {
+	public static bool IsClapRoll(CChip chip)
+	{
 		if (chip == null) return false;
 		return chip.nChannelNo == 0x20;
 	}
 
-	public static bool IsKusudama(CChip chip) {
+	public static bool IsKusudama(CChip chip)
+	{
 		if (chip == null) return false;
 		return chip.nChannelNo == 0x19;
 	}
 
-	public static bool IsFuzeRoll(CChip chip) {
+	public static bool IsFuzeRoll(CChip chip)
+	{
 		if (chip == null) return false;
 		return chip.nChannelNo == 0x1D;
 	}
 
-	public static bool IsRollEnd(CChip chip) {
+	public static bool IsRollEnd(CChip chip)
+	{
 		if (chip == null) return false;
 		return chip.nChannelNo == 0x18;
 	}
 
-	public static bool IsBalloon(CChip chip) {
+	public static bool IsBalloon(CChip chip)
+	{
 		if (chip == null) return false;
 		return chip.nChannelNo == 0x17;
 	}
 
-	public static bool IsBigRoll(CChip chip) {
+	public static bool IsBigRoll(CChip chip)
+	{
 		if (chip == null) return false;
 		return chip.nChannelNo == 0x16;
 	}
 
-	public static bool IsSmallRoll(CChip chip) {
+	public static bool IsSmallRoll(CChip chip)
+	{
 		if (chip == null) return false;
 		return chip.nChannelNo == 0x15;
 	}
 
-	public static bool IsADLIB(CChip chip) {
+	public static bool IsADLIB(CChip chip)
+	{
 		if (chip == null) return false;
 		return chip.nChannelNo == 0x1F;
 	}
 
-	public static bool IsRoll(CChip chip) {
+	public static bool IsRoll(CChip chip)
+	{
 		if (chip == null) return false;
 		return IsBigRoll(chip) || IsSmallRoll(chip) || IsClapRoll(chip) || IsYellowRoll(chip);
 	}
 
-	public static bool IsGenericBalloon(CChip chip) {
+	public static bool IsGenericBalloon(CChip chip)
+	{
 		if (chip == null) return false;
 		return IsBalloon(chip) || IsKusudama(chip) || IsFuzeRoll(chip);
 	}
 
-	public static bool IsGenericRoll(CChip chip) {
+	public static bool IsGenericRoll(CChip chip)
+	{
 		if (chip == null) return false;
 		return (0x15 <= chip.nChannelNo && chip.nChannelNo <= 0x19) ||
 			   (chip.nChannelNo == 0x20 || chip.nChannelNo == 0x21)
 			   || chip.nChannelNo == 0x1D;
 	}
 
-	public static bool IsMissableNote(CChip chip) {
+	public static bool IsMissableNote(CChip chip)
+	{
 		if (chip == null) return false;
 		return (0x11 <= chip.nChannelNo && chip.nChannelNo <= 0x14)
 			   || chip.nChannelNo == 0x1A
@@ -250,7 +290,8 @@ class NotesManager {
 			   || chip.nChannelNo == 0x101;
 	}
 
-	public static bool IsHittableNote(CChip chip) {
+	public static bool IsHittableNote(CChip chip)
+	{
 		if (chip == null) return false;
 		return IsMissableNote(chip)
 			   || IsGenericRoll(chip)
@@ -263,10 +304,12 @@ class NotesManager {
 	#region [Displayables]
 
 	// Flying notes
-	public static void DisplayNote(int player, int x, int y, int Lane) {
+	public static void DisplayNote(int player, int x, int y, int Lane)
+	{
 		EGameType _gt = OpenNijiiroRW.ConfigIni.nGameType[OpenNijiiroRW.GetActualPlayer(player)];
 
-		switch (Lane) {
+		switch (Lane)
+		{
 			case 1:
 			case 2:
 			case 3:
@@ -280,11 +323,13 @@ class NotesManager {
 	}
 
 	// Regular display
-	public static void DisplayNote(int player, int x, int y, CChip chip, int frame, int length = -1) {
+	public static void DisplayNote(int player, int x, int y, CChip chip, int frame, int length = -1)
+	{
 		if (OpenNijiiroRW.ConfigIni.eSTEALTH[OpenNijiiroRW.GetActualPlayer(player)] != EStealthMode.Off || !chip.bShow)
 			return;
 
-		if (length == -1) {
+		if (length == -1)
+		{
 			length = OpenNijiiroRW.Skin.Game_Notes_Size[0];
 		}
 
@@ -296,18 +341,26 @@ class NotesManager {
 		else if (IsBigKaTaiko(chip, _gt) || IsClapKonga(chip, _gt)) noteType = 4;
 		else if (IsBalloon(chip)) noteType = 11;
 
-		else if (IsMine(chip)) {
+		else if (IsMine(chip))
+		{
 			OpenNijiiroRW.Tx.Note_Mine?.t2D描画(x, y);
 			return;
-		} else if (IsPurpleNote(chip)) {
+		}
+		else if (IsPurpleNote(chip))
+		{
 			OpenNijiiroRW.Tx.Note_Swap?.t2D描画(x, y, new Rectangle(0, frame, OpenNijiiroRW.Skin.Game_Notes_Size[0], OpenNijiiroRW.Skin.Game_Notes_Size[1]));
 			return;
-		} else if (IsKusudama(chip)) {
+		}
+		else if (IsKusudama(chip))
+		{
 			OpenNijiiroRW.Tx.Note_Kusu?.t2D描画(x, y, new Rectangle(0, frame, length, OpenNijiiroRW.Skin.Game_Notes_Size[1]));
 			return;
-		} else if (IsADLIB(chip)) {
+		}
+		else if (IsADLIB(chip))
+		{
 			var puchichara = OpenNijiiroRW.Tx.Puchichara[PuchiChara.tGetPuchiCharaIndexByName(OpenNijiiroRW.GetActualPlayer(player))];
-			if (puchichara.effect.ShowAdlib) {
+			if (puchichara.effect.ShowAdlib)
+			{
 				OpenNijiiroRW.Tx.Note_Adlib?.tUpdateOpacity(50);
 				OpenNijiiroRW.Tx.Note_Adlib?.t2D描画(x, y, new Rectangle(0, frame, length, OpenNijiiroRW.Skin.Game_Notes_Size[1]));
 			}
@@ -319,7 +372,8 @@ class NotesManager {
 
 	// Roll display
 	public static void DisplayRoll(int player, int x, int y, CChip chip, int frame,
-		Color4 normalColor, Color4 effectedColor, int x末端, int y末端) {
+		Color4 normalColor, Color4 effectedColor, int x末端, int y末端)
+	{
 		EGameType _gt = OpenNijiiroRW.ConfigIni.nGameType[OpenNijiiroRW.GetActualPlayer(player)];
 
 		if (OpenNijiiroRW.ConfigIni.eSTEALTH[OpenNijiiroRW.GetActualPlayer(player)] != EStealthMode.Off || !chip.bShow)
@@ -335,23 +389,32 @@ class NotesManager {
 		float xHitNoteOffset = wImage / 2.0f;
 		float yHitNoteOffset = hImage / 2.0f;
 
-		if (IsSmallRoll(chip) || (_gt == EGameType.Taiko && IsYellowRoll(chip))) {
+		if (IsSmallRoll(chip) || (_gt == EGameType.Taiko && IsYellowRoll(chip)))
+		{
 			_offset = 0;
 		}
-		if (IsBigRoll(chip) || (_gt == EGameType.Taiko && IsClapRoll(chip))) {
+		if (IsBigRoll(chip) || (_gt == EGameType.Taiko && IsClapRoll(chip)))
+		{
 			_offset = OpenNijiiroRW.Skin.Game_Notes_Size[0] * 3;
-		} else if (IsClapRoll(chip) && _gt == EGameType.Konga) {
+		}
+		else if (IsClapRoll(chip) && _gt == EGameType.Konga)
+		{
 			_offset = OpenNijiiroRW.Skin.Game_Notes_Size[0] * 11;
-		} else if (IsYellowRoll(chip) && _gt == EGameType.Konga) {
+		}
+		else if (IsYellowRoll(chip) && _gt == EGameType.Konga)
+		{
 			_offset = OpenNijiiroRW.Skin.Game_Notes_Size[0] * 8;
-		} else if (IsFuzeRoll(chip)) {
+		}
+		else if (IsFuzeRoll(chip))
+		{
 			_texarr = OpenNijiiroRW.Tx.Note_FuseRoll;
 			_offset = -rollOrigin;
 		}
 
 		if (_texarr == null) return;
 
-		if (chip.bShowRoll) {
+		if (chip.bShowRoll)
+		{
 			var theta = -Math.Atan2(y末端 - y, x末端 - x);
 
 			var dist = Math.Sqrt(Math.Pow(x末端 - x, 2) + Math.Pow(y末端 - y, 2));
@@ -402,21 +465,31 @@ class NotesManager {
 	}
 
 	// SENotes
-	public static void DisplaySENotes(int player, int x, int y, CChip chip) {
+	public static void DisplaySENotes(int player, int x, int y, CChip chip)
+	{
 		if (OpenNijiiroRW.ConfigIni.eSTEALTH[OpenNijiiroRW.GetActualPlayer(player)] == EStealthMode.Stealth)
 			return;
 
 		EGameType _gt = OpenNijiiroRW.ConfigIni.nGameType[OpenNijiiroRW.GetActualPlayer(player)];
 
-		if (IsMine(chip)) {
+		if (IsMine(chip))
+		{
 			OpenNijiiroRW.Tx.SENotesExtension?.t2D描画(x, y, new Rectangle(0, OpenNijiiroRW.Skin.Game_SENote_Size[1], OpenNijiiroRW.Skin.Game_SENote_Size[0], OpenNijiiroRW.Skin.Game_SENote_Size[1]));
-		} else if (IsPurpleNote(chip) && _gt != EGameType.Konga) {
+		}
+		else if (IsPurpleNote(chip) && _gt != EGameType.Konga)
+		{
 			OpenNijiiroRW.Tx.SENotesExtension?.t2D描画(x, y, new Rectangle(0, 0, OpenNijiiroRW.Skin.Game_SENote_Size[0], OpenNijiiroRW.Skin.Game_SENote_Size[1]));
-		} else if (IsFuzeRoll(chip)) {
+		}
+		else if (IsFuzeRoll(chip))
+		{
 			OpenNijiiroRW.Tx.SENotesExtension?.t2D描画(x, y, new Rectangle(0, OpenNijiiroRW.Skin.Game_SENote_Size[1] * 2, OpenNijiiroRW.Skin.Game_SENote_Size[0], OpenNijiiroRW.Skin.Game_SENote_Size[1]));
-		} else if (IsKusudama(chip)) {
+		}
+		else if (IsKusudama(chip))
+		{
 			OpenNijiiroRW.Tx.SENotesExtension?.t2D描画(x, y, new Rectangle(0, OpenNijiiroRW.Skin.Game_SENote_Size[1] * 3, OpenNijiiroRW.Skin.Game_SENote_Size[0], OpenNijiiroRW.Skin.Game_SENote_Size[1]));
-		} else {
+		}
+		else
+		{
 			OpenNijiiroRW.Tx.SENotes[(int)_gt]?.t2D描画(x, y, new Rectangle(0, OpenNijiiroRW.Skin.Game_SENote_Size[1] * chip.nSenote, OpenNijiiroRW.Skin.Game_SENote_Size[0], OpenNijiiroRW.Skin.Game_SENote_Size[1]));
 		}
 	}

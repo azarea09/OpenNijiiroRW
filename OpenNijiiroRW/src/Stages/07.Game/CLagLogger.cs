@@ -4,19 +4,23 @@ using FDK.ExtensionMethods;
 
 namespace OpenNijiiroRW;
 
-internal static class CLagLogger {
+internal static class CLagLogger
+{
 	private const int MaximumLag = 200;
 	private const int MinimumLag = 0 - MaximumLag;
 	private const int Offset = 1 - MinimumLag;
 
 	private static readonly List<int> LagValues = new List<int>(2000);
 
-	public static void Add(int nPlayer, CChip pChip) {
-		if (nPlayer != 0) {
+	public static void Add(int nPlayer, CChip pChip)
+	{
+		if (nPlayer != 0)
+		{
 			return;
 		}
 
-		switch (pChip.nChannelNo) {
+		switch (pChip.nChannelNo)
+		{
 			case 0x15:
 			case 0x16:
 			case 0x17:
@@ -30,8 +34,10 @@ internal static class CLagLogger {
 		LagValues.Add(pChipNLag);
 	}
 
-	public static double? LogAndReturnMeanLag() {
-		if (LagValues.Count < 30) {
+	public static double? LogAndReturnMeanLag()
+	{
+		if (LagValues.Count < 30)
+		{
 			return null;
 		}
 
@@ -49,7 +55,8 @@ internal static class CLagLogger {
 			$"{nameof(CLagLogger)}.{nameof(LogAndReturnMeanLag)}: Mean lag: {mean}. Median lag: {median}. Mode(s) of lag: {modes}. Standard deviation of lag: {stdev}.");
 
 		var hitChipCountsIndexedByOffsetLag = new int[1 + MaximumLag + 1 + MaximumLag + 1];
-		foreach (var pChipNLag in LagValues) {
+		foreach (var pChipNLag in LagValues)
+		{
 			hitChipCountsIndexedByOffsetLag[pChipNLag.Clamp(MinimumLag - 1, MaximumLag + 1) + Offset]++;
 		}
 
@@ -57,23 +64,33 @@ internal static class CLagLogger {
 		var sbData = new StringBuilder();
 
 		var doneOne = false;
-		for (var i = 0; i < hitChipCountsIndexedByOffsetLag.Length; i++) {
+		for (var i = 0; i < hitChipCountsIndexedByOffsetLag.Length; i++)
+		{
 			var count = hitChipCountsIndexedByOffsetLag[i];
 
-			if (count != 0) {
-				if (doneOne) {
+			if (count != 0)
+			{
+				if (doneOne)
+				{
 					sbHeader.Append(",");
 					sbData.Append(",");
-				} else {
+				}
+				else
+				{
 					doneOne = true;
 				}
 
 				var lag = i - Offset;
-				if (lag < MinimumLag) {
+				if (lag < MinimumLag)
+				{
 					sbHeader.Append($"< {MinimumLag}");
-				} else if (lag > MaximumLag) {
+				}
+				else if (lag > MaximumLag)
+				{
 					sbHeader.Append($"> {MaximumLag}");
-				} else {
+				}
+				else
+				{
 					sbHeader.Append(lag);
 				}
 

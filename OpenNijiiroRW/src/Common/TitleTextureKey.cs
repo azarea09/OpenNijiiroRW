@@ -3,15 +3,18 @@ using Color = System.Drawing.Color;
 
 namespace OpenNijiiroRW;
 
-public sealed class TitleTextureKey {
+public sealed class TitleTextureKey
+{
 
 	// Static
 	private static readonly Dictionary<TitleTextureKey, CTexture> _titledictionary
 		= new Dictionary<TitleTextureKey, CTexture>();
 
-	public static CTexture ResolveTitleTexture(TitleTextureKey titleTextureKey) {
+	public static CTexture ResolveTitleTexture(TitleTextureKey titleTextureKey)
+	{
 		if (titleTextureKey == null) return null;
-		if (!_titledictionary.TryGetValue(titleTextureKey, out var texture)) {
+		if (!_titledictionary.TryGetValue(titleTextureKey, out var texture))
+		{
 			texture = GenerateTitleTexture(titleTextureKey);
 			_titledictionary.Add(titleTextureKey, texture);
 		}
@@ -19,9 +22,11 @@ public sealed class TitleTextureKey {
 		return texture;
 	}
 
-	public static CTexture ResolveTitleTexture(TitleTextureKey titleTextureKey, bool bVertical, bool keepCenter = false) {
+	public static CTexture ResolveTitleTexture(TitleTextureKey titleTextureKey, bool bVertical, bool keepCenter = false)
+	{
 		if (titleTextureKey == null) return null;
-		if (!_titledictionary.TryGetValue(titleTextureKey, out var texture)) {
+		if (!_titledictionary.TryGetValue(titleTextureKey, out var texture))
+		{
 			if (bVertical)
 				texture = GenerateTitleTextureTate(titleTextureKey, keepCenter);
 			else
@@ -32,9 +37,11 @@ public sealed class TitleTextureKey {
 		return texture;
 	}
 
-	public static CTexture ResolveTitleTextureTate(TitleTextureKey titleTextureKey) {
+	public static CTexture ResolveTitleTextureTate(TitleTextureKey titleTextureKey)
+	{
 		if (titleTextureKey == null) return null;
-		if (!_titledictionary.TryGetValue(titleTextureKey, out var texture)) {
+		if (!_titledictionary.TryGetValue(titleTextureKey, out var texture))
+		{
 			texture = GenerateTitleTextureTate(titleTextureKey);
 			_titledictionary.Add(titleTextureKey, texture);
 		}
@@ -42,12 +49,15 @@ public sealed class TitleTextureKey {
 		return texture;
 	}
 
-	private static CTexture GenerateTitleTextureTate(TitleTextureKey titleTextureKey, bool keepCenter = false) {
+	private static CTexture GenerateTitleTextureTate(TitleTextureKey titleTextureKey, bool keepCenter = false)
+	{
 		if (titleTextureKey == null) return null;
 		using (var bmp = titleTextureKey.cPrivateFastFont.DrawText_V(
-				   titleTextureKey.str, titleTextureKey.forecolor, titleTextureKey.backcolor, titleTextureKey.secondEdge, 30, keepCenter)) {
+				   titleTextureKey.str, titleTextureKey.forecolor, titleTextureKey.backcolor, titleTextureKey.secondEdge, 30, keepCenter))
+		{
 			CTexture tx文字テクスチャ = OpenNijiiroRW.tテクスチャの生成(bmp, false);
-			if (tx文字テクスチャ.szTextureSize.Height > titleTextureKey.maxWidth) {
+			if (tx文字テクスチャ.szTextureSize.Height > titleTextureKey.maxWidth)
+			{
 				//tx文字テクスチャ.vc拡大縮小倍率.X = (float)(((double)titleTextureKey.maxWidth) / tx文字テクスチャ.szテクスチャサイズ.Height);
 				tx文字テクスチャ.Scale.X = 1.0f;
 				tx文字テクスチャ.Scale.Y = (float)(((double)titleTextureKey.maxWidth) / tx文字テクスチャ.szTextureSize.Height);
@@ -57,12 +67,15 @@ public sealed class TitleTextureKey {
 		}
 	}
 
-	private static CTexture GenerateTitleTexture(TitleTextureKey titleTextureKey, bool keepCenter = false) {
+	private static CTexture GenerateTitleTexture(TitleTextureKey titleTextureKey, bool keepCenter = false)
+	{
 		if (titleTextureKey == null) return null;
 		using (var bmp = titleTextureKey.cPrivateFastFont.DrawText(
-				   titleTextureKey.str, titleTextureKey.forecolor, titleTextureKey.backcolor, titleTextureKey.secondEdge, 30, keepCenter)) {
+				   titleTextureKey.str, titleTextureKey.forecolor, titleTextureKey.backcolor, titleTextureKey.secondEdge, 30, keepCenter))
+		{
 			CTexture tx文字テクスチャ = OpenNijiiroRW.tテクスチャの生成(bmp, false);
-			if (tx文字テクスチャ.szTextureSize.Width > titleTextureKey.maxWidth) {
+			if (tx文字テクスチャ.szTextureSize.Width > titleTextureKey.maxWidth)
+			{
 				tx文字テクスチャ.Scale.X = (float)(((double)titleTextureKey.maxWidth) / tx文字テクスチャ.szTextureSize.Width);
 				tx文字テクスチャ.Scale.Y = 1.0f;// (float) (((double) titleTextureKey.maxWidth) / tx文字テクスチャ.szテクスチャサイズ.Width);
 
@@ -72,9 +85,11 @@ public sealed class TitleTextureKey {
 		}
 	}
 
-	private static void ClearTitleTextureCache() {
+	private static void ClearTitleTextureCache()
+	{
 		// Was initially used when disposing the song select screen (at the end of the program), probably unused
-		foreach (var titleTexture in _titledictionary.Values) {
+		foreach (var titleTexture in _titledictionary.Values)
+		{
 			titleTexture.Dispose();
 		}
 
@@ -89,7 +104,8 @@ public sealed class TitleTextureKey {
 	public readonly int maxWidth;
 	public readonly Color? secondEdge;
 
-	public TitleTextureKey(string str文字, CCachedFontRenderer cPrivateFastFont, Color forecolor, Color backcolor, int maxHeight, Color? secondEdge = null) {
+	public TitleTextureKey(string str文字, CCachedFontRenderer cPrivateFastFont, Color forecolor, Color backcolor, int maxHeight, Color? secondEdge = null)
+	{
 		this.str = str文字;
 		this.cPrivateFastFont = cPrivateFastFont;
 		this.forecolor = forecolor;
@@ -98,7 +114,8 @@ public sealed class TitleTextureKey {
 		this.secondEdge = secondEdge;
 	}
 
-	private bool Equals(TitleTextureKey other) {
+	private bool Equals(TitleTextureKey other)
+	{
 		return string.Equals(str, other.str) &&
 			   cPrivateFastFont.Equals(other.cPrivateFastFont) &&
 			   forecolor.Equals(other.forecolor) &&
@@ -107,14 +124,17 @@ public sealed class TitleTextureKey {
 			   maxWidth == other.maxWidth;
 	}
 
-	public override bool Equals(object obj) {
+	public override bool Equals(object obj)
+	{
 		if (ReferenceEquals(null, obj)) return false;
 		if (ReferenceEquals(this, obj)) return true;
 		return obj is TitleTextureKey other && Equals(other);
 	}
 
-	public override int GetHashCode() {
-		unchecked {
+	public override int GetHashCode()
+	{
+		unchecked
+		{
 			var hashCode = str.GetHashCode();
 			hashCode = (hashCode * 397) ^ cPrivateFastFont.GetHashCode();
 			hashCode = (hashCode * 397) ^ forecolor.GetHashCode();
@@ -126,11 +146,13 @@ public sealed class TitleTextureKey {
 		}
 	}
 
-	public static bool operator ==(TitleTextureKey left, TitleTextureKey right) {
+	public static bool operator ==(TitleTextureKey left, TitleTextureKey right)
+	{
 		return Equals(left, right);
 	}
 
-	public static bool operator !=(TitleTextureKey left, TitleTextureKey right) {
+	public static bool operator !=(TitleTextureKey left, TitleTextureKey right)
+	{
 		return !Equals(left, right);
 	}
 }

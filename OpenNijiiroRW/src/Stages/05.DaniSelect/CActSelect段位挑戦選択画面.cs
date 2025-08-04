@@ -3,8 +3,10 @@ using FDK;
 
 namespace OpenNijiiroRW;
 
-class CActSelect段位挑戦選択画面 : CActivity {
-	public override void Activate() {
+class CActSelect段位挑戦選択画面 : CActivity
+{
+	public override void Activate()
+	{
 		ctBarIn = new CCounter();
 		ctBarOut = new CCounter();
 		ctBarOut.CurrentValue = 255;
@@ -14,20 +16,25 @@ class CActSelect段位挑戦選択画面 : CActivity {
 		base.Activate();
 	}
 
-	public override void DeActivate() {
+	public override void DeActivate()
+	{
 		base.DeActivate();
 	}
 
-	public override void CreateManagedResource() {
+	public override void CreateManagedResource()
+	{
 		base.CreateManagedResource();
 	}
 
-	public override void ReleaseManagedResource() {
+	public override void ReleaseManagedResource()
+	{
 		base.ReleaseManagedResource();
 	}
 
-	public override int Draw() {
-		if (OpenNijiiroRW.stageDanSongSelect.bDifficultyIn || ctBarOut.CurrentValue < ctBarOut.EndValue) {
+	public override int Draw()
+	{
+		if (OpenNijiiroRW.stageDanSongSelect.bDifficultyIn || ctBarOut.CurrentValue < ctBarOut.EndValue)
+		{
 			ctBarIn.Tick();
 			ctBarOut.Tick();
 
@@ -51,18 +58,23 @@ class CActSelect段位挑戦選択画面 : CActivity {
 
 			#region [Key bindings]
 
-			if (ctBarIn.IsEnded && !OpenNijiiroRW.stageDanSongSelect.b選択した && bOption == false) {
+			if (ctBarIn.IsEnded && !OpenNijiiroRW.stageDanSongSelect.b選択した && bOption == false)
+			{
 				if (OpenNijiiroRW.InputManager.Keyboard.KeyPressed((int)SlimDXKeys.Key.RightArrow) ||
-					OpenNijiiroRW.Pad.bPressed(EInstrumentPad.Drums, EPad.RBlue)) {
-					if (n現在の選択行 - 1 >= 0) {
+					OpenNijiiroRW.Pad.bPressed(EInstrumentPad.Drums, EPad.RBlue))
+				{
+					if (n現在の選択行 - 1 >= 0)
+					{
 						OpenNijiiroRW.Skin.soundChangeSFX.tPlay();
 						n現在の選択行--;
 					}
 				}
 
 				if (OpenNijiiroRW.InputManager.Keyboard.KeyPressed((int)SlimDXKeys.Key.LeftArrow) ||
-					OpenNijiiroRW.Pad.bPressed(EInstrumentPad.Drums, EPad.LBlue)) {
-					if (n現在の選択行 + 1 <= 2) {
+					OpenNijiiroRW.Pad.bPressed(EInstrumentPad.Drums, EPad.LBlue))
+				{
+					if (n現在の選択行 + 1 <= 2)
+					{
 						OpenNijiiroRW.Skin.soundChangeSFX.tPlay();
 						n現在の選択行++;
 					}
@@ -70,18 +82,24 @@ class CActSelect段位挑戦選択画面 : CActivity {
 
 				if (OpenNijiiroRW.InputManager.Keyboard.KeyPressed((int)SlimDXKeys.Key.Return) ||
 					OpenNijiiroRW.Pad.bPressed(EInstrumentPad.Drums, EPad.LRed) ||
-					OpenNijiiroRW.Pad.bPressed(EInstrumentPad.Drums, EPad.RRed)) {
-					if (n現在の選択行 == 0) {
+					OpenNijiiroRW.Pad.bPressed(EInstrumentPad.Drums, EPad.RRed))
+				{
+					if (n現在の選択行 == 0)
+					{
 						this.ctBarOut.Start(0, 255, 0.5f, OpenNijiiroRW.Timer);
 						OpenNijiiroRW.Skin.soundCancelSFX.tPlay();
 						OpenNijiiroRW.stageDanSongSelect.bDifficultyIn = false;
-					} else if (n現在の選択行 == 1) {
+					}
+					else if (n現在の選択行 == 1)
+					{
 						//TJAPlayer3.Skin.soundDanSongSelect.t再生する();
 						OpenNijiiroRW.ConfigIni.bTokkunMode = false;
 						OpenNijiiroRW.Skin.soundDecideSFX.tPlay();
 						OpenNijiiroRW.Skin.voiceMenuDanSelectConfirm[OpenNijiiroRW.SaveFile]?.tPlay();
 						OpenNijiiroRW.stageDanSongSelect.ct待機.Start(0, 3000, 1, OpenNijiiroRW.Timer);
-					} else if (n現在の選択行 == 2) {
+					}
+					else if (n現在の選択行 == 2)
+					{
 						bOption = true;
 					}
 				}

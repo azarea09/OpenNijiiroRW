@@ -2,25 +2,30 @@
 
 namespace OpenNijiiroRW;
 
-internal class CActImplFooter : CActivity {
+internal class CActImplFooter : CActivity
+{
 	/// <summary>
 	/// フッター
 	/// </summary>
-	public CActImplFooter() {
+	public CActImplFooter()
+	{
 		base.IsDeActivated = true;
 	}
 
-	public override void Activate() {
+	public override void Activate()
+	{
 		var footerDir = CSkin.Path($"{TextureLoader.BASE}{TextureLoader.GAME}{TextureLoader.FOOTER}");
 		var preset = HScenePreset.GetBGPreset();
 
 		if (preset == null) return;
 
-		if (Directory.Exists(footerDir)) {
+		if (Directory.Exists(footerDir))
+		{
 			Random random = new Random();
 
 			var upDirs = Directory.GetFiles(footerDir);
-			if (preset.FooterSet != null) {
+			if (preset.FooterSet != null)
+			{
 				var _presetPath = (preset.FooterSet.Length > 0) ? $@"{footerDir}" + preset.FooterSet[random.Next(0, preset.FooterSet.Length)] + ".png" : "";
 				var path = File.Exists(_presetPath)
 					? _presetPath
@@ -33,21 +38,25 @@ internal class CActImplFooter : CActivity {
 		base.Activate();
 	}
 
-	public override void DeActivate() {
+	public override void DeActivate()
+	{
 		OpenNijiiroRW.tDisposeSafely(ref Mob_Footer);
 
 		base.DeActivate();
 	}
 
-	public override void CreateManagedResource() {
+	public override void CreateManagedResource()
+	{
 		base.CreateManagedResource();
 	}
 
-	public override void ReleaseManagedResource() {
+	public override void ReleaseManagedResource()
+	{
 		base.ReleaseManagedResource();
 	}
 
-	public override int Draw() {
+	public override int Draw()
+	{
 		this.Mob_Footer?.t2D描画(0, OpenNijiiroRW.Skin.Resolution[1] - this.Mob_Footer.szTextureSize.Height);
 		return base.Draw();
 	}

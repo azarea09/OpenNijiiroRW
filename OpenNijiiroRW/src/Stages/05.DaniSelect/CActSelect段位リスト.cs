@@ -5,9 +5,12 @@ using Rectangle = System.Drawing.Rectangle;
 
 namespace OpenNijiiroRW;
 
-class CActSelect段位リスト : CStage {
-	public CActSelect段位リスト() {
-		for (int i = 0; i < 10; i++) {
+class CActSelect段位リスト : CStage
+{
+	public CActSelect段位リスト()
+	{
+		for (int i = 0; i < 10; i++)
+		{
 			stLevel[i].ch = i.ToString().ToCharArray()[0];
 			stLevel[i].pt = new Point(i * 14, 0);
 
@@ -19,13 +22,16 @@ class CActSelect段位リスト : CStage {
 		}
 	}
 
-	public bool bスクロール中 {
-		get {
+	public bool bスクロール中
+	{
+		get
+		{
 			return ctDaniMoveAnime.IsTicked;
 		}
 	}
 
-	public override void Activate() {
+	public override void Activate()
+	{
 		if (this.IsActivated)
 			return;
 
@@ -40,7 +46,8 @@ class CActSelect段位リスト : CStage {
 		ctExamConditionsAnim = new CCounter(0, 4000, 1, OpenNijiiroRW.Timer);
 
 		this.ttkExams = new TitleTextureKey[(int)Exam.Type.Total];
-		for (int i = 0; i < this.ttkExams.Length; i++) {
+		for (int i = 0; i < this.ttkExams.Length; i++)
+		{
 			this.ttkExams[i] = new TitleTextureKey(CLangManager.LangInstance.GetExamName(i), this.pfExamFont, Color.White, Color.SaddleBrown, 1000);
 		}
 
@@ -50,12 +57,14 @@ class CActSelect段位リスト : CStage {
 		base.Activate();
 	}
 
-	public override void DeActivate() {
+	public override void DeActivate()
+	{
 
 		base.DeActivate();
 	}
 
-	public override void CreateManagedResource() {
+	public override void CreateManagedResource()
+	{
 		this.pfDanFolder = HPrivateFastFont.tInstantiateMainFont(OpenNijiiroRW.Skin.DaniSelect_Font_DanFolder_Size[0]);
 		this.pfDanFolderDesc = HPrivateFastFont.tInstantiateMainFont(OpenNijiiroRW.Skin.DaniSelect_Font_DanFolder_Size[1]);
 		this.pfDanSong = HPrivateFastFont.tInstantiateMainFont(OpenNijiiroRW.Skin.DaniSelect_Font_DanSong_Size);
@@ -64,7 +73,8 @@ class CActSelect段位リスト : CStage {
 		base.CreateManagedResource();
 	}
 
-	public override void ReleaseManagedResource() {
+	public override void ReleaseManagedResource()
+	{
 		OpenNijiiroRW.tDisposeSafely(ref pfDanFolder);
 		OpenNijiiroRW.tDisposeSafely(ref pfDanFolderDesc);
 		OpenNijiiroRW.tDisposeSafely(ref pfDanSong);
@@ -73,7 +83,8 @@ class CActSelect段位リスト : CStage {
 		base.ReleaseManagedResource();
 	}
 
-	public override int Draw() {
+	public override int Draw()
+	{
 		ctDaniMoveAnime.Tick();
 		ctDaniIn.Tick();
 		ctDanAnimeIn.Tick();
@@ -81,8 +92,10 @@ class CActSelect段位リスト : CStage {
 
 		ctExamConditionsAnim.TickLoop();
 
-		if (ctDaniIn.CurrentValue == 6000) {
-			if (!DaniInAnime) {
+		if (ctDaniIn.CurrentValue == 6000)
+		{
+			if (!DaniInAnime)
+			{
 				ctDanAnimeIn.Start(0, 90, 2f, OpenNijiiroRW.Timer);
 				DaniInAnime = true;
 			}
@@ -90,7 +103,8 @@ class CActSelect段位リスト : CStage {
 
 		#region [ バー表示 ]
 
-		if (stバー情報.Length != 0 && ctDaniIn.CurrentValue == 6000) {
+		if (stバー情報.Length != 0 && ctDaniIn.CurrentValue == 6000)
+		{
 			OpenNijiiroRW.Tx.DanC_ExamType.Scale.X = 0.81f;
 			OpenNijiiroRW.Tx.DanC_ExamType.Scale.Y = 0.81f;
 
@@ -108,10 +122,14 @@ class CActSelect段位リスト : CStage {
 
 		#region [ バー移動 ]
 
-		if (ctDaniMoveAnime.CurrentValue == 90) {
-			if (bLeftMove) {
+		if (ctDaniMoveAnime.CurrentValue == 90)
+		{
+			if (bLeftMove)
+			{
 				this.n現在の選択行 -= n現在の選択行 - 1 >= 0 ? 1 : 0;
-			} else {
+			}
+			else
+			{
 				this.n現在の選択行 += n現在の選択行 + 1 < this.stバー情報.Length ? 1 : 0;
 			}
 			ctDaniMoveAnime.Stop();
@@ -133,7 +151,8 @@ class CActSelect段位リスト : CStage {
 		int tickExtraWidth = OpenNijiiroRW.Tx.Dani_Plate_Extra.szTextureSize.Width / 3;
 		int tickExtraHeight = OpenNijiiroRW.Tx.Dani_Plate_Extra.szTextureSize.Height;
 
-		for (int idx = -13; idx < 14; idx++) {
+		for (int idx = -13; idx < 14; idx++)
+		{
 
 			if (ctDaniIn.CurrentValue < 5000 + (idx + 13) * 33)
 				break;
@@ -155,26 +174,31 @@ class CActSelect段位リスト : CStage {
 			int tick = Math.Max(0, Math.Min(5, stバー情報[currentSong].nDanTick));
 			Color tickColor = stバー情報[currentSong].cDanTickColor;
 
-			switch (stバー情報[currentSong].eノード種別) {
-				case CSongListNode.ENodeType.BACKBOX: {
+			switch (stバー情報[currentSong].eノード種別)
+			{
+				case CSongListNode.ENodeType.BACKBOX:
+					{
 						OpenNijiiroRW.Tx.Dani_Plate_Extra?.tUpdateOpacity(255);
 						OpenNijiiroRW.Tx.Dani_Plate_Extra?.tUpdateColor4(CConversion.ColorToColor4(tickColor));
 						OpenNijiiroRW.Tx.Dani_Plate_Extra?.t2D拡大率考慮上中央基準描画(xPos, yPos, new Rectangle(0, 0, tickExtraWidth, tickExtraHeight));
 						break;
 					}
-				case CSongListNode.ENodeType.BOX: {
+				case CSongListNode.ENodeType.BOX:
+					{
 						OpenNijiiroRW.Tx.Dani_Plate_Extra?.tUpdateOpacity(255);
 						OpenNijiiroRW.Tx.Dani_Plate_Extra?.tUpdateColor4(CConversion.ColorToColor4(tickColor));
 						OpenNijiiroRW.Tx.Dani_Plate_Extra?.t2D拡大率考慮上中央基準描画(xPos, yPos, new Rectangle(tickExtraWidth, 0, tickExtraWidth, tickExtraHeight));
 						break;
 					}
-				case CSongListNode.ENodeType.RANDOM: {
+				case CSongListNode.ENodeType.RANDOM:
+					{
 						OpenNijiiroRW.Tx.Dani_Plate_Extra?.tUpdateOpacity(255);
 						OpenNijiiroRW.Tx.Dani_Plate_Extra?.tUpdateColor4(CConversion.ColorToColor4(tickColor));
 						OpenNijiiroRW.Tx.Dani_Plate_Extra?.t2D拡大率考慮上中央基準描画(xPos, yPos, new Rectangle(tickExtraWidth * 2, 0, tickExtraWidth, tickExtraHeight));
 						break;
 					}
-				default: {
+				default:
+					{
 						OpenNijiiroRW.Tx.Dani_Plate?.tUpdateOpacity(255);
 						OpenNijiiroRW.Tx.Dani_Plate?.tUpdateColor4(CConversion.ColorToColor4(tickColor));
 						OpenNijiiroRW.Tx.Dani_Plate?.t2D拡大率考慮上中央基準描画(xPos, yPos, new Rectangle(tickWidth * tick, 0, tickWidth, tickHeight));
@@ -197,7 +221,8 @@ class CActSelect段位リスト : CStage {
 
 			#region [Plate flash]
 
-			if (idx == 0) {
+			if (idx == 0)
+			{
 				OpenNijiiroRW.Tx.Dani_Plate?.tUpdateOpacity(Math.Abs(255 - ctDanTick.CurrentValue));
 				OpenNijiiroRW.Tx.Dani_Plate?.t2D拡大率考慮上中央基準描画(xPos, yPos, new Rectangle(tickWidth * 6, 0, tickWidth, tickHeight));
 			}
@@ -208,7 +233,8 @@ class CActSelect段位リスト : CStage {
 
 			int currentRank = Math.Min(stバー情報[currentSong].clearGrade, 8) - 3;
 
-			if (currentRank >= 0) {
+			if (currentRank >= 0)
+			{
 				OpenNijiiroRW.Tx.DanResult_Rank.Scale.X = 0.20f;
 				OpenNijiiroRW.Tx.DanResult_Rank.Scale.Y = 0.20f;
 				int rank_width = OpenNijiiroRW.Tx.DanResult_Rank.szTextureSize.Width / 7;
@@ -250,7 +276,8 @@ class CActSelect段位リスト : CStage {
 	public List<CSongListNode> listSongs;
 	public STバー情報[] stバー情報;
 
-	public struct STバー情報 {
+	public struct STバー情報
+	{
 		public TitleTextureKey[] ttkタイトル;
 		public int[] n曲難易度;
 		public int[] n曲レベル;
@@ -265,8 +292,10 @@ class CActSelect段位リスト : CStage {
 		public Color cDanTickColor;
 	}
 
-	public CSongListNode currentBar {
-		get {
+	public CSongListNode currentBar
+	{
+		get
+		{
 			return listSongs[n現在の選択行];
 		}
 	}
@@ -276,26 +305,33 @@ class CActSelect段位リスト : CStage {
 
 	private Dictionary<string, CTexture> BarTexCache = new Dictionary<string, CTexture>();
 
-	public static void RefleshSkin() {
+	public static void RefleshSkin()
+	{
 		OpenNijiiroRW.tDisposeSafely(ref pfDanPlateTitle);
 		OpenNijiiroRW.tDisposeSafely(ref pfDanIconTitle);
 	}
 
-	public static void tDisplayDanPlate(CTexture givenPlate, STバー情報? songNode, int x, int y) {
-		if (givenPlate != null) {
+	public static void tDisplayDanPlate(CTexture givenPlate, STバー情報? songNode, int x, int y)
+	{
+		if (givenPlate != null)
+		{
 			givenPlate.Opacity = 255;
 			givenPlate.t2D中心基準描画(x, y);
-		} else {
+		}
+		else
+		{
 			// Default Dan Plate
 
 			int danTick = 0;
 			Color danTickColor = Color.White;
 
-			if (OpenNijiiroRW.stageSongSelect.r確定されたスコア != null) {
+			if (OpenNijiiroRW.stageSongSelect.r確定されたスコア != null)
+			{
 				danTick = OpenNijiiroRW.stageSongSelect.r確定されたスコア.譜面情報.nDanTick;
 				danTickColor = OpenNijiiroRW.stageSongSelect.r確定されたスコア.譜面情報.cDanTickColor;
 			}
-			if (songNode != null) {
+			if (songNode != null)
+			{
 				STバー情報 stNode = (STバー情報)songNode;
 
 				danTick = stNode.nDanTick;
@@ -305,7 +341,8 @@ class CActSelect段位リスト : CStage {
 
 			int unit = OpenNijiiroRW.Tx.Dani_DanPlates.szTextureSize.Width / 6;
 
-			if (OpenNijiiroRW.Tx.Dani_DanPlates != null) {
+			if (OpenNijiiroRW.Tx.Dani_DanPlates != null)
+			{
 				OpenNijiiroRW.Tx.Dani_DanPlates.Opacity = 255;
 				OpenNijiiroRW.Tx.Dani_DanPlates.color4 = CConversion.ColorToColor4(danTickColor);
 			}
@@ -329,7 +366,8 @@ class CActSelect段位リスト : CStage {
 
 			if (OpenNijiiroRW.stageSongSelect.r確定されたスコア != null)
 				titleTmp = OpenNijiiroRW.stageSongSelect.rChoosenSong.ldTitle.GetString("");
-			if (songNode != null) {
+			if (songNode != null)
+			{
 				STバー情報 stNode = (STバー情報)songNode;
 
 				titleTmp = stNode.ttkタイトル[stNode.ttkタイトル.Length - 1].str;
@@ -340,12 +378,14 @@ class CActSelect段位リスト : CStage {
 		}
 	}
 
-	public static void tDisplayDanIcon(int count, float x, float y, int opacity, float scale, bool showFade = false) {
+	public static void tDisplayDanIcon(int count, float x, float y, int opacity, float scale, bool showFade = false)
+	{
 		if (pfDanIconTitle == null)
 			pfDanIconTitle = HPrivateFastFont.tInstantiateMainFont(OpenNijiiroRW.Skin.DaniSelect_DanIconTitle_Size);
 
 		string ex = "th";
-		switch (count) {
+		switch (count)
+		{
 			case 1:
 				ex = "st";
 				break;
@@ -359,7 +399,8 @@ class CActSelect段位リスト : CStage {
 
 		TitleTextureKey ttkTmp = new TitleTextureKey(count.ToString() + ex, pfDanIconTitle, Color.White, Color.Black, 1000);
 
-		if (showFade) {
+		if (showFade)
+		{
 			OpenNijiiroRW.Tx.Dani_DanIcon_Fade.Scale = new Vector3D<float>(scale, scale, 1.0f);
 			OpenNijiiroRW.Tx.Dani_DanIcon_Fade.Opacity = opacity;
 			OpenNijiiroRW.Tx.Dani_DanIcon_Fade.color4 = CConversion.ColorToColor4(OpenNijiiroRW.Skin.DaniSelect_DanIcon_Color[Math.Min(count - 1, OpenNijiiroRW.Skin.DaniSelect_DanIcon_Color.Length - 1)]);
@@ -379,22 +420,28 @@ class CActSelect段位リスト : CStage {
 		TitleTextureKey.ResolveTitleTexture(ttkTmp).Opacity = 255;
 	}
 
-	private void tDrawDanSelectedLevel(float Anime, int modifier = 0) {
+	private void tDrawDanSelectedLevel(float Anime, int modifier = 0)
+	{
 		int scroll = OpenNijiiroRW.Skin.Resolution[0] * modifier;
 		int currentSong = Math.Clamp(n現在の選択行 + modifier, 0, stバー情報.Length - 1);
 		bool over4 = false;
 
-		switch (stバー情報[currentSong].eノード種別) {
-			case CSongListNode.ENodeType.SCORE: {
+		switch (stバー情報[currentSong].eノード種別)
+		{
+			case CSongListNode.ENodeType.SCORE:
+				{
 					#region [Center bar and Dan plate]
 
 					int danTick = stバー情報[currentSong].nDanTick;
 					Color danTickColor = stバー情報[currentSong].cDanTickColor;
 
 					// Use the given bar center if provided, else use a default one
-					if (stバー情報[currentSong].txBarCenter != null) {
+					if (stバー情報[currentSong].txBarCenter != null)
+					{
 						stバー情報[currentSong].txBarCenter.t2D描画(scroll + Anime, 0);
-					} else {
+					}
+					else
+					{
 						int unit = OpenNijiiroRW.Tx.Dani_DanSides.szTextureSize.Width / 6;
 						OpenNijiiroRW.Tx.Dani_DanSides.color4 = CConversion.ColorToColor4(danTickColor);
 
@@ -424,7 +471,8 @@ class CActSelect段位リスト : CStage {
 
 					int currentRank = Math.Min(stバー情報[currentSong].clearGrade, 8) - 3;
 
-					if (currentRank >= 0) {
+					if (currentRank >= 0)
+					{
 						OpenNijiiroRW.Tx.DanResult_Rank.Scale.X = 0.8f;
 						OpenNijiiroRW.Tx.DanResult_Rank.Scale.Y = 0.8f;
 
@@ -450,7 +498,8 @@ class CActSelect段位リスト : CStage {
 
 					#region [Song information]
 
-					int getOpacity(int index, int sections = 2) {
+					int getOpacity(int index, int sections = 2)
+					{
 						int current_section = index / 3;
 						int animJauge = ctExamConditionsAnim.CurrentValue;
 						int split = 4000 / sections;
@@ -494,10 +543,12 @@ class CActSelect段位リスト : CStage {
 					int difficulty_cymbol_height = OpenNijiiroRW.Tx.Dani_Difficulty_Cymbol.szTextureSize.Height;
 					int sections_count = 1 + ((stバー情報[currentSong].n曲レベル.Length - 1) / 3);
 
-					for (int i = 0; i < stバー情報[currentSong].ttkタイトル.Length - 1; i++) {
+					for (int i = 0; i < stバー情報[currentSong].ttkタイトル.Length - 1; i++)
+					{
 						int pos = i % 3;
 						int opacity = 255;
-						if (stバー情報[currentSong].ttkタイトル.Length - 1 > 3) {
+						if (stバー情報[currentSong].ttkタイトル.Length - 1 > 3)
+						{
 							opacity = getOpacity(i, sections_count);
 						}
 						TitleTextureKey.ResolveTitleTexture(stバー情報[currentSong].ttkタイトル[i]).Opacity = opacity;
@@ -507,18 +558,22 @@ class CActSelect段位リスト : CStage {
 						tDisplayDanIcon(i + 1, scroll + Anime + OpenNijiiroRW.Skin.DaniSelect_DanIcon_X[pos], OpenNijiiroRW.Skin.DaniSelect_DanIcon_Y[pos], opacity, 1.0f);
 					}
 
-					for (int i = 0; i < stバー情報[currentSong].n曲難易度.Length; i++) {
+					for (int i = 0; i < stバー情報[currentSong].n曲難易度.Length; i++)
+					{
 						int pos = i % 3;
-						if (stバー情報[currentSong].n曲難易度.Length > 3) {
+						if (stバー情報[currentSong].n曲難易度.Length > 3)
+						{
 							OpenNijiiroRW.Tx.Dani_Difficulty_Cymbol.Opacity = getOpacity(i, sections_count);
 						}
 						OpenNijiiroRW.Tx.Dani_Difficulty_Cymbol.t2D中心基準描画(scroll + Anime + OpenNijiiroRW.Skin.DaniSelect_Difficulty_Cymbol_X[pos], OpenNijiiroRW.Skin.DaniSelect_Difficulty_Cymbol_Y[pos], new Rectangle(stバー情報[currentSong].n曲難易度[i] * difficulty_cymbol_width, 0, difficulty_cymbol_width, difficulty_cymbol_height));
 						OpenNijiiroRW.Tx.Dani_Difficulty_Cymbol.Opacity = 255;
 					}
 
-					for (int i = 0; i < stバー情報[currentSong].n曲レベル.Length; i++) {
+					for (int i = 0; i < stバー情報[currentSong].n曲レベル.Length; i++)
+					{
 						int pos = i % 3;
-						if (stバー情報[currentSong].n曲レベル.Length > 3) {
+						if (stバー情報[currentSong].n曲レベル.Length > 3)
+						{
 							OpenNijiiroRW.Tx.Dani_Level_Number.Opacity = getOpacity(i, sections_count);
 						}
 						this.tLevelNumberDraw(scroll + Anime + OpenNijiiroRW.Skin.DaniSelect_Level_Number_X[pos], OpenNijiiroRW.Skin.DaniSelect_Level_Number_Y[pos], stバー情報[currentSong].n曲レベル[i]);
@@ -530,8 +585,10 @@ class CActSelect段位リスト : CStage {
 
 					#region [Check if one of the EXAM5,6,7 slots are used]
 
-					for (int j = 4; j < CExamInfo.cMaxExam; j++) {
-						if (stバー情報[currentSong].List_DanSongs[0].Dan_C[j] != null) {
+					for (int j = 4; j < CExamInfo.cMaxExam; j++)
+					{
+						if (stバー情報[currentSong].List_DanSongs[0].Dan_C[j] != null)
+						{
 							over4 = true;
 							break;
 						}
@@ -550,17 +607,21 @@ class CActSelect段位リスト : CStage {
 
 						int opacity = 255;
 
-						if (over4 == true) {
+						if (over4 == true)
+						{
 							int half = (j - 1) / 3;
 
 							int animJauge = ctExamConditionsAnim.CurrentValue;
 
-							if (half == 0) {
+							if (half == 0)
+							{
 								if (animJauge > 3745)
 									opacity = animJauge - 3745;
 								else if (animJauge > 1745)
 									opacity = 2000 - animJauge;
-							} else {
+							}
+							else
+							{
 								if (animJauge > 3745)
 									opacity = 4000 - animJauge;
 								else if (animJauge > 1745)
@@ -576,10 +637,12 @@ class CActSelect段位リスト : CStage {
 
 						for (int i = 0; i < stバー情報[currentSong].List_DanSongs.Count; i++)  //曲ごとのループ(魂ゲージを除く) 横(x)
 						{
-							if (stバー情報[currentSong].List_DanSongs[i].Dan_C[j] != null) {
+							if (stバー情報[currentSong].List_DanSongs[i].Dan_C[j] != null)
+							{
 								OpenNijiiroRW.Tx.Dani_Exam_Number.Opacity = opacity;
 
-								if (stバー情報[currentSong].List_DanSongs[stバー情報[currentSong].List_DanSongs.Count - 1].Dan_C[j] != null) {
+								if (stバー情報[currentSong].List_DanSongs[stバー情報[currentSong].List_DanSongs.Count - 1].Dan_C[j] != null)
+								{
 									//個別の条件がありますよー
 
 									int moveX = OpenNijiiroRW.Skin.DaniSelect_Exam_Interval[0];
@@ -591,7 +654,8 @@ class CActSelect段位リスト : CStage {
 									int exam_y = OpenNijiiroRW.Skin.DaniSelect_Exam_Y[index];
 
 									CTexture tex = null;
-									switch (stバー情報[currentSong].List_DanSongs.Count) {
+									switch (stバー情報[currentSong].List_DanSongs.Count)
+									{
 										case 1:
 											tex = OpenNijiiroRW.Tx.Dani_Bloc[0];
 											break;
@@ -611,7 +675,8 @@ class CActSelect段位リスト : CStage {
 											break;
 									}
 
-									if (i == 0) {
+									if (i == 0)
+									{
 										if (tex != null)
 											tex.Opacity = opacity;
 										tex?.t2D描画(
@@ -623,10 +688,13 @@ class CActSelect段位リスト : CStage {
 										tExamDraw(scroll + Anime + exam_x + (i * moveX),
 											exam_y + (i * moveY),
 											stバー情報[currentSong].List_DanSongs[i].Dan_C[j].GetValue()[0], stバー情報[currentSong].List_DanSongs[i].Dan_C[j].ExamRange);
-								} else {
+								}
+								else
+								{
 									//全体の条件ですよー
 
-									if (i == 0) {
+									if (i == 0)
+									{
 										if (OpenNijiiroRW.Tx.Dani_Bloc[0] != null)
 											OpenNijiiroRW.Tx.Dani_Bloc[0].Opacity = opacity;
 										OpenNijiiroRW.Tx.Dani_Bloc[0]?.t2D描画(
@@ -646,7 +714,8 @@ class CActSelect段位リスト : CStage {
 
 						#region [Exam title]
 
-						if (stバー情報[currentSong].List_DanSongs[0].Dan_C[j] != null) {
+						if (stバー情報[currentSong].List_DanSongs[0].Dan_C[j] != null)
+						{
 							CTexture tmpTex = TitleTextureKey.ResolveTitleTexture(this.ttkExams[(int)stバー情報[currentSong].List_DanSongs[0].Dan_C[j].ExamType]);
 
 							tmpTex.Opacity = opacity;
@@ -661,11 +730,13 @@ class CActSelect段位リスト : CStage {
 					#endregion
 				}
 				break;
-			case CSongListNode.ENodeType.BACKBOX: {
+			case CSongListNode.ENodeType.BACKBOX:
+				{
 					OpenNijiiroRW.Tx.Dani_Bar_Back?.t2D描画(scroll + Anime, 0);
 					break;
 				}
-			case CSongListNode.ENodeType.BOX: {
+			case CSongListNode.ENodeType.BOX:
+				{
 					OpenNijiiroRW.Tx.Dani_Bar_Folder_Back?.t2D描画(scroll + Anime, 0);
 					OpenNijiiroRW.Tx.Dani_Bar_Folder?.t2D描画(scroll + Anime, 0);
 					TitleTextureKey.ResolveTitleTexture(stバー情報[currentSong].ttkタイトル[0])
@@ -675,41 +746,50 @@ class CActSelect段位リスト : CStage {
 							.t2D拡大率考慮上中央基準描画((int)(scroll + Anime + OpenNijiiroRW.Skin.DaniSelect_FolderText_X[desc]), OpenNijiiroRW.Skin.DaniSelect_FolderText_Y[desc]);
 					break;
 				}
-			case CSongListNode.ENodeType.RANDOM: {
+			case CSongListNode.ENodeType.RANDOM:
+				{
 					OpenNijiiroRW.Tx.Dani_Bar_Random?.t2D描画(scroll + Anime, 0);
 					break;
 				}
 		}
 	}
 
-	public void tOpenFolder(CSongListNode song) {
+	public void tOpenFolder(CSongListNode song)
+	{
 		listSongs = song.childrenList;
 		n現在の選択行 = 0;
 		tUpdateSongs();
 	}
 
-	public void tCloseFolder(CSongListNode song) {
+	public void tCloseFolder(CSongListNode song)
+	{
 		listSongs = song.rParentNode.rParentNode.childrenList;
 		n現在の選択行 = 0;
 		tUpdateSongs();
 	}
 
-	private void tUpdateSongs() {
+	private void tUpdateSongs()
+	{
 		stバー情報 = new STバー情報[listSongs.Count];
 		this.tバーの初期化();
 	}
 
-	private void tバーの初期化() {
-		for (int i = 0; i < stバー情報.Length; i++) {
+	private void tバーの初期化()
+	{
+		for (int i = 0; i < stバー情報.Length; i++)
+		{
 			var song = listSongs[i];
 
 			stバー情報[i].eノード種別 = song.nodeType;
-			switch (song.nodeType) {
-				case CSongListNode.ENodeType.SCORE: {
+			switch (song.nodeType)
+			{
+				case CSongListNode.ENodeType.SCORE:
+					{
 						stバー情報[i].ttkタイトル = new TitleTextureKey[listSongs[i].DanSongs.Count + 1];
 						stバー情報[i].n曲難易度 = new int[listSongs[i].DanSongs.Count];
 						stバー情報[i].n曲レベル = new int[listSongs[i].DanSongs.Count];
-						for (int j = 0; j < listSongs[i].DanSongs.Count; j++) {
+						for (int j = 0; j < listSongs[i].DanSongs.Count; j++)
+						{
 							stバー情報[i].ttkタイトル[j] = new TitleTextureKey(song.DanSongs[j].bTitleShow ? "???" : song.DanSongs[j].Title, pfDanSong, Color.White, Color.Black, 700);
 							stバー情報[i].n曲難易度[j] = song.DanSongs[j].Difficulty;
 							stバー情報[i].n曲レベル[j] = song.DanSongs[j].Level;
@@ -729,23 +809,30 @@ class CActSelect段位リスト : CStage {
 						stバー情報[i].clearGrade = TableEntry.ClearStatuses[(int)Difficulty.Dan];
 
 						string barCenter = Path.GetDirectoryName(song.score[6].ファイル情報.ファイルの絶対パス) + @$"${Path.DirectorySeparatorChar}Bar_Center.png";
-						if (BarTexCache.TryGetValue(barCenter, out CTexture texture1)) {
+						if (BarTexCache.TryGetValue(barCenter, out CTexture texture1))
+						{
 							stバー情報[i].txBarCenter = texture1;
-						} else {
+						}
+						else
+						{
 							stバー情報[i].txBarCenter = OpenNijiiroRW.tテクスチャの生成(barCenter);
 							BarTexCache.Add(barCenter, stバー情報[i].txBarCenter);
 						}
 
 						string danPlate = Path.GetDirectoryName(song.score[6].ファイル情報.ファイルの絶対パス) + @$"${Path.DirectorySeparatorChar}Dan_Plate.png";
-						if (BarTexCache.TryGetValue(danPlate, out CTexture texture2)) {
+						if (BarTexCache.TryGetValue(danPlate, out CTexture texture2))
+						{
 							stバー情報[i].txDanPlate = texture2;
-						} else {
+						}
+						else
+						{
 							stバー情報[i].txDanPlate = OpenNijiiroRW.tテクスチャの生成(danPlate);
 							BarTexCache.Add(danPlate, stバー情報[i].txDanPlate);
 						}
 					}
 					break;
-				case CSongListNode.ENodeType.BOX: {
+				case CSongListNode.ENodeType.BOX:
+					{
 						OpenNijiiroRW.Tx.Dani_Bar_Folder?.tUpdateColor4(CConversion.ColorToColor4(song.BoxColor));
 
 						stバー情報[i].ttkタイトル = new TitleTextureKey[4];
@@ -758,13 +845,15 @@ class CActSelect段位リスト : CStage {
 						stバー情報[i].cDanTickColor = song.BoxColor;
 					}
 					break;
-				case CSongListNode.ENodeType.BACKBOX: {
+				case CSongListNode.ENodeType.BACKBOX:
+					{
 						stバー情報[i].ttkタイトル = new TitleTextureKey[1];
 						stバー情報[i].ttkタイトル[0] = new TitleTextureKey(CLangManager.LangInstance.GetString("MENU_RETURN"), pfDanSong, Color.White, Color.Black, 700);
 						stバー情報[i].cDanTickColor = Color.FromArgb(180, 150, 70);
 					}
 					break;
-				case CSongListNode.ENodeType.RANDOM: {
+				case CSongListNode.ENodeType.RANDOM:
+					{
 						stバー情報[i].ttkタイトル = new TitleTextureKey[1];
 						stバー情報[i].ttkタイトル[0] = new TitleTextureKey(CLangManager.LangInstance.GetString("SONGSELECT_RANDOM"), pfDanSong, Color.White, Color.Black, 700);
 						stバー情報[i].cDanTickColor = Color.FromArgb(150, 250, 255);
@@ -775,23 +864,28 @@ class CActSelect段位リスト : CStage {
 		}
 	}
 
-	public void t右に移動() {
-		if (n現在の選択行 < stバー情報.Length - 1) {
+	public void t右に移動()
+	{
+		if (n現在の選択行 < stバー情報.Length - 1)
+		{
 			OpenNijiiroRW.Skin.soundChangeSFX.tPlay();
 			this.bLeftMove = false;
 			this.ctDaniMoveAnime.Start(0, 90, 2f, OpenNijiiroRW.Timer);
 		}
 	}
 
-	public void t左に移動() {
-		if (n現在の選択行 > 0) {
+	public void t左に移動()
+	{
+		if (n現在の選択行 > 0)
+		{
 			OpenNijiiroRW.Skin.soundChangeSFX.tPlay();
 			this.bLeftMove = true;
 			this.ctDaniMoveAnime.Start(0, 90, 2f, OpenNijiiroRW.Timer);
 		}
 	}
 
-	public void tLevelNumberDraw(float x, float y, int num, float scale = 1.0f) {
+	public void tLevelNumberDraw(float x, float y, int num, float scale = 1.0f)
+	{
 		/*
         for (int j = 0; j < str.Length; j++)
         {
@@ -809,7 +903,8 @@ class CActSelect段位リスト : CStage {
 		float height = OpenNijiiroRW.Tx.Dani_Level_Number.sz画像サイズ.Height;
 
 		int[] nums = CConversion.SeparateDigits(num);
-		for (int j = 0; j < nums.Length; j++) {
+		for (int j = 0; j < nums.Length; j++)
+		{
 			float offset = j;
 
 			float _x = x - (((OpenNijiiroRW.Skin.DaniSelect_Level_Number_Interval[0] * offset) + (width / 2)) * scale);
@@ -824,7 +919,8 @@ class CActSelect段位リスト : CStage {
 		}
 	}
 
-	public void tSoulDraw(float x, float y, int num) {
+	public void tSoulDraw(float x, float y, int num)
+	{
 		/*
         TJAPlayer3.Tx.Dani_Soul_Number.t2D描画(x + 16 * str.Length, y - 30 / 2, new RectangleF(0, 30, 80, 30));
 
@@ -851,7 +947,8 @@ class CActSelect段位リスト : CStage {
 			y + OpenNijiiroRW.Skin.DaniSelect_Soul_Number_Interval[1] - (height / 2),
 			new RectangleF(0, height, text_width, height));
 
-		for (int j = 0; j < nums.Length; j++) {
+		for (int j = 0; j < nums.Length; j++)
+		{
 			float offset = j;
 
 			float _x = x - (OpenNijiiroRW.Skin.DaniSelect_Soul_Number_Interval[0] * offset) + (width / 2);
@@ -862,7 +959,8 @@ class CActSelect段位リスト : CStage {
 		}
 	}
 
-	public void tExamDraw(float x, float y, int num, Exam.Range Range, float scale = 1.0f) {
+	public void tExamDraw(float x, float y, int num, Exam.Range Range, float scale = 1.0f)
+	{
 		/*
         TJAPlayer3.Tx.Dani_Exam_Number.t2D描画(x + 19 * str.Length, y - 24 / 2, new RectangleF(45 * (int)Range, 24, 45, 24));
 
@@ -895,7 +993,8 @@ class CActSelect段位リスト : CStage {
 			y + ((OpenNijiiroRW.Skin.DaniSelect_Exam_Number_Interval[1] + (height / 2)) * scale),
 			new RectangleF(text_width * (int)Range, height, text_width, height));
 
-		for (int j = 0; j < nums.Length; j++) {
+		for (int j = 0; j < nums.Length; j++)
+		{
 			float offset = j;
 
 			float _x = x - (((OpenNijiiroRW.Skin.DaniSelect_Exam_Number_Interval[0] * offset) + (width / 2)) * scale);

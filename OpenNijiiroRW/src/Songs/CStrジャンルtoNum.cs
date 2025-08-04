@@ -1,8 +1,11 @@
 ﻿namespace OpenNijiiroRW;
 
-internal static class CStrジャンルtoNum {
-	internal static int ForAC8_14(string strジャンル) {
-		switch (strジャンル) {
+internal static class CStrジャンルtoNum
+{
+	internal static int ForAC8_14(string strジャンル)
+	{
+		switch (strジャンル)
+		{
 			case "アニメ":
 				return 0;
 			case "ポップス":
@@ -25,8 +28,10 @@ internal static class CStrジャンルtoNum {
 		}
 	}
 
-	internal static int ForAC15(string strジャンル) {
-		switch (strジャンル) {
+	internal static int ForAC15(string strジャンル)
+	{
+		switch (strジャンル)
+		{
 			case "ポップス":
 			case "J-POP":
 			case "POPS":

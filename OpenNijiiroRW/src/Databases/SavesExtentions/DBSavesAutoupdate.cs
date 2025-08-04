@@ -1,16 +1,20 @@
 ﻿using Microsoft.Data.Sqlite;
 
-namespace OpenNijiiroRW {
-	internal class DBSavesAutoupdate {
+namespace OpenNijiiroRW
+{
+	internal class DBSavesAutoupdate
+	{
 
-		public static void HandleSavesDBAutoupdates(SqliteConnection connection) {
+		public static void HandleSavesDBAutoupdates(SqliteConnection connection)
+		{
 			// Pre 0.6.0
 			FixSaveDB_IdxUniquePlay(connection);
 
 			string version = GetDBVersion(connection);
 
 			// 0.6.0.70 - Global Counters
-			if (VersionComparer.CompareVersions(version, "v0.6.0.70") < 0) {
+			if (VersionComparer.CompareVersions(version, "v0.6.0.70") < 0)
+			{
 				AddActiveCountersTable(connection);
 				SetDBVersion(connection, "v0.6.0.70");
 			}
@@ -18,7 +22,8 @@ namespace OpenNijiiroRW {
 
 		#region [DB Version]
 
-		private static string GetDBVersion(SqliteConnection connection) {
+		private static string GetDBVersion(SqliteConnection connection)
+		{
 			string _ver = "v0.6.0.0";
 
 			var command = connection.CreateCommand();
@@ -28,7 +33,8 @@ namespace OpenNijiiroRW {
                     FROM opentaiko_version;
                 ";
 			SqliteDataReader reader = command.ExecuteReader();
-			while (reader.Read()) {
+			while (reader.Read())
+			{
 				_ver = (string)reader["SupportedVersion"];
 			}
 			reader.Close();
@@ -36,7 +42,8 @@ namespace OpenNijiiroRW {
 			return _ver;
 		}
 
-		private static void SetDBVersion(SqliteConnection connection, string new_version) {
+		private static void SetDBVersion(SqliteConnection connection, string new_version)
+		{
 			var command = connection.CreateCommand();
 			command.CommandText = $"""
 			UPDATE opentaiko_version
@@ -49,7 +56,8 @@ namespace OpenNijiiroRW {
 
 		#region [0.6.0.70 - Active Counters]
 
-		private static void AddActiveCountersTable(SqliteConnection connection) {
+		private static void AddActiveCountersTable(SqliteConnection connection)
+		{
 			var command = connection.CreateCommand();
 			command.CommandText = $"""
 			CREATE TABLE "global_counters" (
@@ -68,7 +76,8 @@ namespace OpenNijiiroRW {
 
 		#region [Pre 0.6.0]
 
-		private static void FixSaveDB_IdxUniquePlay(SqliteConnection connection) {
+		private static void FixSaveDB_IdxUniquePlay(SqliteConnection connection)
+		{
 			var command = connection.CreateCommand();
 			command.CommandText = $"""
 			DROP INDEX IF EXISTS idx_unique_play;

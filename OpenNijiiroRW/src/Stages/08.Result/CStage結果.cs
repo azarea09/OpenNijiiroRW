@@ -6,7 +6,8 @@ using FDK;
 
 namespace OpenNijiiroRW;
 
-internal class CStage結果 : CStage {
+internal class CStage結果 : CStage
+{
 
 	// Properties
 
@@ -36,7 +37,8 @@ internal class CStage結果 : CStage {
 
 	// Constructor
 
-	public CStage結果() {
+	public CStage結果()
+	{
 		this.st演奏記録.Drums = new CScoreIni.C演奏記録();
 		this.r空うちドラムチップ = new CChip[10];
 		this.n総合ランク値 = -1;
@@ -51,13 +53,15 @@ internal class CStage結果 : CStage {
 	}
 
 
-	public bool isAutoDisabled(int player) {
+	public bool isAutoDisabled(int player)
+	{
 		return ((player != 1 && !OpenNijiiroRW.ConfigIni.bAutoPlay[player])
 				|| (player == 1 && !OpenNijiiroRW.ConfigIni.bAutoPlay[player] && !OpenNijiiroRW.ConfigIni.bAIBattleMode));
 	}
 
 
-	public int GetTowerScoreRank() {
+	public int GetTowerScoreRank()
+	{
 		int tmpClear = 0;
 		double progress = CFloorManagement.LastRegisteredFloor / ((double)OpenNijiiroRW.stageSongSelect.rChoosenSong.score[5].譜面情報.nTotalFloor);
 
@@ -73,7 +77,8 @@ internal class CStage結果 : CStage {
 			OpenNijiiroRW.stageGameScreen.CChartScore[0].nGood == 0
 		};
 
-		for (int i = 0; i < conditions.Length; i++) {
+		for (int i = 0; i < conditions.Length; i++)
+		{
 			if (conditions[i] == true)
 				tmpClear++;
 			else
@@ -85,12 +90,14 @@ internal class CStage結果 : CStage {
 
 	// CStage 実装
 
-	public override void Activate() {
+	public override void Activate()
+	{
 
 		Trace.TraceInformation("結果ステージを活性化します。");
 		Trace.Indent();
 		bAddedToRecentlyPlayedSongs = false;
-		try {
+		try
+		{
 			/*
 			 * Notes about the difference between Replay - Save statuses and the "Assisted clear" clear status
 			 *
@@ -145,14 +152,18 @@ internal class CStage結果 : CStage {
 				#region [ Results calculus ]
 				//---------------------
 
-				if (OpenNijiiroRW.stageSongSelect.nChoosenSongDifficulty[0] != (int)Difficulty.Dan && OpenNijiiroRW.stageSongSelect.nChoosenSongDifficulty[0] != (int)Difficulty.Tower) {
-					for (int p = 0; p < OpenNijiiroRW.ConfigIni.nPlayerCount; p++) {
+				if (OpenNijiiroRW.stageSongSelect.nChoosenSongDifficulty[0] != (int)Difficulty.Dan && OpenNijiiroRW.stageSongSelect.nChoosenSongDifficulty[0] != (int)Difficulty.Tower)
+				{
+					for (int p = 0; p < OpenNijiiroRW.ConfigIni.nPlayerCount; p++)
+					{
 						var ccf = OpenNijiiroRW.stageGameScreen.CChartScore[p];
 
 						this.nクリア[p] = 0;
-						if (HGaugeMethods.UNSAFE_FastNormaCheck(p)) {
+						if (HGaugeMethods.UNSAFE_FastNormaCheck(p))
+						{
 							this.nクリア[p] = 2;
-							if (ccf.nMiss == 0 && ccf.nMine == 0) {
+							if (ccf.nMiss == 0 && ccf.nMine == 0)
+							{
 								this.nクリア[p] = 3;
 								if (ccf.nGood == 0) this.nクリア[p] = 4;
 							}
@@ -163,13 +174,18 @@ internal class CStage結果 : CStage {
 
 						}
 
-						if ((int)OpenNijiiroRW.stageGameScreen.actScore.Get(p) < 500000) {
+						if ((int)OpenNijiiroRW.stageGameScreen.actScore.Get(p) < 500000)
+						{
 							this.nスコアランク[p] = 0;
-						} else {
+						}
+						else
+						{
 							var sr = OpenNijiiroRW.stageGameScreen.ScoreRank.ScoreRank[p];
 
-							for (int i = 0; i < 7; i++) {
-								if ((int)OpenNijiiroRW.stageGameScreen.actScore.Get(p) >= sr[i]) {
+							for (int i = 0; i < 7; i++)
+							{
+								if ((int)OpenNijiiroRW.stageGameScreen.actScore.Get(p) >= sr[i])
+								{
 									this.nスコアランク[p] = i + 1;
 								}
 							}
@@ -191,12 +207,14 @@ internal class CStage結果 : CStage {
 
 
 
-				if (OpenNijiiroRW.stageSongSelect.nChoosenSongDifficulty[0] != (int)Difficulty.Dan && OpenNijiiroRW.stageSongSelect.nChoosenSongDifficulty[0] != (int)Difficulty.Tower) {
+				if (OpenNijiiroRW.stageSongSelect.nChoosenSongDifficulty[0] != (int)Difficulty.Dan && OpenNijiiroRW.stageSongSelect.nChoosenSongDifficulty[0] != (int)Difficulty.Tower)
+				{
 					// Regular (Ensou game) Score and Score Rank saves
 
 					#region [Regular saves]
 
-					for (int i = 0; i < OpenNijiiroRW.ConfigIni.nPlayerCount; i++) {
+					for (int i = 0; i < OpenNijiiroRW.ConfigIni.nPlayerCount; i++)
+					{
 						int diff = OpenNijiiroRW.stageSongSelect.nChoosenSongDifficulty[i];
 
 						ClearStatus_Replay[i] = this.nクリア[i];
@@ -205,7 +223,9 @@ internal class CStage結果 : CStage {
 
 					#endregion
 
-				} else if (OpenNijiiroRW.stageSongSelect.nChoosenSongDifficulty[0] == (int)Difficulty.Dan) {
+				}
+				else if (OpenNijiiroRW.stageSongSelect.nChoosenSongDifficulty[0] == (int)Difficulty.Dan)
+				{
 					/* == Specific format for DaniDoujou charts ==
 					 **
 					 ** Higher is better, takes the Clear0 spot (Usually the spot allocated for Kantan Clear crowns)
@@ -223,7 +243,8 @@ internal class CStage結果 : CStage {
 
 					int clearValue = 0;
 
-					if (examStatus != Exam.Status.Failure) {
+					if (examStatus != Exam.Status.Failure)
+					{
 						// Red Goukaku
 						clearValue += 1;
 
@@ -232,7 +253,8 @@ internal class CStage結果 : CStage {
 							clearValue += 1;
 
 						// Gold Iki
-						if (this.st演奏記録.Drums.nBadCount == 0) {
+						if (this.st演奏記録.Drums.nBadCount == 0)
+						{
 							clearValue += 2;
 
 							// Rainbow Iki
@@ -245,14 +267,16 @@ internal class CStage結果 : CStage {
 
 					}
 
-					if (isAutoDisabled(0)) {
+					if (isAutoDisabled(0))
+					{
 						ClearStatus_Replay[0] = clearValue;
 					}
 
 					// this.st演奏記録[0].nクリア[0] = Math.Max(ini[0].stセクション[0].nクリア[0], clearValue);
 
 					// Unlock dan grade
-					if (clearValue > 0 && !OpenNijiiroRW.ConfigIni.bAutoPlay[0]) {
+					if (clearValue > 0 && !OpenNijiiroRW.ConfigIni.bAutoPlay[0])
+					{
 						/*
 						this.newGradeGranted = TJAPlayer3.NamePlateConfig.tUpdateDanTitle(TJAPlayer3.stage選曲.r確定された曲.strタイトル.Substring(0, 2),
 							clearValue % 2 == 0,
@@ -267,7 +291,9 @@ internal class CStage結果 : CStage {
 
 					#endregion
 
-				} else if (OpenNijiiroRW.stageSongSelect.nChoosenSongDifficulty[0] == (int)Difficulty.Tower) {
+				}
+				else if (OpenNijiiroRW.stageSongSelect.nChoosenSongDifficulty[0] == (int)Difficulty.Tower)
+				{
 					// Clear if top reached, then FC or DFC like any regular chart
 					// Score Rank cointains highest reached floor
 
@@ -277,7 +303,8 @@ internal class CStage結果 : CStage {
 
 					if (tmpClear != 0) clearStatuses[0] = assistedClear[0] ? 0 : tmpClear;
 
-					if (isAutoDisabled(0)) {
+					if (isAutoDisabled(0))
+					{
 						ClearStatus_Replay[0] = tmpClear;
 					}
 
@@ -290,7 +317,8 @@ internal class CStage結果 : CStage {
 
 			}
 
-			string diffToString(int diff) {
+			string diffToString(int diff)
+			{
 				string[] diffArr =
 				{
 					" Easy ",
@@ -319,18 +347,21 @@ internal class CStage結果 : CStage {
 
 			// Byte count must be used instead of String.Length.
 			// The byte count is what Discord is concerned with. Some chars are greater than one byte.
-			if (Encoding.UTF8.GetBytes(details).Length > 128) {
+			if (Encoding.UTF8.GetBytes(details).Length > 128)
+			{
 				byte[] details_byte = Encoding.UTF8.GetBytes(details);
 				Array.Resize(ref details_byte, 128);
 				details = Encoding.UTF8.GetString(details_byte);
 			}
 
 			// Discord Presenseの更新
-			OpenNijiiroRW.DiscordClient?.SetPresence(new RichPresence() {
+			OpenNijiiroRW.DiscordClient?.SetPresence(new RichPresence()
+			{
 				Details = details,
 				State = "Result" + (OpenNijiiroRW.ConfigIni.bAutoPlay[0] == true ? " (Auto)" : ""),
 				Timestamps = new Timestamps(OpenNijiiroRW.StartupTime),
-				Assets = new Assets() {
+				Assets = new Assets()
+				{
 					LargeImageKey = OpenNijiiroRW.LargeImageKey,
 					LargeImageText = OpenNijiiroRW.LargeImageText,
 				}
@@ -367,7 +398,8 @@ internal class CStage結果 : CStage {
 				OpenNijiiroRW.stageSongSelect.actPlayOption.tGetModMultiplier(CActPlayOption.EBalancingType.COINS, false, 4)
 			};
 
-			float getCoinMul(int player) {
+			float getCoinMul(int player)
+			{
 				var chara = OpenNijiiroRW.Tx.Characters[OpenNijiiroRW.SaveFileInstances[OpenNijiiroRW.GetActualPlayer(player)].data.Character];
 				var puchichara = OpenNijiiroRW.Tx.Puchichara[PuchiChara.tGetPuchiCharaIndexByName(OpenNijiiroRW.GetActualPlayer(player))];
 
@@ -375,7 +407,8 @@ internal class CStage結果 : CStage {
 				return chara.GetEffectCoinMultiplier() * puchichara.GetEffectCoinMultiplier();
 			}
 
-			if (OpenNijiiroRW.stageSongSelect.nChoosenSongDifficulty[0] == (int)Difficulty.Tower) {
+			if (OpenNijiiroRW.stageSongSelect.nChoosenSongDifficulty[0] == (int)Difficulty.Tower)
+			{
 				diffModifier = 3;
 
 				int stars = OpenNijiiroRW.stageSongSelect.rChoosenSong.score[(int)Difficulty.Tower].譜面情報.nレベル[(int)Difficulty.Tower];
@@ -392,9 +425,11 @@ internal class CStage結果 : CStage {
 
 				int clearModifier = 0;
 
-				if (this.st演奏記録.Drums.nBadCount == 0) {
+				if (this.st演奏記録.Drums.nBadCount == 0)
+				{
 					clearModifier = (int)(5 * lengthBonus);
-					if (this.st演奏記録.Drums.nOkCount == 0) {
+					if (this.st演奏記録.Drums.nOkCount == 0)
+					{
 						clearModifier = (int)(12 * lengthBonus);
 					}
 				}
@@ -404,7 +439,9 @@ internal class CStage結果 : CStage {
 				// this.nEarnedMedalsCount[0] = stars;
 				this.nEarnedMedalsCount[0] = 5 + (int)((diffModifier * (starRate + redStarRate)) * (floorRate * lengthBonus)) + clearModifier;
 				this.nEarnedMedalsCount[0] = Math.Max(5, (int)(this.nEarnedMedalsCount[0] * modMultipliers[0] * getCoinMul(0)));
-			} else if (OpenNijiiroRW.stageSongSelect.nChoosenSongDifficulty[0] == (int)Difficulty.Dan) {
+			}
+			else if (OpenNijiiroRW.stageSongSelect.nChoosenSongDifficulty[0] == (int)Difficulty.Dan)
+			{
 				int partialScore = 0;
 
 				#region [Clear and Goukaku modifier]
@@ -414,9 +451,11 @@ internal class CStage結果 : CStage {
 				int clearModifier = -1;
 				int goukakuModifier = 0;
 
-				if (examStatus != Exam.Status.Failure) {
+				if (examStatus != Exam.Status.Failure)
+				{
 					clearModifier = 0;
-					if (this.st演奏記録.Drums.nBadCount == 0) {
+					if (this.st演奏記録.Drums.nBadCount == 0)
+					{
 						clearModifier = 4;
 						if (this.st演奏記録.Drums.nOkCount == 0)
 							clearModifier = 6;
@@ -430,8 +469,10 @@ internal class CStage結果 : CStage {
 
 				#region [Partial scores]
 
-				for (int i = 0; i < OpenNijiiroRW.stageSongSelect.rChoosenSong.DanSongs.Count; i++) {
-					if (OpenNijiiroRW.stageSongSelect.rChoosenSong.DanSongs[i] != null) {
+				for (int i = 0; i < OpenNijiiroRW.stageSongSelect.rChoosenSong.DanSongs.Count; i++)
+				{
+					if (OpenNijiiroRW.stageSongSelect.rChoosenSong.DanSongs[i] != null)
+					{
 						int diff = OpenNijiiroRW.stageSongSelect.rChoosenSong.DanSongs[i].Difficulty;
 						int stars = OpenNijiiroRW.stageSongSelect.rChoosenSong.DanSongs[i].Level;
 
@@ -449,12 +490,16 @@ internal class CStage結果 : CStage {
 
 				if (clearModifier < 0)
 					this.nEarnedMedalsCount[0] = 10;
-				else {
+				else
+				{
 					this.nEarnedMedalsCount[0] = 10 + goukakuModifier + clearModifier + (int)(partialScore * dAccuracyRate);
 					this.nEarnedMedalsCount[0] = Math.Max(10, (int)(this.nEarnedMedalsCount[0] * modMultipliers[0] * getCoinMul(0)));
 				}
-			} else {
-				for (int i = 0; i < OpenNijiiroRW.ConfigIni.nPlayerCount; i++) {
+			}
+			else
+			{
+				for (int i = 0; i < OpenNijiiroRW.ConfigIni.nPlayerCount; i++)
+				{
 					int diff = OpenNijiiroRW.stageSongSelect.nChoosenSongDifficulty[i];
 					int stars = OpenNijiiroRW.stageSongSelect.rChoosenSong.score[diff].譜面情報.nレベル[diff];
 
@@ -469,9 +514,11 @@ internal class CStage結果 : CStage {
 
 					int clearModifier = modifiers[0];
 
-					if (HGaugeMethods.UNSAFE_FastNormaCheck(i)) {
+					if (HGaugeMethods.UNSAFE_FastNormaCheck(i))
+					{
 						clearModifier = modifiers[1] * diffModifier;
-						if (OpenNijiiroRW.stageGameScreen.CChartScore[i].nMiss == 0) {
+						if (OpenNijiiroRW.stageGameScreen.CChartScore[i].nMiss == 0)
+						{
 							clearModifier = modifiers[2] * diffModifier;
 							if (OpenNijiiroRW.stageGameScreen.CChartScore[i].nGood == 0)
 								clearModifier = modifiers[3] * diffModifier;
@@ -488,7 +535,8 @@ internal class CStage結果 : CStage {
 
 					int scoreRankModifier = srModifiers[0] * diffModifier;
 
-					for (int j = 1; j < 8; j++) {
+					for (int j = 1; j < 8; j++)
+					{
 						if (OpenNijiiroRW.stageGameScreen.actScore.GetScore(i) >= OpenNijiiroRW.stageGameScreen.ScoreRank.ScoreRank[i][j - 1])
 							scoreRankModifier = srModifiers[j] * diffModifier;
 					}
@@ -501,7 +549,8 @@ internal class CStage結果 : CStage {
 
 					if (clearModifier < 0)
 						this.nEarnedMedalsCount[i] = 5;
-					else {
+					else
+					{
 						this.nEarnedMedalsCount[i] = 5 + (int)((diffModifier * (starRate + redStarRate)) * dAccuracyRate) + clearModifier + scoreRankModifier;
 						this.nEarnedMedalsCount[i] = Math.Max(5, (int)(this.nEarnedMedalsCount[i] * modMultipliers[i] * getCoinMul(i)));
 					}
@@ -509,7 +558,8 @@ internal class CStage結果 : CStage {
 			}
 
 			// ADLIB bonuses : 1 coin per ADLIB
-			for (int i = 0; i < OpenNijiiroRW.ConfigIni.nPlayerCount; i++) {
+			for (int i = 0; i < OpenNijiiroRW.ConfigIni.nPlayerCount; i++)
+			{
 				// Too broken on some charts, ADLibs should get either no bonus or just extra stats
 				//this.nEarnedMedalsCount[i] += Math.Min(10, TJAPlayer3.stage演奏ドラム画面.CChartScore[i].nADLIB);
 
@@ -520,7 +570,8 @@ internal class CStage結果 : CStage {
 
 				var _sf = OpenNijiiroRW.SaveFileInstances[OpenNijiiroRW.GetActualPlayer(i)];
 
-				if (OpenNijiiroRW.ConfigIni.bAIBattleMode && i == 0) {
+				if (OpenNijiiroRW.ConfigIni.bAIBattleMode && i == 0)
+				{
 					_sf.tRegisterAIBattleModePlay(bClear[0]);
 				}
 
@@ -528,11 +579,14 @@ internal class CStage結果 : CStage {
 					_sf.tEarnCoins(this.nEarnedMedalsCount[i]);
 
 				if (!OpenNijiiroRW.ConfigIni.bAutoPlay[i]
-					&& !(OpenNijiiroRW.ConfigIni.bAIBattleMode && i == 1)) {
+					&& !(OpenNijiiroRW.ConfigIni.bAIBattleMode && i == 1))
+				{
 					int _cs = -1;
-					if (HGaugeMethods.UNSAFE_FastNormaCheck(i)) {
+					if (HGaugeMethods.UNSAFE_FastNormaCheck(i))
+					{
 						_cs = 0;
-						if (OpenNijiiroRW.stageGameScreen.CChartScore[i].nMiss == 0) {
+						if (OpenNijiiroRW.stageGameScreen.CChartScore[i].nMiss == 0)
+						{
 							_cs = 1;
 							if (OpenNijiiroRW.stageGameScreen.CChartScore[i].nGood == 0)
 								_cs = 2;
@@ -540,7 +594,8 @@ internal class CStage結果 : CStage {
 					}
 
 					// Unsafe function, it is the only appropriate place to call it
-					if (DBSaves.RegisterPlay(i, clearStatuses[i], scoreRanks[i])) {
+					if (DBSaves.RegisterPlay(i, clearStatuses[i], scoreRanks[i]))
+					{
 						this.IsScoreValid[i] = true;
 						this.ClearStatusesSaved[i] = clearStatuses[i];
 						this.ScoreRanksSaved[i] = scoreRanks[i];
@@ -555,7 +610,8 @@ internal class CStage結果 : CStage {
 
 			#region [Replay files generation]
 
-			for (int i = 0; i < OpenNijiiroRW.ConfigIni.nPlayerCount; i++) {
+			for (int i = 0; i < OpenNijiiroRW.ConfigIni.nPlayerCount; i++)
+			{
 				if (OpenNijiiroRW.ConfigIni.bAutoPlay[i])
 					continue;
 				if (OpenNijiiroRW.ConfigIni.bAIBattleMode && i == 1)
@@ -568,7 +624,8 @@ internal class CStage結果 : CStage {
 
 			#region [Modals preprocessing]
 
-			for (int i = 0; i < OpenNijiiroRW.ConfigIni.nPlayerCount; i++) {
+			for (int i = 0; i < OpenNijiiroRW.ConfigIni.nPlayerCount; i++)
+			{
 				if (OpenNijiiroRW.ConfigIni.bAutoPlay[i] || OpenNijiiroRW.ConfigIni.bAIBattleMode && i == 1) continue;
 
 				if (this.nEarnedMedalsCount[i] > 0)
@@ -586,11 +643,13 @@ internal class CStage結果 : CStage {
 					OpenNijiiroRW.Databases.DBNameplateUnlockables.tGetUnlockedItems(i, OpenNijiiroRW.ModalManager.rModalQueue);
 					OpenNijiiroRW.Databases.DBSongUnlockables.tGetUnlockedItems(i, OpenNijiiroRW.ModalManager.rModalQueue);
 
-					foreach (var puchi in OpenNijiiroRW.Tx.Puchichara) {
+					foreach (var puchi in OpenNijiiroRW.Tx.Puchichara)
+					{
 						puchi.tGetUnlockedItems(i, OpenNijiiroRW.ModalManager.rModalQueue);
 					}
 
-					foreach (var chara in OpenNijiiroRW.Tx.Characters) {
+					foreach (var chara in OpenNijiiroRW.Tx.Characters)
+					{
 						chara.tGetUnlockedItems(i, OpenNijiiroRW.ModalManager.rModalQueue);
 					}
 				}
@@ -626,7 +685,8 @@ internal class CStage結果 : CStage {
 			b音声再生 = false;
 			this.EndAnime = false;
 
-			if (OpenNijiiroRW.stageSongSelect.nChoosenSongDifficulty[0] == (int)Difficulty.Tower) {
+			if (OpenNijiiroRW.stageSongSelect.nChoosenSongDifficulty[0] == (int)Difficulty.Tower)
+			{
 				this.ttkMaxFloors = new TitleTextureKey("/" + OpenNijiiroRW.stageSongSelect.rChoosenSong.score[5].譜面情報.nTotalFloor.ToString() + CLangManager.LangInstance.GetString("TOWER_FLOOR_INITIAL"), pfTowerText48, Color.Black, Color.Transparent, 700);
 				this.ttkToutatsu = new TitleTextureKey(CLangManager.LangInstance.GetString("TOWER_FLOOR_REACHED"), pfTowerText48, Color.White, Color.Black, 700);
 				this.ttkTen = new TitleTextureKey(CLangManager.LangInstance.GetString("TOWER_SCORE_INITIAL"), pfTowerText, Color.Black, Color.Transparent, 700);
@@ -634,13 +694,19 @@ internal class CStage結果 : CStage {
 				this.ttkScore = new TitleTextureKey(CLangManager.LangInstance.GetString("TOWER_SCORE"), pfTowerText, Color.Black, Color.Transparent, 700);
 				this.ttkRemaningLifes = new TitleTextureKey(CFloorManagement.CurrentNumberOfLives.ToString() + " / " + CFloorManagement.MaxNumberOfLives.ToString(), pfTowerText, Color.Black, Color.Transparent, 700);
 				this.ttkScoreCount = new TitleTextureKey(OpenNijiiroRW.stageGameScreen.actScore.GetScore(0).ToString(), pfTowerText, Color.Black, Color.Transparent, 700);
-			} else if (OpenNijiiroRW.stageSongSelect.nChoosenSongDifficulty[0] == (int)Difficulty.Dan) {
+			}
+			else if (OpenNijiiroRW.stageSongSelect.nChoosenSongDifficulty[0] == (int)Difficulty.Dan)
+			{
 				Background = new ResultBG(CSkin.Path($@"{TextureLoader.BASE}{TextureLoader.DANRESULT}Script.lua"));
 				Background.Init();
-			} else if (OpenNijiiroRW.ConfigIni.bAIBattleMode) {
+			}
+			else if (OpenNijiiroRW.ConfigIni.bAIBattleMode)
+			{
 				Background = new ResultBG(CSkin.Path($@"{TextureLoader.BASE}{TextureLoader.RESULT}AIBattle{Path.DirectorySeparatorChar}Script.lua"));
 				Background.Init();
-			} else {
+			}
+			else
+			{
 				//Luaに移植する時にコメントアウトを解除
 				Background = new ResultBG(CSkin.Path($@"{TextureLoader.BASE}{TextureLoader.RESULT}{Path.DirectorySeparatorChar}Script.lua"));
 				Background.Init();
@@ -648,7 +714,8 @@ internal class CStage結果 : CStage {
 
 			this.ttkDanTitles = new TitleTextureKey[OpenNijiiroRW.stageSongSelect.rChoosenSong.DanSongs.Count];
 
-			for (int i = 0; i < OpenNijiiroRW.stageSongSelect.rChoosenSong.DanSongs.Count; i++) {
+			for (int i = 0; i < OpenNijiiroRW.stageSongSelect.rChoosenSong.DanSongs.Count; i++)
+			{
 				this.ttkDanTitles[i] = new TitleTextureKey(OpenNijiiroRW.stageSongSelect.rChoosenSong.DanSongs[i].bTitleShow
 						? "???"
 						: OpenNijiiroRW.stageSongSelect.rChoosenSong.DanSongs[i].Title,
@@ -657,7 +724,9 @@ internal class CStage結果 : CStage {
 					Color.Black,
 					700);
 			}
-		} finally {
+		}
+		finally
+		{
 			Trace.TraceInformation("結果ステージの活性化を完了しました。");
 			Trace.Unindent();
 		}
@@ -665,22 +734,26 @@ internal class CStage結果 : CStage {
 		if (OpenNijiiroRW.stageSongSelect.nChoosenSongDifficulty[0] != (int)Difficulty.Dan && OpenNijiiroRW.stageSongSelect.nChoosenSongDifficulty[0] != (int)Difficulty.Tower)
 			bgmResultIn.tPlay();
 	}
-	public override void DeActivate() {
+	public override void DeActivate()
+	{
 		OpenNijiiroRW.tDisposeSafely(ref Background);
 
-		if (this.rResultSound != null) {
+		if (this.rResultSound != null)
+		{
 			OpenNijiiroRW.SoundManager.tDisposeSound(this.rResultSound);
 			this.rResultSound = null;
 		}
 
-		if (this.ct登場用 != null) {
+		if (this.ct登場用 != null)
+		{
 			this.ct登場用 = null;
 		}
 		Dan_Plate?.Dispose();
 
 		base.DeActivate();
 	}
-	public override void CreateManagedResource() {
+	public override void CreateManagedResource()
+	{
 		this.pfTowerText = HPrivateFastFont.tInstantiateMainFont(OpenNijiiroRW.Skin.TowerResult_Font_TowerText);
 		this.pfTowerText48 = HPrivateFastFont.tInstantiateMainFont(OpenNijiiroRW.Skin.TowerResult_Font_TowerText48);
 		this.pfTowerText72 = HPrivateFastFont.tInstantiateMainFont(OpenNijiiroRW.Skin.TowerResult_Font_TowerText72);
@@ -689,42 +762,54 @@ internal class CStage結果 : CStage {
 
 		base.CreateManagedResource();
 	}
-	public override void ReleaseManagedResource() {
+	public override void ReleaseManagedResource()
+	{
 
-		if (OpenNijiiroRW.stageSongSelect.nChoosenSongDifficulty[0] == (int)Difficulty.Tower) {
+		if (OpenNijiiroRW.stageSongSelect.nChoosenSongDifficulty[0] == (int)Difficulty.Tower)
+		{
 			OpenNijiiroRW.tDisposeSafely(ref pfTowerText);
 			OpenNijiiroRW.tDisposeSafely(ref pfTowerText48);
 			OpenNijiiroRW.tDisposeSafely(ref pfTowerText72);
-		} else if (OpenNijiiroRW.stageSongSelect.nChoosenSongDifficulty[0] == (int)Difficulty.Dan) {
+		}
+		else if (OpenNijiiroRW.stageSongSelect.nChoosenSongDifficulty[0] == (int)Difficulty.Dan)
+		{
 			OpenNijiiroRW.tDisposeSafely(ref pfDanTitles);
 		}
 
 		base.ReleaseManagedResource();
 	}
-	public override int Draw() {
-		if (!base.IsDeActivated) {
+	public override int Draw()
+	{
+		if (!base.IsDeActivated)
+		{
 
 			ctShine_Plate.TickLoop();
 
 			// int num;
 
-			if (base.IsFirstDraw) {
+			if (base.IsFirstDraw)
+			{
 				this.ct登場用 = new CCounter(0, 100, 5, OpenNijiiroRW.Timer);
 				this.actFIFromGameplay.tフェードイン開始();
 				base.ePhaseID = CStage.EPhase.Common_FADEIN;
 
-				if (this.rResultSound != null) {
+				if (this.rResultSound != null)
+				{
 					this.rResultSound.PlayStart();
 				}
 
 				base.IsFirstDraw = false;
 			}
 			this.bアニメが完了 = true;
-			if (this.ct登場用.IsTicked) {
+			if (this.ct登場用.IsTicked)
+			{
 				this.ct登場用.Tick();
-				if (this.ct登場用.IsEnded) {
+				if (this.ct登場用.IsEnded)
+				{
 					this.ct登場用.Stop();
-				} else {
+				}
+				else
+				{
 					this.bアニメが完了 = false;
 				}
 			}
@@ -734,14 +819,17 @@ internal class CStage結果 : CStage {
 			Background?.Update();
 			Background?.Draw();
 
-			if (OpenNijiiroRW.stageSongSelect.nChoosenSongDifficulty[0] != (int)Difficulty.Dan && OpenNijiiroRW.stageSongSelect.nChoosenSongDifficulty[0] != (int)Difficulty.Tower) {
+			if (OpenNijiiroRW.stageSongSelect.nChoosenSongDifficulty[0] != (int)Difficulty.Dan && OpenNijiiroRW.stageSongSelect.nChoosenSongDifficulty[0] != (int)Difficulty.Tower)
+			{
 				#region [Ensou game result screen]
 
-				if (!b音声再生 && !bgmResultIn.bIsPlaying) {
+				if (!b音声再生 && !bgmResultIn.bIsPlaying)
+				{
 					bgmResultLoop.tPlay();
 					b音声再生 = true;
 				}
-				if (!OpenNijiiroRW.ConfigIni.bAIBattleMode) {
+				if (!OpenNijiiroRW.ConfigIni.bAIBattleMode)
+				{
 					/*
 					if (TJAPlayer3.Tx.Result_Background != null)
 					{
@@ -989,12 +1077,14 @@ internal class CStage結果 : CStage {
 						}
 					}
 					*/
-					if (OpenNijiiroRW.Tx.Result_Header != null) {
+					if (OpenNijiiroRW.Tx.Result_Header != null)
+					{
 						OpenNijiiroRW.Tx.Result_Header.t2D描画(0, 0);
 					}
 				}
 
-				if (this.ct登場用.IsTicked && (OpenNijiiroRW.Tx.Result_Header != null)) {
+				if (this.ct登場用.IsTicked && (OpenNijiiroRW.Tx.Result_Header != null))
+				{
 					double num2 = ((double)this.ct登場用.CurrentValue) / 100.0;
 					double num3 = Math.Sin(Math.PI / 2 * num2);
 
@@ -1007,7 +1097,8 @@ internal class CStage結果 : CStage {
 				}
 				*/
 
-				if (!b音声再生 && !bgmResultIn.bIsPlaying) {
+				if (!b音声再生 && !bgmResultIn.bIsPlaying)
+				{
 					bgmResultLoop.tPlay();
 					b音声再生 = true;
 				}
@@ -1015,8 +1106,11 @@ internal class CStage結果 : CStage {
 
 				#endregion
 
-			} else {
-				if (OpenNijiiroRW.stageSongSelect.nChoosenSongDifficulty[0] == (int)Difficulty.Dan) {
+			}
+			else
+			{
+				if (OpenNijiiroRW.stageSongSelect.nChoosenSongDifficulty[0] == (int)Difficulty.Dan)
+				{
 					double screen_ratio_x = OpenNijiiroRW.Skin.Resolution[0] / 1280.0;
 
 					#region [Counter processings]
@@ -1030,7 +1124,8 @@ internal class CStage結果 : CStage {
 					 **	8200 + 300 * count => Goukaku/Fugoukaku display => Step 2 (Prompt the user to tap enter and let them swaping between informations hitting kas)
 					 **  ??? => Success/Fail animation
 					 */
-					if (ctPhase1 == null) {
+					if (ctPhase1 == null)
+					{
 						ctPhase1 = new CCounter(0, 8200 + songCount * 300, 0.5f, OpenNijiiroRW.Timer);
 						ctPhase1.CurrentValue = 0;
 					}
@@ -1045,7 +1140,8 @@ internal class CStage結果 : CStage {
 
 					#region [DaniDoujou result screen]
 
-					if (!b音声再生 && !OpenNijiiroRW.Skin.bgmDanResult.bIsPlaying) {
+					if (!b音声再生 && !OpenNijiiroRW.Skin.bgmDanResult.bIsPlaying)
+					{
 						OpenNijiiroRW.Skin.bgmDanResult.tPlay();
 						b音声再生 = true;
 					}
@@ -1072,13 +1168,17 @@ internal class CStage結果 : CStage {
 
 					ctDanSongInfoChange.Tick();
 
-					if (ctDanSongInfoChange.CurrentValue == ctDanSongInfoChange.EndValue && songCount > 3) {
+					if (ctDanSongInfoChange.CurrentValue == ctDanSongInfoChange.EndValue && songCount > 3)
+					{
 						NextDanSongInfo();
-					} else if (nNowDanSongInfo > 0 && songCount <= 3) {
+					}
+					else if (nNowDanSongInfo > 0 && songCount <= 3)
+					{
 						nNowDanSongInfo = 0;
 					}
 
-					for (int i = 0; i < songCount; i++) {
+					for (int i = 0; i < songCount; i++)
+					{
 						int songOffset = (int)(Math.Max(0, 3200 + 300 * i - ctPhase1.CurrentValue) * screen_ratio_x);
 
 						int quadrant = i / 3;
@@ -1109,25 +1209,32 @@ internal class CStage結果 : CStage {
 
 					int unitsBeforeAppearance = Math.Max(0, 8200 + 300 * songCount - ctPhase1.CurrentValue);
 
-					if (unitsBeforeAppearance <= 270) {
+					if (unitsBeforeAppearance <= 270)
+					{
 						OpenNijiiroRW.Tx.DanResult_Rank.Opacity = 255;
 
 						int rank_width = OpenNijiiroRW.Tx.DanResult_Rank.szTextureSize.Width / 7;
 						int rank_height = OpenNijiiroRW.Tx.DanResult_Rank.szTextureSize.Height;
 
-						if (examStatus != Exam.Status.Failure) {
+						if (examStatus != Exam.Status.Failure)
+						{
 							#region [Goukaku]
 
 							#region [ Appear animation ]
 
-							if (unitsBeforeAppearance >= 90) {
+							if (unitsBeforeAppearance >= 90)
+							{
 								OpenNijiiroRW.Tx.DanResult_Rank.Opacity = (int)((270 - unitsBeforeAppearance) / 180.0f * 255.0f);
 								OpenNijiiroRW.Tx.DanResult_Rank.Scale.X = 1.0f + (float)Math.Sin((360 - unitsBeforeAppearance) / 1.5f * (Math.PI / 180)) * 1.4f;
 								OpenNijiiroRW.Tx.DanResult_Rank.Scale.Y = 1.0f + (float)Math.Sin((360 - unitsBeforeAppearance) / 1.5f * (Math.PI / 180)) * 1.4f;
-							} else if (unitsBeforeAppearance > 0) {
+							}
+							else if (unitsBeforeAppearance > 0)
+							{
 								OpenNijiiroRW.Tx.Result_ScoreRankEffect.Scale.X = 0.5f + (float)Math.Sin((float)(90 - unitsBeforeAppearance) * (Math.PI / 180)) * 0.5f;
 								OpenNijiiroRW.Tx.Result_ScoreRankEffect.Scale.Y = 0.5f + (float)Math.Sin((float)(90 - unitsBeforeAppearance) * (Math.PI / 180)) * 0.5f;
-							} else {
+							}
+							else
+							{
 								OpenNijiiroRW.Tx.DanResult_Rank.Scale.X = 1f;
 								OpenNijiiroRW.Tx.DanResult_Rank.Scale.Y = 1f;
 							}
@@ -1142,7 +1249,8 @@ internal class CStage結果 : CStage {
 								successType += 1;
 
 							int comboType = 0;
-							if (this.st演奏記録.Drums.nBadCount == 0) {
+							if (this.st演奏記録.Drums.nBadCount == 0)
+							{
 								comboType += 1;
 
 								if (this.st演奏記録.Drums.nOkCount == 0)
@@ -1155,12 +1263,15 @@ internal class CStage結果 : CStage {
 								new Rectangle(rank_width * (2 * comboType + successType + 1), 0, rank_width, rank_height));
 
 							#endregion
-						} else {
+						}
+						else
+						{
 							#region [Fugoukaku]
 
 							#region [ Appear animation ]
 
-							if (unitsBeforeAppearance >= 90) {
+							if (unitsBeforeAppearance >= 90)
+							{
 								OpenNijiiroRW.Tx.DanResult_Rank.Opacity = (int)((270 - unitsBeforeAppearance) / 180.0f * 255.0f);
 							}
 
@@ -1178,17 +1289,21 @@ internal class CStage結果 : CStage {
 
 					#endregion
 
-					if (!b音声再生 && !OpenNijiiroRW.Skin.bgmDanResult.bIsPlaying) {
+					if (!b音声再生 && !OpenNijiiroRW.Skin.bgmDanResult.bIsPlaying)
+					{
 						OpenNijiiroRW.Skin.bgmDanResult.tPlay();
 						b音声再生 = true;
 					}
 
 					#endregion
 
-				} else {
+				}
+				else
+				{
 					#region [Tower result screen]
 
-					if (!b音声再生 && !OpenNijiiroRW.Skin.bgmTowerResult.bIsPlaying) {
+					if (!b音声再生 && !OpenNijiiroRW.Skin.bgmTowerResult.bIsPlaying)
+					{
 						OpenNijiiroRW.Skin.bgmTowerResult.tPlay();
 						b音声再生 = true;
 					}
@@ -1199,7 +1314,8 @@ internal class CStage結果 : CStage {
 
 					#region [Tower background]
 
-					if (OpenNijiiroRW.Skin.Game_Tower_Ptn_Result > 0) {
+					if (OpenNijiiroRW.Skin.Game_Tower_Ptn_Result > 0)
+					{
 						int xFactor = 0;
 						float yFactor = 1f;
 
@@ -1208,7 +1324,8 @@ internal class CStage結果 : CStage {
 						if (currentTowerType < 0 || currentTowerType >= OpenNijiiroRW.Skin.Game_Tower_Ptn_Result)
 							currentTowerType = 0;
 
-						if (OpenNijiiroRW.Tx.TowerResult_Background != null && OpenNijiiroRW.Tx.TowerResult_Tower[currentTowerType] != null) {
+						if (OpenNijiiroRW.Tx.TowerResult_Background != null && OpenNijiiroRW.Tx.TowerResult_Tower[currentTowerType] != null)
+						{
 							xFactor = (OpenNijiiroRW.Tx.TowerResult_Background.szTextureSize.Width - OpenNijiiroRW.Tx.TowerResult_Tower[currentTowerType].szTextureSize.Width) / 2;
 							yFactor = OpenNijiiroRW.Tx.TowerResult_Tower[currentTowerType].szTextureSize.Height / (float)OpenNijiiroRW.Tx.TowerResult_Background.szTextureSize.Height;
 						}
@@ -1228,7 +1345,8 @@ internal class CStage結果 : CStage {
 					int y = 2 * OpenNijiiroRW.actTextConsole.fontHeight + 8;
 					OpenNijiiroRW.actTextConsole.Print(0, y, CTextConsole.EFontType.White, sc.ToString());
 
-					if (sc >= 0 && OpenNijiiroRW.Tx.TowerResult_ScoreRankEffect != null) {
+					if (sc >= 0 && OpenNijiiroRW.Tx.TowerResult_ScoreRankEffect != null)
+					{
 						int scoreRankEffect_width = OpenNijiiroRW.Tx.TowerResult_ScoreRankEffect.szTextureSize.Width / 7;
 						int scoreRankEffect_height = OpenNijiiroRW.Tx.TowerResult_ScoreRankEffect.szTextureSize.Height;
 
@@ -1267,7 +1385,8 @@ internal class CStage結果 : CStage {
 
 					#endregion
 
-					if (!b音声再生 && !OpenNijiiroRW.Skin.bgmTowerResult.bIsPlaying) {
+					if (!b音声再生 && !OpenNijiiroRW.Skin.bgmTowerResult.bIsPlaying)
+					{
 						OpenNijiiroRW.Skin.bgmTowerResult.tPlay();
 						b音声再生 = true;
 					}
@@ -1286,17 +1405,20 @@ internal class CStage結果 : CStage {
 
 
 
-			if (this.actParameterPanel.Draw() == 0) {
+			if (this.actParameterPanel.Draw() == 0)
+			{
 				this.bアニメが完了 = false;
 			}
 
-			if (this.actSongBar.Draw() == 0) {
+			if (this.actSongBar.Draw() == 0)
+			{
 				this.bアニメが完了 = false;
 			}
 
 			#region Nameplate
 
-			for (int i = 0; i < OpenNijiiroRW.ConfigIni.nPlayerCount; i++) {
+			for (int i = 0; i < OpenNijiiroRW.ConfigIni.nPlayerCount; i++)
+			{
 				if (OpenNijiiroRW.ConfigIni.bAIBattleMode && i == 1) break;
 
 				int pos = i;
@@ -1308,17 +1430,22 @@ internal class CStage結果 : CStage {
 				int modIcons_x;
 				int modIcons_y;
 
-				if (OpenNijiiroRW.ConfigIni.nPlayerCount == 5) {
+				if (OpenNijiiroRW.ConfigIni.nPlayerCount == 5)
+				{
 					namePlate_x = OpenNijiiroRW.Skin.Result_NamePlate_5P[0] + OpenNijiiroRW.Skin.Result_UIMove_5P_X[pos];
 					namePlate_y = OpenNijiiroRW.Skin.Result_NamePlate_5P[1] + OpenNijiiroRW.Skin.Result_UIMove_5P_Y[pos];
 					modIcons_x = OpenNijiiroRW.Skin.Result_ModIcons_5P[0] + OpenNijiiroRW.Skin.Result_UIMove_5P_X[pos];
 					modIcons_y = OpenNijiiroRW.Skin.Result_ModIcons_5P[1] + OpenNijiiroRW.Skin.Result_UIMove_5P_Y[pos];
-				} else if (OpenNijiiroRW.ConfigIni.nPlayerCount == 4 || OpenNijiiroRW.ConfigIni.nPlayerCount == 3) {
+				}
+				else if (OpenNijiiroRW.ConfigIni.nPlayerCount == 4 || OpenNijiiroRW.ConfigIni.nPlayerCount == 3)
+				{
 					namePlate_x = OpenNijiiroRW.Skin.Result_NamePlate_4P[0] + OpenNijiiroRW.Skin.Result_UIMove_4P_X[pos];
 					namePlate_y = OpenNijiiroRW.Skin.Result_NamePlate_4P[1] + OpenNijiiroRW.Skin.Result_UIMove_4P_Y[pos];
 					modIcons_x = OpenNijiiroRW.Skin.Result_ModIcons_4P[0] + OpenNijiiroRW.Skin.Result_UIMove_4P_X[pos];
 					modIcons_y = OpenNijiiroRW.Skin.Result_ModIcons_4P[1] + OpenNijiiroRW.Skin.Result_UIMove_4P_Y[pos];
-				} else {
+				}
+				else
+				{
 					namePlate_x = OpenNijiiroRW.Skin.Result_NamePlate_X[pos];
 					namePlate_y = OpenNijiiroRW.Skin.Result_NamePlate_Y[pos];
 					modIcons_x = OpenNijiiroRW.Skin.Result_ModIcons_X[pos];
@@ -1345,13 +1472,17 @@ internal class CStage結果 : CStage {
 
 			#endregion
 
-			if (base.ePhaseID == CStage.EPhase.Common_FADEIN) {
-				if (this.actFIFromGameplay.Draw() != 0) {
+			if (base.ePhaseID == CStage.EPhase.Common_FADEIN)
+			{
+				if (this.actFIFromGameplay.Draw() != 0)
+				{
 					base.ePhaseID = CStage.EPhase.Common_NORMAL;
 				}
-			} else if ((base.ePhaseID == CStage.EPhase.Common_FADEOUT))         //&& ( this.actFO.On進行描画() != 0 ) )
+			}
+			else if ((base.ePhaseID == CStage.EPhase.Common_FADEOUT))         //&& ( this.actFO.On進行描画() != 0 ) )
 			{
-				if (this.actFO.Draw() != 0) {
+				if (this.actFO.Draw() != 0)
+				{
 					bgmResultLoop.tStop();
 					OpenNijiiroRW.Skin.bgmDanResult.tStop();
 					OpenNijiiroRW.Skin.bgmTowerResult.tStop();
@@ -1374,8 +1505,10 @@ internal class CStage結果 : CStage {
 
 			// キー入力
 
-			if (base.ePhaseID == CStage.EPhase.Common_NORMAL) {
-				if (OpenNijiiroRW.InputManager.Keyboard.KeyPressed((int)SlimDXKeys.Key.Escape)) {
+			if (base.ePhaseID == CStage.EPhase.Common_NORMAL)
+			{
+				if (OpenNijiiroRW.InputManager.Keyboard.KeyPressed((int)SlimDXKeys.Key.Escape))
+				{
 					#region [ Return to song select screen (Faster method) ]
 
 					OpenNijiiroRW.Skin.soundDecideSFX.tPlay();
@@ -1395,28 +1528,34 @@ internal class CStage結果 : CStage {
 					  || OpenNijiiroRW.Pad.bPressed(EInstrumentPad.Drums, EPad.RD))
 					 || (OpenNijiiroRW.Pad.bPressed(EInstrumentPad.Drums, EPad.LC)
 						 || (OpenNijiiroRW.Pad.bPressedDGB(EPad.Decide)
-							 || OpenNijiiroRW.InputManager.Keyboard.KeyPressed((int)SlimDXKeys.Key.Return))))) {
+							 || OpenNijiiroRW.InputManager.Keyboard.KeyPressed((int)SlimDXKeys.Key.Return)))))
+				{
 
 
 					#region [ Skip animations ]
 
 					if (OpenNijiiroRW.stageSongSelect.nChoosenSongDifficulty[0] < (int)Difficulty.Tower
-						&& this.actParameterPanel.ctMainCounter.CurrentValue < this.actParameterPanel.MountainAppearValue) {
+						&& this.actParameterPanel.ctMainCounter.CurrentValue < this.actParameterPanel.MountainAppearValue)
+					{
 						OpenNijiiroRW.Skin.soundDecideSFX.tPlay();
 						this.actParameterPanel.tSkipResultAnimations();
-					} else if (OpenNijiiroRW.stageSongSelect.nChoosenSongDifficulty[0] == (int)Difficulty.Dan
-							   && (ctPhase1 != null && ctPhase1.IsUnEnded)) {
+					}
+					else if (OpenNijiiroRW.stageSongSelect.nChoosenSongDifficulty[0] == (int)Difficulty.Dan
+							   && (ctPhase1 != null && ctPhase1.IsUnEnded))
+					{
 						OpenNijiiroRW.Skin.soundDecideSFX.tPlay();
 						ctPhase1.CurrentValue = (int)ctPhase1.EndValue;
 					}
 
 					#endregion
 
-					else {
+					else
+					{
 
 						bool _modalsProcessed = OpenNijiiroRW.ModalManager.InputManagement();
 
-						if (_modalsProcessed == true) {
+						if (_modalsProcessed == true)
+						{
 							#region [ Return to song select screen ]
 
 							actFO.tフェードアウト開始();
@@ -1438,11 +1577,14 @@ internal class CStage結果 : CStage {
 				if (OpenNijiiroRW.InputManager.Keyboard.KeyPressing((int)SlimDXKeys.Key.LeftArrow) ||
 					OpenNijiiroRW.Pad.bPressed(EInstrumentPad.Drums, EPad.LeftChange) ||
 					OpenNijiiroRW.InputManager.Keyboard.KeyPressing((int)SlimDXKeys.Key.RightArrow) ||
-					OpenNijiiroRW.Pad.bPressed(EInstrumentPad.Drums, EPad.RightChange)) {
-					if (OpenNijiiroRW.stageSongSelect.nChoosenSongDifficulty[0] == (int)Difficulty.Dan) {
+					OpenNijiiroRW.Pad.bPressed(EInstrumentPad.Drums, EPad.RightChange))
+				{
+					if (OpenNijiiroRW.stageSongSelect.nChoosenSongDifficulty[0] == (int)Difficulty.Dan)
+					{
 						#region [ Phase 2 (Swap freely between Exams and Songs) ]
 
-						if (ctPhase1 != null && ctPhase1.IsEnded && (ctPhase2 == null || ctPhase2.IsEnded)) {
+						if (ctPhase1 != null && ctPhase1.IsEnded && (ctPhase2 == null || ctPhase2.IsEnded))
+						{
 							ctPhase2 = new CCounter(0, 1280, 0.5f, OpenNijiiroRW.Timer);
 							ctPhase2.CurrentValue = 0;
 
@@ -1464,7 +1606,8 @@ internal class CStage結果 : CStage {
 
 	#region [Dan result exam information]
 
-	private void ftDanDisplayExamInfo(int offset = 0) {
+	private void ftDanDisplayExamInfo(int offset = 0)
+	{
 		int baseX = OpenNijiiroRW.Skin.DanResult_StatePanel[0] + offset;
 		int baseY = OpenNijiiroRW.Skin.DanResult_StatePanel[1];
 
@@ -1513,16 +1656,20 @@ internal class CStage結果 : CStage {
 
 	#region [Dan result individual song information]
 
-	private void ftDanDisplaySongInfo(int i, int offset = 0) {
+	private void ftDanDisplaySongInfo(int i, int offset = 0)
+	{
 		int drawPos = i % 3;
 		int nowIndex = (i / 3);
 
 		int opacityCounter = Math.Min(ctDanSongInfoChange.CurrentValue, 255);
 		int opacity;
 
-		if (nowIndex == nNowDanSongInfo) {
+		if (nowIndex == nNowDanSongInfo)
+		{
 			opacity = opacityCounter;
-		} else {
+		}
+		else
+		{
 			opacity = 255 - opacityCounter;
 		}
 
@@ -1589,9 +1736,11 @@ internal class CStage結果 : CStage {
 	#endregion
 
 
-	public void tPostprocessing() {
+	public void tPostprocessing()
+	{
 
-		if (!bAddedToRecentlyPlayedSongs) {
+		if (!bAddedToRecentlyPlayedSongs)
+		{
 			// Song added to recently added songs here
 
 			OpenNijiiroRW.RecentlyPlayedSongs.tAddChart(OpenNijiiroRW.stageSongSelect.rChoosenSong.uniqueId.data.id);
@@ -1601,7 +1750,8 @@ internal class CStage結果 : CStage {
 
 	}
 
-	public enum E戻り値 : int {
+	public enum E戻り値 : int
+	{
 		継続,
 		完了
 	}
@@ -1628,17 +1778,24 @@ internal class CStage結果 : CStage {
 	private CSound rResultSound;
 	public ResultBG Background;
 
-	public bool[] bClear {
-		get {
-			if (OpenNijiiroRW.ConfigIni.bAIBattleMode) {
+	public bool[] bClear
+	{
+		get
+		{
+			if (OpenNijiiroRW.ConfigIni.bAIBattleMode)
+			{
 				int clearCount = 0;
-				for (int i = 0; i < OpenNijiiroRW.stageGameScreen.AIBattleSections.Count; i++) {
-					if (OpenNijiiroRW.stageGameScreen.AIBattleSections[i].End == CStage演奏画面共通.AIBattleSection.EndType.Clear) {
+				for (int i = 0; i < OpenNijiiroRW.stageGameScreen.AIBattleSections.Count; i++)
+				{
+					if (OpenNijiiroRW.stageGameScreen.AIBattleSections[i].End == CStage演奏画面共通.AIBattleSection.EndType.Clear)
+					{
 						clearCount++;
 					}
 				}
 				return new bool[] { clearCount >= OpenNijiiroRW.stageGameScreen.AIBattleSections.Count / 2.0, false };
-			} else {
+			}
+			else
+			{
 				return new bool[] { OpenNijiiroRW.stageGameScreen.bIsAlreadyCleared[0], OpenNijiiroRW.stageGameScreen.bIsAlreadyCleared[1], OpenNijiiroRW.stageGameScreen.bIsAlreadyCleared[2], OpenNijiiroRW.stageGameScreen.bIsAlreadyCleared[3], OpenNijiiroRW.stageGameScreen.bIsAlreadyCleared[4] };
 			}
 		}
@@ -1648,12 +1805,14 @@ internal class CStage結果 : CStage {
 
 	private int nNowDanSongInfo;
 
-	private void NextDanSongInfo() {
+	private void NextDanSongInfo()
+	{
 		ctDanSongInfoChange = new CCounter(0, 2000, 1, OpenNijiiroRW.Timer);
 		ctDanSongInfoChange.CurrentValue = 0;
 
 		nNowDanSongInfo++;
-		if (nNowDanSongInfo >= Math.Ceiling(OpenNijiiroRW.stageSongSelect.rChoosenSong.DanSongs.Count / 3.0)) {
+		if (nNowDanSongInfo >= Math.Ceiling(OpenNijiiroRW.stageSongSelect.rChoosenSong.DanSongs.Count / 3.0))
+		{
 			nNowDanSongInfo = 0;
 		}
 	}
@@ -1710,21 +1869,31 @@ internal class CStage結果 : CStage {
 	private CCachedFontRenderer pfTowerText48;
 	private CCachedFontRenderer pfTowerText72;
 
-	private CSkin.CSystemSound bgmResultIn {
-		get {
-			if (OpenNijiiroRW.ConfigIni.bAIBattleMode) {
+	private CSkin.CSystemSound bgmResultIn
+	{
+		get
+		{
+			if (OpenNijiiroRW.ConfigIni.bAIBattleMode)
+			{
 				return OpenNijiiroRW.Skin.bgmResultIn_AI;
-			} else {
+			}
+			else
+			{
 				return OpenNijiiroRW.Skin.bgmリザルトイン音;
 			}
 		}
 	}
 
-	private CSkin.CSystemSound bgmResultLoop {
-		get {
-			if (OpenNijiiroRW.ConfigIni.bAIBattleMode) {
+	private CSkin.CSystemSound bgmResultLoop
+	{
+		get
+		{
+			if (OpenNijiiroRW.ConfigIni.bAIBattleMode)
+			{
 				return OpenNijiiroRW.Skin.bgmResult_AI;
-			} else {
+			}
+			else
+			{
 				return OpenNijiiroRW.Skin.bgmリザルト音;
 			}
 		}

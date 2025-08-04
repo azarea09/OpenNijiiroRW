@@ -3,7 +3,8 @@ using SkiaSharp;
 
 namespace FDK;
 
-public static class BitmapUtil {
+public static class BitmapUtil
+{
 	// 定数
 
 	public const uint DIB_PAL_COLORS = 1;
@@ -13,7 +14,8 @@ public static class BitmapUtil {
 	// 構造体
 
 	[StructLayout(LayoutKind.Sequential, Pack = 1)]
-	public struct BITMAPFILEHEADER {
+	public struct BITMAPFILEHEADER
+	{
 		public ushort bfType;
 		public uint bfSize;
 		public ushort bfReserved1;
@@ -22,7 +24,8 @@ public static class BitmapUtil {
 	}
 
 	[StructLayout(LayoutKind.Sequential, Pack = 1)]
-	public struct BITMAPINFOHEADER {
+	public struct BITMAPINFOHEADER
+	{
 		public const int BI_RGB = 0;
 		public uint biSize構造体のサイズ;
 		public int biWidthビットマップの幅dot;
@@ -40,7 +43,8 @@ public static class BitmapUtil {
 
 	// メソッド
 
-	public static unsafe SKBitmap ToBitmap(IntPtr pBITMAPINFOHEADER) {
+	public static unsafe SKBitmap ToBitmap(IntPtr pBITMAPINFOHEADER)
+	{
 		BITMAPFILEHEADER bitmapfileheader;
 		BITMAPINFOHEADER* bitmapinfoheaderPtr = (BITMAPINFOHEADER*)pBITMAPINFOHEADER;
 		bitmapfileheader.bfType = 0x4d42;

@@ -1,7 +1,8 @@
 ﻿namespace FDK;
 // 定数
 
-public enum InputDeviceType {
+public enum InputDeviceType
+{
 	Keyboard,
 	Mouse,
 	Joystick,

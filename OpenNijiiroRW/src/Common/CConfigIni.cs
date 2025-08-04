@@ -7,7 +7,8 @@ using FDK.ExtensionMethods;
 
 namespace OpenNijiiroRW;
 
-internal class CConfigIni : INotifyPropertyChanged {
+internal class CConfigIni : INotifyPropertyChanged
+{
 	private const int MinimumKeyboardSoundLevelIncrement = 1;
 	private const int MaximumKeyboardSoundLevelIncrement = 20;
 	private const int DefaultKeyboardSoundLevelIncrement = 5;
@@ -16,301 +17,364 @@ internal class CConfigIni : INotifyPropertyChanged {
 
 	#region [ CKeyAssign ]
 
-	public class CKeyAssign {
-		public class CKeyAssignPad {
-			public CConfigIni.CKeyAssign.STKEYASSIGN[] HH {
+	public class CKeyAssign
+	{
+		public class CKeyAssignPad
+		{
+			public CConfigIni.CKeyAssign.STKEYASSIGN[] HH
+			{
 				get { return this.padHH_R; }
 				set { this.padHH_R = value; }
 			}
 
-			public CConfigIni.CKeyAssign.STKEYASSIGN[] R {
+			public CConfigIni.CKeyAssign.STKEYASSIGN[] R
+			{
 				get { return this.padHH_R; }
 				set { this.padHH_R = value; }
 			}
 
-			public CConfigIni.CKeyAssign.STKEYASSIGN[] SD {
+			public CConfigIni.CKeyAssign.STKEYASSIGN[] SD
+			{
 				get { return this.padSD_G; }
 				set { this.padSD_G = value; }
 			}
 
-			public CConfigIni.CKeyAssign.STKEYASSIGN[] G {
+			public CConfigIni.CKeyAssign.STKEYASSIGN[] G
+			{
 				get { return this.padSD_G; }
 				set { this.padSD_G = value; }
 			}
 
-			public CConfigIni.CKeyAssign.STKEYASSIGN[] BD {
+			public CConfigIni.CKeyAssign.STKEYASSIGN[] BD
+			{
 				get { return this.padBD_B; }
 				set { this.padBD_B = value; }
 			}
 
-			public CConfigIni.CKeyAssign.STKEYASSIGN[] B {
+			public CConfigIni.CKeyAssign.STKEYASSIGN[] B
+			{
 				get { return this.padBD_B; }
 				set { this.padBD_B = value; }
 			}
 
-			public CConfigIni.CKeyAssign.STKEYASSIGN[] HT {
+			public CConfigIni.CKeyAssign.STKEYASSIGN[] HT
+			{
 				get { return this.padHT_Pick; }
 				set { this.padHT_Pick = value; }
 			}
 
-			public CConfigIni.CKeyAssign.STKEYASSIGN[] Pick {
+			public CConfigIni.CKeyAssign.STKEYASSIGN[] Pick
+			{
 				get { return this.padHT_Pick; }
 				set { this.padHT_Pick = value; }
 			}
 
-			public CConfigIni.CKeyAssign.STKEYASSIGN[] LT {
+			public CConfigIni.CKeyAssign.STKEYASSIGN[] LT
+			{
 				get { return this.padLT_Wail; }
 				set { this.padLT_Wail = value; }
 			}
 
-			public CConfigIni.CKeyAssign.STKEYASSIGN[] Wail {
+			public CConfigIni.CKeyAssign.STKEYASSIGN[] Wail
+			{
 				get { return this.padLT_Wail; }
 				set { this.padLT_Wail = value; }
 			}
 
-			public CConfigIni.CKeyAssign.STKEYASSIGN[] FT {
+			public CConfigIni.CKeyAssign.STKEYASSIGN[] FT
+			{
 				get { return this.padFT_Cancel; }
 				set { this.padFT_Cancel = value; }
 			}
 
-			public CConfigIni.CKeyAssign.STKEYASSIGN[] Cancel {
+			public CConfigIni.CKeyAssign.STKEYASSIGN[] Cancel
+			{
 				get { return this.padFT_Cancel; }
 				set { this.padFT_Cancel = value; }
 			}
 
-			public CConfigIni.CKeyAssign.STKEYASSIGN[] CY {
+			public CConfigIni.CKeyAssign.STKEYASSIGN[] CY
+			{
 				get { return this.padCY_Decide; }
 				set { this.padCY_Decide = value; }
 			}
 
-			public CConfigIni.CKeyAssign.STKEYASSIGN[] Decide {
+			public CConfigIni.CKeyAssign.STKEYASSIGN[] Decide
+			{
 				get { return this.padCY_Decide; }
 				set { this.padCY_Decide = value; }
 			}
 
-			public CConfigIni.CKeyAssign.STKEYASSIGN[] HHO {
+			public CConfigIni.CKeyAssign.STKEYASSIGN[] HHO
+			{
 				get { return this.padHHO; }
 				set { this.padHHO = value; }
 			}
 
-			public CConfigIni.CKeyAssign.STKEYASSIGN[] RD {
+			public CConfigIni.CKeyAssign.STKEYASSIGN[] RD
+			{
 				get { return this.padRD; }
 				set { this.padRD = value; }
 			}
 
-			public CConfigIni.CKeyAssign.STKEYASSIGN[] LC {
+			public CConfigIni.CKeyAssign.STKEYASSIGN[] LC
+			{
 				get { return this.padLC; }
 				set { this.padLC = value; }
 			}
 
-			public CConfigIni.CKeyAssign.STKEYASSIGN[] LP {
+			public CConfigIni.CKeyAssign.STKEYASSIGN[] LP
+			{
 				get { return this.padLP; }
 				set { this.padLP = value; }
 			}
 
-			public CConfigIni.CKeyAssign.STKEYASSIGN[] LBD {
+			public CConfigIni.CKeyAssign.STKEYASSIGN[] LBD
+			{
 				get { return this.padLBD; }
 				set { this.padLBD = value; }
 			}
 
-			public CConfigIni.CKeyAssign.STKEYASSIGN[] LeftRed {
+			public CConfigIni.CKeyAssign.STKEYASSIGN[] LeftRed
+			{
 				get { return this.padLRed; }
 				set { this.padLRed = value; }
 			}
 
-			public CConfigIni.CKeyAssign.STKEYASSIGN[] RightRed {
+			public CConfigIni.CKeyAssign.STKEYASSIGN[] RightRed
+			{
 				get { return this.padRRed; }
 				set { this.padRRed = value; }
 			}
 
-			public CConfigIni.CKeyAssign.STKEYASSIGN[] LeftBlue {
+			public CConfigIni.CKeyAssign.STKEYASSIGN[] LeftBlue
+			{
 				get { return this.padLBlue; }
 				set { this.padLBlue = value; }
 			}
 
-			public CConfigIni.CKeyAssign.STKEYASSIGN[] RightBlue {
+			public CConfigIni.CKeyAssign.STKEYASSIGN[] RightBlue
+			{
 				get { return this.padRBlue; }
 				set { this.padRBlue = value; }
 			}
 
-			public CConfigIni.CKeyAssign.STKEYASSIGN[] LeftRed2P {
+			public CConfigIni.CKeyAssign.STKEYASSIGN[] LeftRed2P
+			{
 				get { return this.padLRed2P; }
 				set { this.padLRed2P = value; }
 			}
 
-			public CConfigIni.CKeyAssign.STKEYASSIGN[] RightRed2P {
+			public CConfigIni.CKeyAssign.STKEYASSIGN[] RightRed2P
+			{
 				get { return this.padRRed2P; }
 				set { this.padRRed2P = value; }
 			}
 
-			public CConfigIni.CKeyAssign.STKEYASSIGN[] LeftBlue2P {
+			public CConfigIni.CKeyAssign.STKEYASSIGN[] LeftBlue2P
+			{
 				get { return this.padLBlue2P; }
 				set { this.padLBlue2P = value; }
 			}
 
-			public CConfigIni.CKeyAssign.STKEYASSIGN[] RightBlue2P {
+			public CConfigIni.CKeyAssign.STKEYASSIGN[] RightBlue2P
+			{
 				get { return this.padRBlue2P; }
 				set { this.padRBlue2P = value; }
 			}
 
-			public CConfigIni.CKeyAssign.STKEYASSIGN[] LeftRed3P {
+			public CConfigIni.CKeyAssign.STKEYASSIGN[] LeftRed3P
+			{
 				get { return this.padLRed3P; }
 				set { this.padLRed3P = value; }
 			}
 
-			public CConfigIni.CKeyAssign.STKEYASSIGN[] RightRed3P {
+			public CConfigIni.CKeyAssign.STKEYASSIGN[] RightRed3P
+			{
 				get { return this.padRRed3P; }
 				set { this.padRRed3P = value; }
 			}
 
-			public CConfigIni.CKeyAssign.STKEYASSIGN[] LeftBlue3P {
+			public CConfigIni.CKeyAssign.STKEYASSIGN[] LeftBlue3P
+			{
 				get { return this.padLBlue3P; }
 				set { this.padLBlue3P = value; }
 			}
 
-			public CConfigIni.CKeyAssign.STKEYASSIGN[] RightBlue3P {
+			public CConfigIni.CKeyAssign.STKEYASSIGN[] RightBlue3P
+			{
 				get { return this.padRBlue3P; }
 				set { this.padRBlue3P = value; }
 			}
 
-			public CConfigIni.CKeyAssign.STKEYASSIGN[] LeftRed4P {
+			public CConfigIni.CKeyAssign.STKEYASSIGN[] LeftRed4P
+			{
 				get { return this.padLRed4P; }
 				set { this.padLRed4P = value; }
 			}
 
-			public CConfigIni.CKeyAssign.STKEYASSIGN[] RightRed4P {
+			public CConfigIni.CKeyAssign.STKEYASSIGN[] RightRed4P
+			{
 				get { return this.padRRed4P; }
 				set { this.padRRed4P = value; }
 			}
 
-			public CConfigIni.CKeyAssign.STKEYASSIGN[] LeftBlue4P {
+			public CConfigIni.CKeyAssign.STKEYASSIGN[] LeftBlue4P
+			{
 				get { return this.padLBlue4P; }
 				set { this.padLBlue4P = value; }
 			}
 
-			public CConfigIni.CKeyAssign.STKEYASSIGN[] RightBlue4P {
+			public CConfigIni.CKeyAssign.STKEYASSIGN[] RightBlue4P
+			{
 				get { return this.padRBlue4P; }
 				set { this.padRBlue4P = value; }
 			}
 
-			public CConfigIni.CKeyAssign.STKEYASSIGN[] LeftRed5P {
+			public CConfigIni.CKeyAssign.STKEYASSIGN[] LeftRed5P
+			{
 				get { return this.padLRed5P; }
 				set { this.padLRed5P = value; }
 			}
 
-			public CConfigIni.CKeyAssign.STKEYASSIGN[] RightRed5P {
+			public CConfigIni.CKeyAssign.STKEYASSIGN[] RightRed5P
+			{
 				get { return this.padRRed5P; }
 				set { this.padRRed5P = value; }
 			}
 
-			public CConfigIni.CKeyAssign.STKEYASSIGN[] LeftBlue5P {
+			public CConfigIni.CKeyAssign.STKEYASSIGN[] LeftBlue5P
+			{
 				get { return this.padLBlue5P; }
 				set { this.padLBlue5P = value; }
 			}
 
-			public CConfigIni.CKeyAssign.STKEYASSIGN[] RightBlue5P {
+			public CConfigIni.CKeyAssign.STKEYASSIGN[] RightBlue5P
+			{
 				get { return this.padRBlue5P; }
 				set { this.padRBlue5P = value; }
 			}
 
-			public CConfigIni.CKeyAssign.STKEYASSIGN[] Clap {
+			public CConfigIni.CKeyAssign.STKEYASSIGN[] Clap
+			{
 				get { return this.padClap; }
 				set { this.padClap = value; }
 			}
 
-			public CConfigIni.CKeyAssign.STKEYASSIGN[] Clap2P {
+			public CConfigIni.CKeyAssign.STKEYASSIGN[] Clap2P
+			{
 				get { return this.padClap2P; }
 				set { this.padClap2P = value; }
 			}
 
-			public CConfigIni.CKeyAssign.STKEYASSIGN[] Clap3P {
+			public CConfigIni.CKeyAssign.STKEYASSIGN[] Clap3P
+			{
 				get { return this.padClap3P; }
 				set { this.padClap3P = value; }
 			}
 
-			public CConfigIni.CKeyAssign.STKEYASSIGN[] Clap4P {
+			public CConfigIni.CKeyAssign.STKEYASSIGN[] Clap4P
+			{
 				get { return this.padClap4P; }
 				set { this.padClap4P = value; }
 			}
 
-			public CConfigIni.CKeyAssign.STKEYASSIGN[] Clap5P {
+			public CConfigIni.CKeyAssign.STKEYASSIGN[] Clap5P
+			{
 				get { return this.padClap5P; }
 				set { this.padClap5P = value; }
 			}
 
-			public CConfigIni.CKeyAssign.STKEYASSIGN[] LeftChange {
+			public CConfigIni.CKeyAssign.STKEYASSIGN[] LeftChange
+			{
 				get { return this.padLeftChange; }
 				set { this.padLeftChange = value; }
 			}
 
-			public CConfigIni.CKeyAssign.STKEYASSIGN[] RightChange {
+			public CConfigIni.CKeyAssign.STKEYASSIGN[] RightChange
+			{
 				get { return this.padRightChange; }
 				set { this.padRightChange = value; }
 			}
 
-			public CConfigIni.CKeyAssign.STKEYASSIGN[] Capture {
+			public CConfigIni.CKeyAssign.STKEYASSIGN[] Capture
+			{
 				get { return this.padCapture; }
 				set { this.padCapture = value; }
 			}
 
-			public CConfigIni.CKeyAssign.STKEYASSIGN[] SongVolIncrease {
+			public CConfigIni.CKeyAssign.STKEYASSIGN[] SongVolIncrease
+			{
 				get { return this.padSongVolIncrease; }
 				set { this.padSongVolIncrease = value; }
 			}
 
-			public CConfigIni.CKeyAssign.STKEYASSIGN[] SongVolDecrease {
+			public CConfigIni.CKeyAssign.STKEYASSIGN[] SongVolDecrease
+			{
 				get { return this.padSongVolDecrease; }
 				set { this.padSongVolDecrease = value; }
 			}
 
-			public CConfigIni.CKeyAssign.STKEYASSIGN[] DisplayHits {
+			public CConfigIni.CKeyAssign.STKEYASSIGN[] DisplayHits
+			{
 				get { return this.padDisplayHits; }
 				set { this.padDisplayHits = value; }
 			}
 
-			public CConfigIni.CKeyAssign.STKEYASSIGN[] DisplayDebug {
+			public CConfigIni.CKeyAssign.STKEYASSIGN[] DisplayDebug
+			{
 				get { return this.padDisplayDebug; }
 				set { this.padDisplayDebug = value; }
 			}
 
-			public CConfigIni.CKeyAssign.STKEYASSIGN[] QuickConfig {
+			public CConfigIni.CKeyAssign.STKEYASSIGN[] QuickConfig
+			{
 				get { return this.padQuickConfig; }
 				set { this.padQuickConfig = value; }
 			}
 
-			public CConfigIni.CKeyAssign.STKEYASSIGN[] NewHeya {
+			public CConfigIni.CKeyAssign.STKEYASSIGN[] NewHeya
+			{
 				get { return this.padNewHeya; }
 				set { this.padNewHeya = value; }
 			}
 
-			public CConfigIni.CKeyAssign.STKEYASSIGN[] SortSongs {
+			public CConfigIni.CKeyAssign.STKEYASSIGN[] SortSongs
+			{
 				get { return this.padSortSongs; }
 				set { this.padSortSongs = value; }
 			}
 
-			public CConfigIni.CKeyAssign.STKEYASSIGN[] ToggleAutoP1 {
+			public CConfigIni.CKeyAssign.STKEYASSIGN[] ToggleAutoP1
+			{
 				get { return this.padToggleAutoP1; }
 				set { this.padToggleAutoP1 = value; }
 			}
 
-			public CConfigIni.CKeyAssign.STKEYASSIGN[] ToggleAutoP2 {
+			public CConfigIni.CKeyAssign.STKEYASSIGN[] ToggleAutoP2
+			{
 				get { return this.padToggleAutoP2; }
 				set { this.padToggleAutoP2 = value; }
 			}
 
-			public CConfigIni.CKeyAssign.STKEYASSIGN[] ToggleTrainingMode {
+			public CConfigIni.CKeyAssign.STKEYASSIGN[] ToggleTrainingMode
+			{
 				get { return this.padToggleTrainingMode; }
 				set { this.padToggleTrainingMode = value; }
 			}
 
-			public CConfigIni.CKeyAssign.STKEYASSIGN[] CycleVideoDisplayMode {
+			public CConfigIni.CKeyAssign.STKEYASSIGN[] CycleVideoDisplayMode
+			{
 				get { return this.padCycleVideoDisplayMode; }
 				set { this.padCycleVideoDisplayMode = value; }
 			}
 
-			public CConfigIni.CKeyAssign.STKEYASSIGN[] this[int index] {
-				get {
-					switch (index) {
+			public CConfigIni.CKeyAssign.STKEYASSIGN[] this[int index]
+			{
+				get
+				{
+					switch (index)
+					{
 						case (int)EKeyConfigPad.HH:
 							return this.padHH_R;
 
@@ -515,8 +579,10 @@ internal class CConfigIni : INotifyPropertyChanged {
 
 					throw new IndexOutOfRangeException();
 				}
-				set {
-					switch (index) {
+				set
+				{
+					switch (index)
+					{
 						case (int)EKeyConfigPad.HH:
 							this.padHH_R = value;
 							return;
@@ -874,18 +940,21 @@ internal class CConfigIni : INotifyPropertyChanged {
 			#endregion
 		}
 
-		public bool KeyIsPressed(STKEYASSIGN[] pad) {
+		public bool KeyIsPressed(STKEYASSIGN[] pad)
+		{
 			if (OpenNijiiroRW.InputManager == null) return false; // Input initialisation failed/not reached
 			return OpenNijiiroRW.InputManager.Keyboard.KeyPressed(pad.ToList().ConvertAll<int>(key => key.Code));
 		}
 
 		[StructLayout(LayoutKind.Sequential)]
-		public struct STKEYASSIGN {
+		public struct STKEYASSIGN
+		{
 			public EInputDevice InputDevice;
 			public int ID;
 			public int Code;
 
-			public STKEYASSIGN(EInputDevice DeviceType, int nID, int nCode) {
+			public STKEYASSIGN(EInputDevice DeviceType, int nID, int nCode)
+			{
 				this.InputDevice = DeviceType;
 				this.ID = nID;
 				this.Code = nCode;
@@ -898,9 +967,12 @@ internal class CConfigIni : INotifyPropertyChanged {
 		public CKeyAssignPad Taiko = new CKeyAssignPad();
 		public CKeyAssignPad System = new CKeyAssignPad();
 
-		public CKeyAssignPad this[int index] {
-			get {
-				switch (index) {
+		public CKeyAssignPad this[int index]
+		{
+			get
+			{
+				switch (index)
+				{
 					case (int)EKeyConfigPart.Drums:
 						return this.Drums;
 
@@ -919,8 +991,10 @@ internal class CConfigIni : INotifyPropertyChanged {
 
 				throw new IndexOutOfRangeException();
 			}
-			set {
-				switch (index) {
+			set
+			{
+				switch (index)
+				{
 					case (int)EKeyConfigPart.Drums:
 						this.Drums = value;
 						return;
@@ -950,7 +1024,8 @@ internal class CConfigIni : INotifyPropertyChanged {
 	#endregion
 
 	//
-	public enum ESoundDeviceTypeForConfig {
+	public enum ESoundDeviceTypeForConfig
+	{
 		Bass,
 		ASIO,
 		WASAPI_Exclusive,
@@ -959,14 +1034,16 @@ internal class CConfigIni : INotifyPropertyChanged {
 	}
 	// Properties
 
-	public class CAIPerformances {
+	public class CAIPerformances
+	{
 		public int nGoodOdds;
 		public int nPerfectOdds;
 		public int nBadOdds;
 		public int nRollSpeed;
 		public int nMineHitOdds;
 
-		public CAIPerformances(int po, int go, int bo, int rp, int mho = 0) {
+		public CAIPerformances(int po, int go, int bo, int rp, int mho = 0)
+		{
 			nGoodOdds = go;
 			nPerfectOdds = po;
 			nBadOdds = bo;
@@ -975,12 +1052,14 @@ internal class CConfigIni : INotifyPropertyChanged {
 		}
 	}
 
-	public class CTimingZones {
+	public class CTimingZones
+	{
 		public int nGoodZone;
 		public int nOkZone;
 		public int nBadZone;
 
-		public CTimingZones(int gz, int oz, int bz) {
+		public CTimingZones(int gz, int oz, int bz)
+		{
 			nGoodZone = gz;
 			nOkZone = oz;
 			nBadZone = bz;
@@ -1015,7 +1094,8 @@ internal class CConfigIni : INotifyPropertyChanged {
 	public int nMsSleepPerFrame; // #xxxxx 2011.11.27 yyagi add
 	public int nSongSpeed;
 
-	public double SongPlaybackSpeed {
+	public double SongPlaybackSpeed
+	{
 		get => ((double)nSongSpeed) / 20.0;
 	}
 
@@ -1025,56 +1105,64 @@ internal class CConfigIni : INotifyPropertyChanged {
 
 	private bool _applyLoudnessMetadata;
 
-	public bool ApplyLoudnessMetadata {
+	public bool ApplyLoudnessMetadata
+	{
 		get => _applyLoudnessMetadata;
 		set => SetProperty(ref _applyLoudnessMetadata, value, nameof(ApplyLoudnessMetadata));
 	}
 
 	private double _targetLoudness;
 
-	public double TargetLoudness {
+	public double TargetLoudness
+	{
 		get => _targetLoudness;
 		set => SetProperty(ref _targetLoudness, value, nameof(TargetLoudness));
 	}
 
 	private bool _applySongVol;
 
-	public bool ApplySongVol {
+	public bool ApplySongVol
+	{
 		get => _applySongVol;
 		set => SetProperty(ref _applySongVol, value, nameof(ApplySongVol));
 	}
 
 	private int _soundEffectLevel;
 
-	public int SoundEffectLevel {
+	public int SoundEffectLevel
+	{
 		get => _soundEffectLevel;
 		set => SetProperty(ref _soundEffectLevel, value, nameof(SoundEffectLevel));
 	}
 
 	private int _voiceLevel;
 
-	public int VoiceLevel {
+	public int VoiceLevel
+	{
 		get => _voiceLevel;
 		set => SetProperty(ref _voiceLevel, value, nameof(VoiceLevel));
 	}
 
 	private int _songPreviewLevel;
 
-	public int SongPreviewLevel {
+	public int SongPreviewLevel
+	{
 		get => _songPreviewLevel;
 		set => SetProperty(ref _songPreviewLevel, value, nameof(SongPreviewLevel));
 	}
 
 	private int _songPlaybackLevel;
 
-	public int SongPlaybackLevel {
+	public int SongPlaybackLevel
+	{
 		get => _songPlaybackLevel;
 		set => SetProperty(ref _songPlaybackLevel, value, nameof(SongPlaybackLevel));
 	}
 
 	private int _keyboardSoundLevelIncrement;
 
-	public int KeyboardSoundLevelIncrement {
+	public int KeyboardSoundLevelIncrement
+	{
 		get => _keyboardSoundLevelIncrement;
 		set => SetProperty(
 			ref _keyboardSoundLevelIncrement,
@@ -1097,11 +1185,16 @@ internal class CConfigIni : INotifyPropertyChanged {
 	private int _nPlayerCount;
 	public int nPreviousPlayerCount = 1; // Specific usages
 
-	public int nPlayerCount {
-		get {
-			if (bAIBattleMode) {
+	public int nPlayerCount
+	{
+		get
+		{
+			if (bAIBattleMode)
+			{
 				return 2;
-			} else {
+			}
+			else
+			{
 				return _nPlayerCount;
 			}
 		}
@@ -1201,17 +1294,24 @@ internal class CConfigIni : INotifyPropertyChanged {
 	public bool bIsEnabledSystemMenu; // #28200 2012.5.1 yyagi System Menuの使用可否切替
 	public string strSystemSkinSubfolderFullName; // #28195 2012.5.2 yyagi Skin切替用 System/以下のサブフォルダ名
 
-	public void tInitializeAILevel() {
+	public void tInitializeAILevel()
+	{
 		this.nAILevel = this.nDefaultAILevel;
 	}
 
-	public bool bEnterIsNotUsedInKeyAssignments {
-		get {
-			for (int i = 0; i <= (int)EKeyConfigPart.System; i++) {
-				for (int j = 0; j < (int)EKeyConfigPad.Max; j++) {
-					for (int k = 0; k < 0x10; k++) {
+	public bool bEnterIsNotUsedInKeyAssignments
+	{
+		get
+		{
+			for (int i = 0; i <= (int)EKeyConfigPart.System; i++)
+			{
+				for (int j = 0; j < (int)EKeyConfigPad.Max; j++)
+				{
+					for (int k = 0; k < 0x10; k++)
+					{
 						if ((this.KeyAssign[i][j][k].InputDevice == EInputDevice.Keyboard) &&
-							(this.KeyAssign[i][j][k].Code == (int)SlimDXKeys.Key.Return)) {
+							(this.KeyAssign[i][j][k].Code == (int)SlimDXKeys.Key.Return))
+						{
 							return false;
 						}
 					}
@@ -1222,25 +1322,34 @@ internal class CConfigIni : INotifyPropertyChanged {
 		}
 	}
 
-	public bool bWindowMode {
+	public bool bWindowMode
+	{
 		get { return !this.bFullScreen; }
 		set { this.bFullScreen = !value; }
 	}
 
-	public bool bDoNotDisplayPerformanceInfos {
+	public bool bDoNotDisplayPerformanceInfos
+	{
 		// FIXME: should be flipped
 		get { return !this.bDisplayDebugInfo; }
 		set { this.bDisplayDebugInfo = !value; }
 	}
 
-	public int nBackgroundTransparency {
+	public int nBackgroundTransparency
+	{
 		get { return this.nBGAlpha; }
-		set {
-			if (value < 0) {
+		set
+		{
+			if (value < 0)
+			{
 				this.nBGAlpha = 0;
-			} else if (value > 0xff) {
+			}
+			else if (value > 0xff)
+			{
 				this.nBGAlpha = 0xff;
-			} else {
+			}
+			else
+			{
 				this.nBGAlpha = value;
 			}
 		}
@@ -1292,15 +1401,19 @@ internal class CConfigIni : INotifyPropertyChanged {
 	public STRANGE nHitRangeMs;
 
 	[StructLayout(LayoutKind.Sequential)]
-	public struct STRANGE {
+	public struct STRANGE
+	{
 		public int Perfect;
 		public int Great;
 		public int Good;
 		public int Poor;
 
-		public int this[int index] {
-			get {
-				switch (index) {
+		public int this[int index]
+		{
+			get
+			{
+				switch (index)
+				{
 					case 0:
 						return this.Perfect;
 
@@ -1316,8 +1429,10 @@ internal class CConfigIni : INotifyPropertyChanged {
 
 				throw new IndexOutOfRangeException();
 			}
-			set {
-				switch (index) {
+			set
+			{
+				switch (index)
+				{
 					case 0:
 						this.Perfect = value;
 						return;
@@ -1347,7 +1462,8 @@ internal class CConfigIni : INotifyPropertyChanged {
 	public STLANEVALUE nVelocityMin;
 
 	[StructLayout(LayoutKind.Sequential)]
-	public struct STLANEVALUE {
+	public struct STLANEVALUE
+	{
 		public int LC;
 		public int HH;
 		public int SD;
@@ -1362,9 +1478,12 @@ internal class CConfigIni : INotifyPropertyChanged {
 		public int Guitar;
 		public int Bass;
 
-		public int this[int index] {
-			get {
-				switch (index) {
+		public int this[int index]
+		{
+			get
+			{
+				switch (index)
+				{
 					case 0:
 						return this.LC;
 
@@ -1407,8 +1526,10 @@ internal class CConfigIni : INotifyPropertyChanged {
 
 				throw new IndexOutOfRangeException();
 			}
-			set {
-				switch (index) {
+			set
+			{
+				switch (index)
+				{
 					case 0:
 						this.LC = value;
 						return;
@@ -1509,7 +1630,8 @@ internal class CConfigIni : INotifyPropertyChanged {
 
 	// Constructor
 
-	public CConfigIni() {
+	public CConfigIni()
+	{
 		this.strSongsPath = "Songs" + Path.DirectorySeparatorChar;
 		this.bFullScreen = false;
 		this.bIgnoreSongUnlockables = false;
@@ -1580,13 +1702,15 @@ internal class CConfigIni : INotifyPropertyChanged {
 			new EFunMods[5] { EFunMods.None, EFunMods.None, EFunMods.None, EFunMods.None, EFunMods.None };
 		this.nInputAdjustTimeMs = 0;
 		this.nGlobalOffsetMs = 0;
-		for (int i = 0; i < 3; i++) {
+		for (int i = 0; i < 3; i++)
+		{
 			this.bReverse[i] = false;
 			this.JudgeTextDisplayPosition[i] = EJudgeTextDisplayPosition.AboveLane;
 		}
 
 
-		for (int i = 0; i < 5; i++) {
+		for (int i = 0; i < 5; i++)
+		{
 			this.eRandom[i] = ERandomMode.Off;
 			this.nScrollSpeed[i] = 9;
 			this.nTimingZones[i] = 2;
@@ -1597,7 +1721,8 @@ internal class CConfigIni : INotifyPropertyChanged {
 
 		#region [ AutoPlay ]
 
-		for (int i = 0; i < 5; i++) {
+		for (int i = 0; i < 5; i++)
+		{
 			this.bAutoPlay[i] = false;
 		}
 
@@ -1746,32 +1871,40 @@ internal class CConfigIni : INotifyPropertyChanged {
 	}
 
 	public CConfigIni(string iniファイル名)
-		: this() {
+		: this()
+	{
 		this.LoadFromFile(iniファイル名);
 	}
 
 
 	// メソッド
 
-	public void RemoveDuplicateKeyAssignments(EInputDevice deviceType, int nID, int nCode, EKeyConfigPad pad) {
+	public void RemoveDuplicateKeyAssignments(EInputDevice deviceType, int nID, int nCode, EKeyConfigPad pad)
+	{
 		bool isMenu = pad is EKeyConfigPad.Decide or EKeyConfigPad.RightChange or EKeyConfigPad.LeftChange;
-		for (int i = 0; i <= (int)EKeyConfigPart.System; i++) {
+		for (int i = 0; i <= (int)EKeyConfigPart.System; i++)
+		{
 			// Do not restrict duplicate keybinds for System controls
-			for (int j = 0; j < (int)EKeyConfigPad.Capture; j++) {
+			for (int j = 0; j < (int)EKeyConfigPad.Capture; j++)
+			{
 				bool isJMenu = j is (int)EKeyConfigPad.LeftChange
 					or (int)EKeyConfigPad.RightChange
 					or (int)EKeyConfigPad.Decide;
-				if (isMenu != isJMenu) {
+				if (isMenu != isJMenu)
+				{
 					continue;
 				}
-				for (int k = 0; k < 0x10; k++) {
+				for (int k = 0; k < 0x10; k++)
+				{
 					if (this.KeyAssign[i][j][k].InputDevice != deviceType ||
 						this.KeyAssign[i][j][k].ID != nID ||
-						this.KeyAssign[i][j][k].Code != nCode) {
+						this.KeyAssign[i][j][k].Code != nCode)
+					{
 						continue;
 					}
 
-					for (int m = k; m < 15; m++) {
+					for (int m = k; m < 15; m++)
+					{
 						this.KeyAssign[i][j][m] = this.KeyAssign[i][j][m + 1];
 					}
 
@@ -1784,7 +1917,8 @@ internal class CConfigIni : INotifyPropertyChanged {
 		}
 	}
 
-	public void t書き出し(string iniファイル名) {
+	public void t書き出し(string iniファイル名)
+	{
 		StreamWriter sw = new StreamWriter(iniファイル名, false, Encoding.GetEncoding(OpenNijiiroRW.sEncType));
 		sw.WriteLine(";-------------------");
 
@@ -1819,7 +1953,8 @@ internal class CConfigIni : INotifyPropertyChanged {
 
 		Uri uriRoot = new Uri(System.IO.Path.Combine(OpenNijiiroRW.strEXEのあるフォルダ,
 			"System" + System.IO.Path.DirectorySeparatorChar));
-		if (strSystemSkinSubfolderFullName != null && strSystemSkinSubfolderFullName.Length == 0) {
+		if (strSystemSkinSubfolderFullName != null && strSystemSkinSubfolderFullName.Length == 0)
+		{
 			// Config.iniが空の状態でDTXManiaをViewerとして起動_終了すると、strSystemSkinSubfolderFullName が空の状態でここに来る。
 			// → 初期値として Default/ を設定する。
 			strSystemSkinSubfolderFullName = System.IO.Path.Combine(OpenNijiiroRW.strEXEのあるフォルダ,
@@ -1979,9 +2114,11 @@ internal class CConfigIni : INotifyPropertyChanged {
 		sw.WriteLine("; 存在しないデバイスを指定すると、DTXManiaが起動しないことがあります。");
 		sw.WriteLine("; Sound device used by ASIO.");
 		sw.WriteLine("; Don't specify unconnected device, as the DTXMania may not bootup.");
-		if (OperatingSystem.IsWindows()) {
+		if (OperatingSystem.IsWindows())
+		{
 			string[] asiodev = CEnumerateAllAsioDevices.GetAllASIODevices();
-			for (int i = 0; i < asiodev.Length; i++) {
+			for (int i = 0; i < asiodev.Length; i++)
+			{
 				sw.WriteLine("; {0}: {1}", i, asiodev[i]);
 			}
 		}
@@ -2360,11 +2497,13 @@ internal class CConfigIni : INotifyPropertyChanged {
 
 		sw.WriteLine("[GUID]");
 		sw.WriteLine();
-		foreach (KeyValuePair<int, string> pair in this.dicJoystick) {
+		foreach (KeyValuePair<int, string> pair in this.dicJoystick)
+		{
 			sw.WriteLine("JoystickID={0},{1}", pair.Key, pair.Value);
 		}
 
-		foreach (KeyValuePair<int, string> pair in this.dicGamepad) {
+		foreach (KeyValuePair<int, string> pair in this.dicGamepad)
+		{
 			sw.WriteLine("GamepadID={0},{1}", pair.Key, pair.Value);
 		}
 
@@ -2607,44 +2746,54 @@ internal class CConfigIni : INotifyPropertyChanged {
 		sw.Close();
 	}
 
-	public void LoadFromFile(string iniFileName) {
+	public void LoadFromFile(string iniFileName)
+	{
 		this.ConfigIniFileName = iniFileName;
 		this.bConfigIniFileExists = File.Exists(this.ConfigIniFileName);
-		if (!this.bConfigIniFileExists) {
+		if (!this.bConfigIniFileExists)
+		{
 			return;
 		}
 
 		string str;
 		this.ClearAllKeyAssignments();
 		using (StreamReader reader =
-			   new StreamReader(this.ConfigIniFileName, Encoding.GetEncoding(OpenNijiiroRW.sEncType))) {
+			   new StreamReader(this.ConfigIniFileName, Encoding.GetEncoding(OpenNijiiroRW.sEncType)))
+		{
 			str = reader.ReadToEnd();
 		}
 
 		this.LoadFromString(str);
 	}
 
-	private void LoadFromString(string strAllSettings) {
+	private void LoadFromString(string strAllSettings)
+	{
 		ESectionType currentSectionType = ESectionType.Unknown;
 		string[] delimiter = { "\n" };
 		string[] strSingleLine = strAllSettings.Split(delimiter, StringSplitOptions.RemoveEmptyEntries);
-		foreach (string s in strSingleLine) {
+		foreach (string s in strSingleLine)
+		{
 			string line = s.Replace('\t', ' ')
 				.TrimStart(new char[] { '\t', ' ' });
-			if ((line.Length == 0) || (line[0] == ';')) {
+			if ((line.Length == 0) || (line[0] == ';'))
+			{
 				continue;
 			}
 
-			try {
-				if (line[0] == '[') {
+			try
+			{
+				if (line[0] == '[')
+				{
 					StringBuilder builder = new StringBuilder(0x20);
 					int num = 1;
-					while ((num < line.Length) && (line[num] != ']')) {
+					while ((num < line.Length) && (line[num] != ']'))
+					{
 						builder.Append(line[num++]);
 					}
 
 					string sectionName = builder.ToString();
-					currentSectionType = sectionName switch {
+					currentSectionType = sectionName switch
+					{
 						"System" => ESectionType.System,
 						"AutoPlay" => ESectionType.AutoPlay,
 						"HitRange" => ESectionType.HitRange,
@@ -2659,25 +2808,33 @@ internal class CConfigIni : INotifyPropertyChanged {
 						"Temp" => ESectionType.Temp,
 						_ => ESectionType.Unknown
 					};
-				} else {
+				}
+				else
+				{
 					string[] keyValuePair = line.Split(new char[] { '=' });
-					if (keyValuePair.Length == 2) {
+					if (keyValuePair.Length == 2)
+					{
 						string key = keyValuePair[0].Trim();
 						string value = keyValuePair[1].Trim();
-						if (this.sectionProcess.TryGetValue(currentSectionType, out var processSection)) {
+						if (this.sectionProcess.TryGetValue(currentSectionType, out var processSection))
+						{
 							processSection(key, value);
 						}
 					}
 				}
-			} catch (Exception exception) {
+			}
+			catch (Exception exception)
+			{
 				Trace.TraceError(exception.ToString());
 				Trace.TraceError("例外が発生しましたが処理を継続します。 (93c4c5cd-4996-4e8c-a82f-a179ff590b44)");
 			}
 		}
 	}
 
-	private void ProcessSystemSection(string key, string value) {
-		switch (key) {
+	private void ProcessSystemSection(string key, string value)
+	{
+		switch (key)
+		{
 			case "TJAPath":
 				this.strSongsPath = value;
 				break;
@@ -2688,12 +2845,15 @@ internal class CConfigIni : INotifyPropertyChanged {
 			case "LayoutType":
 				this.nLayoutType = int.Parse(value);
 				break;
-			case "SaveFileName": {
+			case "SaveFileName":
+				{
 					var _s = value.Split(new char[] { ',' });
 
 					// Ignore custom save file names if duplicates
-					if (!_s.GroupBy(x => x).Any(g => g.Count() > 1)) {
-						for (int i = 0; i < Math.Min(5, _s.Length); i++) {
+					if (!_s.GroupBy(x => x).Any(g => g.Count() > 1))
+					{
+						for (int i = 0; i < Math.Min(5, _s.Length); i++)
+						{
 							this.sSaveFile[i] = _s[i];
 						}
 					}
@@ -2703,9 +2863,11 @@ internal class CConfigIni : INotifyPropertyChanged {
 			case "IgnoreSongUnlockables":
 				this.bIgnoreSongUnlockables = CConversion.bONorOFF(value[0]);
 				break;
-			case "SkinPath": {
+			case "SkinPath":
+				{
 					string absSkinPath = value;
-					if (!System.IO.Path.IsPathRooted(value)) {
+					if (!System.IO.Path.IsPathRooted(value))
+					{
 						absSkinPath = System.IO.Path.Combine(OpenNijiiroRW.strEXEのあるフォルダ, "System");
 						absSkinPath = System.IO.Path.Combine(absSkinPath, value);
 						Uri u = new Uri(absSkinPath);
@@ -2742,17 +2904,21 @@ internal class CConfigIni : INotifyPropertyChanged {
 			case "FullScreen":
 				this.bFullScreen = CConversion.bONorOFF(value[0]);
 				break;
-			case "WindowWidth": {
+			case "WindowWidth":
+				{
 					this.nWindowWidth = CConversion.ParseIntInRange(value, 1, 65535, this.nWindowWidth);
-					if (this.nWindowWidth <= 0) {
+					if (this.nWindowWidth <= 0)
+					{
 						this.nWindowWidth = RenderSurfaceSize.Width;
 					}
 
 					break;
 				}
-			case "WindowHeight": {
+			case "WindowHeight":
+				{
 					this.nWindowHeight = CConversion.ParseIntInRange(value, 1, 65535, this.nWindowHeight);
-					if (this.nWindowHeight <= 0) {
+					if (this.nWindowHeight <= 0)
+					{
 						this.nWindowHeight = RenderSurfaceSize.Height;
 					}
 
@@ -2776,12 +2942,15 @@ internal class CConfigIni : INotifyPropertyChanged {
 			case "WASAPIBufferSizeMs":
 				this.nWASAPIBufferSizeMs = CConversion.ParseIntInRange(value, 0, 9999, this.nWASAPIBufferSizeMs);
 				break;
-			case "ASIODevice": {
-					if (OperatingSystem.IsWindows()) {
+			case "ASIODevice":
+				{
+					if (OperatingSystem.IsWindows())
+					{
 						string[] asiodev = CEnumerateAllAsioDevices.GetAllASIODevices();
 						this.nASIODevice = CConversion.ParseIntInRange(value, 0, asiodev.Length - 1, this.nASIODevice);
 					}
-					else {
+					else
+					{
 						this.nASIODevice = 0;
 					}
 					break;
@@ -2934,8 +3103,10 @@ internal class CConfigIni : INotifyPropertyChanged {
 		}
 	}
 
-	private void ProcessAutoPlaySection(string key, string value) {
-		switch (key) {
+	private void ProcessAutoPlaySection(string key, string value)
+	{
+		switch (key)
+		{
 			case "Taiko":
 				this.bAutoPlay[0] = CConversion.bONorOFF(value[0]);
 				break;
@@ -2964,8 +3135,10 @@ internal class CConfigIni : INotifyPropertyChanged {
 		}
 	}
 
-	private void ProcessHitRangeSection(string key, string value) {
-		switch (key) {
+	private void ProcessHitRangeSection(string key, string value)
+	{
+		switch (key)
+		{
 			case "Perfect":
 				this.nHitRangeMs.Perfect =
 					CConversion.ParseIntInRange(value, 0, 0x3e7, this.nHitRangeMs.Perfect);
@@ -2985,8 +3158,10 @@ internal class CConfigIni : INotifyPropertyChanged {
 		}
 	}
 
-	private void ProcessLogSection(string key, string value) {
-		switch (key) {
+	private void ProcessLogSection(string key, string value)
+	{
+		switch (key)
+		{
 			case "OutputLog":
 				this.bOutputLogs = CConversion.bONorOFF(value[0]);
 				break;
@@ -3002,8 +3177,10 @@ internal class CConfigIni : INotifyPropertyChanged {
 		}
 	}
 
-	private void ProcessPlayOptionSection(string key, string value) {
-		switch (key) {
+	private void ProcessPlayOptionSection(string key, string value)
+	{
+		switch (key)
+		{
 			case "ShowChara":
 				this.ShowChara = CConversion.bONorOFF(value[0]);
 				break;
@@ -3271,8 +3448,10 @@ internal class CConfigIni : INotifyPropertyChanged {
 		}
 	}
 
-	private void ProcessViewerOptionSection(string key, string value) {
-		switch (key) {
+	private void ProcessViewerOptionSection(string key, string value)
+	{
+		switch (key)
+		{
 			case "ViewerVSyncWait":
 				this.bViewerVSyncWait = CConversion.bONorOFF(value[0]);
 				break;
@@ -3291,8 +3470,10 @@ internal class CConfigIni : INotifyPropertyChanged {
 		}
 	}
 
-	private void ProcessGuidSection(string key, string value) {
-		switch (key) {
+	private void ProcessGuidSection(string key, string value)
+	{
+		switch (key)
+		{
 			case "JoystickID":
 				this.GetJoystickID(value);
 				break;
@@ -3302,8 +3483,10 @@ internal class CConfigIni : INotifyPropertyChanged {
 		}
 	}
 
-	private void ProcessDrumKeyAssignmentSection(string key, string value) {
-		switch (key) {
+	private void ProcessDrumKeyAssignmentSection(string key, string value)
+	{
+		switch (key)
+		{
 			case "LeftRed":
 				this.ReadAndSetKey(value, this.KeyAssign.Drums.LeftRed);
 				break;
@@ -3394,130 +3577,164 @@ internal class CConfigIni : INotifyPropertyChanged {
 		}
 	}
 
-	private void ProcessSystemKeyAssignmentSection(string key, string value) {
-		switch (key) {
-			case "Capture": {
+	private void ProcessSystemKeyAssignmentSection(string key, string value)
+	{
+		switch (key)
+		{
+			case "Capture":
+				{
 					this.ReadAndSetKey(value, this.KeyAssign.System.Capture);
 					break;
 				}
-			case "SongVolumeIncrease": {
+			case "SongVolumeIncrease":
+				{
 					this.ReadAndSetKey(value, this.KeyAssign.System.SongVolIncrease);
 					break;
 				}
-			case "SongVolumeDecrease": {
+			case "SongVolumeDecrease":
+				{
 					this.ReadAndSetKey(value, this.KeyAssign.System.SongVolDecrease);
 					break;
 				}
-			case "DisplayHits": {
+			case "DisplayHits":
+				{
 					this.ReadAndSetKey(value, this.KeyAssign.System.DisplayHits);
 					break;
 				}
-			case "DisplayDebug": {
+			case "DisplayDebug":
+				{
 					this.ReadAndSetKey(value, this.KeyAssign.System.DisplayDebug);
 					break;
 				}
-			case "QuickConfig": {
+			case "QuickConfig":
+				{
 					this.ReadAndSetKey(value, this.KeyAssign.System.QuickConfig);
 					break;
 				}
-			case "NewHeya": {
+			case "NewHeya":
+				{
 					this.ReadAndSetKey(value, this.KeyAssign.System.NewHeya);
 					break;
 				}
-			case "SortSongs": {
+			case "SortSongs":
+				{
 					this.ReadAndSetKey(value, this.KeyAssign.System.SortSongs);
 					break;
 				}
-			case "ToggleAutoP1": {
+			case "ToggleAutoP1":
+				{
 					this.ReadAndSetKey(value, this.KeyAssign.System.ToggleAutoP1);
 					break;
 				}
-			case "ToggleAutoP2": {
+			case "ToggleAutoP2":
+				{
 					this.ReadAndSetKey(value, this.KeyAssign.System.ToggleAutoP2);
 					break;
 				}
-			case "ToggleTrainingMode": {
+			case "ToggleTrainingMode":
+				{
 					this.ReadAndSetKey(value, this.KeyAssign.System.ToggleTrainingMode);
 					break;
 				}
-			case "CycleVideoDisplayMode": {
+			case "CycleVideoDisplayMode":
+				{
 					this.ReadAndSetKey(value, this.KeyAssign.System.CycleVideoDisplayMode);
 					break;
 				}
 		}
 	}
 
-	private void ProcessTrainingKeyAssignmentSection(string key, string value) {
-		switch (key) {
-			case "TrainingIncreaseScrollSpeed": {
+	private void ProcessTrainingKeyAssignmentSection(string key, string value)
+	{
+		switch (key)
+		{
+			case "TrainingIncreaseScrollSpeed":
+				{
 					this.ReadAndSetKey(value, this.KeyAssign.Drums.TrainingIncreaseScrollSpeed);
 					break;
 				}
-			case "TrainingDecreaseScrollSpeed": {
+			case "TrainingDecreaseScrollSpeed":
+				{
 					this.ReadAndSetKey(value, this.KeyAssign.Drums.TrainingDecreaseScrollSpeed);
 					break;
 				}
-			case "TrainingIncreaseSongSpeed": {
+			case "TrainingIncreaseSongSpeed":
+				{
 					this.ReadAndSetKey(value, this.KeyAssign.Drums.TrainingIncreaseSongSpeed);
 					break;
 				}
-			case "TrainingDecreaseSongSpeed": {
+			case "TrainingDecreaseSongSpeed":
+				{
 					this.ReadAndSetKey(value, this.KeyAssign.Drums.TrainingDecreaseSongSpeed);
 					break;
 				}
-			case "TrainingToggleAuto": {
+			case "TrainingToggleAuto":
+				{
 					this.ReadAndSetKey(value, this.KeyAssign.Drums.TrainingToggleAuto);
 					break;
 				}
-			case "TrainingBranchNormal": {
+			case "TrainingBranchNormal":
+				{
 					this.ReadAndSetKey(value, this.KeyAssign.Drums.TrainingBranchNormal);
 					break;
 				}
-			case "TrainingBranchExpert": {
+			case "TrainingBranchExpert":
+				{
 					this.ReadAndSetKey(value, this.KeyAssign.Drums.TrainingBranchExpert);
 					break;
 				}
-			case "TrainingBranchMaster": {
+			case "TrainingBranchMaster":
+				{
 					this.ReadAndSetKey(value, this.KeyAssign.Drums.TrainingBranchMaster);
 					break;
 				}
-			case "TrainingPause": {
+			case "TrainingPause":
+				{
 					this.ReadAndSetKey(value, this.KeyAssign.Drums.TrainingPause);
 					break;
 				}
-			case "TrainingBookmark": {
+			case "TrainingBookmark":
+				{
 					this.ReadAndSetKey(value, this.KeyAssign.Drums.TrainingBookmark);
 					break;
 				}
-			case "TrainingMoveForwardMeasure": {
+			case "TrainingMoveForwardMeasure":
+				{
 					this.ReadAndSetKey(value, this.KeyAssign.Drums.TrainingMoveForwardMeasure);
 					break;
 				}
-			case "TrainingMoveBackMeasure": {
+			case "TrainingMoveBackMeasure":
+				{
 					this.ReadAndSetKey(value, this.KeyAssign.Drums.TrainingMoveBackMeasure);
 					break;
 				}
-			case "TrainingSkipForwardMeasure": {
+			case "TrainingSkipForwardMeasure":
+				{
 					this.ReadAndSetKey(value, this.KeyAssign.Drums.TrainingSkipForwardMeasure);
 					break;
 				}
-			case "TrainingSkipBackMeasure": {
+			case "TrainingSkipBackMeasure":
+				{
 					this.ReadAndSetKey(value, this.KeyAssign.Drums.TrainingSkipBackMeasure);
 					break;
 				}
-			case "TrainingJumpToFirstMeasure": {
+			case "TrainingJumpToFirstMeasure":
+				{
 					this.ReadAndSetKey(value, this.KeyAssign.Drums.TrainingJumpToFirstMeasure);
 					break;
 				}
-			case "TrainingJumpToLastMeasure": {
+			case "TrainingJumpToLastMeasure":
+				{
 					this.ReadAndSetKey(value, this.KeyAssign.Drums.TrainingJumpToLastMeasure);
 					break;
 				}
 		}
 	}
 
-	private void ProcessDebugSection(string key, string value) {
-		switch (key) {
+	private void ProcessDebugSection(string key, string value)
+	{
+		switch (key)
+		{
 			case "ImGui":
 				this.DEBUG_bShowImgui = CConversion.bONorOFF(value[0]);
 				break;
@@ -3527,7 +3744,8 @@ internal class CConfigIni : INotifyPropertyChanged {
 	#region [ private ]
 
 	//-----------------
-	private enum ESectionType {
+	private enum ESectionType
+	{
 		Unknown,
 		System,
 		Log,
@@ -3550,9 +3768,11 @@ internal class CConfigIni : INotifyPropertyChanged {
 	private bool bConfigIniFileExists;
 	private string ConfigIniFileName;
 
-	private void GetJoystickID(string keyDescription) {
+	private void GetJoystickID(string keyDescription)
+	{
 		string[] strArray = keyDescription.Split(new char[] { ',' });
-		if (strArray.Length < 2 || !int.TryParse(strArray[0], out int result) || result < 0 || result > 9) {
+		if (strArray.Length < 2 || !int.TryParse(strArray[0], out int result) || result < 0 || result > 9)
+		{
 			return;
 		}
 
@@ -3560,9 +3780,11 @@ internal class CConfigIni : INotifyPropertyChanged {
 		this.dicJoystick.Add(result, strArray[1]);
 	}
 
-	private void GetGamepadID(string keyDescription) {
+	private void GetGamepadID(string keyDescription)
+	{
 		string[] strArray = keyDescription.Split(new char[] { ',' });
-		if (strArray.Length < 2 || !int.TryParse(strArray[0], out int result) || result < 0 || result > 9) {
+		if (strArray.Length < 2 || !int.TryParse(strArray[0], out int result) || result < 0 || result > 9)
+		{
 			return;
 		}
 
@@ -3570,31 +3792,40 @@ internal class CConfigIni : INotifyPropertyChanged {
 		this.dicGamepad.Add(result, strArray[1]);
 	}
 
-	private void ClearAllKeyAssignments() {
+	private void ClearAllKeyAssignments()
+	{
 		this.KeyAssign = new CKeyAssign();
-		for (int i = 0; i <= (int)EKeyConfigPart.System; i++) {
-			for (int j = 0; j < (int)EKeyConfigPad.Max; j++) {
+		for (int i = 0; i <= (int)EKeyConfigPart.System; i++)
+		{
+			for (int j = 0; j < (int)EKeyConfigPad.Max; j++)
+			{
 				this.KeyAssign[i][j] = new CKeyAssign.STKEYASSIGN[16];
-				for (int k = 0; k < 16; k++) {
+				for (int k = 0; k < 16; k++)
+				{
 					this.KeyAssign[i][j][k] = new CKeyAssign.STKEYASSIGN(EInputDevice.Unknown, 0, 0);
 				}
 			}
 		}
 	}
 
-	private void WriteKeyAssignment(StreamWriter sw, CKeyAssign.STKEYASSIGN[] assign) {
+	private void WriteKeyAssignment(StreamWriter sw, CKeyAssign.STKEYASSIGN[] assign)
+	{
 		bool flag = true;
-		for (int i = 0; i < 0x10; i++) {
-			if (assign[i].InputDevice == EInputDevice.Unknown) {
+		for (int i = 0; i < 0x10; i++)
+		{
+			if (assign[i].InputDevice == EInputDevice.Unknown)
+			{
 				continue;
 			}
 
-			if (!flag) {
+			if (!flag)
+			{
 				sw.Write(',');
 			}
 
 			flag = false;
-			switch (assign[i].InputDevice) {
+			switch (assign[i].InputDevice)
+			{
 				case EInputDevice.Keyboard:
 					sw.Write('K');
 					break;
@@ -3621,16 +3852,20 @@ internal class CConfigIni : INotifyPropertyChanged {
 		}
 	}
 
-	private void ReadAndSetKey(string keyDescription, CKeyAssign.STKEYASSIGN[] assign) {
+	private void ReadAndSetKey(string keyDescription, CKeyAssign.STKEYASSIGN[] assign)
+	{
 		string[] strArray = keyDescription.Split(new char[] { ',' });
-		for (int i = 0; (i < strArray.Length) && (i < 0x10); i++) {
+		for (int i = 0; (i < strArray.Length) && (i < 0x10); i++)
+		{
 			EInputDevice eInputDevice;
 			int id;
 			int code;
 			string str = strArray[i].Trim().ToUpper();
-			if (str.Length >= 3) {
+			if (str.Length >= 3)
+			{
 				eInputDevice = EInputDevice.Unknown;
-				switch (str[0]) {
+				switch (str[0])
+				{
 					case 'J':
 						eInputDevice = EInputDevice.Joypad;
 						break;
@@ -3654,12 +3889,15 @@ internal class CConfigIni : INotifyPropertyChanged {
 						eInputDevice = EInputDevice.Mouse;
 						break;
 				}
-			} else {
+			}
+			else
+			{
 				continue;
 			}
 
 			id = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ".IndexOf(str[1]);
-			if (((id >= 0) && int.TryParse(str.Substring(2), out code)) && ((code >= 0) && (code <= 0xff))) {
+			if (((id >= 0) && int.TryParse(str.Substring(2), out code)) && ((code >= 0) && (code <= 0xff)))
+			{
 				assign[i].InputDevice = eInputDevice;
 				assign[i].ID = id;
 				assign[i].Code = code;
@@ -3667,7 +3905,8 @@ internal class CConfigIni : INotifyPropertyChanged {
 		}
 	}
 
-	private void SetDefaultKeyAssignments() {
+	private void SetDefaultKeyAssignments()
+	{
 		this.ClearAllKeyAssignments();
 
 		string strDefaultKeyAssign = @"
@@ -3744,8 +3983,10 @@ TrainingJumpToLastMeasure=K051
 
 	public event PropertyChangedEventHandler PropertyChanged;
 
-	private bool SetProperty<T>(ref T storage, T value, string propertyName = null) {
-		if (Equals(storage, value)) {
+	private bool SetProperty<T>(ref T storage, T value, string propertyName = null)
+	{
+		if (Equals(storage, value))
+		{
 			return false;
 		}
 
@@ -3754,7 +3995,8 @@ TrainingJumpToLastMeasure=K051
 		return true;
 	}
 
-	private void OnPropertyChanged(string propertyName) {
+	private void OnPropertyChanged(string propertyName)
+	{
 		PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 	}
 }

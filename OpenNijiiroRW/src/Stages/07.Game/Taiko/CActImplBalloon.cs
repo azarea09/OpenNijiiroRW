@@ -4,19 +4,23 @@ using FDK;
 
 namespace OpenNijiiroRW;
 
-internal class CActImplBalloon : CActivity {
+internal class CActImplBalloon : CActivity
+{
 
 
-	public CActImplBalloon() {
+	public CActImplBalloon()
+	{
 		base.IsDeActivated = true;
 
 	}
 
-	public override void Activate() {
+	public override void Activate()
+	{
 		this.ct風船終了 = new CCounter();
 		this.ct風船ふきだしアニメ = new CCounter();
 		this.ct風船アニメ = new CCounter[5];
-		for (int i = 0; i < 5; i++) {
+		for (int i = 0; i < 5; i++)
+		{
 			this.ct風船アニメ[i] = new CCounter();
 		}
 
@@ -28,7 +32,8 @@ internal class CActImplBalloon : CActivity {
 		base.Activate();
 	}
 
-	public override void DeActivate() {
+	public override void DeActivate()
+	{
 		KusudamaScript.Dispose();
 
 		this.ct風船終了 = null;
@@ -37,32 +42,39 @@ internal class CActImplBalloon : CActivity {
 		base.DeActivate();
 	}
 
-	public override void CreateManagedResource() {
+	public override void CreateManagedResource()
+	{
 		base.CreateManagedResource();
 	}
 
-	public override void ReleaseManagedResource() {
+	public override void ReleaseManagedResource()
+	{
 		base.ReleaseManagedResource();
 	}
 
-	public override int Draw() {
+	public override int Draw()
+	{
 		return base.Draw();
 	}
 
-	public void KusuIn() {
+	public void KusuIn()
+	{
 		KusudamaScript.KusuIn();
 		KusudamaIsActive = true;
 	}
-	public void KusuBroke() {
+	public void KusuBroke()
+	{
 		KusudamaScript.KusuBroke();
 		KusudamaIsActive = false;
 	}
-	public void KusuMiss() {
+	public void KusuMiss()
+	{
 		KusudamaScript.KusuMiss();
 		KusudamaIsActive = false;
 	}
 
-	public enum EBalloonType {
+	public enum EBalloonType
+	{
 		BALLOON,
 		KUSUDAMA,
 		FUSEROLL
@@ -70,26 +82,34 @@ internal class CActImplBalloon : CActivity {
 
 	public bool KusudamaIsActive { get; private set; } = false;
 
-	public void tDrawKusudama() {
-		if (!OpenNijiiroRW.stageGameScreen.bPAUSE) {
+	public void tDrawKusudama()
+	{
+		if (!OpenNijiiroRW.stageGameScreen.bPAUSE)
+		{
 			KusudamaScript.Update();
 		}
-		if (!(OpenNijiiroRW.stageGameScreen.bPAUSE && OpenNijiiroRW.ConfigIni.bTokkunMode)) {
+		if (!(OpenNijiiroRW.stageGameScreen.bPAUSE && OpenNijiiroRW.ConfigIni.bTokkunMode))
+		{
 			KusudamaScript.Draw();
 		}
 	}
 
-	public int On進行描画(int n連打ノルマ, int n連打数, int player, EBalloonType btype) {
+	public int On進行描画(int n連打ノルマ, int n連打数, int player, EBalloonType btype)
+	{
 		this.ct風船ふきだしアニメ.TickLoop();
 		this.ct風船アニメ[player].Tick();
 
 		//CDTXMania.act文字コンソール.tPrint( 0, 16, C文字コンソール.Eフォント種別.赤, this.ct風船終了.n現在の値.ToString() );
 		int[] n残り打数 = new int[] { 0, 0, 0, 0, 0 };
 		#region[  ]
-		if (n連打ノルマ > 0) {
-			if (n連打ノルマ < 5) {
+		if (n連打ノルマ > 0)
+		{
+			if (n連打ノルマ < 5)
+			{
 				n残り打数 = new int[] { 4, 3, 2, 1, 0 };
-			} else {
+			}
+			else
+			{
 				n残り打数[0] = (n連打ノルマ / 5) * 4;
 				n残り打数[1] = (n連打ノルマ / 5) * 3;
 				n残り打数[2] = (n連打ノルマ / 5) * 2;
@@ -98,28 +118,34 @@ internal class CActImplBalloon : CActivity {
 		}
 		#endregion
 
-		if (n連打数 != 0) {
+		if (n連打数 != 0)
+		{
 			int x;
 			int y;
 			int frame_x;
 			int frame_y;
 			int num_x;
 			int num_y;
-			if (OpenNijiiroRW.ConfigIni.nPlayerCount == 5) {
+			if (OpenNijiiroRW.ConfigIni.nPlayerCount == 5)
+			{
 				x = OpenNijiiroRW.Skin.Game_Balloon_Balloon_5P[0] + (OpenNijiiroRW.Skin.Game_UIMove_5P[0] * player);
 				y = OpenNijiiroRW.Skin.Game_Balloon_Balloon_5P[1] + (OpenNijiiroRW.Skin.Game_UIMove_5P[1] * player);
 				frame_x = OpenNijiiroRW.Skin.Game_Balloon_Balloon_Frame_5P[0] + (OpenNijiiroRW.Skin.Game_UIMove_5P[0] * player);
 				frame_y = OpenNijiiroRW.Skin.Game_Balloon_Balloon_Frame_5P[1] + (OpenNijiiroRW.Skin.Game_UIMove_5P[1] * player);
 				num_x = OpenNijiiroRW.Skin.Game_Balloon_Balloon_Number_5P[0] + (OpenNijiiroRW.Skin.Game_UIMove_5P[0] * player);
 				num_y = OpenNijiiroRW.Skin.Game_Balloon_Balloon_Number_5P[1] + (OpenNijiiroRW.Skin.Game_UIMove_5P[1] * player);
-			} else if (OpenNijiiroRW.ConfigIni.nPlayerCount == 4 || OpenNijiiroRW.ConfigIni.nPlayerCount == 3) {
+			}
+			else if (OpenNijiiroRW.ConfigIni.nPlayerCount == 4 || OpenNijiiroRW.ConfigIni.nPlayerCount == 3)
+			{
 				x = OpenNijiiroRW.Skin.Game_Balloon_Balloon_4P[0] + (OpenNijiiroRW.Skin.Game_UIMove_4P[0] * player);
 				y = OpenNijiiroRW.Skin.Game_Balloon_Balloon_4P[1] + (OpenNijiiroRW.Skin.Game_UIMove_4P[1] * player);
 				frame_x = OpenNijiiroRW.Skin.Game_Balloon_Balloon_Frame_4P[0] + (OpenNijiiroRW.Skin.Game_UIMove_4P[0] * player);
 				frame_y = OpenNijiiroRW.Skin.Game_Balloon_Balloon_Frame_4P[1] + (OpenNijiiroRW.Skin.Game_UIMove_4P[1] * player);
 				num_x = OpenNijiiroRW.Skin.Game_Balloon_Balloon_Number_4P[0] + (OpenNijiiroRW.Skin.Game_UIMove_4P[0] * player);
 				num_y = OpenNijiiroRW.Skin.Game_Balloon_Balloon_Number_4P[1] + (OpenNijiiroRW.Skin.Game_UIMove_4P[1] * player);
-			} else {
+			}
+			else
+			{
 				x = OpenNijiiroRW.Skin.Game_Balloon_Balloon_X[player];
 				y = OpenNijiiroRW.Skin.Game_Balloon_Balloon_Y[player];
 				frame_x = OpenNijiiroRW.Skin.Game_Balloon_Balloon_Frame_X[player];
@@ -130,9 +156,11 @@ internal class CActImplBalloon : CActivity {
 			//1P:0 2P:245
 			//if (CDTXMania.Tx.Chara_Balloon_Breaking != null && CDTXMania.ConfigIni.ShowChara)
 			//    CDTXMania.Tx.Chara_Balloon_Breaking.t2D描画(CDTXMania.app.Device, CDTXMania.Skin.Game_Chara_Balloon_X[player], CDTXMania.Skin.Game_Chara_Balloon_Y[player]);
-			for (int j = 0; j < 5; j++) {
+			for (int j = 0; j < 5; j++)
+			{
 
-				if (n残り打数[j] < n連打数 && btype == EBalloonType.BALLOON) {
+				if (n残り打数[j] < n連打数 && btype == EBalloonType.BALLOON)
+				{
 					if (OpenNijiiroRW.Tx.Balloon_Breaking[j] != null)
 						OpenNijiiroRW.Tx.Balloon_Breaking[j].t2D描画(x + (this.ct風船ふきだしアニメ.CurrentValue == 1 ? 3 : 0), y);
 					break;
@@ -140,15 +168,20 @@ internal class CActImplBalloon : CActivity {
 			}
 			//1P:31 2P:329
 
-			if (btype == EBalloonType.BALLOON) {
+			if (btype == EBalloonType.BALLOON)
+			{
 				if (OpenNijiiroRW.Tx.Balloon_Balloon != null)
 					OpenNijiiroRW.Tx.Balloon_Balloon.t2D描画(frame_x, frame_y);
 				this.t文字表示(num_x, num_y, n連打数, player);
-			} else if (btype == EBalloonType.FUSEROLL) {
+			}
+			else if (btype == EBalloonType.FUSEROLL)
+			{
 				if (OpenNijiiroRW.Tx.Fuse_Balloon != null)
 					OpenNijiiroRW.Tx.Fuse_Balloon.t2D描画(frame_x, frame_y);
 				this.tFuseNumber(num_x, num_y, n連打数, player);
-			} else if (btype == EBalloonType.KUSUDAMA && player == 0) {
+			}
+			else if (btype == EBalloonType.KUSUDAMA && player == 0)
+			{
 				/*
                 if (TJAPlayer3.Tx.Kusudama_Back != null)
                     TJAPlayer3.Tx.Kusudama_Back.t2D描画(0, 0);
@@ -187,14 +220,17 @@ internal class CActImplBalloon : CActivity {
 	};
 
 	[StructLayout(LayoutKind.Sequential)]
-	private struct ST文字位置 {
+	private struct ST文字位置
+	{
 		public char ch;
 		public Point pt;
 	}
 
-	private void _nbDisplay(CTexture tx, int num, int x, int y) {
+	private void _nbDisplay(CTexture tx, int num, int x, int y)
+	{
 		int[] nums = CConversion.SeparateDigits(num);
-		for (int j = 0; j < nums.Length; j++) {
+		for (int j = 0; j < nums.Length; j++)
+		{
 			float offset = j - (nums.Length / 2.0f);
 			float _x = x - (OpenNijiiroRW.Skin.Game_Balloon_Number_Interval[0] * offset);
 			float _y = y - (OpenNijiiroRW.Skin.Game_Balloon_Number_Interval[1] * offset);
@@ -206,7 +242,8 @@ internal class CActImplBalloon : CActivity {
 		}
 	}
 
-	private void tKusudamaNumber(int num) {
+	private void tKusudamaNumber(int num)
+	{
 		if (OpenNijiiroRW.Tx.Kusudama_Number == null) return;
 		OpenNijiiroRW.Tx.Kusudama_Number.Scale.X = OpenNijiiroRW.Skin.Game_Balloon_Balloon_Number_Scale;
 		OpenNijiiroRW.Tx.Kusudama_Number.Scale.Y = OpenNijiiroRW.Skin.Game_Balloon_Balloon_Number_Scale;
@@ -214,7 +251,8 @@ internal class CActImplBalloon : CActivity {
 		int y = OpenNijiiroRW.Skin.Game_Kusudama_Number_Y;
 
 		int[] nums = CConversion.SeparateDigits(num);
-		for (int j = 0; j < nums.Length; j++) {
+		for (int j = 0; j < nums.Length; j++)
+		{
 			float offset = j - ((nums.Length - 2) / 2.0f);
 			float width = OpenNijiiroRW.Tx.Kusudama_Number.sz画像サイズ.Width / 10.0f;
 			float height = OpenNijiiroRW.Tx.Kusudama_Number.sz画像サイズ.Height;
@@ -225,7 +263,8 @@ internal class CActImplBalloon : CActivity {
 		}
 	}
 
-	private void tFuseNumber(int x, int y, int num, int nPlayer) {
+	private void tFuseNumber(int x, int y, int num, int nPlayer)
+	{
 		if (OpenNijiiroRW.Tx.Fuse_Number == null) return;
 		OpenNijiiroRW.Tx.Fuse_Number.Scale.X = OpenNijiiroRW.Skin.Game_Balloon_Balloon_Number_Scale;
 		OpenNijiiroRW.Tx.Fuse_Number.Scale.Y = OpenNijiiroRW.Skin.Game_Balloon_Balloon_Number_Scale + RollScale[this.ct風船アニメ[nPlayer].CurrentValue];
@@ -233,7 +272,8 @@ internal class CActImplBalloon : CActivity {
 		_nbDisplay(OpenNijiiroRW.Tx.Fuse_Number, num, x, y);
 	}
 
-	private void t文字表示(int x, int y, int num, int nPlayer) {
+	private void t文字表示(int x, int y, int num, int nPlayer)
+	{
 		if (OpenNijiiroRW.Tx.Balloon_Number_Roll == null) return;
 		OpenNijiiroRW.Tx.Balloon_Number_Roll.Scale.X = OpenNijiiroRW.Skin.Game_Balloon_Balloon_Number_Scale;
 		OpenNijiiroRW.Tx.Balloon_Number_Roll.Scale.Y = OpenNijiiroRW.Skin.Game_Balloon_Balloon_Number_Scale + RollScale[this.ct風船アニメ[nPlayer].CurrentValue];
@@ -241,7 +281,8 @@ internal class CActImplBalloon : CActivity {
 		_nbDisplay(OpenNijiiroRW.Tx.Balloon_Number_Roll, num, x, y);
 	}
 
-	public void tEnd() {
+	public void tEnd()
+	{
 		this.ct風船終了 = new CCounter(0, 80, 10, SoundManager.PlayTimer);
 	}
 }

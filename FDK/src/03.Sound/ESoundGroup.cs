@@ -1,6 +1,7 @@
 ﻿namespace FDK;
 
-public enum ESoundGroup {
+public enum ESoundGroup
+{
 	SoundEffect = 1,
 	Voice = 2,
 	SongPreview = 3,

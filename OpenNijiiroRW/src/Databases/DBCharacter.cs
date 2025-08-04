@@ -2,15 +2,19 @@
 
 namespace OpenNijiiroRW;
 
-class DBCharacter {
-	public class CharacterEffect {
-		public CharacterEffect() {
+class DBCharacter
+{
+	public class CharacterEffect
+	{
+		public CharacterEffect()
+		{
 			Gauge = "Normal";
 			BombFactor = 20;
 			FuseRollFactor = 0;
 		}
 
-		public float GetCoinMultiplier() {
+		public float GetCoinMultiplier()
+		{
 			float mult = 1f;
 
 			if (Gauge == "Hard" && !OpenNijiiroRW.ConfigIni.bForceNormalGauge) mult *= 1.5f;
@@ -19,7 +23,8 @@ class DBCharacter {
 			return mult;
 		}
 
-		public string tGetGaugeType() {
+		public string tGetGaugeType()
+		{
 			return OpenNijiiroRW.ConfigIni.bForceNormalGauge || OpenNijiiroRW.stageSongSelect.nChoosenSongDifficulty[0] >= 5 ? "Normal" : Gauge;
 		}
 
@@ -34,34 +39,40 @@ class DBCharacter {
 		public int FuseRollFactor;
 	}
 
-	public class CharacterData {
-		public CharacterData() {
+	public class CharacterData
+	{
+		public CharacterData()
+		{
 			Name = "(None)";
 			Rarity = "Common";
 			Author = "(None)";
 			SpeechText = new CLocalizationData[6] { new CLocalizationData(), new CLocalizationData(), new CLocalizationData(), new CLocalizationData(), new CLocalizationData(), new CLocalizationData() };
 		}
 
-		public CharacterData(string pcn, string pcr, string pca, CLocalizationData[] pcst) {
+		public CharacterData(string pcn, string pcr, string pca, CLocalizationData[] pcst)
+		{
 			Name = pcn;
 			Rarity = pcr;
 			Author = pca;
 			SpeechText = pcst;
 		}
 
-		public string tGetName() {
+		public string tGetName()
+		{
 			if (Name is string) return (string)Name;
 			else if (Name is CLocalizationData) return ((CLocalizationData)Name).GetString("");
 			return "";
 		}
 
-		public string tGetAuthor() {
+		public string tGetAuthor()
+		{
 			if (Author is string) return (string)Author;
 			else if (Author is CLocalizationData) return ((CLocalizationData)Author).GetString("");
 			return "";
 		}
 
-		public string tGetDescription() {
+		public string tGetDescription()
+		{
 			if (Description is string) return (string)Description;
 			else if (Description is CLocalizationData) return ((CLocalizationData)Description).GetString("");
 			return "";

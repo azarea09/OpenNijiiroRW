@@ -1,19 +1,23 @@
 ﻿namespace OpenNijiiroRW;
 
-internal class Modal {
-	public Modal(EModalType mt, int ra, params object?[] re) {
+internal class Modal
+{
+	public Modal(EModalType mt, int ra, params object?[] re)
+	{
 		modalType = mt;
 		rarity = ra;
 		reference = re;
 	}
 
-	public void tRegisterModal(int player) {
+	public void tRegisterModal(int player)
+	{
 		OpenNijiiroRW.ModalManager.RegisterNewModal(player, rarity, modalType, reference);
 	}
 
 	#region [Enum definitions]
 
-	public enum EModalType {
+	public enum EModalType
+	{
 		Coin = 0,
 		Character = 1,
 		Puchichara = 2,

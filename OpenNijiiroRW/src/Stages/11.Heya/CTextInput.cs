@@ -1,20 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using FDK;
-using ImGuiNET;
+﻿using ImGuiNET;
 
-namespace OpenNijiiroRW {
-	public class CTextInput {
+namespace OpenNijiiroRW
+{
+	public class CTextInput
+	{
 		public CTextInput() { }
 		/// <summary>
 		/// 
 		/// </summary>
 		/// <param name="text">WindowTitle to start with. Changes as user inputs text.</param>
 		/// <param name="max_length">Max length in bytes that the string can be.</param>
-		public CTextInput(string text, uint max_length) : base() {
+		public CTextInput(string text, uint max_length) : base()
+		{
 			Text = text;
 			MaxLength = max_length;
 		}
@@ -22,8 +19,9 @@ namespace OpenNijiiroRW {
 		/// <summary>
 		/// Returns <c>true</c> if the user presses Enter to confirm their text.
 		/// </summary>
-		public bool Update() {
-			ImGui.SetNextWindowSize(new(300,150));
+		public bool Update()
+		{
+			ImGui.SetNextWindowSize(new(300, 150));
 
 			ImGui.Begin("WindowTitle Input", ImGuiWindowFlags.NoResize);
 			ImGui.SetKeyboardFocusHere();
@@ -39,7 +37,8 @@ namespace OpenNijiiroRW {
 		/// <summary>
 		/// Used to display the current text with a blinking cursor, to imitate an input text box. For actual text, use <seealso cref="Text"/>.
 		/// </summary>
-		public string DisplayText {
+		public string DisplayText
+		{
 			get
 			{
 				return Text + (OpenNijiiroRW.Timer.SystemTimeMs % 1000 >= 300 ? "|" : "");

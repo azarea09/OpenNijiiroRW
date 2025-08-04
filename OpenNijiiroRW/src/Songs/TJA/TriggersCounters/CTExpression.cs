@@ -1,14 +1,17 @@
 ﻿using System.Text.RegularExpressions;
 
-namespace OpenNijiiroRW {
-	internal class CTExpression {
+namespace OpenNijiiroRW
+{
+	internal class CTExpression
+	{
 		private string _expr;
 		private int _pos;
 		public int _player { get; private set; }
 		public int _actual { get; private set; }
 		public SaveFile? _sfref { get; private set; }
 
-		public static double Evaluate(string strExpr, int player) {
+		public static double Evaluate(string strExpr, int player)
+		{
 			//Console.WriteLine($"Resolved: {strExpr}");
 			var expr = new CTExpression(strExpr, player);
 			double value = expr.ParseExpression();
@@ -16,10 +19,13 @@ namespace OpenNijiiroRW {
 			return value;
 		}
 
-		private string ResolveAllVariables(string expr) {
+		private string ResolveAllVariables(string expr)
+		{
 			string pattern = @"<([^<>]*)>";
-			while (Regex.IsMatch(expr, pattern)) {
-				expr = Regex.Replace(expr, pattern, match => {
+			while (Regex.IsMatch(expr, pattern))
+			{
+				expr = Regex.Replace(expr, pattern, match =>
+				{
 					string[] parts = match.Groups[1].Value.Split(':');
 					string name = parts[0].Trim();
 					List<string> args = new List<string>();
@@ -31,12 +37,14 @@ namespace OpenNijiiroRW {
 			return expr;
 		}
 
-		private double ResolveVariable(string name, List<string> args) {
+		private double ResolveVariable(string name, List<string> args)
+		{
 			if (_sfref == null) return 0;
 			return CTExprVariables.ResolveVariable(this, name, args);
 		}
 
-		private CTExpression(string expr, int player) {
+		private CTExpression(string expr, int player)
+		{
 			string _resexp = this.ResolveAllVariables(expr);
 			this._expr = string.Join(" ", _resexp.Split(default(string[]), StringSplitOptions.RemoveEmptyEntries));
 			this._player = player;
@@ -49,17 +57,20 @@ namespace OpenNijiiroRW {
 		private string Remain => _expr.Substring(_pos);
 		private void Next() => _pos++;
 
-		private void CheckNoRemain() {
+		private void CheckNoRemain()
+		{
 			if (Current == ' ')
 				Next();
 			if (_pos < _expr.Length)
 				throw new Exception($"Unexpected character {Current} of {Remain}");
 		}
 
-		private bool Match(char expected) {
+		private bool Match(char expected)
+		{
 			if (Current == ' ')
 				Next();
-			if (Current == expected) {
+			if (Current == expected)
+			{
 				Next();
 				return true;
 			}
@@ -68,9 +79,11 @@ namespace OpenNijiiroRW {
 
 		private double ParseExpression() => ParseOr();
 
-		private double ParseOr() {
+		private double ParseOr()
+		{
 			double left = ParseXor();
-			while (Match('|')) {
+			while (Match('|'))
+			{
 				bool bLeft = ToBool(left);
 				bool bRight = ToBool(ParseXor());
 				//Console.Write($"Or({bLeft}, {bRight})");
@@ -80,9 +93,11 @@ namespace OpenNijiiroRW {
 			return left;
 		}
 
-		private double ParseXor() {
+		private double ParseXor()
+		{
 			double left = ParseAnd();
-			while (Match('^')) {
+			while (Match('^'))
+			{
 				bool bLeft = ToBool(left);
 				bool bRight = ToBool(ParseAnd());
 				//Console.Write($"Xor({bLeft}, {bRight})");
@@ -92,9 +107,11 @@ namespace OpenNijiiroRW {
 			return left;
 		}
 
-		private double ParseAnd() {
+		private double ParseAnd()
+		{
 			double left = ParseEquality();
-			while (Match('&')) {
+			while (Match('&'))
+			{
 				bool bLeft = ToBool(left);
 				bool bRight = ToBool(ParseEquality());
 				//Console.Write($"And({bLeft}, {bRight})");
@@ -104,99 +121,132 @@ namespace OpenNijiiroRW {
 			return left;
 		}
 
-		private double ParseEquality() {
+		private double ParseEquality()
+		{
 			double left = ParseComparison();
-			while (true) {
-				if (Match('=')) {
+			while (true)
+			{
+				if (Match('='))
+				{
 					if (!Match('='))
 						throw new Exception("Expected '=='");
 					double right = ParseComparison();
 					//Console.Write($"Equal({left}, {right})");
 					left = right == left ? 1 : 0;
 					//Console.WriteLine($" == {left}");
-				} else if (Match('!')) {
+				}
+				else if (Match('!'))
+				{
 					if (!Match('='))
 						throw new Exception("Expected '!='");
 					double right = ParseComparison();
 					//Console.Write($"NotEqual({left}, {right})");
 					left = right != left ? 1 : 0;
 					//Console.WriteLine($" == {left}");
-				} else return left;
+				}
+				else return left;
 			}
 		}
 
-		private double ParseComparison() {
+		private double ParseComparison()
+		{
 			double left = ParseAddSub();
-			while (true) {
-				if (Match('>')) {
-					if (Match('=')) {
+			while (true)
+			{
+				if (Match('>'))
+				{
+					if (Match('='))
+					{
 						double right = ParseAddSub();
 						//Console.Write($"AboveEqual({left}, {right})");
 						left = left >= right ? 1 : 0;
-					} else {
+					}
+					else
+					{
 						double right = ParseAddSub();
 						//Console.Write($"Above({left}, {right})");
 						left = left > right ? 1 : 0;
 					}
 					//Console.WriteLine($" == {left}");
-				} else if (Match('<')) {
-					if (Match('=')) {
+				}
+				else if (Match('<'))
+				{
+					if (Match('='))
+					{
 						double right = ParseAddSub();
 						//Console.Write($"BelowEqual({left}, {right})");
 						left = left <= right ? 1 : 0;
-					} else {
+					}
+					else
+					{
 						double right = ParseAddSub();
 						//Console.Write($"Below({left}, {right})");
 						left = left < right ? 1 : 0;
 					}
 					//Console.WriteLine($" == {left}");
-				} else return left;
+				}
+				else return left;
 			}
 		}
 
-		private double ParseAddSub() {
+		private double ParseAddSub()
+		{
 			double left = ParseMulDiv();
-			while (true) {
-				if (Match('+')) {
+			while (true)
+			{
+				if (Match('+'))
+				{
 					double right = ParseMulDiv();
 					//Console.Write($"Add({left}, {right})");
 					left += right;
 					//Console.WriteLine($" == {left}");
-				} else if (Match('-')) {
+				}
+				else if (Match('-'))
+				{
 					double right = ParseMulDiv();
 					//Console.Write($"Sub({left}, {right})");
 					left -= right;
 					//Console.WriteLine($" == {left}");
-				} else return left;
+				}
+				else return left;
 			}
 		}
 
-		private double ParseMulDiv() {
+		private double ParseMulDiv()
+		{
 			double left = ParseUnary();
-			while (true) {
-				if (Match('*')) {
+			while (true)
+			{
+				if (Match('*'))
+				{
 					double right = ParseUnary();
 					//Console.Write($"Mul({left}, {right})");
 					left *= right;
 					//Console.WriteLine($" == {left}");
-				} else if (Match('/')) {
+				}
+				else if (Match('/'))
+				{
 					double right = ParseUnary();
 					//Console.Write($"Div({left}, {right})");
 					left /= right;
 					//Console.WriteLine($" == {left}");
-				} else return left;
+				}
+				else return left;
 			}
 		}
 
-		private double ParseUnary() {
-			if (Match('-')) {
+		private double ParseUnary()
+		{
+			if (Match('-'))
+			{
 				double left = ParseUnary();
 				//Console.WriteLine($"Neg({left})");
 				left = -left;
 				//Console.WriteLine($" == {left}");
 				return left;
 			}
-			if (Match('!')) {
+			if (Match('!'))
+			{
 				bool bLeft = ToBool(ParseUnary());
 				//Console.Write($"Not({bLeft})");
 				double left = !bLeft ? 1 : 0;
@@ -206,12 +256,14 @@ namespace OpenNijiiroRW {
 			return ParseFunctionCall();
 		}
 
-		private double ParseFunctionCall() {
+		private double ParseFunctionCall()
+		{
 			double left = ParsePrimary();
 			while (Match('(')) // function call (with function represented by a number index)
 			{
 				var args = new List<double>();
-				while (true) {
+				while (true)
+				{
 					args.Add(ParseExpression());
 					if (Match(':')) continue;
 					if (Match(')')) break;
@@ -222,8 +274,10 @@ namespace OpenNijiiroRW {
 			return left;
 		}
 
-		private double ParsePrimary() {
-			if (Match('(')) {
+		private double ParsePrimary()
+		{
+			if (Match('('))
+			{
 				double val = ParseExpression();
 				if (!Match(')')) throw new Exception($"Expected ')', got {Current} of {Remain}");
 				return val;
@@ -231,7 +285,8 @@ namespace OpenNijiiroRW {
 
 			int start = _pos;
 			while (char.IsDigit(Current) || Current == '.') Next();
-			if (start == _pos) {
+			if (start == _pos)
+			{
 				if (Current == '\0')
 					throw new Exception($"Unexpected end of input");
 				throw new Exception($"Unexpected character: {Current} of {Remain}");
@@ -243,7 +298,8 @@ namespace OpenNijiiroRW {
 			return left;
 		}
 
-		private bool ToBool(double value) {
+		private bool ToBool(double value)
+		{
 			if (value != 0 && value != 1)
 				Console.WriteLine($"Warning: treating non-zero logical value {value} as 1");
 			//Console.Write($"Bool({value})");
@@ -252,29 +308,37 @@ namespace OpenNijiiroRW {
 			return bLeft;
 		}
 
-		private double DoFunc(double idxFunc, List<double> args) {
+		private double DoFunc(double idxFunc, List<double> args)
+		{
 			return CTExprFunctions.DoFunc(this, idxFunc, args);
 		}
 
 		#region [Unit tests]
 
-		public static void TEST() {
+		public static void TEST()
+		{
 			int nFail = 0;
 
-			(bool NoError, double Value) Exec(string expr) {
+			(bool NoError, double Value) Exec(string expr)
+			{
 				Console.WriteLine($"\nExpr: {expr}");
-				try {
+				try
+				{
 					double result = Evaluate(expr, -1);
 					Console.WriteLine($"Result: {result}");
 					return (true, result);
-				} catch (Exception ex) {
+				}
+				catch (Exception ex)
+				{
 					Console.WriteLine($"Error: {ex.Message}");
 					return (false, default);
 				}
 			}
 
-			void Expect(string expr, double value) {
-				if (Exec(expr) != (true, value)) {
+			void Expect(string expr, double value)
+			{
+				if (Exec(expr) != (true, value))
+				{
 					Console.WriteLine($"Wrong: Expected {value}");
 					++nFail;
 				}
@@ -284,8 +348,10 @@ namespace OpenNijiiroRW {
 			double Double(bool v) => v ? 1 : 0;
 			void ExpectBool(string expr, bool value) => Expect(expr, Double(value));
 
-			void ExpectError(string expr) {
-				if (Exec(expr).NoError) {
+			void ExpectError(string expr)
+			{
+				if (Exec(expr).NoError)
+				{
 					Console.WriteLine($"Wrong: Expected error");
 					++nFail;
 				}

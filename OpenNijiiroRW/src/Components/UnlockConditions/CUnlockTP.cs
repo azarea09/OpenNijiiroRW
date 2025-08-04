@@ -1,32 +1,42 @@
-﻿namespace OpenNijiiroRW {
-	internal class CUnlockTP : CUnlockCondition {
+﻿namespace OpenNijiiroRW
+{
+	internal class CUnlockTP : CUnlockCondition
+	{
 		/*
 		 * "Total playcount" Unlock condition object
 		 * Validates if the total playcount requirement is satisfied
 		 */
 
 
-		public CUnlockTP(CUnlockConditionFactory.UnlockConditionJsonRaw rawJson) : base(rawJson) {
+		public CUnlockTP(CUnlockConditionFactory.UnlockConditionJsonRaw rawJson) : base(rawJson)
+		{
 			this.RequiredArgCount = 1;
 			this.ConditionId = "tp";
 		}
 
-		public override (bool, string?) tConditionMet(int player, EScreen screen = EScreen.MyRoom) {
-			if (this.Values.Length == this.RequiredArgCount) {
+		public override (bool, string?) tConditionMet(int player, EScreen screen = EScreen.MyRoom)
+		{
+			if (this.Values.Length == this.RequiredArgCount)
+			{
 				int _satisfactoryPlays = (int)OpenNijiiroRW.SaveFileInstances[player].data.TotalPlaycount;
 
 				bool fulfiled = this.tValueRequirementMet(_satisfactoryPlays, this.Values[0]);
 
-				if (screen == EScreen.Internal) {
+				if (screen == EScreen.Internal)
+				{
 					return (fulfiled, "");
-				} else {
+				}
+				else
+				{
 					return (fulfiled, null);
 				}
-			} else
+			}
+			else
 				return (false, CLangManager.LangInstance.GetString("UNLOCK_CONDITION_ERROR", this.ConditionId, this.RequiredArgCount.ToString()));
 		}
 
-		public override string tConditionMessage(EScreen screen = EScreen.MyRoom) {
+		public override string tConditionMessage(EScreen screen = EScreen.MyRoom)
+		{
 			if (this.Values.Length < this.RequiredArgCount)
 				return CLangManager.LangInstance.GetString("UNLOCK_CONDITION_ERROR", this.ConditionId, this.RequiredArgCount);
 
@@ -37,7 +47,8 @@
 			return CLangManager.LangInstance.GetString("UNLOCK_CONDITION_PLAY", this.Values[0], SaveData.TotalPlaycount);
 		}
 
-		protected override int tGetCountChartsPassingCondition(int player) {
+		protected override int tGetCountChartsPassingCondition(int player)
+		{
 			// Unused for this condition
 			return -1;
 		}

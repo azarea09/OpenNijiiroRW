@@ -3,7 +3,8 @@ using FDK;
 
 namespace OpenNijiiroRW;
 
-class CActNewHeya : CActivity {
+class CActNewHeya : CActivity
+{
 	public bool IsOpend { get; private set; }
 	private CCachedFontRenderer MenuFont;
 
@@ -27,13 +28,15 @@ class CActNewHeya : CActivity {
 
 	private int CurrentPlayer;
 
-	private enum SelectableInfo {
+	private enum SelectableInfo
+	{
 		PlayerSelect,
 		ModeSelect,
 		Select
 	}
 
-	private enum ModeType {
+	private enum ModeType
+	{
 		None = -1,
 		PuchiChara,
 		Chara,
@@ -45,9 +48,11 @@ class CActNewHeya : CActivity {
 
 	private ModeType CurrentMode = ModeType.None;
 
-	private void SetState(SelectableInfo selectableInfo) {
+	private void SetState(SelectableInfo selectableInfo)
+	{
 		CurrentState = selectableInfo;
-		switch (selectableInfo) {
+		switch (selectableInfo)
+		{
 			case SelectableInfo.PlayerSelect:
 				CurrentIndex = 1;
 				CurrentMaxIndex = OpenNijiiroRW.ConfigIni.nPlayerCount + 1;
@@ -58,14 +63,16 @@ class CActNewHeya : CActivity {
 				break;
 			case SelectableInfo.Select:
 				CurrentMode = (ModeType)(CurrentIndex - 1);
-				switch (CurrentMode) {
+				switch (CurrentMode)
+				{
 					case ModeType.Chara:
 						CurrentMaxIndex = OpenNijiiroRW.Skin.Characters_Ptn;
 						break;
 					case ModeType.PuchiChara:
 						CurrentMaxIndex = OpenNijiiroRW.Skin.Puchichara_Ptn;
 						break;
-					case ModeType.DanTitle: {
+					case ModeType.DanTitle:
+						{
 							int amount = 1;
 							if (OpenNijiiroRW.SaveFileInstances[CurrentPlayer].data.DanTitles != null)
 								amount += OpenNijiiroRW.SaveFileInstances[CurrentPlayer].data.DanTitles.Count;
@@ -76,8 +83,10 @@ class CActNewHeya : CActivity {
 							this.ttkDanTitles[0] = new TitleTextureKey("新人", this.MenuFont, Color.White, Color.Black, 1000);
 
 							int idx = 1;
-							if (OpenNijiiroRW.SaveFileInstances[CurrentPlayer].data.DanTitles != null) {
-								foreach (var item in OpenNijiiroRW.SaveFileInstances[CurrentPlayer].data.DanTitles) {
+							if (OpenNijiiroRW.SaveFileInstances[CurrentPlayer].data.DanTitles != null)
+							{
+								foreach (var item in OpenNijiiroRW.SaveFileInstances[CurrentPlayer].data.DanTitles)
+								{
 									if (item.Value.isGold == true)
 										this.ttkDanTitles[idx] = new TitleTextureKey(item.Key, this.MenuFont, Color.Gold, Color.Black, 1000);
 									else
@@ -89,7 +98,8 @@ class CActNewHeya : CActivity {
 							CurrentMaxIndex = amount;
 						}
 						break;
-					case ModeType.SubTitle: {
+					case ModeType.SubTitle:
+						{
 							int amount = 1;
 							if (OpenNijiiroRW.SaveFileInstances[CurrentPlayer].data.UnlockedNameplateIds != null)
 								amount += OpenNijiiroRW.SaveFileInstances[CurrentPlayer].data.UnlockedNameplateIds.Count;
@@ -102,8 +112,10 @@ class CActNewHeya : CActivity {
 							this.titlesKeys[0] = "初心者";
 
 							int idx = 1;
-							if (OpenNijiiroRW.SaveFileInstances[CurrentPlayer].data.UnlockedNameplateIds != null) {
-								foreach (var item in OpenNijiiroRW.SaveFileInstances[CurrentPlayer].data.UnlockedNameplateIds) {
+							if (OpenNijiiroRW.SaveFileInstances[CurrentPlayer].data.UnlockedNameplateIds != null)
+							{
+								foreach (var item in OpenNijiiroRW.SaveFileInstances[CurrentPlayer].data.UnlockedNameplateIds)
+								{
 									var name = OpenNijiiroRW.Databases.DBNameplateUnlockables.data[item];
 									this.ttkTitles[idx] = new TitleTextureKey(name.nameplateInfo.cld.GetString(""), this.MenuFont, Color.Black, Color.Transparent, 1000);
 									this.titlesKeys[idx] = name.nameplateInfo.cld.GetString("");
@@ -120,13 +132,16 @@ class CActNewHeya : CActivity {
 		}
 	}
 
-	private void ChangeIndex(int change) {
+	private void ChangeIndex(int change)
+	{
 		CurrentIndex += change;
 
 		if (CurrentIndex < 0) CurrentIndex = CurrentMaxIndex - 1;
 		else if (CurrentIndex >= CurrentMaxIndex) CurrentIndex = 0;
-		if (CurrentState == SelectableInfo.Select) {
-			switch (CurrentMode) {
+		if (CurrentState == SelectableInfo.Select)
+		{
+			switch (CurrentMode)
+			{
 				case ModeType.PuchiChara:
 					tUpdateUnlockableTextPuchi();
 					break;
@@ -141,7 +156,8 @@ class CActNewHeya : CActivity {
 		}
 	}
 
-	public void Open() {
+	public void Open()
+	{
 		InFade = new CCounter(0, 255, 1.0, OpenNijiiroRW.Timer);
 		IsOpend = true;
 		CurrentMode = ModeType.None;
@@ -149,11 +165,13 @@ class CActNewHeya : CActivity {
 		SetState(SelectableInfo.PlayerSelect);
 	}
 
-	public void Close() {
+	public void Close()
+	{
 		IsOpend = false;
 	}
 
-	public override void Activate() {
+	public override void Activate()
+	{
 		InFade = new CCounter();
 		CharaBoxAnime = new CCounter();
 
@@ -166,7 +184,8 @@ class CActNewHeya : CActivity {
 		ttkPuchiCharaNames = new TitleTextureKey[OpenNijiiroRW.Skin.Puchichara_Ptn];
 		ttkPuchiCharaAuthors = new TitleTextureKey[OpenNijiiroRW.Skin.Puchichara_Ptn];
 
-		for (int i = 0; i < OpenNijiiroRW.Skin.Puchichara_Ptn; i++) {
+		for (int i = 0; i < OpenNijiiroRW.Skin.Puchichara_Ptn; i++)
+		{
 			var textColor = HRarity.tRarityToColor(OpenNijiiroRW.Tx.Puchichara[i].metadata.Rarity);
 			ttkPuchiCharaNames[i] = new TitleTextureKey(OpenNijiiroRW.Tx.Puchichara[i].metadata.tGetName(), this.MenuFont, textColor, Color.Black, 1000);
 			ttkPuchiCharaAuthors[i] = new TitleTextureKey(OpenNijiiroRW.Tx.Puchichara[i].metadata.tGetAuthor(), this.MenuFont, Color.White, Color.Black, 1000);
@@ -176,7 +195,8 @@ class CActNewHeya : CActivity {
 		ttkCharacterAuthors = new TitleTextureKey[OpenNijiiroRW.Skin.Characters_Ptn];
 		ttkCharacterNames = new TitleTextureKey[OpenNijiiroRW.Skin.Characters_Ptn];
 
-		for (int i = 0; i < OpenNijiiroRW.Skin.Characters_Ptn; i++) {
+		for (int i = 0; i < OpenNijiiroRW.Skin.Characters_Ptn; i++)
+		{
 			var textColor = HRarity.tRarityToColor(OpenNijiiroRW.Tx.Characters[i].metadata.Rarity);
 			ttkCharacterNames[i] = new TitleTextureKey(OpenNijiiroRW.Tx.Characters[i].metadata.tGetName(), this.MenuFont, textColor, Color.Black, 1000);
 			ttkCharacterAuthors[i] = new TitleTextureKey(OpenNijiiroRW.Tx.Characters[i].metadata.tGetAuthor(), this.MenuFont, Color.White, Color.Black, 1000);
@@ -186,32 +206,41 @@ class CActNewHeya : CActivity {
 		base.Activate();
 	}
 
-	public override void DeActivate() {
+	public override void DeActivate()
+	{
 
 		base.DeActivate();
 	}
 
-	public override void CreateManagedResource() {
+	public override void CreateManagedResource()
+	{
 		this.MenuFont = HPrivateFastFont.tInstantiateMainFont(OpenNijiiroRW.Skin.Heya_Font_Scale);
 		base.CreateManagedResource();
 	}
 
-	public override void ReleaseManagedResource() {
+	public override void ReleaseManagedResource()
+	{
 		MenuFont.Dispose();
 
 		base.ReleaseManagedResource();
 	}
 
-	public override int Draw() {
-		if ((OpenNijiiroRW.Pad.bPressedDGB(EPad.Decide)) || ((OpenNijiiroRW.ConfigIni.bEnterIsNotUsedInKeyAssignments && OpenNijiiroRW.InputManager.Keyboard.KeyPressed((int)SlimDXKeys.Key.Return)))) {
-			switch (CurrentState) {
-				case SelectableInfo.PlayerSelect: {
-						switch (CurrentIndex) {
+	public override int Draw()
+	{
+		if ((OpenNijiiroRW.Pad.bPressedDGB(EPad.Decide)) || ((OpenNijiiroRW.ConfigIni.bEnterIsNotUsedInKeyAssignments && OpenNijiiroRW.InputManager.Keyboard.KeyPressed((int)SlimDXKeys.Key.Return))))
+		{
+			switch (CurrentState)
+			{
+				case SelectableInfo.PlayerSelect:
+					{
+						switch (CurrentIndex)
+						{
 							case 0:
 								Close();
 								OpenNijiiroRW.Skin.soundCancelSFX.tPlay();
 								break;
-							default: {
+							default:
+								{
 									CurrentPlayer = OpenNijiiroRW.GetActualPlayer(CurrentIndex - 1);
 									SetState(SelectableInfo.ModeSelect);
 									OpenNijiiroRW.Skin.soundDecideSFX.tPlay();
@@ -220,13 +249,16 @@ class CActNewHeya : CActivity {
 						}
 					}
 					break;
-				case SelectableInfo.ModeSelect: {
-						switch (CurrentIndex) {
+				case SelectableInfo.ModeSelect:
+					{
+						switch (CurrentIndex)
+						{
 							case 0:
 								SetState(SelectableInfo.PlayerSelect);
 								OpenNijiiroRW.Skin.soundCancelSFX.tPlay();
 								break;
-							default: {
+							default:
+								{
 									SetState(SelectableInfo.Select);
 									OpenNijiiroRW.Skin.soundDecideSFX.tPlay();
 								}
@@ -234,12 +266,16 @@ class CActNewHeya : CActivity {
 						}
 					}
 					break;
-				case SelectableInfo.Select: {
-						switch (CurrentMode) {
-							case ModeType.PuchiChara: {
+				case SelectableInfo.Select:
+					{
+						switch (CurrentMode)
+						{
+							case ModeType.PuchiChara:
+								{
 									var ess = this.tSelectPuchi();
 
-									if (ess == ESelectStatus.SELECTED) {
+									if (ess == ESelectStatus.SELECTED)
+									{
 										//PuchiChara.tGetPuchiCharaIndexByName(p);
 										//TJAPlayer3.NamePlateConfig.data.PuchiChara[iPlayer] = TJAPlayer3.Skin.Puchicharas_Name[iPuchiCharaCurrent];// iPuchiCharaCurrent;
 										//TJAPlayer3.NamePlateConfig.tApplyHeyaChanges();
@@ -249,7 +285,9 @@ class CActNewHeya : CActivity {
 										OpenNijiiroRW.Tx.Puchichara[CurrentIndex].welcome.tPlay();
 
 										SetState(SelectableInfo.PlayerSelect);
-									} else if (ess == ESelectStatus.SUCCESS) {
+									}
+									else if (ess == ESelectStatus.SUCCESS)
+									{
 										//TJAPlayer3.NamePlateConfig.data.UnlockedPuchicharas[iPlayer].Add(TJAPlayer3.Skin.Puchicharas_Name[iPuchiCharaCurrent]);
 										//TJAPlayer3.NamePlateConfig.tSpendCoins(TJAPlayer3.Tx.Puchichara[iPuchiCharaCurrent].unlock.Values[0], iPlayer);
 										OpenNijiiroRW.SaveFileInstances[CurrentPlayer].data.UnlockedPuchicharas.Add(OpenNijiiroRW.Skin.Puchicharas_Name[CurrentIndex]);
@@ -258,15 +296,19 @@ class CActNewHeya : CActivity {
 										else if (OpenNijiiroRW.Tx.Puchichara[CurrentIndex].unlock is CUnlockAndComb || OpenNijiiroRW.Tx.Puchichara[CurrentIndex].unlock is CUnlockOrComb)
 											OpenNijiiroRW.SaveFileInstances[CurrentPlayer].tSpendCoins(OpenNijiiroRW.Tx.Puchichara[CurrentIndex].unlock.CoinStack);
 										OpenNijiiroRW.Skin.soundDecideSFX.tPlay();
-									} else {
+									}
+									else
+									{
 										OpenNijiiroRW.Skin.soundError.tPlay();
 									}
 								}
 								break;
-							case ModeType.Chara: {
+							case ModeType.Chara:
+								{
 									var ess = this.tSelectChara();
 
-									if (ess == ESelectStatus.SELECTED) {
+									if (ess == ESelectStatus.SELECTED)
+									{
 										//TJAPlayer3.Tx.Loading?.t2D描画(18, 7);
 
 										// Reload character, a bit time expensive but with a O(N) memory complexity instead of O(N * M)
@@ -286,23 +328,29 @@ class CActNewHeya : CActivity {
 
 										SetState(SelectableInfo.PlayerSelect);
 										CurrentMode = ModeType.None;
-									} else if (ess == ESelectStatus.SUCCESS) {
+									}
+									else if (ess == ESelectStatus.SUCCESS)
+									{
 										OpenNijiiroRW.SaveFileInstances[CurrentPlayer].data.UnlockedCharacters.Add(OpenNijiiroRW.Skin.Characters_DirName[CurrentIndex]);
 										if (OpenNijiiroRW.Tx.Characters[CurrentIndex].unlock is CUnlockCH)
 											OpenNijiiroRW.SaveFileInstances[CurrentPlayer].tSpendCoins(OpenNijiiroRW.Tx.Characters[CurrentIndex].unlock.Values[0]);
 										else if (OpenNijiiroRW.Tx.Characters[CurrentIndex].unlock is CUnlockAndComb || OpenNijiiroRW.Tx.Characters[CurrentIndex].unlock is CUnlockOrComb)
 											OpenNijiiroRW.SaveFileInstances[CurrentPlayer].tSpendCoins(OpenNijiiroRW.Tx.Characters[CurrentIndex].unlock.CoinStack);
 										OpenNijiiroRW.Skin.soundDecideSFX.tPlay();
-									} else {
+									}
+									else
+									{
 										OpenNijiiroRW.Skin.soundError.tPlay();
 									}
 								}
 								break;
-							case ModeType.DanTitle: {
+							case ModeType.DanTitle:
+								{
 									bool iG = false;
 									int cs = 0;
 
-									if (CurrentIndex > 0) {
+									if (CurrentIndex > 0)
+									{
 										iG = OpenNijiiroRW.SaveFileInstances[CurrentPlayer].data.DanTitles[this.ttkDanTitles[CurrentIndex].str].isGold;
 										cs = OpenNijiiroRW.SaveFileInstances[CurrentPlayer].data.DanTitles[this.ttkDanTitles[CurrentIndex].str].clearStatus;
 									}
@@ -319,15 +367,19 @@ class CActNewHeya : CActivity {
 									SetState(SelectableInfo.PlayerSelect);
 								}
 								break;
-							case ModeType.SubTitle: {
+							case ModeType.SubTitle:
+								{
 
-									if (CurrentIndex == 0) {
+									if (CurrentIndex == 0)
+									{
 										OpenNijiiroRW.SaveFileInstances[CurrentPlayer].data.TitleType = 0;
 										OpenNijiiroRW.SaveFileInstances[CurrentPlayer].data.TitleId = -1;
 										OpenNijiiroRW.SaveFileInstances[CurrentPlayer].data.TitleRarityInt = 1;
 										OpenNijiiroRW.SaveFileInstances[CurrentPlayer].data.Title = "初心者";
-									} else if (OpenNijiiroRW.SaveFileInstances[CurrentPlayer].data.UnlockedNameplateIds != null &&
-											   OpenNijiiroRW.Databases.DBNameplateUnlockables.data.ContainsKey(OpenNijiiroRW.SaveFileInstances[CurrentPlayer].data.UnlockedNameplateIds[CurrentIndex - 1])) {
+									}
+									else if (OpenNijiiroRW.SaveFileInstances[CurrentPlayer].data.UnlockedNameplateIds != null &&
+											   OpenNijiiroRW.Databases.DBNameplateUnlockables.data.ContainsKey(OpenNijiiroRW.SaveFileInstances[CurrentPlayer].data.UnlockedNameplateIds[CurrentIndex - 1]))
+									{
 										var id = OpenNijiiroRW.SaveFileInstances[CurrentPlayer].data.UnlockedNameplateIds[CurrentIndex - 1];
 										var nameplate = OpenNijiiroRW.Databases.DBNameplateUnlockables.data[id];
 
@@ -335,7 +387,9 @@ class CActNewHeya : CActivity {
 										OpenNijiiroRW.SaveFileInstances[CurrentPlayer].data.Title = nameplate.nameplateInfo.cld.GetString("");
 										OpenNijiiroRW.SaveFileInstances[CurrentPlayer].data.TitleRarityInt = HRarity.tRarityToLangInt(nameplate.rarity);
 										OpenNijiiroRW.SaveFileInstances[CurrentPlayer].data.TitleType = nameplate.nameplateInfo.iType;
-									} else {
+									}
+									else
+									{
 										OpenNijiiroRW.SaveFileInstances[CurrentPlayer].data.TitleType = -1;
 										OpenNijiiroRW.SaveFileInstances[CurrentPlayer].data.TitleId = -1;
 										OpenNijiiroRW.SaveFileInstances[CurrentPlayer].data.TitleRarityInt = 1;
@@ -354,22 +408,29 @@ class CActNewHeya : CActivity {
 					}
 					break;
 			}
-		} else if ((OpenNijiiroRW.Pad.bPressedDGB(EPad.Cancel) || OpenNijiiroRW.InputManager.Keyboard.KeyPressed((int)SlimDXKeys.Key.Escape))) {
+		}
+		else if ((OpenNijiiroRW.Pad.bPressedDGB(EPad.Cancel) || OpenNijiiroRW.InputManager.Keyboard.KeyPressed((int)SlimDXKeys.Key.Escape)))
+		{
 			Close();
 			OpenNijiiroRW.Skin.soundCancelSFX.tPlay();
-		} else if (OpenNijiiroRW.Pad.bPressed(EInstrumentPad.Drums, EPad.LeftChange)
-				   || OpenNijiiroRW.InputManager.Keyboard.KeyPressed((int)SlimDXKeys.Key.LeftArrow)) {
+		}
+		else if (OpenNijiiroRW.Pad.bPressed(EInstrumentPad.Drums, EPad.LeftChange)
+				   || OpenNijiiroRW.InputManager.Keyboard.KeyPressed((int)SlimDXKeys.Key.LeftArrow))
+		{
 			ChangeIndex(-1);
 			OpenNijiiroRW.Skin.soundChangeSFX.tPlay();
-		} else if (OpenNijiiroRW.Pad.bPressed(EInstrumentPad.Drums, EPad.RightChange)
-				   || OpenNijiiroRW.InputManager.Keyboard.KeyPressed((int)SlimDXKeys.Key.RightArrow)) {
+		}
+		else if (OpenNijiiroRW.Pad.bPressed(EInstrumentPad.Drums, EPad.RightChange)
+				   || OpenNijiiroRW.InputManager.Keyboard.KeyPressed((int)SlimDXKeys.Key.RightArrow))
+		{
 			ChangeIndex(1);
 			OpenNijiiroRW.Skin.soundChangeSFX.tPlay();
 		}
 
 		InFade.Tick();
 
-		if (OpenNijiiroRW.Tx.Tile_Black != null) {
+		if (OpenNijiiroRW.Tx.Tile_Black != null)
+		{
 			OpenNijiiroRW.Tx.Tile_Black.Opacity = InFade.CurrentValue / 2;
 			for (int i = 0; i <= (RenderSurfaceSize.Width / OpenNijiiroRW.Tx.Tile_Black.szTextureSize.Width); i++)        // #23510 2010.10.31 yyagi: change "clientSize.Width" to "640" to fix FIFO drawing size
 			{
@@ -381,29 +442,39 @@ class CActNewHeya : CActivity {
 		}
 
 
-		switch (CurrentState) {
+		switch (CurrentState)
+		{
 			case SelectableInfo.PlayerSelect:
-				if (CurrentIndex == 0) {
+				if (CurrentIndex == 0)
+				{
 					OpenNijiiroRW.Tx.NewHeya_Close_Select.t2D描画(OpenNijiiroRW.Skin.SongSelect_NewHeya_Close_Select[0], OpenNijiiroRW.Skin.SongSelect_NewHeya_Close_Select[1]);
-				} else {
+				}
+				else
+				{
 					OpenNijiiroRW.Tx.NewHeya_PlayerPlate_Select.t2D描画(OpenNijiiroRW.Skin.SongSelect_NewHeya_PlayerPlate_X[CurrentIndex - 1], OpenNijiiroRW.Skin.SongSelect_NewHeya_PlayerPlate_Y[CurrentIndex - 1]);
 				}
 				break;
-			case SelectableInfo.ModeSelect: {
+			case SelectableInfo.ModeSelect:
+				{
 					OpenNijiiroRW.Tx.NewHeya_ModeBar_Select.t2D描画(OpenNijiiroRW.Skin.SongSelect_NewHeya_ModeBar_X[CurrentIndex], OpenNijiiroRW.Skin.SongSelect_NewHeya_ModeBar_Y[CurrentIndex]);
 				}
 				break;
-			case SelectableInfo.Select: {
-					switch (CurrentMode) {
+			case SelectableInfo.Select:
+				{
+					switch (CurrentMode)
+					{
 						case ModeType.Chara:
-							for (int i = 1; i < OpenNijiiroRW.Skin.SongSelect_NewHeya_Box_Count - 1; i++) {
+							for (int i = 1; i < OpenNijiiroRW.Skin.SongSelect_NewHeya_Box_Count - 1; i++)
+							{
 								int x = OpenNijiiroRW.Skin.SongSelect_NewHeya_Box_X[i];
 								int y = OpenNijiiroRW.Skin.SongSelect_NewHeya_Box_Y[i];
 								int index = i - (OpenNijiiroRW.Skin.SongSelect_NewHeya_Box_Count / 2) + CurrentIndex;
-								while (index < 0) {
+								while (index < 0)
+								{
 									index += CurrentMaxIndex;
 								}
-								while (index >= CurrentMaxIndex) {
+								while (index >= CurrentMaxIndex)
+								{
 									index -= CurrentMaxIndex;
 								}
 								OpenNijiiroRW.Tx.NewHeya_Box.t2D描画(x, y);
@@ -411,12 +482,14 @@ class CActNewHeya : CActivity {
 
 								float charaRatioX = 1.0f;
 								float charaRatioY = 1.0f;
-								if (OpenNijiiroRW.Skin.Characters_Resolution[index] != null) {
+								if (OpenNijiiroRW.Skin.Characters_Resolution[index] != null)
+								{
 									charaRatioX = OpenNijiiroRW.Skin.Resolution[0] / (float)OpenNijiiroRW.Skin.Characters_Resolution[index][0];
 									charaRatioY = OpenNijiiroRW.Skin.Resolution[1] / (float)OpenNijiiroRW.Skin.Characters_Resolution[index][1];
 								}
 
-								if (OpenNijiiroRW.Tx.Characters_Heya_Preview[index] != null) {
+								if (OpenNijiiroRW.Tx.Characters_Heya_Preview[index] != null)
+								{
 									OpenNijiiroRW.Tx.Characters_Heya_Preview[index].Scale.X = charaRatioX;
 									OpenNijiiroRW.Tx.Characters_Heya_Preview[index].Scale.Y = charaRatioY;
 								}
@@ -424,20 +497,23 @@ class CActNewHeya : CActivity {
 								OpenNijiiroRW.Tx.Characters_Heya_Preview[index]?.t2D拡大率考慮中央基準描画(x + OpenNijiiroRW.Skin.SongSelect_NewHeya_Box_Chara_Offset[0], y + OpenNijiiroRW.Skin.SongSelect_NewHeya_Box_Chara_Offset[1]);
 								OpenNijiiroRW.Tx.Characters_Heya_Preview[index]?.tUpdateColor4(CConversion.ColorToColor4(Color.White));
 
-								if (ttkCharacterNames[index] != null) {
+								if (ttkCharacterNames[index] != null)
+								{
 									CTexture tmpTex = TitleTextureKey.ResolveTitleTexture(ttkCharacterNames[index]);
 
 									tmpTex.t2D拡大率考慮上中央基準描画(x + OpenNijiiroRW.Skin.SongSelect_NewHeya_Box_Name_Offset[0], y + OpenNijiiroRW.Skin.SongSelect_NewHeya_Box_Name_Offset[1]);
 								}
 
-								if (ttkCharacterAuthors[index] != null) {
+								if (ttkCharacterAuthors[index] != null)
+								{
 									CTexture tmpTex = TitleTextureKey.ResolveTitleTexture(ttkCharacterAuthors[index]);
 
 									tmpTex.t2D拡大率考慮上中央基準描画(x + OpenNijiiroRW.Skin.SongSelect_NewHeya_Box_Author_Offset[0], y + OpenNijiiroRW.Skin.SongSelect_NewHeya_Box_Author_Offset[1]);
 								}
 
 								if (OpenNijiiroRW.Tx.Characters[index].unlock != null
-									&& !OpenNijiiroRW.SaveFileInstances[CurrentPlayer].data.UnlockedCharacters.Contains(OpenNijiiroRW.Skin.Characters_DirName[index])) {
+									&& !OpenNijiiroRW.SaveFileInstances[CurrentPlayer].data.UnlockedCharacters.Contains(OpenNijiiroRW.Skin.Characters_DirName[index]))
+								{
 									OpenNijiiroRW.Tx.NewHeya_Lock?.t2D描画(x + OpenNijiiroRW.Skin.SongSelect_NewHeya_Lock_Offset[0], y + OpenNijiiroRW.Skin.SongSelect_NewHeya_Lock_Offset[1]);
 
 									if (this.ttkInfoSection != null)
@@ -447,14 +523,17 @@ class CActNewHeya : CActivity {
 							}
 							break;
 						case ModeType.PuchiChara:
-							for (int i = 1; i < OpenNijiiroRW.Skin.SongSelect_NewHeya_Box_Count - 1; i++) {
+							for (int i = 1; i < OpenNijiiroRW.Skin.SongSelect_NewHeya_Box_Count - 1; i++)
+							{
 								int x = OpenNijiiroRW.Skin.SongSelect_NewHeya_Box_X[i];
 								int y = OpenNijiiroRW.Skin.SongSelect_NewHeya_Box_Y[i];
 								int index = i - (OpenNijiiroRW.Skin.SongSelect_NewHeya_Box_Count / 2) + CurrentIndex;
-								while (index < 0) {
+								while (index < 0)
+								{
 									index += CurrentMaxIndex;
 								}
-								while (index >= CurrentMaxIndex) {
+								while (index >= CurrentMaxIndex)
+								{
 									index -= CurrentMaxIndex;
 								}
 								OpenNijiiroRW.Tx.NewHeya_Box.t2D描画(x, y);
@@ -466,20 +545,23 @@ class CActNewHeya : CActivity {
 								OpenNijiiroRW.Tx.Puchichara[index].tx?.tUpdateColor4(CConversion.ColorToColor4(Color.White));
 
 
-								if (ttkPuchiCharaNames[index] != null) {
+								if (ttkPuchiCharaNames[index] != null)
+								{
 									CTexture tmpTex = TitleTextureKey.ResolveTitleTexture(ttkPuchiCharaNames[index]);
 
 									tmpTex.t2D拡大率考慮上中央基準描画(x + OpenNijiiroRW.Skin.SongSelect_NewHeya_Box_Name_Offset[0], y + OpenNijiiroRW.Skin.SongSelect_NewHeya_Box_Name_Offset[1]);
 								}
 
-								if (ttkPuchiCharaAuthors[index] != null) {
+								if (ttkPuchiCharaAuthors[index] != null)
+								{
 									CTexture tmpTex = TitleTextureKey.ResolveTitleTexture(ttkPuchiCharaAuthors[index]);
 
 									tmpTex.t2D拡大率考慮上中央基準描画(x + OpenNijiiroRW.Skin.SongSelect_NewHeya_Box_Author_Offset[0], y + OpenNijiiroRW.Skin.SongSelect_NewHeya_Box_Author_Offset[1]);
 								}
 
 								if (OpenNijiiroRW.Tx.Puchichara[index].unlock != null
-									&& !OpenNijiiroRW.SaveFileInstances[CurrentPlayer].data.UnlockedPuchicharas.Contains(OpenNijiiroRW.Skin.Puchicharas_Name[index])) {
+									&& !OpenNijiiroRW.SaveFileInstances[CurrentPlayer].data.UnlockedPuchicharas.Contains(OpenNijiiroRW.Skin.Puchicharas_Name[index]))
+								{
 									OpenNijiiroRW.Tx.NewHeya_Lock?.t2D描画(x + OpenNijiiroRW.Skin.SongSelect_NewHeya_Lock_Offset[0], y + OpenNijiiroRW.Skin.SongSelect_NewHeya_Lock_Offset[1]);
 
 									if (this.ttkInfoSection != null)
@@ -489,21 +571,27 @@ class CActNewHeya : CActivity {
 							}
 							break;
 						case ModeType.SubTitle:
-							for (int i = 1; i < OpenNijiiroRW.Skin.SongSelect_NewHeya_Box_Count - 1; i++) {
+							for (int i = 1; i < OpenNijiiroRW.Skin.SongSelect_NewHeya_Box_Count - 1; i++)
+							{
 								int x = OpenNijiiroRW.Skin.SongSelect_NewHeya_Box_X[i];
 								int y = OpenNijiiroRW.Skin.SongSelect_NewHeya_Box_Y[i];
 								int index = i - (OpenNijiiroRW.Skin.SongSelect_NewHeya_Box_Count / 2) + CurrentIndex;
-								while (index < 0) {
+								while (index < 0)
+								{
 									index += CurrentMaxIndex;
 								}
-								while (index >= CurrentMaxIndex) {
+								while (index >= CurrentMaxIndex)
+								{
 									index -= CurrentMaxIndex;
 								}
 								CTexture tmpTex = TitleTextureKey.ResolveTitleTexture(this.ttkTitles[index]);
 
-								if (i != 0) {
+								if (i != 0)
+								{
 									tmpTex.color4 = CConversion.ColorToColor4(Color.DarkGray);
-								} else {
+								}
+								else
+								{
 									tmpTex.color4 = CConversion.ColorToColor4(Color.White);
 								}
 
@@ -516,10 +604,13 @@ class CActNewHeya : CActivity {
 								int rarity = 1;
 								int id = -1;
 
-								if (index == 0) {
+								if (index == 0)
+								{
 									iType = 0;
-								} else if (OpenNijiiroRW.SaveFileInstances[CurrentPlayer].data.UnlockedNameplateIds != null &&
-										   OpenNijiiroRW.Databases.DBNameplateUnlockables.data.ContainsKey(OpenNijiiroRW.SaveFileInstances[CurrentPlayer].data.UnlockedNameplateIds[index - 1])) {
+								}
+								else if (OpenNijiiroRW.SaveFileInstances[CurrentPlayer].data.UnlockedNameplateIds != null &&
+										   OpenNijiiroRW.Databases.DBNameplateUnlockables.data.ContainsKey(OpenNijiiroRW.SaveFileInstances[CurrentPlayer].data.UnlockedNameplateIds[index - 1]))
+								{
 									id = OpenNijiiroRW.SaveFileInstances[CurrentPlayer].data.UnlockedNameplateIds[index - 1];
 									var nameplate = OpenNijiiroRW.Databases.DBNameplateUnlockables.data[id];
 									iType = nameplate.nameplateInfo.iType;
@@ -535,21 +626,27 @@ class CActNewHeya : CActivity {
 							}
 							break;
 						case ModeType.DanTitle:
-							for (int i = 1; i < OpenNijiiroRW.Skin.SongSelect_NewHeya_Box_Count - 1; i++) {
+							for (int i = 1; i < OpenNijiiroRW.Skin.SongSelect_NewHeya_Box_Count - 1; i++)
+							{
 								int x = OpenNijiiroRW.Skin.SongSelect_NewHeya_Box_X[i];
 								int y = OpenNijiiroRW.Skin.SongSelect_NewHeya_Box_Y[i];
 								int index = i - (OpenNijiiroRW.Skin.SongSelect_NewHeya_Box_Count / 2) + CurrentIndex;
-								while (index < 0) {
+								while (index < 0)
+								{
 									index += CurrentMaxIndex;
 								}
-								while (index >= CurrentMaxIndex) {
+								while (index >= CurrentMaxIndex)
+								{
 									index -= CurrentMaxIndex;
 								}
 								CTexture tmpTex = TitleTextureKey.ResolveTitleTexture(this.ttkDanTitles[index]);
 
-								if (i != 0) {
+								if (i != 0)
+								{
 									tmpTex.color4 = CConversion.ColorToColor4(Color.DarkGray);
-								} else {
+								}
+								else
+								{
 									tmpTex.color4 = CConversion.ColorToColor4(Color.White);
 								}
 
@@ -559,7 +656,8 @@ class CActNewHeya : CActivity {
 								y += OpenNijiiroRW.Skin.SongSelect_NewHeya_Box_Chara_Offset[1];
 
 								int danGrade = 0;
-								if (index > 0) {
+								if (index > 0)
+								{
 									danGrade = OpenNijiiroRW.SaveFileInstances[CurrentPlayer].data.DanTitles[this.ttkDanTitles[index].str].clearStatus;
 								}
 
@@ -583,11 +681,13 @@ class CActNewHeya : CActivity {
 
 		OpenNijiiroRW.Tx.NewHeya_Close.t2D描画(0, 0);
 
-		for (int i = 0; i < OpenNijiiroRW.ConfigIni.nPlayerCount; i++) {
+		for (int i = 0; i < OpenNijiiroRW.ConfigIni.nPlayerCount; i++)
+		{
 			OpenNijiiroRW.Tx.NewHeya_PlayerPlate[OpenNijiiroRW.GetActualPlayer(i)].t2D描画(OpenNijiiroRW.Skin.SongSelect_NewHeya_PlayerPlate_X[i], OpenNijiiroRW.Skin.SongSelect_NewHeya_PlayerPlate_Y[i]);
 		}
 
-		for (int i = 0; i < 5; i++) {
+		for (int i = 0; i < 5; i++)
+		{
 			OpenNijiiroRW.Tx.NewHeya_ModeBar.t2D描画(OpenNijiiroRW.Skin.SongSelect_NewHeya_ModeBar_X[i], OpenNijiiroRW.Skin.SongSelect_NewHeya_ModeBar_Y[i]);
 			int title_x = OpenNijiiroRW.Skin.SongSelect_NewHeya_ModeBar_X[i] + OpenNijiiroRW.Skin.SongSelect_NewHeya_ModeBar_Font_Offset[0];
 			int title_y = OpenNijiiroRW.Skin.SongSelect_NewHeya_ModeBar_Y[i] + OpenNijiiroRW.Skin.SongSelect_NewHeya_ModeBar_Font_Offset[1];
@@ -602,17 +702,20 @@ class CActNewHeya : CActivity {
 	 *  SUCCESS : Purchase succeed (without selection)
 	 *  SELECTED : Selection succeed
 	 */
-	private enum ESelectStatus {
+	private enum ESelectStatus
+	{
 		FAILED,
 		SUCCESS,
 		SELECTED
 	};
 
-	private ESelectStatus tSelectPuchi() {
+	private ESelectStatus tSelectPuchi()
+	{
 		// Add "If unlocked" to select directly
 
 		if (OpenNijiiroRW.Tx.Puchichara[CurrentIndex].unlock != null
-			&& !OpenNijiiroRW.SaveFileInstances[CurrentPlayer].data.UnlockedPuchicharas.Contains(OpenNijiiroRW.Skin.Puchicharas_Name[CurrentIndex])) {
+			&& !OpenNijiiroRW.SaveFileInstances[CurrentPlayer].data.UnlockedPuchicharas.Contains(OpenNijiiroRW.Skin.Puchicharas_Name[CurrentIndex]))
+		{
 			(bool, string?) response = OpenNijiiroRW.Tx.Puchichara[CurrentIndex].unlock.tConditionMet(CurrentPlayer);
 			//tConditionMet(
 			//new int[] { TJAPlayer3.SaveFileInstances[TJAPlayer3.SaveFile].data.Medals });
@@ -630,36 +733,44 @@ class CActNewHeya : CActivity {
 		return ESelectStatus.SELECTED;
 	}
 
-	private void tUpdateUnlockableTextPuchi() {
+	private void tUpdateUnlockableTextPuchi()
+	{
 		#region [Check unlockable]
 
 		if (OpenNijiiroRW.Tx.Puchichara[CurrentIndex].unlock != null
-			&& !OpenNijiiroRW.SaveFileInstances[CurrentPlayer].data.UnlockedPuchicharas.Contains(OpenNijiiroRW.Skin.Puchicharas_Name[CurrentIndex])) {
+			&& !OpenNijiiroRW.SaveFileInstances[CurrentPlayer].data.UnlockedPuchicharas.Contains(OpenNijiiroRW.Skin.Puchicharas_Name[CurrentIndex]))
+		{
 			this.ttkInfoSection = new TitleTextureKey(OpenNijiiroRW.Tx.Puchichara[CurrentIndex].unlock.tConditionMessage()
 				, this.MenuFont, Color.White, Color.Black, 1000);
-		} else
+		}
+		else
 			this.ttkInfoSection = null;
 
 		#endregion
 	}
-	private void tUpdateUnlockableTextChara() {
+	private void tUpdateUnlockableTextChara()
+	{
 		#region [Check unlockable]
 
 		if (OpenNijiiroRW.Tx.Characters[CurrentIndex].unlock != null
-			&& !OpenNijiiroRW.SaveFileInstances[CurrentPlayer].data.UnlockedCharacters.Contains(OpenNijiiroRW.Skin.Characters_DirName[CurrentIndex])) {
+			&& !OpenNijiiroRW.SaveFileInstances[CurrentPlayer].data.UnlockedCharacters.Contains(OpenNijiiroRW.Skin.Characters_DirName[CurrentIndex]))
+		{
 			this.ttkInfoSection = new TitleTextureKey(OpenNijiiroRW.Tx.Characters[CurrentIndex].unlock.tConditionMessage()
 				, this.MenuFont, Color.White, Color.Black, 1000);
-		} else
+		}
+		else
 			this.ttkInfoSection = null;
 
 		#endregion
 	}
 
-	private ESelectStatus tSelectChara() {
+	private ESelectStatus tSelectChara()
+	{
 		// Add "If unlocked" to select directly
 
 		if (OpenNijiiroRW.Tx.Characters[CurrentIndex].unlock != null
-			&& !OpenNijiiroRW.SaveFileInstances[CurrentPlayer].data.UnlockedCharacters.Contains(OpenNijiiroRW.Skin.Characters_DirName[CurrentIndex])) {
+			&& !OpenNijiiroRW.SaveFileInstances[CurrentPlayer].data.UnlockedCharacters.Contains(OpenNijiiroRW.Skin.Characters_DirName[CurrentIndex]))
+		{
 			(bool, string?) response = OpenNijiiroRW.Tx.Characters[CurrentIndex].unlock.tConditionMet(CurrentPlayer);
 			//TJAPlayer3.Tx.Characters[iCharacterCurrent].unlock.tConditionMet(
 			//new int[] { TJAPlayer3.SaveFileInstances[TJAPlayer3.SaveFile].data.Medals });

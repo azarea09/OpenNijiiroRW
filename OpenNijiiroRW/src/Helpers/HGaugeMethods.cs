@@ -4,8 +4,10 @@ using FDK;
 
 namespace OpenNijiiroRW;
 
-class HGaugeMethods {
-	public enum EGaugeType {
+class HGaugeMethods
+{
+	public enum EGaugeType
+	{
 		NORMAL = 0,
 		HARD,
 		EXTREME
@@ -16,7 +18,8 @@ class HGaugeMethods {
 	public static float HardGaugeFillRatio = 1f;
 	public static float ExtremeGaugeFillRatio = 1f;
 
-	private static Dictionary<Difficulty, float> DifficultyToHardGaugeDamage = new Dictionary<Difficulty, float> {
+	private static Dictionary<Difficulty, float> DifficultyToHardGaugeDamage = new Dictionary<Difficulty, float>
+	{
 		[Difficulty.Easy] = 4.5f,
 		[Difficulty.Normal] = 5f,
 		[Difficulty.Hard] = 6f,
@@ -24,7 +27,8 @@ class HGaugeMethods {
 		[Difficulty.Edit] = 6.5f
 	};
 
-	private static Dictionary<Difficulty, float> DifficultyToExtremeGaugeDamage = new Dictionary<Difficulty, float> {
+	private static Dictionary<Difficulty, float> DifficultyToExtremeGaugeDamage = new Dictionary<Difficulty, float>
+	{
 		[Difficulty.Easy] = 4.5f,
 		[Difficulty.Normal] = 5f,
 		[Difficulty.Hard] = 6f,
@@ -32,25 +36,29 @@ class HGaugeMethods {
 		[Difficulty.Edit] = 6.5f
 	};
 
-	private static Dictionary<int, float> LevelExtraToHardGaugeDamage = new Dictionary<int, float> {
+	private static Dictionary<int, float> LevelExtraToHardGaugeDamage = new Dictionary<int, float>
+	{
 		[11] = 7.5f,
 		[12] = 8f,
 		[13] = 8.5f
 	};
 
-	private static Dictionary<int, float> LevelExtraToExtremeGaugeDamage = new Dictionary<int, float> {
+	private static Dictionary<int, float> LevelExtraToExtremeGaugeDamage = new Dictionary<int, float>
+	{
 		[11] = 7.5f,
 		[12] = 8f,
 		[13] = 8.5f
 	};
 
-	private static Dictionary<string, EGaugeType> GaugeTypeStringToEnum = new Dictionary<string, EGaugeType> {
+	private static Dictionary<string, EGaugeType> GaugeTypeStringToEnum = new Dictionary<string, EGaugeType>
+	{
 		["Normal"] = EGaugeType.NORMAL,
 		["Hard"] = EGaugeType.HARD,
 		["Extreme"] = EGaugeType.EXTREME
 	};
 
-	private static Dictionary<Difficulty, float> DifficultyToNorma = new Dictionary<Difficulty, float> {
+	private static Dictionary<Difficulty, float> DifficultyToNorma = new Dictionary<Difficulty, float>
+	{
 		[Difficulty.Easy] = 60f,
 		[Difficulty.Normal] = 70f,
 		[Difficulty.Hard] = 70f,
@@ -58,7 +66,8 @@ class HGaugeMethods {
 		[Difficulty.Edit] = 80f
 	};
 
-	private static Dictionary<int, float> LevelExtraToNorma = new Dictionary<int, float> {
+	private static Dictionary<int, float> LevelExtraToNorma = new Dictionary<int, float>
+	{
 		[11] = 88f,
 		[12] = 92f,
 		[13] = 96f
@@ -66,7 +75,8 @@ class HGaugeMethods {
 
 	#region [General calculation]
 
-	public static float tHardGaugeGetDamage(Difficulty diff, int level) {
+	public static float tHardGaugeGetDamage(Difficulty diff, int level)
+	{
 		float damage = 6.5f;
 
 		if (DifficultyToHardGaugeDamage.ContainsKey(diff))
@@ -79,7 +89,8 @@ class HGaugeMethods {
 		return damage;
 	}
 
-	public static float tExtremeGaugeGetDamage(Difficulty diff, int level) {
+	public static float tExtremeGaugeGetDamage(Difficulty diff, int level)
+	{
 		float damage = 6.5f;
 
 		if (DifficultyToExtremeGaugeDamage.ContainsKey(diff))
@@ -92,7 +103,8 @@ class HGaugeMethods {
 		return damage;
 	}
 
-	public static float tHardGaugeGetKillscreenRatio(Difficulty diff, int level, EGaugeType gaugeType, int perfectHits, int totalNotes) {
+	public static float tHardGaugeGetKillscreenRatio(Difficulty diff, int level, EGaugeType gaugeType, int perfectHits, int totalNotes)
+	{
 		if (gaugeType != EGaugeType.EXTREME) return 0f;
 
 		float norma = tGetCurrentGaugeNorma(diff, level);
@@ -101,13 +113,15 @@ class HGaugeMethods {
 		return ratio * norma;
 	}
 
-	public static bool tIsDangerHardGauge(Difficulty diff, int level, EGaugeType gaugeType, float percentObtained, int perfectHits, int totalNotes) {
+	public static bool tIsDangerHardGauge(Difficulty diff, int level, EGaugeType gaugeType, float percentObtained, int perfectHits, int totalNotes)
+	{
 		if (gaugeType == EGaugeType.NORMAL || diff > Difficulty.Edit) return false;
 		float percent = Math.Min(100f, Math.Max(0f, percentObtained));
 		return percent < 100f - ((100f - tHardGaugeGetKillscreenRatio(diff, level, gaugeType, perfectHits, totalNotes)) * 0.7f);
 	}
 
-	public static float tGetCurrentGaugeNorma(Difficulty diff, int level) {
+	public static float tGetCurrentGaugeNorma(Difficulty diff, int level)
+	{
 		float norma = 80f;
 
 		if (DifficultyToNorma.ContainsKey(diff))
@@ -120,7 +134,8 @@ class HGaugeMethods {
 		return norma;
 	}
 
-	public static EGaugeType tGetGaugeTypeEnum(string gaugeType) {
+	public static EGaugeType tGetGaugeTypeEnum(string gaugeType)
+	{
 		EGaugeType gt = EGaugeType.NORMAL;
 
 		if (GaugeTypeStringToEnum.ContainsKey(gaugeType))
@@ -129,7 +144,8 @@ class HGaugeMethods {
 		return gt;
 	}
 
-	public static bool tNormaCheck(Difficulty diff, int level, EGaugeType gaugeType, float percentObtained, float killZonePercent) {
+	public static bool tNormaCheck(Difficulty diff, int level, EGaugeType gaugeType, float percentObtained, float killZonePercent)
+	{
 		float percent = Math.Min(100f, Math.Max(0f, percentObtained));
 		float norma = tGetCurrentGaugeNorma(diff, level);
 
@@ -143,8 +159,10 @@ class HGaugeMethods {
 
 	#region [Displayables]
 
-	public static void tDrawGaugeBase(CTexture baseTexture, int x, int y, float scale_x, float scale_y) {
-		if (baseTexture != null) {
+	public static void tDrawGaugeBase(CTexture baseTexture, int x, int y, float scale_x, float scale_y)
+	{
+		if (baseTexture != null)
+		{
 			baseTexture.Scale.X = scale_x;
 			baseTexture.Scale.Y = scale_y;
 
@@ -158,12 +176,14 @@ class HGaugeMethods {
 		}
 	}
 
-	public static void tDrawGaugeBaseClear(CTexture baseTexture, int x, int y, Difficulty diff, int level, EGaugeType gaugeType, float scale_x, float scale_y) {
+	public static void tDrawGaugeBaseClear(CTexture baseTexture, int x, int y, Difficulty diff, int level, EGaugeType gaugeType, float scale_x, float scale_y)
+	{
 		if (gaugeType != EGaugeType.NORMAL || diff > Difficulty.Edit) return;
 		float norma = tGetCurrentGaugeNorma(diff, level) - 2f; // A segment flashes earlier
 		float revnorma = 100f - norma;
 
-		if (baseTexture != null) {
+		if (baseTexture != null)
+		{
 			baseTexture.Scale.X = scale_x;
 			baseTexture.Scale.Y = scale_y;
 
@@ -199,7 +219,8 @@ class HGaugeMethods {
 		int flashOpacity,
 		int perfectHits,
 		int totalNotes
-	) {
+	)
+	{
 		if (diff > Difficulty.Edit) return;
 		float norma = tGetCurrentGaugeNorma(diff, level) - 2f; // A segment flashes earlier
 		float percent = Math.Min(100f, Math.Max(0f, currentPercent));
@@ -213,7 +234,8 @@ class HGaugeMethods {
 		bool isRainbow = (rainbowTexture != null && percent >= 100f && gaugeType == EGaugeType.NORMAL);
 
 		// Fill
-		if (fillTexture != null && !isRainbow) {
+		if (fillTexture != null && !isRainbow)
+		{
 			fillTexture.Scale.X = scale_x;
 			fillTexture.Scale.Y = scale_y;
 
@@ -232,7 +254,8 @@ class HGaugeMethods {
 		if (!normaCheck) return;
 
 		// Yellow
-		if (yellowTexture != null && !isRainbow) {
+		if (yellowTexture != null && !isRainbow)
+		{
 			int texStartPoint = (int)(gaugeTexLength * (norma / 100f));
 			int differencial = closestTwo - closestNorma;
 			int xOff = (int)(scale_x * texStartPoint);
@@ -251,7 +274,8 @@ class HGaugeMethods {
 		}
 
 		// Rainbow
-		if (rainbowTexture != null && percent >= 100f) {
+		if (rainbowTexture != null && percent >= 100f)
+		{
 			rainbowTexture.Scale.X = scale_x;
 			rainbowTexture.Scale.Y = scale_y;
 
@@ -260,12 +284,15 @@ class HGaugeMethods {
 
 	}
 
-	public static void tDrawGaugeFlash(CTexture flashTexture, int x, int y, int Opacity, Difficulty diff, int level, float currentPercent, EGaugeType gaugeType, float scale_x, float scale_y) {
+	public static void tDrawGaugeFlash(CTexture flashTexture, int x, int y, int Opacity, Difficulty diff, int level, float currentPercent, EGaugeType gaugeType, float scale_x, float scale_y)
+	{
 		if (gaugeType != EGaugeType.NORMAL || diff > Difficulty.Edit) return;
 		float norma = tGetCurrentGaugeNorma(diff, level) - 2f; // A segment flashes earlier
 		float percent = Math.Min(100f, Math.Max(0f, currentPercent));
-		if (tNormaCheck(diff, level, gaugeType, percent, 0) && percent < 100.0) {
-			if (flashTexture != null) {
+		if (tNormaCheck(diff, level, gaugeType, percent, 0) && percent < 100.0)
+		{
+			if (flashTexture != null)
+			{
 				flashTexture.Scale.X = scale_x;
 				flashTexture.Scale.Y = scale_y;
 
@@ -282,10 +309,12 @@ class HGaugeMethods {
 		}
 	}
 
-	public static void tDrawKillZone(CTexture killzoneTexture, int x, int y, Difficulty diff, int level, EGaugeType gaugeType, float scale_x, float scale_y, int perfectHits, int totalNotes) {
+	public static void tDrawKillZone(CTexture killzoneTexture, int x, int y, Difficulty diff, int level, EGaugeType gaugeType, float scale_x, float scale_y, int perfectHits, int totalNotes)
+	{
 		if (gaugeType != EGaugeType.EXTREME || diff > Difficulty.Edit) return;
 		float currentFill = tHardGaugeGetKillscreenRatio(diff, level, gaugeType, perfectHits, totalNotes);
-		if (killzoneTexture != null) {
+		if (killzoneTexture != null)
+		{
 			killzoneTexture.Scale.X = scale_x;
 			killzoneTexture.Scale.Y = scale_y;
 
@@ -299,7 +328,8 @@ class HGaugeMethods {
 		}
 	}
 
-	public static void tDrawClearIcon(CTexture clearIcon, Difficulty diff, int level, float currentPercent, int text_x, int text_y, float scale_x, float scale_y, EGaugeType gaugeType, int perfectHits, int totalNotes, Rectangle clearRect, Rectangle clearRectHighlight) {
+	public static void tDrawClearIcon(CTexture clearIcon, Difficulty diff, int level, float currentPercent, int text_x, int text_y, float scale_x, float scale_y, EGaugeType gaugeType, int perfectHits, int totalNotes, Rectangle clearRect, Rectangle clearRectHighlight)
+	{
 		if (clearIcon == null) return;
 		if (diff > Difficulty.Edit) return;
 
@@ -312,14 +342,18 @@ class HGaugeMethods {
 			: tNormaCheck(diff, level, gaugeType, percent, 0);
 
 		clearIcon.Opacity = 255;
-		if (highlight) {
+		if (highlight)
+		{
 			clearIcon.t2D描画(text_x, text_y, clearRectHighlight);
-		} else {
+		}
+		else
+		{
 			clearIcon.t2D描画(text_x, text_y, clearRect);
 		}
 	}
 
-	public static void tDrawSoulFire(CTexture soulFire, Difficulty diff, int level, float currentPercent, EGaugeType gaugeType, float scale_x, float scale_y, int fire_x, int fire_y, int fireFrame) {
+	public static void tDrawSoulFire(CTexture soulFire, Difficulty diff, int level, float currentPercent, EGaugeType gaugeType, float scale_x, float scale_y, int fire_x, int fire_y, int fireFrame)
+	{
 		if (soulFire == null) return;
 		if (gaugeType != EGaugeType.NORMAL || diff > Difficulty.Edit) return;
 		float percent = Math.Min(100f, Math.Max(0f, currentPercent));
@@ -327,7 +361,8 @@ class HGaugeMethods {
 		int soulfire_width = soulFire.szTextureSize.Width / 8;
 		int soulfire_height = soulFire.szTextureSize.Height;
 
-		if (percent >= 100.0) {
+		if (percent >= 100.0)
+		{
 			soulFire.Scale.X = scale_x;
 			soulFire.Scale.Y = scale_y;
 
@@ -335,7 +370,8 @@ class HGaugeMethods {
 		}
 	}
 
-	public static void tDrawSoulLetter(CTexture soulLetter, Difficulty diff, int level, float currentPercent, EGaugeType gaugeType, float scale_x, float scale_y, int soul_x, int soul_y) {
+	public static void tDrawSoulLetter(CTexture soulLetter, Difficulty diff, int level, float currentPercent, EGaugeType gaugeType, float scale_x, float scale_y, int soul_x, int soul_y)
+	{
 		if (soulLetter == null) return;
 		if (gaugeType != EGaugeType.NORMAL || diff > Difficulty.Edit) return;
 		float norma = tGetCurrentGaugeNorma(diff, level);
@@ -345,9 +381,12 @@ class HGaugeMethods {
 		soulLetter.Scale.Y = scale_y;
 
 		int soul_height = soulLetter.szTextureSize.Height / 2;
-		if (tNormaCheck(diff, level, gaugeType, percent, 0)) {
+		if (tNormaCheck(diff, level, gaugeType, percent, 0))
+		{
 			soulLetter.t2D描画(soul_x, soul_y, new Rectangle(0, 0, soulLetter.szTextureSize.Width, soul_height));
-		} else {
+		}
+		else
+		{
 			soulLetter.t2D描画(soul_x, soul_y, new Rectangle(0, soul_height, soulLetter.szTextureSize.Width, soul_height));
 		}
 	}
@@ -386,7 +425,8 @@ class HGaugeMethods {
 		int fire_y,
 		Rectangle clearRect,
 		Rectangle clearRectHighlight
-	) {
+	)
+	{
 		// Layers : Base - Base clear - Fill - Flash - Killzone - Clear logo - Soul fire - Soul text
 		tDrawGaugeBase(baseTexture, x, y, scale_x, scale_y);
 		tDrawGaugeBaseClear(baseNormaTexture, x, y, diff, level, gaugeType, scale_x, scale_y);
@@ -403,7 +443,8 @@ class HGaugeMethods {
 	// Use with caution
 	#region [Unsafe methods]
 
-	public static bool UNSAFE_FastNormaCheck(int player) {
+	public static bool UNSAFE_FastNormaCheck(int player)
+	{
 		var chara = OpenNijiiroRW.Tx.Characters[OpenNijiiroRW.SaveFileInstances[OpenNijiiroRW.GetActualPlayer(player)].data.Character];
 		var _dif = OpenNijiiroRW.stageSongSelect.nChoosenSongDifficulty[player];
 		return tNormaCheck(
@@ -415,13 +456,15 @@ class HGaugeMethods {
 		);
 	}
 
-	public static bool UNSAFE_IsRainbow(int player) {
+	public static bool UNSAFE_IsRainbow(int player)
+	{
 		var chara = OpenNijiiroRW.Tx.Characters[OpenNijiiroRW.SaveFileInstances[OpenNijiiroRW.GetActualPlayer(player)].data.Character];
 		if (tGetGaugeTypeEnum(chara.effect.tGetGaugeType()) != EGaugeType.NORMAL) return false;
 		return (float)OpenNijiiroRW.stageGameScreen.actGauge.db現在のゲージ値[player] >= 100f;
 	}
 
-	public static float UNSAFE_KillZonePercent(int player) {
+	public static float UNSAFE_KillZonePercent(int player)
+	{
 		var chara = OpenNijiiroRW.Tx.Characters[OpenNijiiroRW.SaveFileInstances[OpenNijiiroRW.GetActualPlayer(player)].data.Character];
 		CTja dtx = OpenNijiiroRW.GetTJA(player)!;
 
@@ -442,7 +485,8 @@ class HGaugeMethods {
 			totalHits);
 	}
 
-	public static void UNSAFE_DrawGaugeFast(int player, int opacity, int rainbowTextureIndex, int soulFlameIndex) {
+	public static void UNSAFE_DrawGaugeFast(int player, int opacity, int rainbowTextureIndex, int soulFlameIndex)
+	{
 		var chara = OpenNijiiroRW.Tx.Characters[OpenNijiiroRW.SaveFileInstances[OpenNijiiroRW.GetActualPlayer(player)].data.Character];
 		CTja dtx = OpenNijiiroRW.GetTJA(player)!;
 
@@ -453,16 +497,23 @@ class HGaugeMethods {
 		int gauge_x = 0;
 		int gauge_y = 0;
 
-		if (OpenNijiiroRW.ConfigIni.nPlayerCount == 5) {
+		if (OpenNijiiroRW.ConfigIni.nPlayerCount == 5)
+		{
 			gauge_x = OpenNijiiroRW.Skin.Game_Gauge_5P[0] + (OpenNijiiroRW.Skin.Game_UIMove_5P[0] * player);
 			gauge_y = OpenNijiiroRW.Skin.Game_Gauge_5P[1] + (OpenNijiiroRW.Skin.Game_UIMove_5P[1] * player);
-		} else if (OpenNijiiroRW.ConfigIni.nPlayerCount == 4 || OpenNijiiroRW.ConfigIni.nPlayerCount == 3) {
+		}
+		else if (OpenNijiiroRW.ConfigIni.nPlayerCount == 4 || OpenNijiiroRW.ConfigIni.nPlayerCount == 3)
+		{
 			gauge_x = OpenNijiiroRW.Skin.Game_Gauge_4P[0] + (OpenNijiiroRW.Skin.Game_UIMove_4P[0] * player);
 			gauge_y = OpenNijiiroRW.Skin.Game_Gauge_4P[1] + (OpenNijiiroRW.Skin.Game_UIMove_4P[1] * player);
-		} else if (OpenNijiiroRW.ConfigIni.bAIBattleMode) {
+		}
+		else if (OpenNijiiroRW.ConfigIni.bAIBattleMode)
+		{
 			gauge_x = OpenNijiiroRW.Skin.Game_Gauge_X_AI;
 			gauge_y = OpenNijiiroRW.Skin.Game_Gauge_Y_AI;
-		} else {
+		}
+		else
+		{
 			gauge_x = OpenNijiiroRW.Skin.Game_Gauge_X[player];
 			gauge_y = OpenNijiiroRW.Skin.Game_Gauge_Y[player];
 		}
@@ -470,11 +521,15 @@ class HGaugeMethods {
 		// WindowTitle pos
 		int text_x = 0;
 		int text_y = 0;
-		if (OpenNijiiroRW.ConfigIni.nPlayerCount <= 2) {
-			if (OpenNijiiroRW.ConfigIni.bAIBattleMode) {
+		if (OpenNijiiroRW.ConfigIni.nPlayerCount <= 2)
+		{
+			if (OpenNijiiroRW.ConfigIni.bAIBattleMode)
+			{
 				text_x = OpenNijiiroRW.Skin.Game_Gauge_ClearText_X_AI;
 				text_y = OpenNijiiroRW.Skin.Game_Gauge_ClearText_Y_AI;
-			} else {
+			}
+			else
+			{
 				text_x = OpenNijiiroRW.Skin.Game_Gauge_ClearText_X[player];
 				text_y = OpenNijiiroRW.Skin.Game_Gauge_ClearText_Y[player];
 			}
@@ -483,17 +538,25 @@ class HGaugeMethods {
 		// Soul pos
 		int soul_x = 0;
 		int soul_y = 0;
-		if (OpenNijiiroRW.ConfigIni.bAIBattleMode) {
+		if (OpenNijiiroRW.ConfigIni.bAIBattleMode)
+		{
 			soul_x = OpenNijiiroRW.Skin.Gauge_Soul_X_AI;
 			soul_y = OpenNijiiroRW.Skin.Gauge_Soul_Y_AI;
-		} else {
-			if (OpenNijiiroRW.ConfigIni.nPlayerCount == 5) {
+		}
+		else
+		{
+			if (OpenNijiiroRW.ConfigIni.nPlayerCount == 5)
+			{
 				soul_x = OpenNijiiroRW.Skin.Gauge_Soul_5P[0] + (OpenNijiiroRW.Skin.Game_UIMove_5P[0] * player);
 				soul_y = OpenNijiiroRW.Skin.Gauge_Soul_5P[1] + (OpenNijiiroRW.Skin.Game_UIMove_5P[1] * player);
-			} else if (OpenNijiiroRW.ConfigIni.nPlayerCount == 4 || OpenNijiiroRW.ConfigIni.nPlayerCount == 3) {
+			}
+			else if (OpenNijiiroRW.ConfigIni.nPlayerCount == 4 || OpenNijiiroRW.ConfigIni.nPlayerCount == 3)
+			{
 				soul_x = OpenNijiiroRW.Skin.Gauge_Soul_4P[0] + (OpenNijiiroRW.Skin.Game_UIMove_4P[0] * player);
 				soul_y = OpenNijiiroRW.Skin.Gauge_Soul_4P[1] + (OpenNijiiroRW.Skin.Game_UIMove_4P[1] * player);
-			} else {
+			}
+			else
+			{
 				soul_x = OpenNijiiroRW.Skin.Gauge_Soul_X[player];
 				soul_y = OpenNijiiroRW.Skin.Gauge_Soul_Y[player];
 			}
@@ -502,17 +565,25 @@ class HGaugeMethods {
 		// Fire pos
 		int fire_x = 0;
 		int fire_y = 0;
-		if (OpenNijiiroRW.ConfigIni.bAIBattleMode) {
+		if (OpenNijiiroRW.ConfigIni.bAIBattleMode)
+		{
 			fire_x = OpenNijiiroRW.Skin.Gauge_Soul_Fire_X_AI;
 			fire_y = OpenNijiiroRW.Skin.Gauge_Soul_Fire_Y_AI;
-		} else {
-			if (OpenNijiiroRW.ConfigIni.nPlayerCount == 5) {
+		}
+		else
+		{
+			if (OpenNijiiroRW.ConfigIni.nPlayerCount == 5)
+			{
 				fire_x = OpenNijiiroRW.Skin.Gauge_Soul_Fire_5P[0] + (OpenNijiiroRW.Skin.Game_UIMove_5P[0] * player);
 				fire_y = OpenNijiiroRW.Skin.Gauge_Soul_Fire_5P[1] + (OpenNijiiroRW.Skin.Game_UIMove_5P[1] * player);
-			} else if (OpenNijiiroRW.ConfigIni.nPlayerCount == 4 || OpenNijiiroRW.ConfigIni.nPlayerCount == 3) {
+			}
+			else if (OpenNijiiroRW.ConfigIni.nPlayerCount == 4 || OpenNijiiroRW.ConfigIni.nPlayerCount == 3)
+			{
 				fire_x = OpenNijiiroRW.Skin.Gauge_Soul_Fire_4P[0] + (OpenNijiiroRW.Skin.Game_UIMove_4P[0] * player);
 				fire_y = OpenNijiiroRW.Skin.Gauge_Soul_Fire_4P[1] + (OpenNijiiroRW.Skin.Game_UIMove_4P[1] * player);
-			} else {
+			}
+			else
+			{
 				fire_x = OpenNijiiroRW.Skin.Gauge_Soul_Fire_X[player];
 				fire_y = OpenNijiiroRW.Skin.Gauge_Soul_Fire_Y[player];
 			}
@@ -524,7 +595,8 @@ class HGaugeMethods {
 
 		// Scale
 		float scale = 1.0f;
-		if (OpenNijiiroRW.ConfigIni.bAIBattleMode) {
+		if (OpenNijiiroRW.ConfigIni.bAIBattleMode)
+		{
 			scale = 0.8f;
 		}
 
@@ -582,7 +654,8 @@ class HGaugeMethods {
 		tDrawCompleteGauge(baseTexture, baseNormaTexture, flashTexture, fillTexture, yellowTexture, rainbowTextureArr, killzoneTexture, clearIcon, soulLetter, soulFlame, gauge_x, gauge_y, gauge_x, gauge_y, opacity, rainbowTextureIndex, soulFlameIndex, difficulty, level, currentPercent, gaugeType, scale, scale, text_x, text_y, perfectHits, totalHits, soul_x, soul_y, fire_x, fire_y, clearRect, clearRectHighlight);
 	}
 
-	public static void UNSAFE_DrawResultGaugeFast(int player, int shiftPos, int pos, int segmentsDisplayed, int rainbowTextureIndex, int soulFlameIndex, int uioffset_x) {
+	public static void UNSAFE_DrawResultGaugeFast(int player, int shiftPos, int pos, int segmentsDisplayed, int rainbowTextureIndex, int soulFlameIndex, int uioffset_x)
+	{
 		var chara = OpenNijiiroRW.Tx.Characters[OpenNijiiroRW.SaveFileInstances[OpenNijiiroRW.GetActualPlayer(player)].data.Character];
 		CTja dtx = OpenNijiiroRW.GetTJA(player)!;
 
@@ -601,7 +674,8 @@ class HGaugeMethods {
 
 		// Scale x
 		float scale_x = 1.0f;
-		if (OpenNijiiroRW.ConfigIni.nPlayerCount >= 3) {
+		if (OpenNijiiroRW.ConfigIni.nPlayerCount >= 3)
+		{
 			scale_x = 0.5f;
 		}
 
@@ -612,26 +686,36 @@ class HGaugeMethods {
 
 		int gauge_x;
 		int gauge_y;
-		if (OpenNijiiroRW.ConfigIni.nPlayerCount == 5) {
+		if (OpenNijiiroRW.ConfigIni.nPlayerCount == 5)
+		{
 			gauge_x = OpenNijiiroRW.Skin.Result_Gauge_5P[0] + OpenNijiiroRW.Skin.Result_UIMove_5P_X[pos];
 			gauge_y = OpenNijiiroRW.Skin.Result_Gauge_5P[1] + OpenNijiiroRW.Skin.Result_UIMove_5P_Y[pos];
-		} else if (OpenNijiiroRW.ConfigIni.nPlayerCount == 4 || OpenNijiiroRW.ConfigIni.nPlayerCount == 3) {
+		}
+		else if (OpenNijiiroRW.ConfigIni.nPlayerCount == 4 || OpenNijiiroRW.ConfigIni.nPlayerCount == 3)
+		{
 			gauge_x = OpenNijiiroRW.Skin.Result_Gauge_4P[0] + OpenNijiiroRW.Skin.Result_UIMove_4P_X[pos];
 			gauge_y = OpenNijiiroRW.Skin.Result_Gauge_4P[1] + OpenNijiiroRW.Skin.Result_UIMove_4P_Y[pos];
-		} else {
+		}
+		else
+		{
 			gauge_x = OpenNijiiroRW.Skin.Result_Gauge_X[pos] + uioffset_x;
 			gauge_y = OpenNijiiroRW.Skin.Result_Gauge_Y[pos];
 		}
 
 		int gauge_rainbow_x;
 		int gauge_rainbow_y;
-		if (OpenNijiiroRW.ConfigIni.nPlayerCount == 5) {
+		if (OpenNijiiroRW.ConfigIni.nPlayerCount == 5)
+		{
 			gauge_rainbow_x = OpenNijiiroRW.Skin.Result_Gauge_Rainbow_5P[0] + OpenNijiiroRW.Skin.Result_UIMove_5P_X[pos];
 			gauge_rainbow_y = OpenNijiiroRW.Skin.Result_Gauge_Rainbow_5P[1] + OpenNijiiroRW.Skin.Result_UIMove_5P_Y[pos];
-		} else if (OpenNijiiroRW.ConfigIni.nPlayerCount == 4 || OpenNijiiroRW.ConfigIni.nPlayerCount == 3) {
+		}
+		else if (OpenNijiiroRW.ConfigIni.nPlayerCount == 4 || OpenNijiiroRW.ConfigIni.nPlayerCount == 3)
+		{
 			gauge_rainbow_x = OpenNijiiroRW.Skin.Result_Gauge_Rainbow_4P[0] + OpenNijiiroRW.Skin.Result_UIMove_4P_X[pos];
 			gauge_rainbow_y = OpenNijiiroRW.Skin.Result_Gauge_Rainbow_4P[1] + OpenNijiiroRW.Skin.Result_UIMove_4P_Y[pos];
-		} else {
+		}
+		else
+		{
 			gauge_rainbow_x = OpenNijiiroRW.Skin.Result_Gauge_Rainbow_X[pos] + uioffset_x;
 			gauge_rainbow_y = OpenNijiiroRW.Skin.Result_Gauge_Rainbow_Y[pos];
 		}
@@ -641,17 +725,22 @@ class HGaugeMethods {
 		int soulText_y;
 		int soulFire_x;
 		int soulFire_y;
-		if (OpenNijiiroRW.ConfigIni.nPlayerCount == 5) {
+		if (OpenNijiiroRW.ConfigIni.nPlayerCount == 5)
+		{
 			soulText_x = OpenNijiiroRW.Skin.Result_Soul_Text_5P[0] + OpenNijiiroRW.Skin.Result_UIMove_5P_X[pos];
 			soulText_y = OpenNijiiroRW.Skin.Result_Soul_Text_5P[1] + OpenNijiiroRW.Skin.Result_UIMove_5P_Y[pos];
 			soulFire_x = OpenNijiiroRW.Skin.Result_Soul_Fire_5P[0] + OpenNijiiroRW.Skin.Result_UIMove_5P_X[pos];
 			soulFire_y = OpenNijiiroRW.Skin.Result_Soul_Fire_5P[1] + OpenNijiiroRW.Skin.Result_UIMove_5P_Y[pos];
-		} else if (OpenNijiiroRW.ConfigIni.nPlayerCount == 4 || OpenNijiiroRW.ConfigIni.nPlayerCount == 3) {
+		}
+		else if (OpenNijiiroRW.ConfigIni.nPlayerCount == 4 || OpenNijiiroRW.ConfigIni.nPlayerCount == 3)
+		{
 			soulText_x = OpenNijiiroRW.Skin.Result_Soul_Text_4P[0] + OpenNijiiroRW.Skin.Result_UIMove_4P_X[0];
 			soulText_y = OpenNijiiroRW.Skin.Result_Soul_Text_4P[1] + OpenNijiiroRW.Skin.Result_UIMove_4P_Y[1];
 			soulFire_x = OpenNijiiroRW.Skin.Result_Soul_Fire_4P[0] + OpenNijiiroRW.Skin.Result_UIMove_4P_X[0];
 			soulFire_y = OpenNijiiroRW.Skin.Result_Soul_Fire_4P[1] + OpenNijiiroRW.Skin.Result_UIMove_4P_Y[1];
-		} else {
+		}
+		else
+		{
 			soulText_x = OpenNijiiroRW.Skin.Result_Soul_Text_X[pos] + uioffset_x;
 			soulText_y = OpenNijiiroRW.Skin.Result_Soul_Text_Y[pos];
 			soulFire_x = OpenNijiiroRW.Skin.Result_Soul_Fire_X[pos] + uioffset_x;
@@ -661,13 +750,18 @@ class HGaugeMethods {
 		// Clear text
 		int clearText_x;
 		int clearText_y;
-		if (OpenNijiiroRW.ConfigIni.nPlayerCount == 5) {
+		if (OpenNijiiroRW.ConfigIni.nPlayerCount == 5)
+		{
 			clearText_x = OpenNijiiroRW.Skin.Result_Gauge_ClearText_5P[0] + OpenNijiiroRW.Skin.Result_UIMove_5P_X[pos];
 			clearText_y = OpenNijiiroRW.Skin.Result_Gauge_ClearText_5P[1] + OpenNijiiroRW.Skin.Result_UIMove_5P_Y[pos];
-		} else if (OpenNijiiroRW.ConfigIni.nPlayerCount == 4 || OpenNijiiroRW.ConfigIni.nPlayerCount == 3) {
+		}
+		else if (OpenNijiiroRW.ConfigIni.nPlayerCount == 4 || OpenNijiiroRW.ConfigIni.nPlayerCount == 3)
+		{
 			clearText_x = OpenNijiiroRW.Skin.Result_Gauge_ClearText_4P[0] + OpenNijiiroRW.Skin.Result_UIMove_4P_X[pos];
 			clearText_y = OpenNijiiroRW.Skin.Result_Gauge_ClearText_4P[1] + OpenNijiiroRW.Skin.Result_UIMove_4P_Y[pos];
-		} else {
+		}
+		else
+		{
 			clearText_x = OpenNijiiroRW.Skin.Result_Gauge_ClearText_X[pos] + uioffset_x;
 			clearText_y = OpenNijiiroRW.Skin.Result_Gauge_ClearText_Y[pos];
 		}
@@ -706,11 +800,13 @@ class HGaugeMethods {
 		);
 
 		// Positionnings
-		if (soulLetter != null) {
+		if (soulLetter != null)
+		{
 			soulText_x -= (int)((soulLetter.szTextureSize.Width / 2));
 			soulText_y -= (soulLetter.szTextureSize.Height / 4);
 		}
-		if (soulFlame != null) {
+		if (soulFlame != null)
+		{
 			soulFire_y -= (soulFlame.szTextureSize.Height / 2);
 			soulFire_x -= (int)((soulFlame.szTextureSize.Width / 16));
 		}

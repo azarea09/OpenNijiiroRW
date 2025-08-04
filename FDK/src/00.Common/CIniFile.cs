@@ -5,18 +5,22 @@ namespace FDK;
 /// <summary>
 /// 汎用的な .iniファイルを扱う。
 /// </summary>
-public class CIniFile {
+public class CIniFile
+{
 	// Properties
 
-	public string FileName {
+	public string FileName
+	{
 		get;
 		private set;
 	}
-	public List<CSection> Sections {
+	public List<CSection> Sections
+	{
 		get;
 		set;
 	}
-	public class CSection {
+	public class CSection
+	{
 		public string SectionName = "";
 		public List<KeyValuePair<string, string>> Parameters = new List<KeyValuePair<string, string>>();
 	}
@@ -24,33 +28,39 @@ public class CIniFile {
 
 	// Constructor
 
-	public CIniFile() {
+	public CIniFile()
+	{
 		this.FileName = "";
 		this.Sections = new List<CSection>();
 	}
 	public CIniFile(string fileName)
-		: this() {
+		: this()
+	{
 		this.tRead(fileName);
 	}
 
 
 	// メソッド
 
-	public void tRead(string fileName) {
+	public void tRead(string fileName)
+	{
 		this.FileName = fileName;
 
 		StreamReader sr = null;
 		CSection section = null;
-		try {
+		try
+		{
 			sr = new StreamReader(this.FileName, Encoding.GetEncoding("Shift_JIS"));    // ファイルが存在しない場合は例外発生。
 
 			string line;
-			while ((line = sr.ReadLine()) != null) {
+			while ((line = sr.ReadLine()) != null)
+			{
 				line = line.Replace('\t', ' ').TrimStart(new char[] { '\t', ' ' });
 				if (string.IsNullOrEmpty(line) || line[0] == ';')   // ';'以降はコメントとして無視
 					continue;
 
-				if (line[0] == '[') {
+				if (line[0] == '[')
+				{
 					#region [ セクションの変更 ]
 					//-----------------------------
 					var builder = new StringBuilder(32);
@@ -83,27 +93,35 @@ public class CIniFile {
 
 			if (section != null)
 				this.Sections.Add(section);
-		} finally {
+		}
+		finally
+		{
 			if (sr != null)
 				sr.Close();
 		}
 	}
-	public void tWrite(string fileName) {
+	public void tWrite(string fileName)
+	{
 		this.FileName = fileName;
 		this.tWrite();
 	}
-	public void tWrite() {
+	public void tWrite()
+	{
 		StreamWriter sw = null;
-		try {
+		try
+		{
 			sw = new StreamWriter(this.FileName, false, Encoding.GetEncoding("Shift_JIS")); // オープン失敗の場合は例外発生。
 
-			foreach (CSection section in this.Sections) {
+			foreach (CSection section in this.Sections)
+			{
 				sw.WriteLine("[{0}]", section.SectionName);
 
 				foreach (KeyValuePair<string, string> kvp in section.Parameters)
 					sw.WriteLine("{0}={1}", kvp.Key, kvp.Value);
 			}
-		} finally {
+		}
+		finally
+		{
 			if (sw != null)
 				sw.Close();
 		}

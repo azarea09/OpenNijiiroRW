@@ -3,22 +3,28 @@ using FDK;
 
 namespace OpenNijiiroRW;
 
-internal class FlyingNotes : CActivity {
+internal class FlyingNotes : CActivity
+{
 	// Constructor
 
-	public FlyingNotes() {
+	public FlyingNotes()
+	{
 		base.IsDeActivated = true;
 	}
 
 
 	// メソッド
-	public virtual void Start(int nLane, int nPlayer, bool isRoll = false) {
+	public virtual void Start(int nLane, int nPlayer, bool isRoll = false)
+	{
 		if (OpenNijiiroRW.ConfigIni.nPlayerCount > 2 || OpenNijiiroRW.ConfigIni.SimpleMode) return;
 		EGameType _gt = OpenNijiiroRW.ConfigIni.nGameType[OpenNijiiroRW.GetActualPlayer(nPlayer)];
 
-		if (OpenNijiiroRW.Tx.Notes[(int)_gt] != null) {
-			for (int i = 0; i < 128; i++) {
-				if (!Flying[i].IsUsing) {
+		if (OpenNijiiroRW.Tx.Notes[(int)_gt] != null)
+		{
+			for (int i = 0; i < 128; i++)
+			{
+				if (!Flying[i].IsUsing)
+				{
 					// 初期化
 					Flying[i].IsUsing = true;
 					Flying[i].Lane = nLane;
@@ -47,49 +53,65 @@ internal class FlyingNotes : CActivity {
 
 	// CActivity 実装
 
-	public override void Activate() {
-		for (int i = 0; i < 128; i++) {
+	public override void Activate()
+	{
+		for (int i = 0; i < 128; i++)
+		{
 			Flying[i] = new Status();
 			Flying[i].IsUsing = false;
 			Flying[i].Counter = new CCounter();
 		}
-		for (int i = 0; i < 2; i++) {
+		for (int i = 0; i < 2; i++)
+		{
 			StartPointX[i] = OpenNijiiroRW.Skin.Game_Effect_FlyingNotes_StartPoint_X[i];
 		}
 		base.Activate();
 	}
-	public override void DeActivate() {
-		for (int i = 0; i < 128; i++) {
+	public override void DeActivate()
+	{
+		for (int i = 0; i < 128; i++)
+		{
 			Flying[i].Counter = null;
 		}
 		base.DeActivate();
 	}
-	public override void CreateManagedResource() {
+	public override void CreateManagedResource()
+	{
 		base.CreateManagedResource();
 	}
-	public override void ReleaseManagedResource() {
+	public override void ReleaseManagedResource()
+	{
 		base.ReleaseManagedResource();
 	}
-	public override int Draw() {
-		if (!base.IsDeActivated && !OpenNijiiroRW.ConfigIni.SimpleMode) {
-			for (int i = 0; i < 128; i++) {
-				if (Flying[i].IsUsing) {
+	public override int Draw()
+	{
+		if (!base.IsDeActivated && !OpenNijiiroRW.ConfigIni.SimpleMode)
+		{
+			for (int i = 0; i < 128; i++)
+			{
+				if (Flying[i].IsUsing)
+				{
 					Flying[i].OldValue = Flying[i].Counter.CurrentValue;
 					Flying[i].Counter.Tick();
-					if (Flying[i].Counter.IsEnded) {
+					if (Flying[i].Counter.IsEnded)
+					{
 						Flying[i].Counter.Stop();
 						Flying[i].IsUsing = false;
 						OpenNijiiroRW.stageGameScreen.actGauge.Start(Flying[i].Lane, ENoteJudge.Perfect, Flying[i].Player);
 						OpenNijiiroRW.stageGameScreen.actChipEffects.Start(Flying[i].Player, Flying[i].Lane);
 					}
-					for (int n = Flying[i].OldValue; n < Flying[i].Counter.CurrentValue; n += 16) {
+					for (int n = Flying[i].OldValue; n < Flying[i].Counter.CurrentValue; n += 16)
+					{
 						int endX;
 						int endY;
 
-						if (OpenNijiiroRW.ConfigIni.bAIBattleMode) {
+						if (OpenNijiiroRW.ConfigIni.bAIBattleMode)
+						{
 							endX = OpenNijiiroRW.Skin.Game_Effect_FlyingNotes_EndPoint_X_AI[Flying[i].Player];
 							endY = OpenNijiiroRW.Skin.Game_Effect_FlyingNotes_EndPoint_Y_AI[Flying[i].Player];
-						} else {
+						}
+						else
+						{
 							endX = OpenNijiiroRW.Skin.Game_Effect_FlyingNotes_EndPoint_X[Flying[i].Player];
 							endY = OpenNijiiroRW.Skin.Game_Effect_FlyingNotes_EndPoint_Y[Flying[i].Player];
 						}
@@ -114,18 +136,26 @@ internal class FlyingNotes : CActivity {
 						Flying[i].X = StartPointX[Flying[i].Player] + OpenNijiiroRW.stageGameScreen.GetJPOSCROLLX(Flying[i].Player) + (movingDistanceX * value);
 						Flying[i].Y = OpenNijiiroRW.Skin.Game_Effect_FlyingNotes_StartPoint_Y[Flying[i].Player] + OpenNijiiroRW.stageGameScreen.GetJPOSCROLLY(Flying[i].Player) + (int)(movingDistanceY * value);
 
-						if (OpenNijiiroRW.ConfigIni.bAIBattleMode) {
+						if (OpenNijiiroRW.ConfigIni.bAIBattleMode)
+						{
 							Flying[i].Y += Math.Sin(value * Math.PI) * ((Flying[i].Player == 0 ? -OpenNijiiroRW.Skin.Game_Effect_FlyingNotes_Sine : OpenNijiiroRW.Skin.Game_Effect_FlyingNotes_Sine) / 3.0);
-						} else {
+						}
+						else
+						{
 							Flying[i].Y += Math.Sin(value * Math.PI) * (Flying[i].Player == 0 ? -OpenNijiiroRW.Skin.Game_Effect_FlyingNotes_Sine : OpenNijiiroRW.Skin.Game_Effect_FlyingNotes_Sine);
 						}
 
-						if (OpenNijiiroRW.Skin.Game_Effect_FlyingNotes_IsUsingEasing) {
-						} else {
+						if (OpenNijiiroRW.Skin.Game_Effect_FlyingNotes_IsUsingEasing)
+						{
+						}
+						else
+						{
 						}
 
-						if (n % OpenNijiiroRW.Skin.Game_Effect_FireWorks_Timing == 0 && !Flying[i].IsRoll && Flying[i].Counter.CurrentValue > 18) {
-							if (Flying[i].Lane == 3 || Flying[i].Lane == 4) {
+						if (n % OpenNijiiroRW.Skin.Game_Effect_FireWorks_Timing == 0 && !Flying[i].IsRoll && Flying[i].Counter.CurrentValue > 18)
+						{
+							if (Flying[i].Lane == 3 || Flying[i].Lane == 4)
+							{
 								OpenNijiiroRW.stageGameScreen.FireWorks.Start(Flying[i].Lane, Flying[i].Player, Flying[i].X, Flying[i].Y);
 							}
 						}
@@ -175,7 +205,8 @@ internal class FlyingNotes : CActivity {
 	//-----------------
 
 	[StructLayout(LayoutKind.Sequential)]
-	private struct Status {
+	private struct Status
+	{
 		public int Lane;
 		public int Player;
 		public bool IsUsing;

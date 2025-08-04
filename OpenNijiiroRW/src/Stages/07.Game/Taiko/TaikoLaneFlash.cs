@@ -3,31 +3,40 @@ using static OpenNijiiroRW.PlayerLane;
 
 namespace OpenNijiiroRW;
 
-internal class TaikoLaneFlash : CActivity {
+internal class TaikoLaneFlash : CActivity
+{
 	// コンストラクタ
 
-	public TaikoLaneFlash() {
+	public TaikoLaneFlash()
+	{
 		base.IsDeActivated = true;
 	}
 
 
-	public override void Activate() {
+	public override void Activate()
+	{
 		PlayerLane = new PlayerLane[OpenNijiiroRW.ConfigIni.nPlayerCount];
-		for (int i = 0; i < OpenNijiiroRW.ConfigIni.nPlayerCount; i++) {
+		for (int i = 0; i < OpenNijiiroRW.ConfigIni.nPlayerCount; i++)
+		{
 			PlayerLane[i] = new PlayerLane(i);
 		}
 		base.Activate();
 	}
-	public override void DeActivate() {
-		for (int i = 0; i < OpenNijiiroRW.ConfigIni.nPlayerCount; i++) {
+	public override void DeActivate()
+	{
+		for (int i = 0; i < OpenNijiiroRW.ConfigIni.nPlayerCount; i++)
+		{
 			PlayerLane[i] = null;
 		}
 		base.DeActivate();
 	}
 
-	public override int Draw() {
-		for (int i = 0; i < OpenNijiiroRW.ConfigIni.nPlayerCount; i++) {
-			for (int j = 0; j < (int)FlashType.Total; j++) {
+	public override int Draw()
+	{
+		for (int i = 0; i < OpenNijiiroRW.ConfigIni.nPlayerCount; i++)
+		{
+			for (int j = 0; j < (int)FlashType.Total; j++)
+			{
 				PlayerLane[i].Flash[j].Draw();
 			}
 		}
@@ -37,13 +46,17 @@ internal class TaikoLaneFlash : CActivity {
 	public PlayerLane[] PlayerLane;
 
 }
-public class PlayerLane {
-	public PlayerLane(int player) {
+public class PlayerLane
+{
+	public PlayerLane(int player)
+	{
 		Flash = new LaneFlash[(int)FlashType.Total];
 		var _gt = OpenNijiiroRW.ConfigIni.nGameType[OpenNijiiroRW.GetActualPlayer(player)];
 
-		for (int i = 0; i < (int)FlashType.Total; i++) {
-			switch (i) {
+		for (int i = 0; i < (int)FlashType.Total; i++)
+		{
+			switch (i)
+			{
 				case (int)FlashType.Red:
 					Flash[i] = new LaneFlash(ref OpenNijiiroRW.Tx.Lane_Red[(int)_gt], player);
 					break;
@@ -61,14 +74,16 @@ public class PlayerLane {
 			}
 		}
 	}
-	public void Start(FlashType flashType) {
+	public void Start(FlashType flashType)
+	{
 		if (flashType == FlashType.Total) return;
 		Flash[(int)flashType].Start();
 	}
 
 	public LaneFlash[] Flash;
 
-	public enum FlashType {
+	public enum FlashType
+	{
 		Red,
 		Blue,
 		Clap,
