@@ -275,11 +275,11 @@ internal class CStageコンフィグ : CStage {
 				new Rectangle(width * 2, 0, width, height));
 
 			//Center
-			OpenNijiiroRW.Tx.Config_Cursor.vcScaleRatio.X = (move / (float)width) * 2.0f;
+			OpenNijiiroRW.Tx.Config_Cursor.Scale.X = (move / (float)width) * 2.0f;
 			OpenNijiiroRW.Tx.Config_Cursor.t2D拡大率考慮中央基準描画(x, y,
 				new Rectangle(width, 0, width, height));
 
-			OpenNijiiroRW.Tx.Config_Cursor.vcScaleRatio.X = 1.0f;
+			OpenNijiiroRW.Tx.Config_Cursor.Scale.X = 1.0f;
 		}
 		//---------------------
 		#endregion

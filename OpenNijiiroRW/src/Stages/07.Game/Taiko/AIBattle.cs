@@ -128,8 +128,8 @@ class AIBattle : CStage {
 			float size_y = OpenNijiiroRW.Skin.Game_AIBattle_Batch_Anime_Size[1] +
 						   ((OpenNijiiroRW.Skin.Game_AIBattle_Batch_Size[1] - OpenNijiiroRW.Skin.Game_AIBattle_Batch_Anime_Size[1]) * value);
 
-			OpenNijiiroRW.Tx.AIBattle_Batch.vcScaleRatio.X = (size_x / (float)width) + inScale;
-			OpenNijiiroRW.Tx.AIBattle_Batch.vcScaleRatio.Y = (size_y / (float)height) + inScale;
+			OpenNijiiroRW.Tx.AIBattle_Batch.Scale.X = (size_x / (float)width) + inScale;
+			OpenNijiiroRW.Tx.AIBattle_Batch.Scale.Y = (size_y / (float)height) + inScale;
 
 			switch (section.End) {
 				case CStage演奏画面共通.AIBattleSection.EndType.Clear:

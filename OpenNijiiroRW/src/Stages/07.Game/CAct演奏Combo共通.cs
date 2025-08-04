@@ -455,8 +455,8 @@ internal class CAct演奏Combo共通 : CActivity {
 			if (n桁数 <= 1) {
 				if (OpenNijiiroRW.Tx.Taiko_Combo[0] != null) {
 					var yScalling = OpenNijiiroRW.ConfigIni.SimpleMode ? 0 : ComboScale[this.ctComboAddCounter[nPlayer].CurrentValue];
-					OpenNijiiroRW.Tx.Taiko_Combo[0].vcScaleRatio.Y = OpenNijiiroRW.Skin.Game_Taiko_Combo_Scale[0] + yScalling;
-					OpenNijiiroRW.Tx.Taiko_Combo[0].vcScaleRatio.X = OpenNijiiroRW.Skin.Game_Taiko_Combo_Scale[0];
+					OpenNijiiroRW.Tx.Taiko_Combo[0].Scale.Y = OpenNijiiroRW.Skin.Game_Taiko_Combo_Scale[0] + yScalling;
+					OpenNijiiroRW.Tx.Taiko_Combo[0].Scale.X = OpenNijiiroRW.Skin.Game_Taiko_Combo_Scale[0];
 					OpenNijiiroRW.Tx.Taiko_Combo[0].t2D拡大率考慮下中心基準描画(rightX, combo_y, new Rectangle(n位の数[i] * OpenNijiiroRW.Skin.Game_Taiko_Combo_Size[0], 0, OpenNijiiroRW.Skin.Game_Taiko_Combo_Size[0], OpenNijiiroRW.Skin.Game_Taiko_Combo_Size[1]));
 				}
 			} else if (n桁数 <= 2) {
@@ -464,15 +464,15 @@ internal class CAct演奏Combo共通 : CActivity {
 				if (nCombo値 < 50) {
 					if (OpenNijiiroRW.Tx.Taiko_Combo[0] != null) {
 						var yScalling = OpenNijiiroRW.ConfigIni.SimpleMode ? 0 : ComboScale[this.ctComboAddCounter[nPlayer].CurrentValue];
-						OpenNijiiroRW.Tx.Taiko_Combo[0].vcScaleRatio.Y = OpenNijiiroRW.Skin.Game_Taiko_Combo_Scale[0] + yScalling;
-						OpenNijiiroRW.Tx.Taiko_Combo[0].vcScaleRatio.X = OpenNijiiroRW.Skin.Game_Taiko_Combo_Scale[0];
+						OpenNijiiroRW.Tx.Taiko_Combo[0].Scale.Y = OpenNijiiroRW.Skin.Game_Taiko_Combo_Scale[0] + yScalling;
+						OpenNijiiroRW.Tx.Taiko_Combo[0].Scale.X = OpenNijiiroRW.Skin.Game_Taiko_Combo_Scale[0];
 						OpenNijiiroRW.Tx.Taiko_Combo[0].t2D拡大率考慮下中心基準描画(rightX - OpenNijiiroRW.Skin.Game_Taiko_Combo_Padding[0] * i, combo_y, new Rectangle(n位の数[i] * OpenNijiiroRW.Skin.Game_Taiko_Combo_Size[0], 0, OpenNijiiroRW.Skin.Game_Taiko_Combo_Size[0], OpenNijiiroRW.Skin.Game_Taiko_Combo_Size[1]));
 					}
 				} else {
 					if (OpenNijiiroRW.Tx.Taiko_Combo[2] != null) {
 						var yScalling = OpenNijiiroRW.ConfigIni.SimpleMode ? 0 : ComboScale[this.ctComboAddCounter[nPlayer].CurrentValue];
-						OpenNijiiroRW.Tx.Taiko_Combo[2].vcScaleRatio.Y = OpenNijiiroRW.Skin.Game_Taiko_Combo_Scale[0] + yScalling;
-						OpenNijiiroRW.Tx.Taiko_Combo[2].vcScaleRatio.X = OpenNijiiroRW.Skin.Game_Taiko_Combo_Scale[0];
+						OpenNijiiroRW.Tx.Taiko_Combo[2].Scale.Y = OpenNijiiroRW.Skin.Game_Taiko_Combo_Scale[0] + yScalling;
+						OpenNijiiroRW.Tx.Taiko_Combo[2].Scale.X = OpenNijiiroRW.Skin.Game_Taiko_Combo_Scale[0];
 						OpenNijiiroRW.Tx.Taiko_Combo[2].t2D拡大率考慮下中心基準描画(rightX - OpenNijiiroRW.Skin.Game_Taiko_Combo_Padding[0] * i, combo_y, new Rectangle(n位の数[i] * OpenNijiiroRW.Skin.Game_Taiko_Combo_Size[0], 0, OpenNijiiroRW.Skin.Game_Taiko_Combo_Size[0], OpenNijiiroRW.Skin.Game_Taiko_Combo_Size[1]));
 					}
 
@@ -481,14 +481,14 @@ internal class CAct演奏Combo共通 : CActivity {
 			} else if (n桁数 == 3) {
 				if (nCombo値 >= 300 && OpenNijiiroRW.Tx.Taiko_Combo[3] != null) {
 					var yScalling = OpenNijiiroRW.ConfigIni.SimpleMode ? 0 : ComboScale_Ex[this.ctComboAddCounter[nPlayer].CurrentValue, 0];
-					OpenNijiiroRW.Tx.Taiko_Combo[3].vcScaleRatio.Y = OpenNijiiroRW.Skin.Game_Taiko_Combo_Scale[1] + yScalling;
-					OpenNijiiroRW.Tx.Taiko_Combo[3].vcScaleRatio.X = OpenNijiiroRW.Skin.Game_Taiko_Combo_Scale[1];
+					OpenNijiiroRW.Tx.Taiko_Combo[3].Scale.Y = OpenNijiiroRW.Skin.Game_Taiko_Combo_Scale[1] + yScalling;
+					OpenNijiiroRW.Tx.Taiko_Combo[3].Scale.X = OpenNijiiroRW.Skin.Game_Taiko_Combo_Scale[1];
 					var yJumping = OpenNijiiroRW.Skin.Game_Taiko_Combo_Ex_IsJumping ? (int)ComboScale_Ex[this.ctComboAddCounter[nPlayer].CurrentValue, 1] : 0;
 					OpenNijiiroRW.Tx.Taiko_Combo[3].t2D拡大率考慮下中心基準描画(rightX - OpenNijiiroRW.Skin.Game_Taiko_Combo_Padding[1] * i, combo_ex_y + yJumping, new Rectangle(n位の数[i] * OpenNijiiroRW.Skin.Game_Taiko_Combo_Size_Ex[0], 0, OpenNijiiroRW.Skin.Game_Taiko_Combo_Size_Ex[0], OpenNijiiroRW.Skin.Game_Taiko_Combo_Size_Ex[1]));
 				} else if (OpenNijiiroRW.Tx.Taiko_Combo[1] != null) {
 					var yScalling = OpenNijiiroRW.ConfigIni.SimpleMode ? 0 : ComboScale_Ex[this.ctComboAddCounter[nPlayer].CurrentValue, 0];
-					OpenNijiiroRW.Tx.Taiko_Combo[1].vcScaleRatio.Y = OpenNijiiroRW.Skin.Game_Taiko_Combo_Scale[1] + yScalling;
-					OpenNijiiroRW.Tx.Taiko_Combo[1].vcScaleRatio.X = OpenNijiiroRW.Skin.Game_Taiko_Combo_Scale[1];
+					OpenNijiiroRW.Tx.Taiko_Combo[1].Scale.Y = OpenNijiiroRW.Skin.Game_Taiko_Combo_Scale[1] + yScalling;
+					OpenNijiiroRW.Tx.Taiko_Combo[1].Scale.X = OpenNijiiroRW.Skin.Game_Taiko_Combo_Scale[1];
 					var yJumping = OpenNijiiroRW.Skin.Game_Taiko_Combo_Ex_IsJumping ? (int)ComboScale_Ex[this.ctComboAddCounter[nPlayer].CurrentValue, 1] : 0;
 					OpenNijiiroRW.Tx.Taiko_Combo[1].t2D拡大率考慮下中心基準描画(rightX - OpenNijiiroRW.Skin.Game_Taiko_Combo_Padding[1] * i, combo_ex_y + yJumping, new Rectangle(n位の数[i] * OpenNijiiroRW.Skin.Game_Taiko_Combo_Size_Ex[0], 0, OpenNijiiroRW.Skin.Game_Taiko_Combo_Size_Ex[0], OpenNijiiroRW.Skin.Game_Taiko_Combo_Size_Ex[1]));
 				}
@@ -497,14 +497,14 @@ internal class CAct演奏Combo共通 : CActivity {
 			} else {
 				if (nCombo値 >= 300 && OpenNijiiroRW.Tx.Taiko_Combo[3] != null) {
 					var yScalling = OpenNijiiroRW.ConfigIni.SimpleMode ? 0 : ComboScale_Ex[this.ctComboAddCounter[nPlayer].CurrentValue, 0];
-					OpenNijiiroRW.Tx.Taiko_Combo[3].vcScaleRatio.Y = 1.0f + yScalling;
-					OpenNijiiroRW.Tx.Taiko_Combo[3].vcScaleRatio.X = OpenNijiiroRW.Skin.Game_Taiko_Combo_Scale[2];
+					OpenNijiiroRW.Tx.Taiko_Combo[3].Scale.Y = 1.0f + yScalling;
+					OpenNijiiroRW.Tx.Taiko_Combo[3].Scale.X = OpenNijiiroRW.Skin.Game_Taiko_Combo_Scale[2];
 					var yJumping = OpenNijiiroRW.Skin.Game_Taiko_Combo_Ex_IsJumping ? (int)ComboScale_Ex[this.ctComboAddCounter[nPlayer].CurrentValue, 1] : 0;
 					OpenNijiiroRW.Tx.Taiko_Combo[3].t2D拡大率考慮下中心基準描画(rightX - OpenNijiiroRW.Skin.Game_Taiko_Combo_Padding[2] * i, combo_ex_y + yJumping, new Rectangle(n位の数[i] * OpenNijiiroRW.Skin.Game_Taiko_Combo_Size_Ex[0], 0, OpenNijiiroRW.Skin.Game_Taiko_Combo_Size_Ex[0], OpenNijiiroRW.Skin.Game_Taiko_Combo_Size_Ex[1]));
 				} else if (OpenNijiiroRW.Tx.Taiko_Combo[1] != null) {
 					var yScalling = OpenNijiiroRW.ConfigIni.SimpleMode ? 0 : ComboScale_Ex[this.ctComboAddCounter[nPlayer].CurrentValue, 0];
-					OpenNijiiroRW.Tx.Taiko_Combo[1].vcScaleRatio.Y = 1.0f + yScalling;
-					OpenNijiiroRW.Tx.Taiko_Combo[1].vcScaleRatio.X = OpenNijiiroRW.Skin.Game_Taiko_Combo_Scale[2];
+					OpenNijiiroRW.Tx.Taiko_Combo[1].Scale.Y = 1.0f + yScalling;
+					OpenNijiiroRW.Tx.Taiko_Combo[1].Scale.X = OpenNijiiroRW.Skin.Game_Taiko_Combo_Scale[2];
 					var yJumping = OpenNijiiroRW.Skin.Game_Taiko_Combo_Ex_IsJumping ? (int)ComboScale_Ex[this.ctComboAddCounter[nPlayer].CurrentValue, 1] : 0;
 					OpenNijiiroRW.Tx.Taiko_Combo[1].t2D拡大率考慮下中心基準描画(rightX - OpenNijiiroRW.Skin.Game_Taiko_Combo_Padding[2] * i, combo_ex_y + yJumping, new Rectangle(n位の数[i] * OpenNijiiroRW.Skin.Game_Taiko_Combo_Size_Ex[0], 0, OpenNijiiroRW.Skin.Game_Taiko_Combo_Size_Ex[0], OpenNijiiroRW.Skin.Game_Taiko_Combo_Size_Ex[1]));
 				}

@@ -363,8 +363,8 @@ class NotesManager {
 				_texarr.color4 = normalColor;
 
 			// Body
-			_texarr.vcScaleRatio.X = (float)div;
-			_texarr.fZ軸中心回転 = (float)theta;
+			_texarr.Scale.X = (float)div;
+			_texarr.Rotation = (float)theta;
 
 			var _center_x = (x + x末端) / 2 + xHitNoteOffset;
 			var _center_y = (y + y末端) / 2 + yHitNoteOffset;
@@ -375,7 +375,7 @@ class NotesManager {
 				OpenNijiiroRW.Skin.Game_Notes_Size[1]));
 
 			// Tail
-			_texarr.vcScaleRatio.X = 1.0f;
+			_texarr.Scale.X = 1.0f;
 			var _xc = x末端 + xHitNoteOffset;
 			var _yc = y末端 + yHitNoteOffset;
 			// notice that the texture for bar tail is centered at the mid-left of the image rect
@@ -388,7 +388,7 @@ class NotesManager {
 				OpenNijiiroRW.Skin.Game_Notes_Size[0],
 				OpenNijiiroRW.Skin.Game_Notes_Size[1]));
 
-			_texarr.fZ軸中心回転 = 0;
+			_texarr.Rotation = 0;
 		}
 
 		if (OpenNijiiroRW.Skin.Game_RollColorMode == CSkin.RollColorMode.All)

@@ -91,8 +91,8 @@ class CActSelect段位リスト : CStage {
 		#region [ バー表示 ]
 
 		if (stバー情報.Length != 0 && ctDaniIn.CurrentValue == 6000) {
-			OpenNijiiroRW.Tx.DanC_ExamType.vcScaleRatio.X = 0.81f;
-			OpenNijiiroRW.Tx.DanC_ExamType.vcScaleRatio.Y = 0.81f;
+			OpenNijiiroRW.Tx.DanC_ExamType.Scale.X = 0.81f;
+			OpenNijiiroRW.Tx.DanC_ExamType.Scale.Y = 0.81f;
 
 			float Anime = ctDanAnimeIn.CurrentValue == 90 ? bLeftMove ? (float)Math.Sin(ctDaniMoveAnime.CurrentValue * (Math.PI / 180)) * OpenNijiiroRW.Skin.Resolution[0] : -((float)Math.Sin(ctDaniMoveAnime.CurrentValue * (Math.PI / 180)) * OpenNijiiroRW.Skin.Resolution[0]) : OpenNijiiroRW.Skin.Resolution[0] - (float)Math.Sin(ctDanAnimeIn.CurrentValue * (Math.PI / 180)) * OpenNijiiroRW.Skin.Resolution[0];
 
@@ -209,8 +209,8 @@ class CActSelect段位リスト : CStage {
 			int currentRank = Math.Min(stバー情報[currentSong].clearGrade, 8) - 3;
 
 			if (currentRank >= 0) {
-				OpenNijiiroRW.Tx.DanResult_Rank.vcScaleRatio.X = 0.20f;
-				OpenNijiiroRW.Tx.DanResult_Rank.vcScaleRatio.Y = 0.20f;
+				OpenNijiiroRW.Tx.DanResult_Rank.Scale.X = 0.20f;
+				OpenNijiiroRW.Tx.DanResult_Rank.Scale.Y = 0.20f;
 				int rank_width = OpenNijiiroRW.Tx.DanResult_Rank.szTextureSize.Width / 7;
 				int rank_height = OpenNijiiroRW.Tx.DanResult_Rank.szTextureSize.Height;
 				OpenNijiiroRW.Tx.DanResult_Rank.t2D拡大率考慮上中央基準描画(xPos - 2, yPos - 14, new Rectangle(rank_width * (currentRank + 1), 0, rank_width, rank_height));
@@ -360,20 +360,20 @@ class CActSelect段位リスト : CStage {
 		TitleTextureKey ttkTmp = new TitleTextureKey(count.ToString() + ex, pfDanIconTitle, Color.White, Color.Black, 1000);
 
 		if (showFade) {
-			OpenNijiiroRW.Tx.Dani_DanIcon_Fade.vcScaleRatio = new Vector3D<float>(scale, scale, 1.0f);
+			OpenNijiiroRW.Tx.Dani_DanIcon_Fade.Scale = new Vector3D<float>(scale, scale, 1.0f);
 			OpenNijiiroRW.Tx.Dani_DanIcon_Fade.Opacity = opacity;
 			OpenNijiiroRW.Tx.Dani_DanIcon_Fade.color4 = CConversion.ColorToColor4(OpenNijiiroRW.Skin.DaniSelect_DanIcon_Color[Math.Min(count - 1, OpenNijiiroRW.Skin.DaniSelect_DanIcon_Color.Length - 1)]);
 			OpenNijiiroRW.Tx.Dani_DanIcon_Fade.t2D拡大率考慮描画(CTexture.RefPnt.Left, x - ((OpenNijiiroRW.Tx.Dani_DanIcon.szTextureSize.Width / 2) * scale), y);
 			OpenNijiiroRW.Tx.Dani_DanIcon_Fade.Opacity = 255;
 		}
 
-		OpenNijiiroRW.Tx.Dani_DanIcon.vcScaleRatio = new Vector3D<float>(scale, scale, 1.0f);
+		OpenNijiiroRW.Tx.Dani_DanIcon.Scale = new Vector3D<float>(scale, scale, 1.0f);
 		OpenNijiiroRW.Tx.Dani_DanIcon.Opacity = opacity;
 		OpenNijiiroRW.Tx.Dani_DanIcon.color4 = CConversion.ColorToColor4(OpenNijiiroRW.Skin.DaniSelect_DanIcon_Color[Math.Min(count - 1, OpenNijiiroRW.Skin.DaniSelect_DanIcon_Color.Length - 1)]);
 		OpenNijiiroRW.Tx.Dani_DanIcon.t2D拡大率考慮中央基準描画(x, y);
 		OpenNijiiroRW.Tx.Dani_DanIcon.Opacity = 255;
 
-		TitleTextureKey.ResolveTitleTexture(ttkTmp).vcScaleRatio = new Vector3D<float>(scale, scale, 1.0f);
+		TitleTextureKey.ResolveTitleTexture(ttkTmp).Scale = new Vector3D<float>(scale, scale, 1.0f);
 		TitleTextureKey.ResolveTitleTexture(ttkTmp).Opacity = opacity;
 		TitleTextureKey.ResolveTitleTexture(ttkTmp).t2D拡大率考慮中央基準描画(x + OpenNijiiroRW.Skin.DaniSelect_DanIconTitle_Offset[0], y + OpenNijiiroRW.Skin.DaniSelect_DanIconTitle_Offset[1]);
 		TitleTextureKey.ResolveTitleTexture(ttkTmp).Opacity = 255;
@@ -425,8 +425,8 @@ class CActSelect段位リスト : CStage {
 					int currentRank = Math.Min(stバー情報[currentSong].clearGrade, 8) - 3;
 
 					if (currentRank >= 0) {
-						OpenNijiiroRW.Tx.DanResult_Rank.vcScaleRatio.X = 0.8f;
-						OpenNijiiroRW.Tx.DanResult_Rank.vcScaleRatio.Y = 0.8f;
+						OpenNijiiroRW.Tx.DanResult_Rank.Scale.X = 0.8f;
+						OpenNijiiroRW.Tx.DanResult_Rank.Scale.Y = 0.8f;
 
 						int rank_width = OpenNijiiroRW.Tx.DanResult_Rank.szTextureSize.Width / 7;
 						int rank_height = OpenNijiiroRW.Tx.DanResult_Rank.szTextureSize.Height;
@@ -815,12 +815,12 @@ class CActSelect段位リスト : CStage {
 			float _x = x - (((OpenNijiiroRW.Skin.DaniSelect_Level_Number_Interval[0] * offset) + (width / 2)) * scale);
 			float _y = y - (((OpenNijiiroRW.Skin.DaniSelect_Level_Number_Interval[1] * offset) - (width / 2)) * scale);
 
-			OpenNijiiroRW.Tx.Dani_Level_Number.vcScaleRatio.X = scale;
-			OpenNijiiroRW.Tx.Dani_Level_Number.vcScaleRatio.Y = scale;
+			OpenNijiiroRW.Tx.Dani_Level_Number.Scale.X = scale;
+			OpenNijiiroRW.Tx.Dani_Level_Number.Scale.Y = scale;
 			OpenNijiiroRW.Tx.Dani_Level_Number.t2D描画(_x, _y,
 				new RectangleF(width * nums[j], 0, width, height));
-			OpenNijiiroRW.Tx.Dani_Level_Number.vcScaleRatio.X = 1;
-			OpenNijiiroRW.Tx.Dani_Level_Number.vcScaleRatio.Y = 1;
+			OpenNijiiroRW.Tx.Dani_Level_Number.Scale.X = 1;
+			OpenNijiiroRW.Tx.Dani_Level_Number.Scale.Y = 1;
 		}
 	}
 
@@ -887,8 +887,8 @@ class CActSelect段位リスト : CStage {
 
 		float text_width = OpenNijiiroRW.Skin.DaniSelect_Exam_Number_Text_Width;
 
-		OpenNijiiroRW.Tx.Dani_Exam_Number.vcScaleRatio.X = scale;
-		OpenNijiiroRW.Tx.Dani_Exam_Number.vcScaleRatio.Y = scale;
+		OpenNijiiroRW.Tx.Dani_Exam_Number.Scale.X = scale;
+		OpenNijiiroRW.Tx.Dani_Exam_Number.Scale.Y = scale;
 
 		OpenNijiiroRW.Tx.Dani_Exam_Number.t2D描画(
 			x + ((OpenNijiiroRW.Skin.DaniSelect_Exam_Number_Interval[0] + (width / 2)) * scale),

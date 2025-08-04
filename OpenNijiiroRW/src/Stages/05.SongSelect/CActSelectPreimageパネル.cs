@@ -79,8 +79,8 @@ internal class CActSelectPreimageパネル : CActivity {
 			float bestRatio = Math.Min(xRatio, yRatio);
 
 			this.rCurrentlyDisplayedPreimage.Opacity = 255;
-			this.rCurrentlyDisplayedPreimage.vcScaleRatio.X = bestRatio;
-			this.rCurrentlyDisplayedPreimage.vcScaleRatio.Y = bestRatio;
+			this.rCurrentlyDisplayedPreimage.Scale.X = bestRatio;
+			this.rCurrentlyDisplayedPreimage.Scale.Y = bestRatio;
 
 		}
 		return rCurrentlyDisplayedPreimage;
@@ -152,8 +152,8 @@ internal class CActSelectPreimageパネル : CActivity {
 				float bestRatio = Math.Min(xRatio, yRatio);
 
 				this.rCurrentlyDisplayedPreimage.Opacity = (int)(255f * num3);
-				this.rCurrentlyDisplayedPreimage.vcScaleRatio.X = num4 * bestRatio;
-				this.rCurrentlyDisplayedPreimage.vcScaleRatio.Y = num4 * bestRatio;
+				this.rCurrentlyDisplayedPreimage.Scale.X = num4 * bestRatio;
+				this.rCurrentlyDisplayedPreimage.Scale.Y = num4 * bestRatio;
 
 				var HiddenIndex = OpenNijiiroRW.Databases.DBSongUnlockables.tGetSongHiddenIndex(OpenNijiiroRW.stageSongSelect.actSongList.rCurrentlySelectedSong);
 

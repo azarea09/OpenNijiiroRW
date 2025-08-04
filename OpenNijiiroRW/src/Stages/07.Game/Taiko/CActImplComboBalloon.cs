@@ -105,7 +105,7 @@ internal class CActImplComboBalloon : CActivity {
 								new Rectangle(OpenNijiiroRW.Skin.Game_Balloon_Combo_Text_Rect[0], OpenNijiiroRW.Skin.Game_Balloon_Combo_Text_Rect[1], OpenNijiiroRW.Skin.Game_Balloon_Combo_Text_Rect[2], OpenNijiiroRW.Skin.Game_Balloon_Combo_Text_Rect[3]));
 						} else {
 							this.t小文字表示(OpenNijiiroRW.Skin.Game_Balloon_Combo_Number_Ex_X[i], OpenNijiiroRW.Skin.Game_Balloon_Combo_Number_Ex_Y[i], this.nCombo_渡[i], j);
-							OpenNijiiroRW.Tx.Balloon_Number_Combo.vcScaleRatio.X = 1.0f;
+							OpenNijiiroRW.Tx.Balloon_Number_Combo.Scale.X = 1.0f;
 							OpenNijiiroRW.Tx.Balloon_Number_Combo.t2D描画(OpenNijiiroRW.Skin.Game_Balloon_Combo_Text_Ex_X[i] + 6 - NowDrawBalloon * 3, OpenNijiiroRW.Skin.Game_Balloon_Combo_Text_Ex_Y[i],
 								new Rectangle(OpenNijiiroRW.Skin.Game_Balloon_Combo_Text_Rect[0], OpenNijiiroRW.Skin.Game_Balloon_Combo_Text_Rect[1], OpenNijiiroRW.Skin.Game_Balloon_Combo_Text_Rect[2], OpenNijiiroRW.Skin.Game_Balloon_Combo_Text_Rect[3]));
 						}

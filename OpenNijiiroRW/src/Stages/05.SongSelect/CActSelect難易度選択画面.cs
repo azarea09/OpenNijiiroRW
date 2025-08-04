@@ -294,8 +294,8 @@ internal class CActSelect難易度選択画面 : CActivity {
 		OpenNijiiroRW.Tx.Difficulty_Bar.Opacity = (OpenNijiiroRW.stageSongSelect.actSongList.ctDifficultyIn.CurrentValue - 1255);
 		OpenNijiiroRW.Tx.Difficulty_Number.Opacity = (OpenNijiiroRW.stageSongSelect.actSongList.ctDifficultyIn.CurrentValue - 1255);
 		OpenNijiiroRW.Tx.Difficulty_Crown.Opacity = (OpenNijiiroRW.stageSongSelect.actSongList.ctDifficultyIn.CurrentValue - 1255);
-		OpenNijiiroRW.Tx.SongSelect_ScoreRank.vcScaleRatio.X = 0.65f;
-		OpenNijiiroRW.Tx.SongSelect_ScoreRank.vcScaleRatio.Y = 0.65f;
+		OpenNijiiroRW.Tx.SongSelect_ScoreRank.Scale.X = 0.65f;
+		OpenNijiiroRW.Tx.SongSelect_ScoreRank.Scale.Y = 0.65f;
 		OpenNijiiroRW.Tx.SongSelect_ScoreRank.Opacity = (OpenNijiiroRW.stageSongSelect.actSongList.ctDifficultyIn.CurrentValue - 1255);
 		OpenNijiiroRW.Tx.Difficulty_Star.Opacity = (OpenNijiiroRW.stageSongSelect.actSongList.ctDifficultyIn.CurrentValue - 1255);
 

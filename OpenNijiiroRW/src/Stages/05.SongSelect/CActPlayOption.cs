@@ -109,7 +109,7 @@ internal class CActPlayOption : CActivity {
 		}
 
 		for (int i = 0; i < OptionType.Length; i++)
-			OptionType[i].vcScaleRatio.X = 0.96f;
+			OptionType[i].Scale.X = 0.96f;
 
 		base.Activate();
 	}

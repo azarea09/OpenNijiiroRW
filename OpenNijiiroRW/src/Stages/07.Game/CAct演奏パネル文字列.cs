@@ -62,7 +62,7 @@ internal class CAct演奏パネル文字列 : CActivity {
 						this.txMusicName = OpenNijiiroRW.tテクスチャの生成(bmpSongTitle, false);
 					}
 					if (txMusicName != null) {
-						this.txMusicName.vcScaleRatio.X = OpenNijiiroRW.GetSongNameXScaling(ref txMusicName);
+						this.txMusicName.Scale.X = OpenNijiiroRW.GetSongNameXScaling(ref txMusicName);
 					}
 
 					SKBitmap bmpDiff;
@@ -207,7 +207,7 @@ internal class CAct演奏パネル文字列 : CActivity {
 					if (this.txMusicName.szTextureSize.Width <= OpenNijiiroRW.Skin.Game_MusicName_MaxWidth)
 						fRate = 1.0f;
 
-					this.txMusicName.vcScaleRatio.X = fRate;
+					this.txMusicName.Scale.X = fRate;
 
 					this.txMusicName.t2D描画(OpenNijiiroRW.Skin.Game_MusicName_X - (this.txMusicName.szTextureSize.Width * fRate), OpenNijiiroRW.Skin.Game_MusicName_Y);
 				}
@@ -238,7 +238,7 @@ internal class CAct演奏パネル文字列 : CActivity {
 						if (this.txMusicName.szTextureSize.Width <= OpenNijiiroRW.Skin.Game_MusicName_MaxWidth)
 							fRate = 1.0f;
 
-						this.txMusicName.vcScaleRatio.X = fRate;
+						this.txMusicName.Scale.X = fRate;
 
 						this.txMusicName.t2D描画(OpenNijiiroRW.Skin.Game_MusicName_X - (this.txMusicName.szTextureSize.Width * fRate), OpenNijiiroRW.Skin.Game_MusicName_Y);
 					}

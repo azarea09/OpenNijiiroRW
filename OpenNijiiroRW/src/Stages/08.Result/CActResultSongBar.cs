@@ -25,7 +25,7 @@ internal class CActResultSongBar : CActivity {
 
 		using (var bmpSongTitle = pfMusicName.DrawText(title, OpenNijiiroRW.Skin.Result_MusicName_ForeColor, OpenNijiiroRW.Skin.Result_MusicName_BackColor, null, 30)) {
 			this.txMusicName = OpenNijiiroRW.tテクスチャの生成(bmpSongTitle, false);
-			txMusicName.vcScaleRatio.X = OpenNijiiroRW.GetSongNameXScaling(ref txMusicName, OpenNijiiroRW.Skin.Result_MusicName_MaxSize);
+			txMusicName.Scale.X = OpenNijiiroRW.GetSongNameXScaling(ref txMusicName, OpenNijiiroRW.Skin.Result_MusicName_MaxSize);
 		}
 
 		base.Activate();
@@ -57,11 +57,11 @@ internal class CActResultSongBar : CActivity {
 		this.ct登場用.Tick();
 
 		if (OpenNijiiroRW.Skin.Result_MusicName_ReferencePoint == CSkin.ReferencePoint.Center) {
-			this.txMusicName.t2D描画(OpenNijiiroRW.Skin.Result_MusicName_X - ((this.txMusicName.szTextureSize.Width * txMusicName.vcScaleRatio.X) / 2), OpenNijiiroRW.Skin.Result_MusicName_Y);
+			this.txMusicName.t2D描画(OpenNijiiroRW.Skin.Result_MusicName_X - ((this.txMusicName.szTextureSize.Width * txMusicName.Scale.X) / 2), OpenNijiiroRW.Skin.Result_MusicName_Y);
 		} else if (OpenNijiiroRW.Skin.Result_MusicName_ReferencePoint == CSkin.ReferencePoint.Left) {
 			this.txMusicName.t2D描画(OpenNijiiroRW.Skin.Result_MusicName_X, OpenNijiiroRW.Skin.Result_MusicName_Y);
 		} else {
-			this.txMusicName.t2D描画(OpenNijiiroRW.Skin.Result_MusicName_X - this.txMusicName.szTextureSize.Width * txMusicName.vcScaleRatio.X, OpenNijiiroRW.Skin.Result_MusicName_Y);
+			this.txMusicName.t2D描画(OpenNijiiroRW.Skin.Result_MusicName_X - this.txMusicName.szTextureSize.Width * txMusicName.Scale.X, OpenNijiiroRW.Skin.Result_MusicName_Y);
 		}
 
 		if (!this.ct登場用.IsEnded) {

@@ -78,12 +78,12 @@ class CActSelectDanInfo : CStage {
 				int difficulty_cymbol_height = OpenNijiiroRW.Tx.Dani_Difficulty_Cymbol.szTextureSize.Height;
 
 				OpenNijiiroRW.Tx.Dani_Difficulty_Cymbol.Opacity = opacity;
-				OpenNijiiroRW.Tx.Dani_Difficulty_Cymbol.vcScaleRatio.X = OpenNijiiroRW.Skin.SongSelect_DanInfo_Difficulty_Cymbol_Scale;
-				OpenNijiiroRW.Tx.Dani_Difficulty_Cymbol.vcScaleRatio.Y = OpenNijiiroRW.Skin.SongSelect_DanInfo_Difficulty_Cymbol_Scale;
+				OpenNijiiroRW.Tx.Dani_Difficulty_Cymbol.Scale.X = OpenNijiiroRW.Skin.SongSelect_DanInfo_Difficulty_Cymbol_Scale;
+				OpenNijiiroRW.Tx.Dani_Difficulty_Cymbol.Scale.Y = OpenNijiiroRW.Skin.SongSelect_DanInfo_Difficulty_Cymbol_Scale;
 				OpenNijiiroRW.Tx.Dani_Difficulty_Cymbol.t2D拡大率考慮中央基準描画(OpenNijiiroRW.Skin.SongSelect_DanInfo_Difficulty_Cymbol_X[pos], OpenNijiiroRW.Skin.SongSelect_DanInfo_Difficulty_Cymbol_Y[pos], new Rectangle(dan.Difficulty * difficulty_cymbol_width, 0, difficulty_cymbol_width, difficulty_cymbol_height));
 				OpenNijiiroRW.Tx.Dani_Difficulty_Cymbol.Opacity = 255;
-				OpenNijiiroRW.Tx.Dani_Difficulty_Cymbol.vcScaleRatio.X = 1;
-				OpenNijiiroRW.Tx.Dani_Difficulty_Cymbol.vcScaleRatio.Y = 1;
+				OpenNijiiroRW.Tx.Dani_Difficulty_Cymbol.Scale.X = 1;
+				OpenNijiiroRW.Tx.Dani_Difficulty_Cymbol.Scale.Y = 1;
 
 				OpenNijiiroRW.Tx.Dani_Level_Number.Opacity = opacity;
 				OpenNijiiroRW.stageDanSongSelect.段位リスト.tLevelNumberDraw(OpenNijiiroRW.Skin.SongSelect_DanInfo_Level_Number_X[pos], OpenNijiiroRW.Skin.SongSelect_DanInfo_Level_Number_Y[pos], dan.Level, OpenNijiiroRW.Skin.SongSelect_DanInfo_Level_Number_Scale);

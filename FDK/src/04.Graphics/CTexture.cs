@@ -59,8 +59,6 @@ public class CTexture : IDisposable {
 	/// </summary>
 	private static int TextureRectID;
 
-	private static int CameraID;
-
 	/// <summary>
 	/// 描画に使用する共通のバッファを作成
 	/// </summary>
@@ -75,12 +73,13 @@ public class CTexture : IDisposable {
 
                 uniform mat4 mvp;
                 uniform vec4 color;
-                uniform mat4 camera;
 
                 varying vec2 texcoord;
 
                 void main()
                 {
+					mat4 camera = mat4(1.0);
+
                     vec4 position = vec4(aPosition, 1.0);
                     position = camera * mvp * position;
 
@@ -116,7 +115,6 @@ public class CTexture : IDisposable {
 		ColorID = Game.Gl.GetUniformLocation(ShaderProgram, "color"); //色合い
 		ScaleID = Game.Gl.GetUniformLocation(ShaderProgram, "scale"); //スケール
 		TextureRectID = Game.Gl.GetUniformLocation(ShaderProgram, "textureRect"); //テクスチャの切り抜きの座標と大きさ
-		CameraID = Game.Gl.GetUniformLocation(ShaderProgram, "camera"); //テクスチャの切り抜きの座標と大きさ
 
 		//------
 
@@ -243,13 +241,13 @@ public class CTexture : IDisposable {
 		get;
 		set;
 	}
-	public float fZ軸中心回転 {
+	public float Rotation {
 		get;
 		set;
 	}
 	public float fZRotation {
-		get => fZ軸中心回転;
-		set { fZ軸中心回転 = value; }
+		get => Rotation;
+		set { Rotation = value; }
 	}
 	public int Opacity {
 		get {
@@ -273,7 +271,7 @@ public class CTexture : IDisposable {
 		get;
 		protected set;
 	}
-	public Vector3D<float> vcScaleRatio;
+	public Vector3D<float> Scale;
 
 	// 画面が変わるたび以下のプロパティを設定し治すこと。
 
@@ -295,8 +293,8 @@ public class CTexture : IDisposable {
 		this.szTextureSize = new Size(0, 0);
 		this._opacity = 0xff;
 		this.b加算合成 = false;
-		this.fZ軸中心回転 = 0f;
-		this.vcScaleRatio = new Vector3D<float>(1f, 1f, 1f);
+		this.Rotation = 0f;
+		this.Scale = new Vector3D<float>(1f, 1f, 1f);
 		//			this._txData = null;
 	}
 
@@ -305,8 +303,8 @@ public class CTexture : IDisposable {
 		this.szTextureSize = tx.szTextureSize;
 		this._opacity = tx._opacity;
 		this.b加算合成 = tx.b加算合成;
-		this.fZ軸中心回転 = tx.fZ軸中心回転;
-		this.vcScaleRatio = tx.vcScaleRatio;
+		this.Rotation = tx.Rotation;
+		this.Scale = tx.Scale;
 		Pointer = tx.Pointer;
 		//			this._txData = null;
 	}
@@ -463,8 +461,8 @@ public class CTexture : IDisposable {
 	}
 
 	public void tSetScale(float x, float y) {
-		vcScaleRatio.X = x;
-		vcScaleRatio.Y = y;
+		Scale.X = x;
+		Scale.Y = y;
 	}
 
 	// メソッド
@@ -498,34 +496,34 @@ public class CTexture : IDisposable {
 
 	// 下を基準にして描画する(拡大率考慮)メソッドを追加。 (AioiLight)
 	public void t2D拡大率考慮下基準描画(int x, int y) {
-		this.t2D描画(x, y - (szTextureSize.Height * this.vcScaleRatio.Y), 1f, this.rc全画像);
+		this.t2D描画(x, y - (szTextureSize.Height * this.Scale.Y), 1f, this.rc全画像);
 	}
 	public void t2D拡大率考慮下基準描画(int x, int y, Rectangle rc画像内の描画領域) {
-		this.t2D描画(x, y - (rc画像内の描画領域.Height * this.vcScaleRatio.Y), 1f, rc画像内の描画領域);
+		this.t2D描画(x, y - (rc画像内の描画領域.Height * this.Scale.Y), 1f, rc画像内の描画領域);
 	}
 	public void t2D拡大率考慮下中心基準描画(int x, int y) {
-		this.t2D描画(x - (this.szTextureSize.Width / 2 * this.vcScaleRatio.X), y - (szTextureSize.Height * this.vcScaleRatio.Y), 1f, this.rc全画像);
+		this.t2D描画(x - (this.szTextureSize.Width / 2 * this.Scale.X), y - (szTextureSize.Height * this.Scale.Y), 1f, this.rc全画像);
 	}
 
 	public void t2D拡大率考慮下中心基準描画Mirrored(int x, int y) {
-		this.t2D左右反転描画(x - (this.szTextureSize.Width / 2 * this.vcScaleRatio.X), y - (szTextureSize.Height * this.vcScaleRatio.Y), 1f, this.rc全画像);
+		this.t2D左右反転描画(x - (this.szTextureSize.Width / 2 * this.Scale.X), y - (szTextureSize.Height * this.Scale.Y), 1f, this.rc全画像);
 	}
 	public void t2D拡大率考慮下中心基準描画Mirrored(float x, float y) {
-		this.t2D左右反転描画(x - (this.szTextureSize.Width / 2 * this.vcScaleRatio.X), y - (szTextureSize.Height * this.vcScaleRatio.Y), 1f, this.rc全画像);
+		this.t2D左右反転描画(x - (this.szTextureSize.Width / 2 * this.Scale.X), y - (szTextureSize.Height * this.Scale.Y), 1f, this.rc全画像);
 	}
 
 	public void t2D拡大率考慮下基準描画(float x, float y) {
-		this.t2D描画(x, y - (szTextureSize.Height * this.vcScaleRatio.Y), 1f, this.rc全画像);
+		this.t2D描画(x, y - (szTextureSize.Height * this.Scale.Y), 1f, this.rc全画像);
 	}
 	public void t2D拡大率考慮下基準描画(float x, float y, RectangleF rc画像内の描画領域) {
-		this.t2D描画(x, y - (rc画像内の描画領域.Height * this.vcScaleRatio.Y), 1f, rc画像内の描画領域);
+		this.t2D描画(x, y - (rc画像内の描画領域.Height * this.Scale.Y), 1f, rc画像内の描画領域);
 	}
 	public void t2D拡大率考慮下中心基準描画(float x, float y) {
 		this.t2D拡大率考慮下中心基準描画((int)x, (int)y);
 	}
 
 	public void t2D拡大率考慮下中心基準描画(int x, int y, Rectangle rc画像内の描画領域) {
-		this.t2D描画(x - ((rc画像内の描画領域.Width / 2)), y - (rc画像内の描画領域.Height * this.vcScaleRatio.Y), 1f, rc画像内の描画領域);
+		this.t2D描画(x - ((rc画像内の描画領域.Width / 2)), y - (rc画像内の描画領域.Height * this.Scale.Y), 1f, rc画像内の描画領域);
 	}
 	public void t2D拡大率考慮下中心基準描画(float x, float y, Rectangle rc画像内の描画領域) {
 		this.t2D拡大率考慮下中心基準描画((int)x, (int)y, rc画像内の描画領域);
@@ -539,35 +537,35 @@ public class CTexture : IDisposable {
 	}
 
 	public void t2D_DisplayImage_RollNote(int x, int y, RectangleF rc) {
-		this.t2D描画(x - (rc.Width / 2 * this.vcScaleRatio.X), y - (rc.Height / 2 * this.vcScaleRatio.Y), 1f, rc, true);
+		this.t2D描画(x - (rc.Width / 2 * this.Scale.X), y - (rc.Height / 2 * this.Scale.Y), 1f, rc, true);
 	}
 
 	public void t2D拡大率考慮中央基準描画(int x, int y) {
-		this.t2D描画(x - (this.szTextureSize.Width / 2 * this.vcScaleRatio.X), y - (szTextureSize.Height / 2 * this.vcScaleRatio.Y), 1f, this.rc全画像);
+		this.t2D描画(x - (this.szTextureSize.Width / 2 * this.Scale.X), y - (szTextureSize.Height / 2 * this.Scale.Y), 1f, this.rc全画像);
 	}
 	public void t2D拡大率考慮中央基準描画(int x, int y, RectangleF rc) {
-		this.t2D描画(x - (rc.Width / 2 * this.vcScaleRatio.X), y - (rc.Height / 2 * this.vcScaleRatio.Y), 1f, rc);
+		this.t2D描画(x - (rc.Width / 2 * this.Scale.X), y - (rc.Height / 2 * this.Scale.Y), 1f, rc);
 	}
 	public void t2D_DisplayImage_AnchorCenterLeft(int x, int y, RectangleF rc) {
-		this.t2D描画(x, y - (rc.Height / 2 * this.vcScaleRatio.Y), 1f, rc);
+		this.t2D描画(x, y - (rc.Height / 2 * this.Scale.Y), 1f, rc);
 	}
 	public void t2D拡大率考慮上中央基準描画(int x, int y, RectangleF rc) {
-		this.t2D描画(x - (rc.Width / 2 * this.vcScaleRatio.X), y, 1f, rc);
+		this.t2D描画(x - (rc.Width / 2 * this.Scale.X), y, 1f, rc);
 	}
 	public void t2D_DisplayImage_AnchorUpRight(int x, int y, RectangleF rc) {
-		this.t2D描画(x - (rc.Width * this.vcScaleRatio.X), y, 1f, rc);
+		this.t2D描画(x - (rc.Width * this.Scale.X), y, 1f, rc);
 	}
 	public void t2D拡大率考慮上中央基準描画(int x, int y) {
-		this.t2D描画(x - (rc全画像.Width / 2 * this.vcScaleRatio.X), y, 1f, rc全画像);
+		this.t2D描画(x - (rc全画像.Width / 2 * this.Scale.X), y, 1f, rc全画像);
 	}
 	public void t2D拡大率考慮中央基準描画(float x, float y) {
-		this.t2D描画(x - (this.szTextureSize.Width / 2 * this.vcScaleRatio.X), y - (szTextureSize.Height / 2 * this.vcScaleRatio.Y), 1f, this.rc全画像);
+		this.t2D描画(x - (this.szTextureSize.Width / 2 * this.Scale.X), y - (szTextureSize.Height / 2 * this.Scale.Y), 1f, this.rc全画像);
 	}
 	public void t2D拡大率考慮中央基準描画Mirrored(float x, float y) {
-		this.t2D左右反転描画(x - (this.szTextureSize.Width / 2 * this.vcScaleRatio.X), y - (szTextureSize.Height / 2 * this.vcScaleRatio.Y), 1f, this.rc全画像);
+		this.t2D左右反転描画(x - (this.szTextureSize.Width / 2 * this.Scale.X), y - (szTextureSize.Height / 2 * this.Scale.Y), 1f, this.rc全画像);
 	}
 	public void t2D拡大率考慮中央基準描画(float x, float y, RectangleF rc) {
-		this.t2D描画(x - (rc.Width / 2 * this.vcScaleRatio.X), y - (rc.Height / 2 * this.vcScaleRatio.Y), 1f, rc);
+		this.t2D描画(x - (rc.Width / 2 * this.Scale.X), y - (rc.Height / 2 * this.Scale.Y), 1f, rc);
 	}
 	public void t2D拡大率考慮描画(RefPnt refpnt, float x, float y) {
 		this.t2D拡大率考慮描画(refpnt, x, y, rc全画像);
@@ -581,28 +579,28 @@ public class CTexture : IDisposable {
 				this.t2D描画(x, y, depth, rect);
 				break;
 			case RefPnt.Up:
-				this.t2D描画(x - (rect.Width / 2 * this.vcScaleRatio.X), y, depth, rect);
+				this.t2D描画(x - (rect.Width / 2 * this.Scale.X), y, depth, rect);
 				break;
 			case RefPnt.UpRight:
-				this.t2D描画(x - rect.Width * this.vcScaleRatio.X, y, depth, rect);
+				this.t2D描画(x - rect.Width * this.Scale.X, y, depth, rect);
 				break;
 			case RefPnt.Left:
-				this.t2D描画(x, y - (rect.Height / 2 * this.vcScaleRatio.Y), depth, rect);
+				this.t2D描画(x, y - (rect.Height / 2 * this.Scale.Y), depth, rect);
 				break;
 			case RefPnt.Center:
-				this.t2D描画(x - (rect.Width / 2 * this.vcScaleRatio.X), y - (rect.Height / 2 * this.vcScaleRatio.Y), depth, rect);
+				this.t2D描画(x - (rect.Width / 2 * this.Scale.X), y - (rect.Height / 2 * this.Scale.Y), depth, rect);
 				break;
 			case RefPnt.Right:
-				this.t2D描画(x - rect.Width * this.vcScaleRatio.X, y - (rect.Height / 2 * this.vcScaleRatio.Y), depth, rect);
+				this.t2D描画(x - rect.Width * this.Scale.X, y - (rect.Height / 2 * this.Scale.Y), depth, rect);
 				break;
 			case RefPnt.DownLeft:
-				this.t2D描画(x, y - rect.Height * this.vcScaleRatio.Y, depth, rect);
+				this.t2D描画(x, y - rect.Height * this.Scale.Y, depth, rect);
 				break;
 			case RefPnt.Down:
-				this.t2D描画(x - (rect.Width / 2 * this.vcScaleRatio.X), y - rect.Height * this.vcScaleRatio.Y, depth, rect);
+				this.t2D描画(x - (rect.Width / 2 * this.Scale.X), y - rect.Height * this.Scale.Y, depth, rect);
 				break;
 			case RefPnt.DownRight:
-				this.t2D描画(x - rect.Width * this.vcScaleRatio.X, y - rect.Height * this.vcScaleRatio.Y, depth, rect);
+				this.t2D描画(x - rect.Width * this.Scale.X, y - rect.Height * this.Scale.Y, depth, rect);
 				break;
 			default:
 				break;
@@ -610,13 +608,13 @@ public class CTexture : IDisposable {
 
 	}
 	public void t2D_DisplayImage_AnchorCenter(int x, int y) {
-		this.t2D描画(x - (this.rc全画像.Width / 2 * this.vcScaleRatio.X), y - (this.rc全画像.Height / 2 * this.vcScaleRatio.Y), 1f, this.rc全画像);
+		this.t2D描画(x - (this.rc全画像.Width / 2 * this.Scale.X), y - (this.rc全画像.Height / 2 * this.Scale.Y), 1f, this.rc全画像);
 	}
 	public void t2D_DisplayImage_AnchorCenter(int x, int y, Rectangle rc) {
-		this.t2D描画(x - (rc.Width / 2 * this.vcScaleRatio.X), y - (rc.Height / 2 * this.vcScaleRatio.Y), 1f, rc);
+		this.t2D描画(x - (rc.Width / 2 * this.Scale.X), y - (rc.Height / 2 * this.Scale.Y), 1f, rc);
 	}
 	public void t2D_DisplayImage_AnchorCenter(int x, int y, RectangleF rc) {
-		this.t2D描画(x - (rc.Width / 2 * this.vcScaleRatio.X), y - (rc.Height / 2 * this.vcScaleRatio.Y), 1f, rc);
+		this.t2D描画(x - (rc.Width / 2 * this.Scale.X), y - (rc.Height / 2 * this.Scale.Y), 1f, rc);
 	}
 
 	public enum RefPnt {
@@ -685,36 +683,31 @@ public class CTexture : IDisposable {
 		unsafe {
 			Matrix4X4<float> mvp = Matrix4X4<float>.Identity;
 
-			float gameAspect = (float)RenderSurfaceSize.Width / RenderSurfaceSize.Height;
-
-
 			//スケーリング-----
 			mvp *= Matrix4X4.CreateScale(rc画像内の描画領域.Width / RenderSurfaceSize.Width, rc画像内の描画領域.Height / RenderSurfaceSize.Height, 1) *
-				   Matrix4X4.CreateScale(flipX ? -vcScaleRatio.X : vcScaleRatio.X, flipY ? -vcScaleRatio.Y : vcScaleRatio.Y, 1.0f);
+				   Matrix4X4.CreateScale(flipX ? -Scale.X : Scale.X, flipY ? -Scale.Y : Scale.Y, 1.0f);
 			//-----
 
 			//回転-----
-			mvp *= Matrix4X4.CreateScale(1.0f * gameAspect, 1.0f, 1.0f) * //ここでアスペクト比でスケーリングしないとおかしなことになる
-				   Matrix4X4.CreateRotationZ(fZ軸中心回転) *
-				   Matrix4X4.CreateScale(1.0f / gameAspect, 1.0f, 1.0f);//回転した後戻してあげる
+			mvp *= Matrix4X4.CreateScale(1.0f * RenderSurfaceSize.AspectRatio, 1.0f, 1.0f) * //ここでアスペクト比でスケーリングしないとおかしなことになる
+				   Matrix4X4.CreateRotationZ(Rotation) *
+				   Matrix4X4.CreateScale(1.0f / RenderSurfaceSize.AspectRatio, 1.0f, 1.0f);//回転した後戻してあげる
 																		//-----
 
 			//移動----
-			float offsetX = rc画像内の描画領域.Width * vcScaleRatio.X / RenderSurfaceSize.Width;
-			float offsetY = rc画像内の描画領域.Height * vcScaleRatio.Y / RenderSurfaceSize.Height;
+			float offsetX = rc画像内の描画領域.Width * Scale.X / RenderSurfaceSize.Width;
+			float offsetY = rc画像内の描画領域.Height * Scale.Y / RenderSurfaceSize.Height;
 			mvp *= Matrix4X4.CreateTranslation(offsetX, -offsetY, 0.0f);
 			mvp *= Matrix4X4.CreateTranslation(-1.0f, 1.0f, 0);
 			mvp *= Matrix4X4.CreateTranslation(x / RenderSurfaceSize.Width * 2, -y / RenderSurfaceSize.Height * 2, 0.0f);
 			//-----
 
 			Game.Gl.UniformMatrix4(MVPID, 1, false, (float*)&mvp); //MVPに値を設定
-			Matrix4X4<float> camera = Game.Camera;
-			Game.Gl.UniformMatrix4(CameraID, 1, false, (float*)&camera);
 		}
 		//------
 
 		Game.Gl.Uniform4(ColorID, new System.Numerics.Vector4(color4.Red, color4.Green, color4.Blue, color4.Alpha)); //変色用のカラーを設定
-		Game.Gl.Uniform2(ScaleID, new System.Numerics.Vector2(vcScaleRatio.X, vcScaleRatio.Y)); //変色用のカラーを設定
+		Game.Gl.Uniform2(ScaleID, new System.Numerics.Vector2(Scale.X, Scale.Y)); //変色用のカラーを設定
 
 		//テクスチャの切り抜きの座標と大きさを設定
 		Game.Gl.Uniform4(TextureRectID, new System.Numerics.Vector4(
@@ -784,8 +777,6 @@ public class CTexture : IDisposable {
 
 
 	public void t2D描画SongObj(float x, float y, float xScale, float yScale) {
-		this.color4.Alpha = this._opacity / 255f;
-
 		var rc画像内の描画領域 = rc全画像;
 		this.color4.Alpha = this._opacity / 255f;
 
@@ -812,18 +803,15 @@ public class CTexture : IDisposable {
 		unsafe {
 			Matrix4X4<float> mvp = Matrix4X4<float>.Identity;
 
-			float gameAspect = (float)RenderSurfaceSize.Width / RenderSurfaceSize.Height;
-
-
 			//スケーリング-----
 			mvp *= Matrix4X4.CreateScale((float)rc画像内の描画領域.Width / RenderSurfaceSize.Width, (float)rc画像内の描画領域.Height / RenderSurfaceSize.Height, 1) *
 				   Matrix4X4.CreateScale(xScale, yScale, 1.0f);
 			//-----
 
 			//回転-----
-			mvp *= Matrix4X4.CreateScale(1.0f * gameAspect, 1.0f, 1.0f) * //ここでアスペクト比でスケーリングしないとおかしなことになる
-				   Matrix4X4.CreateRotationZ(fZ軸中心回転) *
-				   Matrix4X4.CreateScale(1.0f / gameAspect, 1.0f, 1.0f);//回転した後戻してあげる
+			mvp *= Matrix4X4.CreateScale(1.0f * RenderSurfaceSize.AspectRatio, 1.0f, 1.0f) * //ここでアスペクト比でスケーリングしないとおかしなことになる
+				   Matrix4X4.CreateRotationZ(Rotation) *
+				   Matrix4X4.CreateScale(1.0f / RenderSurfaceSize.AspectRatio, 1.0f, 1.0f);//回転した後戻してあげる
 																		//-----
 
 			//移動----
@@ -835,13 +823,11 @@ public class CTexture : IDisposable {
 			//-----
 
 			Game.Gl.UniformMatrix4(MVPID, 1, false, (float*)&mvp); //MVPに値を設定
-			Matrix4X4<float> camera = Game.Camera;
-			Game.Gl.UniformMatrix4(CameraID, 1, false, (float*)&camera);
 		}
 		//------
 
 		Game.Gl.Uniform4(ColorID, new System.Numerics.Vector4(color4.Red, color4.Green, color4.Blue, color4.Alpha)); //変色用のカラーを設定
-		Game.Gl.Uniform2(ScaleID, new System.Numerics.Vector2(vcScaleRatio.X, vcScaleRatio.Y)); //変色用のカラーを設定
+		Game.Gl.Uniform2(ScaleID, new System.Numerics.Vector2(Scale.X, Scale.Y)); //変色用のカラーを設定
 
 		//テクスチャの切り抜きの座標と大きさを設定
 		Game.Gl.Uniform4(TextureRectID, new System.Numerics.Vector4(

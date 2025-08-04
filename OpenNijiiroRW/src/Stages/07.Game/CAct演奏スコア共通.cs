@@ -285,9 +285,9 @@ internal class CAct演奏スコア共通 : CActivity {
 								//this.txScore.color4 = new SlimDX.Color4( 1.0f, 1.0f, 1.0f );
 								OpenNijiiroRW.Tx.Taiko_Score[0].Opacity = alpha;
 								if (OpenNijiiroRW.ConfigIni.SimpleMode) {
-									OpenNijiiroRW.Tx.Taiko_Score[0].vcScaleRatio.Y = 1;
+									OpenNijiiroRW.Tx.Taiko_Score[0].Scale.Y = 1;
 								} else {
-									OpenNijiiroRW.Tx.Taiko_Score[0].vcScaleRatio.Y = ScoreScale[this.ct点数アニメタイマ[player].CurrentValue];
+									OpenNijiiroRW.Tx.Taiko_Score[0].Scale.Y = ScoreScale[this.ct点数アニメタイマ[player].CurrentValue];
 								}
 								OpenNijiiroRW.Tx.Taiko_Score[0].t2D拡大率考慮下基準描画(x, y, rectangle);
 
@@ -298,7 +298,7 @@ internal class CAct演奏スコア共通 : CActivity {
 								//this.txScore.color4 = new SlimDX.Color4( 1.0f, 0.5f, 0.4f );
 								//this.txScore.color4 = CDTXMania.Skin.cScoreColor1P;
 								OpenNijiiroRW.Tx.Taiko_Score[1].Opacity = alpha;
-								OpenNijiiroRW.Tx.Taiko_Score[1].vcScaleRatio.Y = 1;
+								OpenNijiiroRW.Tx.Taiko_Score[1].Scale.Y = 1;
 								OpenNijiiroRW.Tx.Taiko_Score[1].t2D拡大率考慮下基準描画(x, y, rectangle);
 							}
 							break;
@@ -307,7 +307,7 @@ internal class CAct演奏スコア共通 : CActivity {
 								//this.txScore.color4 = new SlimDX.Color4( 0.4f, 0.5f, 1.0f );
 								//this.txScore.color4 = CDTXMania.Skin.cScoreColor2P;
 								OpenNijiiroRW.Tx.Taiko_Score[2].Opacity = alpha;
-								OpenNijiiroRW.Tx.Taiko_Score[2].vcScaleRatio.Y = 1;
+								OpenNijiiroRW.Tx.Taiko_Score[2].Scale.Y = 1;
 								OpenNijiiroRW.Tx.Taiko_Score[2].t2D拡大率考慮下基準描画(x, y, rectangle);
 							}
 							break;
@@ -316,7 +316,7 @@ internal class CAct演奏スコア共通 : CActivity {
 								//this.txScore.color4 = new SlimDX.Color4( 0.4f, 0.5f, 1.0f );
 								//this.txScore.color4 = CDTXMania.Skin.cScoreColor2P;
 								OpenNijiiroRW.Tx.Taiko_Score[3].Opacity = alpha;
-								OpenNijiiroRW.Tx.Taiko_Score[3].vcScaleRatio.Y = 1;
+								OpenNijiiroRW.Tx.Taiko_Score[3].Scale.Y = 1;
 								OpenNijiiroRW.Tx.Taiko_Score[3].t2D拡大率考慮下基準描画(x, y, rectangle);
 							}
 							break;
@@ -325,7 +325,7 @@ internal class CAct演奏スコア共通 : CActivity {
 								//this.txScore.color4 = new SlimDX.Color4( 0.4f, 0.5f, 1.0f );
 								//this.txScore.color4 = CDTXMania.Skin.cScoreColor2P;
 								OpenNijiiroRW.Tx.Taiko_Score[4].Opacity = alpha;
-								OpenNijiiroRW.Tx.Taiko_Score[4].vcScaleRatio.Y = 1;
+								OpenNijiiroRW.Tx.Taiko_Score[4].Scale.Y = 1;
 								OpenNijiiroRW.Tx.Taiko_Score[4].t2D拡大率考慮下基準描画(x, y, rectangle);
 							}
 							break;
@@ -334,7 +334,7 @@ internal class CAct演奏スコア共通 : CActivity {
 								//this.txScore.color4 = new SlimDX.Color4( 0.4f, 0.5f, 1.0f );
 								//this.txScore.color4 = CDTXMania.Skin.cScoreColor2P;
 								OpenNijiiroRW.Tx.Taiko_Score[5].Opacity = alpha;
-								OpenNijiiroRW.Tx.Taiko_Score[5].vcScaleRatio.Y = 1;
+								OpenNijiiroRW.Tx.Taiko_Score[5].Scale.Y = 1;
 								OpenNijiiroRW.Tx.Taiko_Score[5].t2D拡大率考慮下基準描画(x, y, rectangle);
 							}
 							break;

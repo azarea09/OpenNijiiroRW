@@ -145,8 +145,8 @@ class HGaugeMethods {
 
 	public static void tDrawGaugeBase(CTexture baseTexture, int x, int y, float scale_x, float scale_y) {
 		if (baseTexture != null) {
-			baseTexture.vcScaleRatio.X = scale_x;
-			baseTexture.vcScaleRatio.Y = scale_y;
+			baseTexture.Scale.X = scale_x;
+			baseTexture.Scale.Y = scale_y;
 
 			baseTexture.t2D描画(x, y,
 				new Rectangle(
@@ -164,8 +164,8 @@ class HGaugeMethods {
 		float revnorma = 100f - norma;
 
 		if (baseTexture != null) {
-			baseTexture.vcScaleRatio.X = scale_x;
-			baseTexture.vcScaleRatio.Y = scale_y;
+			baseTexture.Scale.X = scale_x;
+			baseTexture.Scale.Y = scale_y;
 
 			int gaugeTexLength = GaugeBox[2];
 			int clearPartLength = (int)(gaugeTexLength * (revnorma / 100f));
@@ -214,8 +214,8 @@ class HGaugeMethods {
 
 		// Fill
 		if (fillTexture != null && !isRainbow) {
-			fillTexture.vcScaleRatio.X = scale_x;
-			fillTexture.vcScaleRatio.Y = scale_y;
+			fillTexture.Scale.X = scale_x;
+			fillTexture.Scale.Y = scale_y;
 
 			fillTexture.Opacity = 255;
 			if (gaugeType != EGaugeType.NORMAL && tIsDangerHardGauge(diff, level, gaugeType, percent, perfectHits, totalNotes)) fillTexture.Opacity = 255 - flashOpacity;
@@ -237,8 +237,8 @@ class HGaugeMethods {
 			int differencial = closestTwo - closestNorma;
 			int xOff = (int)(scale_x * texStartPoint);
 
-			yellowTexture.vcScaleRatio.X = scale_x;
-			yellowTexture.vcScaleRatio.Y = scale_y;
+			yellowTexture.Scale.X = scale_x;
+			yellowTexture.Scale.Y = scale_y;
 
 			yellowTexture.Opacity = 255;
 			yellowTexture.t2D描画(x + xOff, y,
@@ -252,8 +252,8 @@ class HGaugeMethods {
 
 		// Rainbow
 		if (rainbowTexture != null && percent >= 100f) {
-			rainbowTexture.vcScaleRatio.X = scale_x;
-			rainbowTexture.vcScaleRatio.Y = scale_y;
+			rainbowTexture.Scale.X = scale_x;
+			rainbowTexture.Scale.Y = scale_y;
 
 			rainbowTexture.t2D描画(rainbow_x, rainbow_y);
 		}
@@ -266,8 +266,8 @@ class HGaugeMethods {
 		float percent = Math.Min(100f, Math.Max(0f, currentPercent));
 		if (tNormaCheck(diff, level, gaugeType, percent, 0) && percent < 100.0) {
 			if (flashTexture != null) {
-				flashTexture.vcScaleRatio.X = scale_x;
-				flashTexture.vcScaleRatio.Y = scale_y;
+				flashTexture.Scale.X = scale_x;
+				flashTexture.Scale.Y = scale_y;
 
 				flashTexture.Opacity = Opacity;
 				flashTexture.t2D描画(x, y,
@@ -286,8 +286,8 @@ class HGaugeMethods {
 		if (gaugeType != EGaugeType.EXTREME || diff > Difficulty.Edit) return;
 		float currentFill = tHardGaugeGetKillscreenRatio(diff, level, gaugeType, perfectHits, totalNotes);
 		if (killzoneTexture != null) {
-			killzoneTexture.vcScaleRatio.X = scale_x;
-			killzoneTexture.vcScaleRatio.Y = scale_y;
+			killzoneTexture.Scale.X = scale_x;
+			killzoneTexture.Scale.Y = scale_y;
 
 			killzoneTexture.t2D描画(x, y,
 				new Rectangle(
@@ -303,8 +303,8 @@ class HGaugeMethods {
 		if (clearIcon == null) return;
 		if (diff > Difficulty.Edit) return;
 
-		clearIcon.vcScaleRatio.X = scale_x;
-		clearIcon.vcScaleRatio.Y = scale_y;
+		clearIcon.Scale.X = scale_x;
+		clearIcon.Scale.Y = scale_y;
 
 		float percent = Math.Min(100f, Math.Max(0f, currentPercent));
 		bool highlight = (gaugeType != EGaugeType.NORMAL)
@@ -328,8 +328,8 @@ class HGaugeMethods {
 		int soulfire_height = soulFire.szTextureSize.Height;
 
 		if (percent >= 100.0) {
-			soulFire.vcScaleRatio.X = scale_x;
-			soulFire.vcScaleRatio.Y = scale_y;
+			soulFire.Scale.X = scale_x;
+			soulFire.Scale.Y = scale_y;
 
 			soulFire.t2D描画(fire_x, fire_y, new Rectangle(soulfire_width * fireFrame, 0, soulfire_width, soulfire_height));
 		}
@@ -341,8 +341,8 @@ class HGaugeMethods {
 		float norma = tGetCurrentGaugeNorma(diff, level);
 		float percent = Math.Min(100f, Math.Max(0f, currentPercent));
 
-		soulLetter.vcScaleRatio.X = scale_x;
-		soulLetter.vcScaleRatio.Y = scale_y;
+		soulLetter.Scale.X = scale_x;
+		soulLetter.Scale.Y = scale_y;
 
 		int soul_height = soulLetter.szTextureSize.Height / 2;
 		if (tNormaCheck(diff, level, gaugeType, percent, 0)) {

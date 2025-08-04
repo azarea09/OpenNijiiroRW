@@ -54,7 +54,7 @@ class CSongObject {
 		if (frame + 1 > textures.Length) return;
 		if (tx == null) return;
 
-		tx.fZ軸中心回転 = CConversion.DegreeToRadian(this.rotation);
+		tx.Rotation = CConversion.DegreeToRadian(this.rotation);
 		tx.color4 = this.color;
 		tx.Opacity = this.opacity;
 

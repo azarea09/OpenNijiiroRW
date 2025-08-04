@@ -57,7 +57,7 @@ class CPuchichara {
 		// Puchichara textures
 		tx = OpenNijiiroRW.Tx.TxCAbsolute($@"{path}{Path.DirectorySeparatorChar}Chara.png");
 		if (tx != null) {
-			tx.vcScaleRatio = new Vector3D<float>(OpenNijiiroRW.Skin.Game_PuchiChara_Scale[0]);
+			tx.Scale = new Vector3D<float>(OpenNijiiroRW.Skin.Game_PuchiChara_Scale[0]);
 		}
 
 		// Heya render

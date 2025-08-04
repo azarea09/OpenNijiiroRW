@@ -70,7 +70,7 @@ internal class CActSelect演奏履歴パネル : CActivity {
 				for (int i = 0; i < (int)Difficulty.Total; i++) {
 					SKBitmap image = ft表示用フォント.DrawText(cスコア.譜面情報.演奏履歴[i], Color.Yellow);
 					var tex = new CTexture(image);
-					tex.vcScaleRatio = new Vector3D<float>(0.5f, 0.5f, 1f);
+					tex.Scale = new Vector3D<float>(0.5f, 0.5f, 1f);
 					this.tx文字列パネル.Add(tex);
 					image.Dispose();
 				}

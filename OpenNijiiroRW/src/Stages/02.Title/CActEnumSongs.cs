@@ -77,7 +77,7 @@ internal class CActEnumSongs : CActivity {
 			if ((strMessage != null) && (strMessage.Length > 0)) {
 				SKBitmap image = ftMessage.DrawText(strMessage[ci], Color.White);
 				this.txMessage = new CTexture(image);
-				this.txMessage.vcScaleRatio = new Vector3D<float>(0.5f, 0.5f, 1f);
+				this.txMessage.Scale = new Vector3D<float>(0.5f, 0.5f, 1f);
 				image.Dispose();
 				OpenNijiiroRW.tDisposeSafely(ref ftMessage);
 			} else {

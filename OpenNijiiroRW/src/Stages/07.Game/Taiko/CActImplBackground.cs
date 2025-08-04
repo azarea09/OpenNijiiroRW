@@ -116,40 +116,40 @@ internal class CActImplBackground : CActivity {
 
 		// Scale tower chara
 		foreach (CTexture texture in OpenNijiiroRW.Tx.Characters_Tower_Standing[currentCharacter]) {
-			texture.vcScaleRatio.X = resolutionScaleX;
-			texture.vcScaleRatio.Y = resolutionScaleY;
+			texture.Scale.X = resolutionScaleX;
+			texture.Scale.Y = resolutionScaleY;
 		}
 		foreach (CTexture texture in OpenNijiiroRW.Tx.Characters_Tower_Climbing[currentCharacter]) {
-			texture.vcScaleRatio.X = resolutionScaleX;
-			texture.vcScaleRatio.Y = resolutionScaleY;
+			texture.Scale.X = resolutionScaleX;
+			texture.Scale.Y = resolutionScaleY;
 		}
 		foreach (CTexture texture in OpenNijiiroRW.Tx.Characters_Tower_Running[currentCharacter]) {
-			texture.vcScaleRatio.X = resolutionScaleX;
-			texture.vcScaleRatio.Y = resolutionScaleY;
+			texture.Scale.X = resolutionScaleX;
+			texture.Scale.Y = resolutionScaleY;
 		}
 		foreach (CTexture texture in OpenNijiiroRW.Tx.Characters_Tower_Clear[currentCharacter]) {
-			texture.vcScaleRatio.X = resolutionScaleX;
-			texture.vcScaleRatio.Y = resolutionScaleY;
+			texture.Scale.X = resolutionScaleX;
+			texture.Scale.Y = resolutionScaleY;
 		}
 		foreach (CTexture texture in OpenNijiiroRW.Tx.Characters_Tower_Fail[currentCharacter]) {
-			texture.vcScaleRatio.X = resolutionScaleX;
-			texture.vcScaleRatio.Y = resolutionScaleY;
+			texture.Scale.X = resolutionScaleX;
+			texture.Scale.Y = resolutionScaleY;
 		}
 		foreach (CTexture texture in OpenNijiiroRW.Tx.Characters_Tower_Standing_Tired[currentCharacter]) {
-			texture.vcScaleRatio.X = resolutionScaleX;
-			texture.vcScaleRatio.Y = resolutionScaleY;
+			texture.Scale.X = resolutionScaleX;
+			texture.Scale.Y = resolutionScaleY;
 		}
 		foreach (CTexture texture in OpenNijiiroRW.Tx.Characters_Tower_Climbing_Tired[currentCharacter]) {
-			texture.vcScaleRatio.X = resolutionScaleX;
-			texture.vcScaleRatio.Y = resolutionScaleY;
+			texture.Scale.X = resolutionScaleX;
+			texture.Scale.Y = resolutionScaleY;
 		}
 		foreach (CTexture texture in OpenNijiiroRW.Tx.Characters_Tower_Running_Tired[currentCharacter]) {
-			texture.vcScaleRatio.X = resolutionScaleX;
-			texture.vcScaleRatio.Y = resolutionScaleY;
+			texture.Scale.X = resolutionScaleX;
+			texture.Scale.Y = resolutionScaleY;
 		}
 		foreach (CTexture texture in OpenNijiiroRW.Tx.Characters_Tower_Clear_Tired[currentCharacter]) {
-			texture.vcScaleRatio.X = resolutionScaleX;
-			texture.vcScaleRatio.Y = resolutionScaleY;
+			texture.Scale.X = resolutionScaleX;
+			texture.Scale.Y = resolutionScaleY;
 		}
 
 		this.ctSlideAnimation = new CCounter();
@@ -243,8 +243,8 @@ internal class CActImplBackground : CActivity {
 					int digitLength = OpenNijiiroRW.Tx.Taiko_Combo[0].szTextureSize.Width / 10;
 
 					OpenNijiiroRW.Tx.Taiko_Combo[0].color4 = new Color4(1f, 0.6f, 0.2f, 1f);
-					OpenNijiiroRW.Tx.Taiko_Combo[0].vcScaleRatio.X = 1.4f;
-					OpenNijiiroRW.Tx.Taiko_Combo[0].vcScaleRatio.Y = 1.4f;
+					OpenNijiiroRW.Tx.Taiko_Combo[0].Scale.X = 1.4f;
+					OpenNijiiroRW.Tx.Taiko_Combo[0].Scale.Y = 1.4f;
 
 					for (int idx = len - 1; idx >= 0; idx--) {
 						int currentNum = int.Parse(floorStr[idx].ToString());
@@ -288,8 +288,8 @@ internal class CActImplBackground : CActivity {
 							: new Color4(1f, 0.2f, 0.2f, 1f));
 
 					OpenNijiiroRW.Tx.Taiko_Combo[0].color4 = lifeColor;
-					OpenNijiiroRW.Tx.Taiko_Combo[0].vcScaleRatio.X = 1.1f;
-					OpenNijiiroRW.Tx.Taiko_Combo[0].vcScaleRatio.Y = 1.1f;
+					OpenNijiiroRW.Tx.Taiko_Combo[0].Scale.X = 1.1f;
+					OpenNijiiroRW.Tx.Taiko_Combo[0].Scale.Y = 1.1f;
 
 					for (int idx = 0; idx < len; idx++) {
 						int currentNum = int.Parse(lifeStr[len - idx - 1].ToString());

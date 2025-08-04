@@ -75,13 +75,13 @@ internal class CActFIFOStart : CActivity {
 				OpenNijiiroRW.Tx.SongLoading_Fade_AI.t2D描画(0, 0);
 
 				if (preTime > 500) {
-					OpenNijiiroRW.Tx.SongLoading_Fade_AI_Anime_Base.vcScaleRatio.X = Math.Min(((preTime - 500) / 255.0f), 1.0f);
+					OpenNijiiroRW.Tx.SongLoading_Fade_AI_Anime_Base.Scale.X = Math.Min(((preTime - 500) / 255.0f), 1.0f);
 					OpenNijiiroRW.Tx.SongLoading_Fade_AI_Anime_Base.t2D拡大率考慮中央基準描画(OpenNijiiroRW.Skin.Resolution[0] / 2, OpenNijiiroRW.Skin.Resolution[1] / 2);
 				}
 
 				if (preTime > 1000) {
 					OpenNijiiroRW.Tx.SongLoading_Fade_AI_Anime_Ring.Opacity = preTime - 1000;
-					OpenNijiiroRW.Tx.SongLoading_Fade_AI_Anime_Ring.fZ軸中心回転 = preTime / 6000.0f;
+					OpenNijiiroRW.Tx.SongLoading_Fade_AI_Anime_Ring.Rotation = preTime / 6000.0f;
 					OpenNijiiroRW.Tx.SongLoading_Fade_AI_Anime_Ring.t2D描画(OpenNijiiroRW.Skin.SongLoading_Fade_AI_Anime_Ring[0], OpenNijiiroRW.Skin.SongLoading_Fade_AI_Anime_Ring[1]);
 					if (preTime - 1000 < 1500) {
 						OpenNijiiroRW.Tx.SongLoading_Fade_AI_Anime_NowLoading.Opacity = preTime - 1000;
@@ -175,9 +175,9 @@ internal class CActFIFOStart : CActivity {
 		var ScaleX = (float)((IsExit ? 1f - StartScaleX : 0f) - ((time >= max ? (time - max) : 0) * ((1f - StartScaleX) / end))) * (IsExit ? 1f : -1f);
 		var Value = (float)((IsExit ? 1f : 0f) - ((time >= max ? (time - max) : 0) * (1f / end))) * (IsExit ? 1f : -1f);
 
-		ShowTex.vcScaleRatio.X = StartScaleX + ScaleX;
+		ShowTex.Scale.X = StartScaleX + ScaleX;
 		ShowTex.t2D描画(-(SizeXHarf * StartScaleX) + (Value * (SizeXHarf * StartScaleX)), 0, new RectangleF(0, 0, SizeXHarf, SizeY));
-		ShowTex.t2D描画((SizeXHarf + (SizeXHarf * StartScaleX)) - (Value * (SizeXHarf * StartScaleX)) + ((1f - ShowTex.vcScaleRatio.X) * SizeXHarf), 0, new RectangleF(SizeXHarf, 0, SizeXHarf, SizeY));
+		ShowTex.t2D描画((SizeXHarf + (SizeXHarf * StartScaleX)) - (Value * (SizeXHarf * StartScaleX)) + ((1f - ShowTex.Scale.X) * SizeXHarf), 0, new RectangleF(SizeXHarf, 0, SizeXHarf, SizeY));
 
 	}
 	/// <summary>
@@ -202,8 +202,8 @@ internal class CActFIFOStart : CActivity {
 		var SizeY_Harf = OpenNijiiroRW.Tx.SongLoading_Plate.szTextureSize.Height / 2.0f;
 
 		OpenNijiiroRW.Tx.SongLoading_Plate.Opacity = (int)opacity;
-		OpenNijiiroRW.Tx.SongLoading_Plate.vcScaleRatio.X = scaleX;
-		OpenNijiiroRW.Tx.SongLoading_Plate.vcScaleRatio.Y = scaleY;
+		OpenNijiiroRW.Tx.SongLoading_Plate.Scale.X = scaleX;
+		OpenNijiiroRW.Tx.SongLoading_Plate.Scale.Y = scaleY;
 		OpenNijiiroRW.Tx.SongLoading_Plate.t2D描画(OpenNijiiroRW.Skin.SongLoading_Plate_X + SizeX_Harf - (SizeX_Harf * scaleX) - SizeX_Harf, OpenNijiiroRW.Skin.SongLoading_Plate_Y - SizeY_Harf + ((1f - scaleY) * SizeY_Harf));
 	}
 

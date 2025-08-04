@@ -398,8 +398,8 @@ internal class CStageSongSelect : CStage {
 							if (txGenreBack != null) {
 								txGenreBack.color4 = CConversion.ColorToColor4(this.NowBgColor);
 								txGenreBack.Opacity = 255;
-								txGenreBack.vcScaleRatio.X = scale;
-								txGenreBack.vcScaleRatio.Y = scale;
+								txGenreBack.Scale.X = scale;
+								txGenreBack.Scale.Y = scale;
 								txGenreBack.t2D描画(-(int)ct背景スクロール用タイマー.CurrentValue + (txGenreBack.szTextureSize.Width * scale) * i, 0);
 							}
 						}
@@ -410,8 +410,8 @@ internal class CStageSongSelect : CStage {
 							if (txOldGenreBack != null) {
 								txOldGenreBack.color4 = CConversion.ColorToColor4(this.OldBgColor);
 								txOldGenreBack.Opacity = 600 - ctBackgroundFade.CurrentValue;
-								txOldGenreBack.vcScaleRatio.X = scale;
-								txOldGenreBack.vcScaleRatio.Y = scale;
+								txOldGenreBack.Scale.X = scale;
+								txOldGenreBack.Scale.Y = scale;
 								txOldGenreBack.t2D描画(-(int)ctOldBGScroll.CurrentValue + (txOldGenreBack.szTextureSize.Width * scale) * i, 0);
 							}
 						}

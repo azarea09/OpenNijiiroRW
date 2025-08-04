@@ -222,19 +222,19 @@ internal class CActImplLaneTaiko : CActivity {
 				}
 
 				if (this.ctゴーゴー.CurrentValue <= 4) {
-					OpenNijiiroRW.Tx.Lane_Background_GoGo.vcScaleRatio.Y = 0.2f;
+					OpenNijiiroRW.Tx.Lane_Background_GoGo.Scale.Y = 0.2f;
 					OpenNijiiroRW.Tx.Lane_Background_GoGo.t2D描画(x[i], y[i] + 54);
 				} else if (this.ctゴーゴー.CurrentValue <= 5) {
-					OpenNijiiroRW.Tx.Lane_Background_GoGo.vcScaleRatio.Y = 0.4f;
+					OpenNijiiroRW.Tx.Lane_Background_GoGo.Scale.Y = 0.4f;
 					OpenNijiiroRW.Tx.Lane_Background_GoGo.t2D描画(x[i], y[i] + 40);
 				} else if (this.ctゴーゴー.CurrentValue <= 6) {
-					OpenNijiiroRW.Tx.Lane_Background_GoGo.vcScaleRatio.Y = 0.6f;
+					OpenNijiiroRW.Tx.Lane_Background_GoGo.Scale.Y = 0.6f;
 					OpenNijiiroRW.Tx.Lane_Background_GoGo.t2D描画(x[i], y[i] + 26);
 				} else if (this.ctゴーゴー.CurrentValue <= 8) {
-					OpenNijiiroRW.Tx.Lane_Background_GoGo.vcScaleRatio.Y = 0.8f;
+					OpenNijiiroRW.Tx.Lane_Background_GoGo.Scale.Y = 0.8f;
 					OpenNijiiroRW.Tx.Lane_Background_GoGo.t2D描画(x[i], y[i] + 13);
 				} else if (this.ctゴーゴー.CurrentValue >= 9) {
-					OpenNijiiroRW.Tx.Lane_Background_GoGo.vcScaleRatio.Y = 1.0f;
+					OpenNijiiroRW.Tx.Lane_Background_GoGo.Scale.Y = 1.0f;
 					OpenNijiiroRW.Tx.Lane_Background_GoGo.t2D描画(x[i], y[i]);
 				}
 			}
@@ -674,8 +674,8 @@ internal class CActImplLaneTaiko : CActivity {
 						y += OpenNijiiroRW.Skin.Game_Effect_Fire_Y[i];
 					}
 
-					OpenNijiiroRW.Tx.Effects_Fire.vcScaleRatio.X = f倍率;
-					OpenNijiiroRW.Tx.Effects_Fire.vcScaleRatio.Y = f倍率;
+					OpenNijiiroRW.Tx.Effects_Fire.Scale.X = f倍率;
+					OpenNijiiroRW.Tx.Effects_Fire.Scale.Y = f倍率;
 
 					OpenNijiiroRW.Tx.Effects_Fire.t2D描画(x, y,
 						new Rectangle(width * (this.ctゴーゴー炎.CurrentValue), 0, width, height));

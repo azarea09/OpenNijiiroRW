@@ -49,8 +49,8 @@ public sealed class TitleTextureKey {
 			CTexture tx文字テクスチャ = OpenNijiiroRW.tテクスチャの生成(bmp, false);
 			if (tx文字テクスチャ.szTextureSize.Height > titleTextureKey.maxWidth) {
 				//tx文字テクスチャ.vc拡大縮小倍率.X = (float)(((double)titleTextureKey.maxWidth) / tx文字テクスチャ.szテクスチャサイズ.Height);
-				tx文字テクスチャ.vcScaleRatio.X = 1.0f;
-				tx文字テクスチャ.vcScaleRatio.Y = (float)(((double)titleTextureKey.maxWidth) / tx文字テクスチャ.szTextureSize.Height);
+				tx文字テクスチャ.Scale.X = 1.0f;
+				tx文字テクスチャ.Scale.Y = (float)(((double)titleTextureKey.maxWidth) / tx文字テクスチャ.szTextureSize.Height);
 			}
 
 			return tx文字テクスチャ;
@@ -63,8 +63,8 @@ public sealed class TitleTextureKey {
 				   titleTextureKey.str, titleTextureKey.forecolor, titleTextureKey.backcolor, titleTextureKey.secondEdge, 30, keepCenter)) {
 			CTexture tx文字テクスチャ = OpenNijiiroRW.tテクスチャの生成(bmp, false);
 			if (tx文字テクスチャ.szTextureSize.Width > titleTextureKey.maxWidth) {
-				tx文字テクスチャ.vcScaleRatio.X = (float)(((double)titleTextureKey.maxWidth) / tx文字テクスチャ.szTextureSize.Width);
-				tx文字テクスチャ.vcScaleRatio.Y = 1.0f;// (float) (((double) titleTextureKey.maxWidth) / tx文字テクスチャ.szテクスチャサイズ.Width);
+				tx文字テクスチャ.Scale.X = (float)(((double)titleTextureKey.maxWidth) / tx文字テクスチャ.szTextureSize.Width);
+				tx文字テクスチャ.Scale.Y = 1.0f;// (float) (((double) titleTextureKey.maxWidth) / tx文字テクスチャ.szテクスチャサイズ.Width);
 
 			}
 

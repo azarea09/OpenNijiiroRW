@@ -41,13 +41,13 @@ class ScriptBGFunc {
 	}
 	public void SetScale(double xscale, double yscale, string fileName) {
 		if (Textures[fileName] != null) {
-			Textures[fileName].vcScaleRatio.X = (float)xscale;
-			Textures[fileName].vcScaleRatio.Y = (float)yscale;
+			Textures[fileName].Scale.X = (float)xscale;
+			Textures[fileName].Scale.Y = (float)yscale;
 		}
 	}
 	public void SetRotation(double angle, string fileName) {
 		if (Textures[fileName] != null) {
-			Textures[fileName].fZ軸中心回転 = (float)(angle * Math.PI / 180);
+			Textures[fileName].Rotation = (float)(angle * Math.PI / 180);
 		}
 	}
 	public void SetColor(double r, double g, double b, string fileName) {

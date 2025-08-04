@@ -884,7 +884,7 @@ internal class CActSelect曲リスト : CActivity {
 		#region [ Songs not found画像 ]
 		try {
 			this.txSongNotFound = new CTexture(ft曲リスト用フォント.DrawText("Songs not found.\nYou need to install songs.", Color.White));
-			this.txSongNotFound.vcScaleRatio = new Vector3D<float>(0.5f, 0.5f, 1f); // 半分のサイズで表示する。
+			this.txSongNotFound.Scale = new Vector3D<float>(0.5f, 0.5f, 1f); // 半分のサイズで表示する。
 
 			/*
 			using( Bitmap image = new Bitmap( 640, 128 ) )
@@ -913,7 +913,7 @@ internal class CActSelect曲リスト : CActivity {
 		#region [ "曲データを検索しています"画像 ]
 		try {
 			this.txEnumeratingSongs = new CTexture(ft曲リスト用フォント.DrawText("Now loading songs.\nPlease wait...", Color.White));
-			this.txEnumeratingSongs.vcScaleRatio = new Vector3D<float>(0.5f, 0.5f, 1f); // 半分のサイズで表示する。
+			this.txEnumeratingSongs.Scale = new Vector3D<float>(0.5f, 0.5f, 1f); // 半分のサイズで表示する。
 
 			/*
 			using ( Bitmap image = new Bitmap( 640, 96 ) )
@@ -1291,13 +1291,13 @@ internal class CActSelect曲リスト : CActivity {
 
 			bar_genre.color4 = CConversion.ColorToColor4(stバー情報[nパネル番号].BoxColor);
 
-			bar_genre.vcScaleRatio.X = 1.0f;
+			bar_genre.Scale.X = 1.0f;
 			if (bar_genre_overlap != null)
-				bar_genre_overlap.vcScaleRatio.X = 1.0f;
+				bar_genre_overlap.Scale.X = 1.0f;
 
-			OpenNijiiroRW.Tx.SongSelect_Bar_Genre_Overlay.vcScaleRatio.X = 1.0f;
-			OpenNijiiroRW.Tx.SongSelect_Bar_Genre_Back.vcScaleRatio.X = 1.0f;
-			OpenNijiiroRW.Tx.SongSelect_Bar_Genre_Random.vcScaleRatio.X = 1.0f;
+			OpenNijiiroRW.Tx.SongSelect_Bar_Genre_Overlay.Scale.X = 1.0f;
+			OpenNijiiroRW.Tx.SongSelect_Bar_Genre_Back.Scale.X = 1.0f;
+			OpenNijiiroRW.Tx.SongSelect_Bar_Genre_Random.Scale.X = 1.0f;
 
 
 
@@ -1814,7 +1814,7 @@ internal class CActSelect曲リスト : CActivity {
 								this.txBoxText[j].Opacity = (int)(BarAnimeCount * 255.0f);
 
 							if (this.txBoxText[j].szTextureSize.Width >= 510)
-								this.txBoxText[j].vcScaleRatio.X = 510f / this.txBoxText[j].szTextureSize.Width;
+								this.txBoxText[j].Scale.X = 510f / this.txBoxText[j].szTextureSize.Width;
 
 							this.txBoxText[j].t2D拡大率考慮中央基準描画(OpenNijiiroRW.Skin.SongSelect_BoxExplanation_X, OpenNijiiroRW.Skin.SongSelect_BoxExplanation_Y + j * OpenNijiiroRW.Skin.SongSelect_BoxExplanation_Interval);
 						}
@@ -2490,110 +2490,110 @@ internal class CActSelect曲リスト : CActivity {
 
 			float texture_xoffset = ((texture.szTextureSize.Width / 3) * (1.0f - openAnime));
 
-			texture.vcScaleRatio.X = 1.0f * openAnime;
-			texture.vcScaleRatio.Y = 1.0f;
+			texture.Scale.X = 1.0f * openAnime;
+			texture.Scale.Y = 1.0f;
 			texture.t2D描画(x + (texture_xoffset * 1.5f) + moveX_xoffset - moveX, y - move, new Rectangle(0, 0, width, height));
 
-			texture.vcScaleRatio.X = 1.0f * openAnime;
-			texture.vcScaleRatio.Y = 1.0f + ((move / (float)height) * 2.0f);
+			texture.Scale.X = 1.0f * openAnime;
+			texture.Scale.Y = 1.0f + ((move / (float)height) * 2.0f);
 			texture.t2D描画(x + (texture_xoffset * 1.5f) + moveX_xoffset - moveX, y + height - move, new Rectangle(0, height, width, height));
 
-			texture.vcScaleRatio.X = 1.0f * openAnime;
-			texture.vcScaleRatio.Y = 1.0f;
+			texture.Scale.X = 1.0f * openAnime;
+			texture.Scale.Y = 1.0f;
 			texture.t2D描画(x + (texture_xoffset * 1.5f) + moveX_xoffset - moveX, y + (height * 2) + move, new Rectangle(0, height * 2, width, height));
 
 
-			texture.vcScaleRatio.X = (1.0f + ((moveX / (float)width) * 2.0f)) * openAnime;
-			texture.vcScaleRatio.Y = 1.0f;
+			texture.Scale.X = (1.0f + ((moveX / (float)width) * 2.0f)) * openAnime;
+			texture.Scale.Y = 1.0f;
 			texture.t2D描画(x + (texture_xoffset / 2) + moveX_xoffset - moveX + width, y - move, new Rectangle(width, 0, width, height));
 
-			texture.vcScaleRatio.X = (1.0f + ((moveX / (float)width) * 2.0f)) * openAnime;
-			texture.vcScaleRatio.Y = 1.0f + ((move / (float)height) * 2.0f);
+			texture.Scale.X = (1.0f + ((moveX / (float)width) * 2.0f)) * openAnime;
+			texture.Scale.Y = 1.0f + ((move / (float)height) * 2.0f);
 			texture.t2D描画(x + (texture_xoffset / 2) + moveX_xoffset - moveX + width, y + height - move, new Rectangle(width, height, width, height));
 
-			texture.vcScaleRatio.X = (1.0f + ((moveX / (float)width) * 2.0f)) * openAnime;
-			texture.vcScaleRatio.Y = 1.0f;
+			texture.Scale.X = (1.0f + ((moveX / (float)width) * 2.0f)) * openAnime;
+			texture.Scale.Y = 1.0f;
 			texture.t2D描画(x + (texture_xoffset / 2) + moveX_xoffset - moveX + width, y + (height * 2) + move, new Rectangle(width, height * 2, width, height));
 
 
-			texture.vcScaleRatio.X = 1.0f * openAnime;
-			texture.vcScaleRatio.Y = 1.0f;
+			texture.Scale.X = 1.0f * openAnime;
+			texture.Scale.Y = 1.0f;
 			texture.t2D描画(x - (texture_xoffset / 2) - moveX_xoffset + moveX + (width * 2), y - move, new Rectangle(width * 2, 0, width, height));
 
-			texture.vcScaleRatio.X = 1.0f * openAnime;
-			texture.vcScaleRatio.Y = 1.0f + ((move / (float)height) * 2.0f);
+			texture.Scale.X = 1.0f * openAnime;
+			texture.Scale.Y = 1.0f + ((move / (float)height) * 2.0f);
 			texture.t2D描画(x - (texture_xoffset / 2) - moveX_xoffset + moveX + (width * 2), y + height - move, new Rectangle(width * 2, height, width, height));
 
-			texture.vcScaleRatio.X = 1.0f * openAnime;
-			texture.vcScaleRatio.Y = 1.0f;
+			texture.Scale.X = 1.0f * openAnime;
+			texture.Scale.Y = 1.0f;
 			texture.t2D描画(x - (texture_xoffset / 2) - moveX_xoffset + moveX + (width * 2), y + (height * 2) + move, new Rectangle(width * 2, height * 2, width, height));
 
 		}
 
 		if (drawOverlay) {
 			if (fullScaleOverlay) {
-				overlay.vcScaleRatio.X = 1.0f * openAnime;
-				overlay.vcScaleRatio.Y = 1.0f;
+				overlay.Scale.X = 1.0f * openAnime;
+				overlay.Scale.Y = 1.0f;
 				overlay.t2D描画(x + (overlay_xoffset * 1.5f) + moveX_xoffset - moveX, y - move, new Rectangle(0, 0, width, height));
 
-				overlay.vcScaleRatio.X = 1.0f * openAnime;
-				overlay.vcScaleRatio.Y = 1.0f + ((move / (float)height) * 2.0f);
+				overlay.Scale.X = 1.0f * openAnime;
+				overlay.Scale.Y = 1.0f + ((move / (float)height) * 2.0f);
 				overlay.t2D描画(x + (overlay_xoffset * 1.5f) + moveX_xoffset - moveX, y + height - move, new Rectangle(0, height, width, height));
 			} else {
-				overlay.vcScaleRatio.X = 1.0f * openAnime;
-				overlay.vcScaleRatio.Y = 1.0f;
+				overlay.Scale.X = 1.0f * openAnime;
+				overlay.Scale.Y = 1.0f;
 				overlay.t2D描画(x + (overlay_xoffset * 1.5f) + moveX_xoffset - moveX, y, new Rectangle(0, 0, width, height));
 
-				overlay.vcScaleRatio.X = 1.0f * openAnime;
-				overlay.vcScaleRatio.Y = 1.0f + ((move / (float)height) * 1.0f);
+				overlay.Scale.X = 1.0f * openAnime;
+				overlay.Scale.Y = 1.0f + ((move / (float)height) * 1.0f);
 				overlay.t2D描画(x + (overlay_xoffset * 1.5f) + moveX_xoffset - moveX, y + height, new Rectangle(0, height, width, height));
 			}
-			overlay.vcScaleRatio.X = 1.0f * openAnime;
-			overlay.vcScaleRatio.Y = 1.0f;
+			overlay.Scale.X = 1.0f * openAnime;
+			overlay.Scale.Y = 1.0f;
 			overlay.t2D描画(x + (overlay_xoffset * 1.5f) + moveX_xoffset - moveX, y + (height * 2) + move, new Rectangle(0, height * 2, width, height));
 
 
 			if (fullScaleOverlay) {
-				overlay.vcScaleRatio.X = (1.0f + ((moveX / (float)width) * 2.0f)) * openAnime;
-				overlay.vcScaleRatio.Y = 1.0f;
+				overlay.Scale.X = (1.0f + ((moveX / (float)width) * 2.0f)) * openAnime;
+				overlay.Scale.Y = 1.0f;
 				overlay.t2D描画(x + (overlay_xoffset / 2) + moveX_xoffset - moveX + width, y - move, new Rectangle(width, 0, width, height));
 
-				overlay.vcScaleRatio.X = (1.0f + ((moveX / (float)width) * 2.0f)) * openAnime;
-				overlay.vcScaleRatio.Y = 1.0f + ((move / (float)height) * 2.0f);
+				overlay.Scale.X = (1.0f + ((moveX / (float)width) * 2.0f)) * openAnime;
+				overlay.Scale.Y = 1.0f + ((move / (float)height) * 2.0f);
 				overlay.t2D描画(x + (overlay_xoffset / 2) + moveX_xoffset - moveX + width, y + height - move, new Rectangle(width, height, width, height));
 			} else {
-				overlay.vcScaleRatio.X = (1.0f + ((moveX / (float)width) * 2.0f)) * openAnime;
-				overlay.vcScaleRatio.Y = 1.0f;
+				overlay.Scale.X = (1.0f + ((moveX / (float)width) * 2.0f)) * openAnime;
+				overlay.Scale.Y = 1.0f;
 				overlay.t2D描画(x + (overlay_xoffset / 2) + moveX_xoffset - moveX + width, y, new Rectangle(width, 0, width, height));
 
-				overlay.vcScaleRatio.X = (1.0f + ((moveX / (float)width) * 2.0f)) * openAnime;
-				overlay.vcScaleRatio.Y = 1.0f + ((move / (float)height) * 1.0f);
+				overlay.Scale.X = (1.0f + ((moveX / (float)width) * 2.0f)) * openAnime;
+				overlay.Scale.Y = 1.0f + ((move / (float)height) * 1.0f);
 				overlay.t2D描画(x + (overlay_xoffset / 2) + moveX_xoffset - moveX + width, y + height, new Rectangle(width, height, width, height));
 			}
-			overlay.vcScaleRatio.X = (1.0f + ((moveX / (float)width) * 2.0f)) * openAnime;
-			overlay.vcScaleRatio.Y = 1.0f;
+			overlay.Scale.X = (1.0f + ((moveX / (float)width) * 2.0f)) * openAnime;
+			overlay.Scale.Y = 1.0f;
 			overlay.t2D描画(x + (overlay_xoffset / 2) + moveX_xoffset - moveX + width, y + (height * 2) + move, new Rectangle(width, height * 2, width, height));
 
 
 			if (fullScaleOverlay) {
-				overlay.vcScaleRatio.X = 1.0f * openAnime;
-				overlay.vcScaleRatio.Y = 1.0f;
+				overlay.Scale.X = 1.0f * openAnime;
+				overlay.Scale.Y = 1.0f;
 				overlay.t2D描画(x - (overlay_xoffset / 2) - moveX_xoffset + moveX + (width * 2), y - move, new Rectangle(width * 2, 0, width, height));
 
-				overlay.vcScaleRatio.X = 1.0f * openAnime;
-				overlay.vcScaleRatio.Y = 1.0f + ((move / (float)height) * 2.0f);
+				overlay.Scale.X = 1.0f * openAnime;
+				overlay.Scale.Y = 1.0f + ((move / (float)height) * 2.0f);
 				overlay.t2D描画(x - (overlay_xoffset / 2) - moveX_xoffset + moveX + (width * 2), y + height - move, new Rectangle(width * 2, height, width, height));
 			} else {
-				overlay.vcScaleRatio.X = 1.0f * openAnime;
-				overlay.vcScaleRatio.Y = 1.0f;
+				overlay.Scale.X = 1.0f * openAnime;
+				overlay.Scale.Y = 1.0f;
 				overlay.t2D描画(x - (overlay_xoffset / 2) - moveX_xoffset + moveX + (width * 2), y, new Rectangle(width * 2, 0, width, height));
 
-				overlay.vcScaleRatio.X = 1.0f * openAnime;
-				overlay.vcScaleRatio.Y = 1.0f + ((move / (float)height) * 1.0f);
+				overlay.Scale.X = 1.0f * openAnime;
+				overlay.Scale.Y = 1.0f + ((move / (float)height) * 1.0f);
 				overlay.t2D描画(x - (overlay_xoffset / 2) - moveX_xoffset + moveX + (width * 2), y + height, new Rectangle(width * 2, height, width, height));
 			}
-			overlay.vcScaleRatio.X = 1.0f * openAnime;
-			overlay.vcScaleRatio.Y = 1.0f;
+			overlay.Scale.X = 1.0f * openAnime;
+			overlay.Scale.Y = 1.0f;
 			overlay.t2D描画(x - (overlay_xoffset / 2) - moveX_xoffset + moveX + (width * 2), y + (height * 2) + move, new Rectangle(width * 2, height * 2, width, height));
 
 		}
@@ -2862,11 +2862,11 @@ internal class CActSelect曲リスト : CActivity {
 			int scoreRankEffect_height = OpenNijiiroRW.Tx.TowerResult_ScoreRankEffect.szTextureSize.Height;
 
 			//TJAPlayer3.Tx.TowerResult_ScoreRankEffect.Opacity = 255;
-			OpenNijiiroRW.Tx.TowerResult_ScoreRankEffect.vcScaleRatio.X = _resize;
-			OpenNijiiroRW.Tx.TowerResult_ScoreRankEffect.vcScaleRatio.Y = _resize;
+			OpenNijiiroRW.Tx.TowerResult_ScoreRankEffect.Scale.X = _resize;
+			OpenNijiiroRW.Tx.TowerResult_ScoreRankEffect.Scale.Y = _resize;
 			OpenNijiiroRW.Tx.TowerResult_ScoreRankEffect.t2D拡大率考慮中央基準描画(x, y, new Rectangle(grade * scoreRankEffect_width, 0, scoreRankEffect_width, scoreRankEffect_height));
-			OpenNijiiroRW.Tx.TowerResult_ScoreRankEffect.vcScaleRatio.X = 1f;
-			OpenNijiiroRW.Tx.TowerResult_ScoreRankEffect.vcScaleRatio.Y = 1f;
+			OpenNijiiroRW.Tx.TowerResult_ScoreRankEffect.Scale.X = 1f;
+			OpenNijiiroRW.Tx.TowerResult_ScoreRankEffect.Scale.Y = 1f;
 		}
 	}
 
@@ -2876,11 +2876,11 @@ internal class CActSelect曲リスト : CActivity {
 			int danResult_rank_height = OpenNijiiroRW.Tx.DanResult_Rank.szTextureSize.Height;
 
 			//TJAPlayer3.Tx.DanResult_Rank.Opacity = 255;
-			OpenNijiiroRW.Tx.DanResult_Rank.vcScaleRatio.X = _resize;
-			OpenNijiiroRW.Tx.DanResult_Rank.vcScaleRatio.Y = _resize;
+			OpenNijiiroRW.Tx.DanResult_Rank.Scale.X = _resize;
+			OpenNijiiroRW.Tx.DanResult_Rank.Scale.Y = _resize;
 			OpenNijiiroRW.Tx.DanResult_Rank.t2D拡大率考慮中央基準描画(x, y, new Rectangle(danResult_rank_width * (grade + 1), 0, danResult_rank_width, danResult_rank_height));
-			OpenNijiiroRW.Tx.DanResult_Rank.vcScaleRatio.X = 1f;
-			OpenNijiiroRW.Tx.DanResult_Rank.vcScaleRatio.Y = 1f;
+			OpenNijiiroRW.Tx.DanResult_Rank.Scale.X = 1f;
+			OpenNijiiroRW.Tx.DanResult_Rank.Scale.Y = 1f;
 		}
 	}
 
@@ -2891,10 +2891,10 @@ internal class CActSelect曲リスト : CActivity {
 
 		// To change to include all crowns/score ranks later
 
-		OpenNijiiroRW.Tx.SongSelect_Crown.vcScaleRatio.X = _resize;
-		OpenNijiiroRW.Tx.SongSelect_Crown.vcScaleRatio.Y = _resize;
-		OpenNijiiroRW.Tx.SongSelect_ScoreRank.vcScaleRatio.X = _resize;
-		OpenNijiiroRW.Tx.SongSelect_ScoreRank.vcScaleRatio.Y = _resize;
+		OpenNijiiroRW.Tx.SongSelect_Crown.Scale.X = _resize;
+		OpenNijiiroRW.Tx.SongSelect_Crown.Scale.Y = _resize;
+		OpenNijiiroRW.Tx.SongSelect_ScoreRank.Scale.X = _resize;
+		OpenNijiiroRW.Tx.SongSelect_ScoreRank.Scale.Y = _resize;
 
 		int bestCrown = -1;
 		int bestScoreRank = -1;
@@ -2925,8 +2925,8 @@ internal class CActSelect曲リスト : CActivity {
 			int dani_difficulty_cymbol_height = OpenNijiiroRW.Tx.Dani_Difficulty_Cymbol.szTextureSize.Height;
 
 			OpenNijiiroRW.Tx.Dani_Difficulty_Cymbol.Opacity = OpenNijiiroRW.Tx.SongSelect_Favorite.Opacity;
-			OpenNijiiroRW.Tx.Dani_Difficulty_Cymbol.vcScaleRatio.X = 0.5f;
-			OpenNijiiroRW.Tx.Dani_Difficulty_Cymbol.vcScaleRatio.Y = 0.5f;
+			OpenNijiiroRW.Tx.Dani_Difficulty_Cymbol.Scale.X = 0.5f;
+			OpenNijiiroRW.Tx.Dani_Difficulty_Cymbol.Scale.Y = 0.5f;
 
 			if (bestCrown >= 0) {
 				OpenNijiiroRW.Tx.Dani_Difficulty_Cymbol.t2D中心基準描画(
@@ -2943,8 +2943,8 @@ internal class CActSelect曲リスト : CActivity {
 			}
 
 			OpenNijiiroRW.Tx.Dani_Difficulty_Cymbol.Opacity = 255;
-			OpenNijiiroRW.Tx.Dani_Difficulty_Cymbol.vcScaleRatio.X = 1f;
-			OpenNijiiroRW.Tx.Dani_Difficulty_Cymbol.vcScaleRatio.Y = 1f;
+			OpenNijiiroRW.Tx.Dani_Difficulty_Cymbol.Scale.X = 1f;
+			OpenNijiiroRW.Tx.Dani_Difficulty_Cymbol.Scale.Y = 1f;
 		}
 
 
@@ -2954,16 +2954,16 @@ internal class CActSelect曲リスト : CActivity {
 		if (csu != null
 			&& OpenNijiiroRW.Tx.SongSelect_Favorite != null
 			&& OpenNijiiroRW.Favorites.tIsFavorite(csu.data.id)) {
-			OpenNijiiroRW.Tx.SongSelect_Favorite.vcScaleRatio.X = _resize;
-			OpenNijiiroRW.Tx.SongSelect_Favorite.vcScaleRatio.Y = _resize;
+			OpenNijiiroRW.Tx.SongSelect_Favorite.Scale.X = _resize;
+			OpenNijiiroRW.Tx.SongSelect_Favorite.Scale.Y = _resize;
 			OpenNijiiroRW.Tx.SongSelect_Favorite.t2D拡大率考慮中央基準描画(x, y);
 		}
 	}
 
 	public void displayVisibleLockStatus(int x, int y, float _resize) {
 		if (OpenNijiiroRW.Tx.SongSelect_Lock != null) {
-			OpenNijiiroRW.Tx.SongSelect_Lock.vcScaleRatio.X = _resize;
-			OpenNijiiroRW.Tx.SongSelect_Lock.vcScaleRatio.Y = _resize;
+			OpenNijiiroRW.Tx.SongSelect_Lock.Scale.X = _resize;
+			OpenNijiiroRW.Tx.SongSelect_Lock.Scale.Y = _resize;
 			OpenNijiiroRW.Tx.SongSelect_Lock.t2D拡大率考慮中央基準描画(x, y);
 		}
 	}
@@ -3050,7 +3050,7 @@ internal class CActSelect曲リスト : CActivity {
 			float height = OpenNijiiroRW.Tx.SongSelect_Level_Number.sz画像サイズ.Height;
 
 			var _expand_ratio = 1.0f / (1.0f + (0.25f * (nums.Length - 1)));
-			OpenNijiiroRW.Tx.SongSelect_Level_Number.vcScaleRatio.X = _expand_ratio;
+			OpenNijiiroRW.Tx.SongSelect_Level_Number.Scale.X = _expand_ratio;
 
 			icon_coords[0] = Math.Max(icon_coords[0], _x + width * _expand_ratio);
 			icon_coords[1] = _y;
@@ -3058,7 +3058,7 @@ internal class CActSelect曲リスト : CActivity {
 			OpenNijiiroRW.Tx.SongSelect_Level_Number.t2D描画(_x, _y, new RectangleF(width * nums[j], 0, width, height));
 
 			if (OpenNijiiroRW.Tx.SongSelect_Level_Number_Colored != null) {
-				OpenNijiiroRW.Tx.SongSelect_Level_Number_Colored.vcScaleRatio.X = _expand_ratio;
+				OpenNijiiroRW.Tx.SongSelect_Level_Number_Colored.Scale.X = _expand_ratio;
 				OpenNijiiroRW.Tx.SongSelect_Level_Number_Colored.color4 = CConversion.ColorToColor4(OpenNijiiroRW.Skin.SongSelect_Difficulty_Colors[diff]);
 				OpenNijiiroRW.Tx.SongSelect_Level_Number_Colored.t2D描画(_x, _y, new RectangleF(width * nums[j], 0, width, height));
 			}
@@ -3088,14 +3088,14 @@ internal class CActSelect曲リスト : CActivity {
 			float height = OpenNijiiroRW.Tx.SongSelect_Level_Number_Big.sz画像サイズ.Height;
 
 			var _expand_ratio = 1.0f / (1.0f + (0.25f * (nums.Length - 1)));
-			OpenNijiiroRW.Tx.SongSelect_Level_Number_Big.vcScaleRatio.X = _expand_ratio;
+			OpenNijiiroRW.Tx.SongSelect_Level_Number_Big.Scale.X = _expand_ratio;
 			OpenNijiiroRW.Tx.SongSelect_Level_Number_Big.t2D描画(_x, _y, new RectangleF(width * nums[j], 0, width, height));
 
 			icon_coords[0] = Math.Max(icon_coords[0], _x + width * _expand_ratio);
 			icon_coords[1] = _y;
 
 			if (OpenNijiiroRW.Tx.SongSelect_Level_Number_Big_Colored != null) {
-				OpenNijiiroRW.Tx.SongSelect_Level_Number_Big_Colored.vcScaleRatio.X = _expand_ratio;
+				OpenNijiiroRW.Tx.SongSelect_Level_Number_Big_Colored.Scale.X = _expand_ratio;
 				OpenNijiiroRW.Tx.SongSelect_Level_Number_Big_Colored.color4 = CConversion.ColorToColor4(OpenNijiiroRW.Skin.SongSelect_Difficulty_Colors[difficulty]);
 				OpenNijiiroRW.Tx.SongSelect_Level_Number_Big_Colored.t2D描画(_x, _y, new RectangleF(width * nums[j], 0, width, height));
 			}

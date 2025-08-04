@@ -247,11 +247,11 @@ internal class CActImplGauge : CAct演奏ゲージ共通 {
 						this.ct虹アニメ.TickLoop();
 						this.ct虹透明度.TickLoop();
 						if (OpenNijiiroRW.Tx.Gauge_Rainbow[this.ct虹アニメ.CurrentValue] != null) {
-							OpenNijiiroRW.Tx.Gauge_Rainbow[this.ct虹アニメ.CurrentValue].vcScaleRatio.X = scale;
-							OpenNijiiroRW.Tx.Gauge_Rainbow[this.ct虹アニメ.CurrentValue].vcScaleRatio.Y = scale;
+							OpenNijiiroRW.Tx.Gauge_Rainbow[this.ct虹アニメ.CurrentValue].Scale.X = scale;
+							OpenNijiiroRW.Tx.Gauge_Rainbow[this.ct虹アニメ.CurrentValue].Scale.Y = scale;
 
-							OpenNijiiroRW.Tx.Gauge_Rainbow[虹ベース].vcScaleRatio.X = scale;
-							OpenNijiiroRW.Tx.Gauge_Rainbow[虹ベース].vcScaleRatio.Y = scale;
+							OpenNijiiroRW.Tx.Gauge_Rainbow[虹ベース].Scale.X = scale;
+							OpenNijiiroRW.Tx.Gauge_Rainbow[虹ベース].Scale.Y = scale;
 
 							bool smart = OpenNijiiroRW.ConfigIni.nPlayerCount > 2 || OpenNijiiroRW.stageSongSelect.nChoosenSongDifficulty[0] == (int)Difficulty.Dan;
 
@@ -277,8 +277,8 @@ internal class CActImplGauge : CAct演奏ゲージ共通 {
 
 					if (OpenNijiiroRW.Tx.Gauge_Line[0] != null) {
 
-						OpenNijiiroRW.Tx.Gauge_Line[0].vcScaleRatio.X = scale;
-						OpenNijiiroRW.Tx.Gauge_Line[0].vcScaleRatio.Y = scale;
+						OpenNijiiroRW.Tx.Gauge_Line[0].Scale.X = scale;
+						OpenNijiiroRW.Tx.Gauge_Line[0].Scale.Y = scale;
 
 						OpenNijiiroRW.Tx.Gauge_Line[0].t2D描画(x, y);
 					}
@@ -316,8 +316,8 @@ internal class CActImplGauge : CAct演奏ゲージ共通 {
 						if (this.db現在のゲージ値[i] >= 100.0) {
 							this.ct炎.TickLoop();
 
-							OpenNijiiroRW.Tx.Gauge_Soul_Fire.vcScaleRatio.X = scale;
-							OpenNijiiroRW.Tx.Gauge_Soul_Fire.vcScaleRatio.Y = scale;
+							OpenNijiiroRW.Tx.Gauge_Soul_Fire.Scale.X = scale;
+							OpenNijiiroRW.Tx.Gauge_Soul_Fire.Scale.Y = scale;
 
 							OpenNijiiroRW.Tx.Gauge_Soul_Fire.t2D描画(x, y, new Rectangle(soulfire_width * (this.ct炎.CurrentValue), 0, soulfire_width, soulfire_height));
 						}
@@ -347,8 +347,8 @@ internal class CActImplGauge : CAct演奏ゲージ共通 {
 							}
 						}
 
-						OpenNijiiroRW.Tx.Gauge_Soul.vcScaleRatio.X = scale;
-						OpenNijiiroRW.Tx.Gauge_Soul.vcScaleRatio.Y = scale;
+						OpenNijiiroRW.Tx.Gauge_Soul.Scale.X = scale;
+						OpenNijiiroRW.Tx.Gauge_Soul.Scale.Y = scale;
 
 						if (this.db現在のゲージ値[i] >= 80.0) {
 							OpenNijiiroRW.Tx.Gauge_Soul.t2D描画(x, y, new Rectangle(0, 0, OpenNijiiroRW.Tx.Gauge_Soul.szTextureSize.Width, soul_height));

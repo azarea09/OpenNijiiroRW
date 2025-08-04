@@ -436,8 +436,8 @@ internal class CActImplCharacter : CActivity {
 					chara_y -= nowChara.szTextureSize.Height * charaScale; // Center down
 				}
 
-				nowChara.vcScaleRatio.X = charaScale;
-				nowChara.vcScaleRatio.Y = charaScale;
+				nowChara.Scale.X = charaScale;
+				nowChara.Scale.Y = charaScale;
 
 				if (flipX) {
 					nowChara.t2D左右反転描画(chara_x, chara_y);
@@ -445,8 +445,8 @@ internal class CActImplCharacter : CActivity {
 					nowChara.t2D描画(chara_x, chara_y);
 				}
 
-				nowChara.vcScaleRatio.X = 1.0f;
-				nowChara.vcScaleRatio.Y = 1.0f;
+				nowChara.Scale.X = 1.0f;
+				nowChara.Scale.Y = 1.0f;
 			}
 
 			if ((this.b風船連打中[i] != true && CharaAction_Balloon_Delay[i].IsEnded) || OpenNijiiroRW.ConfigIni.nPlayerCount > 2) {
@@ -508,8 +508,8 @@ internal class CActImplCharacter : CActivity {
 
 					if (OpenNijiiroRW.Skin.Characters_Balloon_Broke_Ptn[this.iCurrentCharacter[i]] != 0 && OpenNijiiroRW.Tx.Characters_Balloon_Broke[this.iCurrentCharacter[i]][nNowCharaFrame[i]] != null) {
 						OpenNijiiroRW.Tx.Characters_Balloon_Broke[this.iCurrentCharacter[i]][nNowCharaFrame[i]].Opacity = nowOpacity;
-						OpenNijiiroRW.Tx.Characters_Balloon_Broke[this.iCurrentCharacter[i]][nNowCharaFrame[i]].vcScaleRatio.X = charaScale;
-						OpenNijiiroRW.Tx.Characters_Balloon_Broke[this.iCurrentCharacter[i]][nNowCharaFrame[i]].vcScaleRatio.Y = charaScale;
+						OpenNijiiroRW.Tx.Characters_Balloon_Broke[this.iCurrentCharacter[i]][nNowCharaFrame[i]].Scale.X = charaScale;
+						OpenNijiiroRW.Tx.Characters_Balloon_Broke[this.iCurrentCharacter[i]][nNowCharaFrame[i]].Scale.Y = charaScale;
 						OpenNijiiroRW.Tx.Characters_Balloon_Broke[this.iCurrentCharacter[i]][nNowCharaFrame[i]].t2D描画(
 							OpenNijiiroRW.stageGameScreen.GetJPOSCROLLX(i) + chara_x,
 							OpenNijiiroRW.stageGameScreen.GetJPOSCROLLY(i) + chara_y);
@@ -531,8 +531,8 @@ internal class CActImplCharacter : CActivity {
 
 					if (OpenNijiiroRW.Skin.Characters_Balloon_Miss_Ptn[this.iCurrentCharacter[i]] != 0 && OpenNijiiroRW.Tx.Characters_Balloon_Miss[this.iCurrentCharacter[i]][nNowCharaFrame[i]] != null) {
 						OpenNijiiroRW.Tx.Characters_Balloon_Miss[this.iCurrentCharacter[i]][nNowCharaFrame[i]].Opacity = nowOpacity;
-						OpenNijiiroRW.Tx.Characters_Balloon_Miss[this.iCurrentCharacter[i]][nNowCharaFrame[i]].vcScaleRatio.X = charaScale;
-						OpenNijiiroRW.Tx.Characters_Balloon_Miss[this.iCurrentCharacter[i]][nNowCharaFrame[i]].vcScaleRatio.Y = charaScale;
+						OpenNijiiroRW.Tx.Characters_Balloon_Miss[this.iCurrentCharacter[i]][nNowCharaFrame[i]].Scale.X = charaScale;
+						OpenNijiiroRW.Tx.Characters_Balloon_Miss[this.iCurrentCharacter[i]][nNowCharaFrame[i]].Scale.Y = charaScale;
 						OpenNijiiroRW.Tx.Characters_Balloon_Miss[this.iCurrentCharacter[i]][nNowCharaFrame[i]].t2D描画(
 							OpenNijiiroRW.stageGameScreen.GetJPOSCROLLX(i) + chara_x,
 							OpenNijiiroRW.stageGameScreen.GetJPOSCROLLY(i) + chara_y);
@@ -549,8 +549,8 @@ internal class CActImplCharacter : CActivity {
 					}
 				} else if (eNowAnime[i] == Anime.Balloon_Breaking) {
 					if (OpenNijiiroRW.Skin.Characters_Balloon_Breaking_Ptn[this.iCurrentCharacter[i]] != 0 && OpenNijiiroRW.Tx.Characters_Balloon_Breaking[this.iCurrentCharacter[i]][nNowCharaFrame[i]] != null) {
-						OpenNijiiroRW.Tx.Characters_Balloon_Breaking[this.iCurrentCharacter[i]][nNowCharaFrame[i]].vcScaleRatio.X = charaScale;
-						OpenNijiiroRW.Tx.Characters_Balloon_Breaking[this.iCurrentCharacter[i]][nNowCharaFrame[i]].vcScaleRatio.Y = charaScale;
+						OpenNijiiroRW.Tx.Characters_Balloon_Breaking[this.iCurrentCharacter[i]][nNowCharaFrame[i]].Scale.X = charaScale;
+						OpenNijiiroRW.Tx.Characters_Balloon_Breaking[this.iCurrentCharacter[i]][nNowCharaFrame[i]].Scale.Y = charaScale;
 						OpenNijiiroRW.Tx.Characters_Balloon_Breaking[this.iCurrentCharacter[i]][nNowCharaFrame[i]].t2D描画(
 							OpenNijiiroRW.stageGameScreen.GetJPOSCROLLX(i) + chara_x,
 							OpenNijiiroRW.stageGameScreen.GetJPOSCROLLY(i) + chara_y);
@@ -569,8 +569,8 @@ internal class CActImplCharacter : CActivity {
 
 					if (OpenNijiiroRW.Skin.Characters_Kusudama_Broke_Ptn[this.iCurrentCharacter[i]] != 0 && OpenNijiiroRW.Tx.Characters_Kusudama_Broke[this.iCurrentCharacter[i]][nNowCharaFrame[i]] != null) {
 						OpenNijiiroRW.Tx.Characters_Kusudama_Broke[this.iCurrentCharacter[i]][nNowCharaFrame[i]].Opacity = nowOpacity;
-						OpenNijiiroRW.Tx.Characters_Kusudama_Broke[this.iCurrentCharacter[i]][nNowCharaFrame[i]].vcScaleRatio.X = charaScale;
-						OpenNijiiroRW.Tx.Characters_Kusudama_Broke[this.iCurrentCharacter[i]][nNowCharaFrame[i]].vcScaleRatio.Y = charaScale;
+						OpenNijiiroRW.Tx.Characters_Kusudama_Broke[this.iCurrentCharacter[i]][nNowCharaFrame[i]].Scale.X = charaScale;
+						OpenNijiiroRW.Tx.Characters_Kusudama_Broke[this.iCurrentCharacter[i]][nNowCharaFrame[i]].Scale.Y = charaScale;
 						if (i % 2 == 0) {
 							OpenNijiiroRW.Tx.Characters_Kusudama_Broke[this.iCurrentCharacter[i]][nNowCharaFrame[i]].t2D描画(kusu_chara_x - kusuOutX, kusu_chara_y - kusuOutY);
 						} else {
@@ -600,8 +600,8 @@ internal class CActImplCharacter : CActivity {
 
 					if (OpenNijiiroRW.Skin.Characters_Kusudama_Miss_Ptn[this.iCurrentCharacter[i]] != 0 && OpenNijiiroRW.Tx.Characters_Kusudama_Miss[this.iCurrentCharacter[i]][nNowCharaFrame[i]] != null) {
 						OpenNijiiroRW.Tx.Characters_Kusudama_Miss[this.iCurrentCharacter[i]][nNowCharaFrame[i]].Opacity = nowOpacity;
-						OpenNijiiroRW.Tx.Characters_Kusudama_Miss[this.iCurrentCharacter[i]][nNowCharaFrame[i]].vcScaleRatio.X = charaScale;
-						OpenNijiiroRW.Tx.Characters_Kusudama_Miss[this.iCurrentCharacter[i]][nNowCharaFrame[i]].vcScaleRatio.Y = charaScale;
+						OpenNijiiroRW.Tx.Characters_Kusudama_Miss[this.iCurrentCharacter[i]][nNowCharaFrame[i]].Scale.X = charaScale;
+						OpenNijiiroRW.Tx.Characters_Kusudama_Miss[this.iCurrentCharacter[i]][nNowCharaFrame[i]].Scale.Y = charaScale;
 
 
 						if (i % 2 == 0) {
@@ -625,8 +625,8 @@ internal class CActImplCharacter : CActivity {
 
 
 					if (OpenNijiiroRW.Skin.Characters_Kusudama_Breaking_Ptn[this.iCurrentCharacter[i]] != 0 && OpenNijiiroRW.Tx.Characters_Kusudama_Breaking[this.iCurrentCharacter[i]][nNowCharaFrame[i]] != null) {
-						OpenNijiiroRW.Tx.Characters_Kusudama_Breaking[this.iCurrentCharacter[i]][nNowCharaFrame[i]].vcScaleRatio.X = charaScale;
-						OpenNijiiroRW.Tx.Characters_Kusudama_Breaking[this.iCurrentCharacter[i]][nNowCharaFrame[i]].vcScaleRatio.Y = charaScale;
+						OpenNijiiroRW.Tx.Characters_Kusudama_Breaking[this.iCurrentCharacter[i]][nNowCharaFrame[i]].Scale.X = charaScale;
+						OpenNijiiroRW.Tx.Characters_Kusudama_Breaking[this.iCurrentCharacter[i]][nNowCharaFrame[i]].Scale.Y = charaScale;
 						if (i % 2 == 0) {
 							OpenNijiiroRW.Tx.Characters_Kusudama_Breaking[this.iCurrentCharacter[i]][nNowCharaFrame[i]].t2D描画(kusu_chara_x - kusuInX, kusu_chara_y + kusuInY);
 						} else {
@@ -652,8 +652,8 @@ internal class CActImplCharacter : CActivity {
 					float kusuInY = -((MathF.Cos(ctKusuIn[i].CurrentValue / 1000.0f * MathF.PI / 2)) * OpenNijiiroRW.Skin.Resolution[1] / 2.0f) * resolutionScaleY;
 
 					if (OpenNijiiroRW.Skin.Characters_Kusudama_Idle_Ptn[this.iCurrentCharacter[i]] != 0 && OpenNijiiroRW.Tx.Characters_Kusudama_Idle[this.iCurrentCharacter[i]][nNowCharaFrame[i]] != null) {
-						OpenNijiiroRW.Tx.Characters_Kusudama_Idle[this.iCurrentCharacter[i]][nNowCharaFrame[i]].vcScaleRatio.X = charaScale;
-						OpenNijiiroRW.Tx.Characters_Kusudama_Idle[this.iCurrentCharacter[i]][nNowCharaFrame[i]].vcScaleRatio.Y = charaScale;
+						OpenNijiiroRW.Tx.Characters_Kusudama_Idle[this.iCurrentCharacter[i]][nNowCharaFrame[i]].Scale.X = charaScale;
+						OpenNijiiroRW.Tx.Characters_Kusudama_Idle[this.iCurrentCharacter[i]][nNowCharaFrame[i]].Scale.Y = charaScale;
 						if (i % 2 == 0) {
 							OpenNijiiroRW.Tx.Characters_Kusudama_Idle[this.iCurrentCharacter[i]][nNowCharaFrame[i]].t2D描画(kusu_chara_x - kusuInX, kusu_chara_y + kusuInY);
 						} else {

@@ -42,7 +42,7 @@ internal class CActDFPFont : CActivity {
 		if (!base.IsDeActivated && !string.IsNullOrEmpty(str)) {
 			CTexture texture = b強調 ? OpenNijiiroRW.Tx.Config_Font_Bold : OpenNijiiroRW.Tx.Config_Font;
 			if (texture != null) {
-				texture.vcScaleRatio = new Vector3D<float>(fScale, fScale, 1f);
+				texture.Scale = new Vector3D<float>(fScale, fScale, 1f);
 				foreach (char ch in str) {
 					foreach (ST文字領域 st文字領域 in this.st文字領域) {
 						if (st文字領域.ch == ch) {

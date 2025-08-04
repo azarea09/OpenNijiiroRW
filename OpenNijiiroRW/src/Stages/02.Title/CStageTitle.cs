@@ -365,7 +365,7 @@ internal class CStageTitle : CStage {
 									OpenNijiiroRW.Tx.Tile_Black.t2D描画(i * OpenNijiiroRW.Tx.Tile_Black.szTextureSize.Width, j * OpenNijiiroRW.Tx.Tile_Black.szTextureSize.Height);
 
 							OpenNijiiroRW.Tx.Banapas_Load[0].Opacity = ctSaveLoaded.CurrentValue >= 872 ? 255 - (ctSaveLoaded.CurrentValue - 872) * 2 : ctSaveLoaded.CurrentValue * 2;
-							OpenNijiiroRW.Tx.Banapas_Load[0].vcScaleRatio.Y = ctSaveLoaded.CurrentValue <= 100 ? ctSaveLoaded.CurrentValue * 0.01f : 1.0f;
+							OpenNijiiroRW.Tx.Banapas_Load[0].Scale.Y = ctSaveLoaded.CurrentValue <= 100 ? ctSaveLoaded.CurrentValue * 0.01f : 1.0f;
 							OpenNijiiroRW.Tx.Banapas_Load[0].t2D描画(0, 0);
 
 							OpenNijiiroRW.Tx.Banapas_Load[1].Opacity = ctSaveLoaded.CurrentValue >= 872 ? 255 - (ctSaveLoaded.CurrentValue - 872) * 2 : ctSaveLoaded.CurrentValue <= 96 ? (int)((ctSaveLoaded.CurrentValue - 96) * 7.96875f) : 255;
@@ -409,7 +409,7 @@ internal class CStageTitle : CStage {
 
 							int count = this.ctSaveLoaded.CurrentValue - 1000;
 							OpenNijiiroRW.Tx.Banapas_Load_Clear[0].Opacity = count >= 1872 ? 255 - (count - 1872) * 2 : count * 2;
-							OpenNijiiroRW.Tx.Banapas_Load_Clear[0].vcScaleRatio.Y = count <= 100 ? count * 0.01f : 1.0f;
+							OpenNijiiroRW.Tx.Banapas_Load_Clear[0].Scale.Y = count <= 100 ? count * 0.01f : 1.0f;
 							OpenNijiiroRW.Tx.Banapas_Load_Clear[0].t2D描画(0, 0);
 
 							float anime = 0f;
@@ -435,8 +435,8 @@ internal class CStageTitle : CStage {
 								}
 							}
 
-							OpenNijiiroRW.Tx.Banapas_Load_Clear[1].vcScaleRatio.X = 1.0f + scalex;
-							OpenNijiiroRW.Tx.Banapas_Load_Clear[1].vcScaleRatio.Y = 1.0f + scaley;
+							OpenNijiiroRW.Tx.Banapas_Load_Clear[1].Scale.X = 1.0f + scalex;
+							OpenNijiiroRW.Tx.Banapas_Load_Clear[1].Scale.Y = 1.0f + scaley;
 							OpenNijiiroRW.Tx.Banapas_Load_Clear[1].Opacity = count >= 1872 ? 255 - (count - 1872) * 2 : count * 2;
 							OpenNijiiroRW.Tx.Banapas_Load_Clear[1].t2D拡大率考慮下中心基準描画(OpenNijiiroRW.Skin.Title_Banapas_Load_Clear_Anime[0], OpenNijiiroRW.Skin.Title_Banapas_Load_Clear_Anime[1] - anime);
 
@@ -654,8 +654,8 @@ internal class CStageTitle : CStage {
 
 							if (_bar != null) {
 								_bar.Opacity = 255;
-								_bar.vcScaleRatio.X = 1.0f;
-								_bar.vcScaleRatio.Y = 1.0f;
+								_bar.Scale.X = 1.0f;
+								_bar.Scale.Y = 1.0f;
 								_bar.t2D描画(OpenNijiiroRW.Skin.Title_ModeSelect_Bar_Center_X[0] - (OpenNijiiroRW.Skin.Title_VerticalBar ? barAnimeX : 0),
 									OpenNijiiroRW.Skin.Title_ModeSelect_Bar_Center_Y[0] - (OpenNijiiroRW.Skin.Title_VerticalBar ? 0 : barAnime),
 									new Rectangle(OpenNijiiroRW.Skin.Title_ModeSelect_Bar_Center_Rect[0][0],
@@ -670,9 +670,9 @@ internal class CStageTitle : CStage {
 										OpenNijiiroRW.Skin.Title_ModeSelect_Bar_Center_Rect[1][3]));
 
 								if (OpenNijiiroRW.Skin.Title_VerticalBar) {
-									_bar.vcScaleRatio.X = (barAnimeX / OpenNijiiroRW.Skin.Title_ModeSelect_Bar_Center_Rect[2][2]) * 2.0f;
+									_bar.Scale.X = (barAnimeX / OpenNijiiroRW.Skin.Title_ModeSelect_Bar_Center_Rect[2][2]) * 2.0f;
 								} else {
-									_bar.vcScaleRatio.Y = (barAnime / OpenNijiiroRW.Skin.Title_ModeSelect_Bar_Center_Rect[2][3]) * 2.0f;
+									_bar.Scale.Y = (barAnime / OpenNijiiroRW.Skin.Title_ModeSelect_Bar_Center_Rect[2][3]) * 2.0f;
 								}
 
 								_bar.t2D拡大率考慮中央基準描画(OpenNijiiroRW.Skin.Title_ModeSelect_Bar_Center_X[2], OpenNijiiroRW.Skin.Title_ModeSelect_Bar_Center_Y[2],
@@ -686,8 +686,8 @@ internal class CStageTitle : CStage {
 							if (OpenNijiiroRW.Tx.ModeSelect_Bar[CMainMenuTab.__MenuCount] != null) {
 								CTexture _overlap = OpenNijiiroRW.Tx.ModeSelect_Bar[CMainMenuTab.__MenuCount];
 
-								_overlap.vcScaleRatio.X = 1.0f;
-								_overlap.vcScaleRatio.Y = 1.0f;
+								_overlap.Scale.X = 1.0f;
+								_overlap.Scale.Y = 1.0f;
 								_overlap.t2D描画(OpenNijiiroRW.Skin.Title_ModeSelect_Bar_Overlay_X[0], OpenNijiiroRW.Skin.Title_ModeSelect_Bar_Overlay_Y[0],
 									new Rectangle(OpenNijiiroRW.Skin.Title_ModeSelect_Bar_Overlay_Rect[0][0],
 										OpenNijiiroRW.Skin.Title_ModeSelect_Bar_Overlay_Rect[0][1],
@@ -701,9 +701,9 @@ internal class CStageTitle : CStage {
 										OpenNijiiroRW.Skin.Title_ModeSelect_Bar_Overlay_Rect[1][3]));
 
 								if (OpenNijiiroRW.Skin.Title_VerticalBar) {
-									_overlap.vcScaleRatio.X = (overlayAnimeX / OpenNijiiroRW.Skin.Title_ModeSelect_Bar_Overlay_Rect[2][2]);
+									_overlap.Scale.X = (overlayAnimeX / OpenNijiiroRW.Skin.Title_ModeSelect_Bar_Overlay_Rect[2][2]);
 								} else {
-									_overlap.vcScaleRatio.Y = (overlayAnime / OpenNijiiroRW.Skin.Title_ModeSelect_Bar_Overlay_Rect[2][3]);
+									_overlap.Scale.Y = (overlayAnime / OpenNijiiroRW.Skin.Title_ModeSelect_Bar_Overlay_Rect[2][3]);
 								}
 
 								_overlap.t2D拡大率考慮上中央基準描画(OpenNijiiroRW.Skin.Title_ModeSelect_Bar_Overlay_X[2], OpenNijiiroRW.Skin.Title_ModeSelect_Bar_Overlay_Y[2],
@@ -770,16 +770,16 @@ internal class CStageTitle : CStage {
 
 
 							if (_bar != null) {
-								_bar.vcScaleRatio.X = 1.0f;
-								_bar.vcScaleRatio.Y = 1.0f;
+								_bar.Scale.X = 1.0f;
+								_bar.Scale.Y = 1.0f;
 								_bar.t2D描画(pos.X + BarAnimeX - BarMoveX, pos.Y + BarAnimeY - BarMoveY);
 							}
 
 							if (OpenNijiiroRW.Tx.ModeSelect_Bar[CMainMenuTab.__MenuCount] != null) {
 								CTexture _overlap = OpenNijiiroRW.Tx.ModeSelect_Bar[CMainMenuTab.__MenuCount];
 
-								_overlap.vcScaleRatio.X = 1.0f;
-								_overlap.vcScaleRatio.Y = 1.0f;
+								_overlap.Scale.X = 1.0f;
+								_overlap.Scale.Y = 1.0f;
 								_overlap.t2D描画(pos.X + BarAnimeX - BarMoveX, pos.Y + BarAnimeY - BarMoveY);
 							}
 

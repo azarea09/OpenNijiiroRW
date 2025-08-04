@@ -132,8 +132,8 @@ internal class CActImplRoll : CActivity {
 	}
 
 	private void t文字表示(int x, int y, int num, int nPlayer) {
-		OpenNijiiroRW.Tx.Balloon_Number_Roll.vcScaleRatio.X = OpenNijiiroRW.Skin.Game_Balloon_Roll_Number_Scale;
-		OpenNijiiroRW.Tx.Balloon_Number_Roll.vcScaleRatio.Y = OpenNijiiroRW.Skin.Game_Balloon_Roll_Number_Scale + RollScale[this.ct連打アニメ[nPlayer].CurrentValue];
+		OpenNijiiroRW.Tx.Balloon_Number_Roll.Scale.X = OpenNijiiroRW.Skin.Game_Balloon_Roll_Number_Scale;
+		OpenNijiiroRW.Tx.Balloon_Number_Roll.Scale.Y = OpenNijiiroRW.Skin.Game_Balloon_Roll_Number_Scale + RollScale[this.ct連打アニメ[nPlayer].CurrentValue];
 
 		int[] nums = CConversion.SeparateDigits(num);
 		for (int j = 0; j < nums.Length; j++) {

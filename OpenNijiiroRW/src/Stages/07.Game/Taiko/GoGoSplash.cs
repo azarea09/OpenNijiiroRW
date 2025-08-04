@@ -36,15 +36,15 @@ class GoGoSplash : CActivity {
 				if (OpenNijiiroRW.Skin.Game_Effect_GoGoSplash_Rotate && OpenNijiiroRW.Tx.Effects_GoGoSplash != null) {
 					// Switch文を使いたかったが、定数じゃないから使えねぇ!!!!
 					if (i == 0) {
-						OpenNijiiroRW.Tx.Effects_GoGoSplash.fZ軸中心回転 = -0.2792526803190927f;
+						OpenNijiiroRW.Tx.Effects_GoGoSplash.Rotation = -0.2792526803190927f;
 					} else if (i == 1) {
-						OpenNijiiroRW.Tx.Effects_GoGoSplash.fZ軸中心回転 = -0.13962634015954636f;
+						OpenNijiiroRW.Tx.Effects_GoGoSplash.Rotation = -0.13962634015954636f;
 					} else if (i == OpenNijiiroRW.Skin.Game_Effect_GoGoSplash_X.Length - 2) {
-						OpenNijiiroRW.Tx.Effects_GoGoSplash.fZ軸中心回転 = 0.13962634015954636f;
+						OpenNijiiroRW.Tx.Effects_GoGoSplash.Rotation = 0.13962634015954636f;
 					} else if (i == OpenNijiiroRW.Skin.Game_Effect_GoGoSplash_X.Length - 1) {
-						OpenNijiiroRW.Tx.Effects_GoGoSplash.fZ軸中心回転 = 0.2792526803190927f;
+						OpenNijiiroRW.Tx.Effects_GoGoSplash.Rotation = 0.2792526803190927f;
 					} else {
-						OpenNijiiroRW.Tx.Effects_GoGoSplash.fZ軸中心回転 = 0.0f;
+						OpenNijiiroRW.Tx.Effects_GoGoSplash.Rotation = 0.0f;
 					}
 				}
 				OpenNijiiroRW.Tx.Effects_GoGoSplash?.t2D拡大率考慮下中心基準描画(OpenNijiiroRW.Skin.Game_Effect_GoGoSplash_X[i], OpenNijiiroRW.Skin.Game_Effect_GoGoSplash_Y[i], new Rectangle(OpenNijiiroRW.Skin.Game_Effect_GoGoSplash[0] * Splash.CurrentValue, 0, OpenNijiiroRW.Skin.Game_Effect_GoGoSplash[0], OpenNijiiroRW.Skin.Game_Effect_GoGoSplash[1]));

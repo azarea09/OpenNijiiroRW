@@ -1784,9 +1784,9 @@ internal class CStage演奏ドラム画面 : CStage演奏画面共通 {
 
 							if (!NotesManager.IsFuzeRoll(pChip)) {
 								if (pChip.bShowRoll) {
-									OpenNijiiroRW.Tx.SENotes[(int)_gt].vcScaleRatio.X = x末端 - x - 44 - _shift;
+									OpenNijiiroRW.Tx.SENotes[(int)_gt].Scale.X = x末端 - x - 44 - _shift;
 									OpenNijiiroRW.Tx.SENotes[(int)_gt].t2D描画(x + 90 + _shift, y + nSenotesY, new Rectangle(_60_cut, 8 * _size[1], 1, _size[1]));
-									OpenNijiiroRW.Tx.SENotes[(int)_gt].vcScaleRatio.X = 1.0f;
+									OpenNijiiroRW.Tx.SENotes[(int)_gt].Scale.X = 1.0f;
 									OpenNijiiroRW.Tx.SENotes[(int)_gt].t2D描画(x + 30 + _shift, y + nSenotesY, new Rectangle(0, 8 * _size[1], _60_cut, _size[1]));
 								}
 								OpenNijiiroRW.Tx.SENotes[(int)_gt].t2D描画(x - (_shift / 13), y + nSenotesY, new Rectangle(0, _size[1] * pChip.nSenote, _size[0], _size[1]));
@@ -1814,7 +1814,7 @@ internal class CStage演奏ドラム画面 : CStage演奏画面共通 {
 					if (NotesManager.IsRollEnd(pChip)) {
 						//大きい連打か小さい連打かの区別方法を考えてなかったよちくしょう
 						if (OpenNijiiroRW.Tx.Notes[(int)_gt] != null)
-							OpenNijiiroRW.Tx.Notes[(int)_gt].vcScaleRatio.X = 1.0f;
+							OpenNijiiroRW.Tx.Notes[(int)_gt].Scale.X = 1.0f;
 						int n = 0;
 						switch (pChip.start.nChannelNo) {
 							case 0x15:

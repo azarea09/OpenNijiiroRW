@@ -228,8 +228,8 @@ class CStageHeya : CStage {
 		}
 
 		if (OpenNijiiroRW.Tx.Characters_Heya_Render[iCharacterCurrent] != null) {
-			OpenNijiiroRW.Tx.Characters_Heya_Render[iCharacterCurrent].vcScaleRatio.X = renderRatioX;
-			OpenNijiiroRW.Tx.Characters_Heya_Render[iCharacterCurrent].vcScaleRatio.Y = renderRatioY;
+			OpenNijiiroRW.Tx.Characters_Heya_Render[iCharacterCurrent].Scale.X = renderRatioX;
+			OpenNijiiroRW.Tx.Characters_Heya_Render[iCharacterCurrent].Scale.Y = renderRatioY;
 		}
 		if (iCurrentMenu == CurrentMenu.Puchi || iCurrentMenu == CurrentMenu.Chara) OpenNijiiroRW.Tx.Heya_Render_Field?.t2D描画(0, 0);
 		if (iCurrentMenu == CurrentMenu.Puchi) OpenNijiiroRW.Tx.Puchichara[iPuchiCharaCurrent].render?.t2D描画(0, 0);
@@ -318,8 +318,8 @@ class CStageHeya : CStage {
 				}
 
 				if (OpenNijiiroRW.Tx.Characters_Heya_Preview[pos] != null) {
-					OpenNijiiroRW.Tx.Characters_Heya_Preview[pos].vcScaleRatio.X = charaRatioX;
-					OpenNijiiroRW.Tx.Characters_Heya_Preview[pos].vcScaleRatio.Y = charaRatioY;
+					OpenNijiiroRW.Tx.Characters_Heya_Preview[pos].Scale.X = charaRatioX;
+					OpenNijiiroRW.Tx.Characters_Heya_Preview[pos].Scale.Y = charaRatioY;
 				}
 
 				OpenNijiiroRW.Tx.Characters_Heya_Preview[pos]?.t2D拡大率考慮中央基準描画(scroll.Item1 + OpenNijiiroRW.Skin.Heya_Center_Menu_Box_Item_Offset[0],

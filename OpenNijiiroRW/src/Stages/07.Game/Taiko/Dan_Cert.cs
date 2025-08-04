@@ -860,7 +860,7 @@ internal class Dan_Cert : CActivity {
 						int miniIconOpacity = opacityJ;
 
 						// Determine bars width
-						OpenNijiiroRW.Tx.DanC_SmallBase.vcScaleRatio.X = isSmallGauge ? 0.34f : 1f;
+						OpenNijiiroRW.Tx.DanC_SmallBase.Scale.X = isSmallGauge ? 0.34f : 1f;
 
 						int smallBarGap = (int)(33f * OpenNijiiroRW.Skin.Resolution[1] / 720f);
 
@@ -879,14 +879,14 @@ internal class Dan_Cert : CActivity {
 
 						// Display bar content
 						if (dan_CJ.ReachStatus == Exam.ReachStatus.Better_Success) {
-							OpenNijiiroRW.Tx.Gauge_Dan_Rainbow[0].vcScaleRatio.X = 0.23875f * OpenNijiiroRW.Tx.DanC_SmallBase.vcScaleRatio.X * (isSmallGauge ? 0.94f : 1f);
-							OpenNijiiroRW.Tx.Gauge_Dan_Rainbow[0].vcScaleRatio.Y = 0.35185f;
+							OpenNijiiroRW.Tx.Gauge_Dan_Rainbow[0].Scale.X = 0.23875f * OpenNijiiroRW.Tx.DanC_SmallBase.Scale.X * (isSmallGauge ? 0.94f : 1f);
+							OpenNijiiroRW.Tx.Gauge_Dan_Rainbow[0].Scale.Y = 0.35185f;
 
 							OpenNijiiroRW.Tx.Gauge_Dan_Rainbow[0]?.t2D描画(miniBarPositionX + 3, miniBarPositionY + 2,
 								new Rectangle(0, 0, (int)(dan_CJ.GetAmountToPercent() * (OpenNijiiroRW.Tx.Gauge_Dan_Rainbow[0].szTextureSize.Width / 100.0)), OpenNijiiroRW.Tx.Gauge_Dan_Rainbow[0].szTextureSize.Height));
 						} else {
-							OpenNijiiroRW.Tx.DanC_Gauge[idxExamGaugeTextureJ].vcScaleRatio.X = 0.23875f * OpenNijiiroRW.Tx.DanC_SmallBase.vcScaleRatio.X * (isSmallGauge ? 0.94f : 1f);
-							OpenNijiiroRW.Tx.DanC_Gauge[idxExamGaugeTextureJ].vcScaleRatio.Y = 0.35185f;
+							OpenNijiiroRW.Tx.DanC_Gauge[idxExamGaugeTextureJ].Scale.X = 0.23875f * OpenNijiiroRW.Tx.DanC_SmallBase.Scale.X * (isSmallGauge ? 0.94f : 1f);
+							OpenNijiiroRW.Tx.DanC_Gauge[idxExamGaugeTextureJ].Scale.Y = 0.35185f;
 
 							OpenNijiiroRW.Tx.DanC_Gauge[idxExamGaugeTextureJ]?.t2D描画(miniBarPositionX + 3, miniBarPositionY + 2,
 								new Rectangle(0, 0, (int)(dan_CJ.GetAmountToPercent() * (OpenNijiiroRW.Tx.DanC_Gauge[idxExamGaugeTextureJ].szTextureSize.Width / 100.0)), OpenNijiiroRW.Tx.DanC_Gauge[idxExamGaugeTextureJ].szTextureSize.Height));
@@ -1012,8 +1012,8 @@ internal class Dan_Cert : CActivity {
 					if (gaugeTexture == null)
 						return;
 
-					gaugeTexture.vcScaleRatio.X = xExtend;
-					gaugeTexture.vcScaleRatio.Y = 1.0f;
+					gaugeTexture.Scale.X = xExtend;
+					gaugeTexture.Scale.Y = 1.0f;
 					gaugeTexture.t2D拡大率考慮下基準描画(
 						barXOffset + OpenNijiiroRW.Skin.Game_DanC_Offset[0], lowerBarYOffset - OpenNijiiroRW.Skin.Game_DanC_Offset[1],
 						new Rectangle(0, 0,
@@ -1083,8 +1083,8 @@ internal class Dan_Cert : CActivity {
 
 				int offset = OpenNijiiroRW.Skin.Game_DanC_Exam_Offset[0];
 
-				OpenNijiiroRW.Tx.DanC_ExamType.vcScaleRatio.X = 1.0f;
-				OpenNijiiroRW.Tx.DanC_ExamType.vcScaleRatio.Y = 1.0f;
+				OpenNijiiroRW.Tx.DanC_ExamType.Scale.X = 1.0f;
+				OpenNijiiroRW.Tx.DanC_ExamType.Scale.Y = 1.0f;
 
 				// Exam range (Less than/More)
 				OpenNijiiroRW.Tx.DanC_ExamRange?.t2D拡大率考慮下基準描画(
@@ -1131,7 +1131,7 @@ internal class Dan_Cert : CActivity {
 
 				#region [Failed condition box]
 
-				OpenNijiiroRW.Tx.DanC_Failed.vcScaleRatio.X = isSmallGauge ? 0.33f : 1f;
+				OpenNijiiroRW.Tx.DanC_Failed.Scale.X = isSmallGauge ? 0.33f : 1f;
 
 				if (dan_C[i].ReachStatus == Exam.ReachStatus.Failure) {
 					OpenNijiiroRW.Tx.DanC_Failed.Opacity = (isResult ? 255 : Math.Min(255, 255 * this.Status[i].Timer_Gauge.CurrentValue / 85));
@@ -1201,8 +1201,8 @@ internal class Dan_Cert : CActivity {
 				var number = Convert.ToInt32(value.ToString()[i].ToString());
 				Rectangle rectangle = new Rectangle(OpenNijiiroRW.Skin.Game_DanC_Number_Size[0] * number - 1, (reachStatus == Exam.ReachStatus.Better_Success) ? OpenNijiiroRW.Skin.Game_DanC_Number_Size[1] : 0, OpenNijiiroRW.Skin.Game_DanC_Number_Size[0], OpenNijiiroRW.Skin.Game_DanC_Number_Size[1]);
 				if (OpenNijiiroRW.Tx.DanC_Number != null) {
-					OpenNijiiroRW.Tx.DanC_Number.vcScaleRatio.X = scaleX;
-					OpenNijiiroRW.Tx.DanC_Number.vcScaleRatio.Y = scaleY + scaleJump;
+					OpenNijiiroRW.Tx.DanC_Number.Scale.X = scaleX;
+					OpenNijiiroRW.Tx.DanC_Number.Scale.Y = scaleY + scaleJump;
 				}
 				OpenNijiiroRW.Tx.DanC_Number?.t2D拡大率考慮下中心基準描画(x - (notesRemainDigit * padding), y, rectangle);
 				notesRemainDigit--;
@@ -1213,8 +1213,8 @@ internal class Dan_Cert : CActivity {
 				var number = Convert.ToInt32(value.ToString()[i].ToString());
 				Rectangle rectangle = new Rectangle(OpenNijiiroRW.Skin.Game_DanC_Small_Number_Size[0] * number - 1, 0, OpenNijiiroRW.Skin.Game_DanC_Small_Number_Size[0], OpenNijiiroRW.Skin.Game_DanC_Small_Number_Size[1]);
 				if (OpenNijiiroRW.Tx.DanC_Small_Number != null) {
-					OpenNijiiroRW.Tx.DanC_Small_Number.vcScaleRatio.X = scaleX;
-					OpenNijiiroRW.Tx.DanC_Small_Number.vcScaleRatio.Y = scaleY + scaleJump;
+					OpenNijiiroRW.Tx.DanC_Small_Number.Scale.X = scaleX;
+					OpenNijiiroRW.Tx.DanC_Small_Number.Scale.Y = scaleY + scaleJump;
 				}
 				OpenNijiiroRW.Tx.DanC_Small_Number?.t2D拡大率考慮下中心基準描画(x - (notesRemainDigit * padding), y, rectangle);
 				notesRemainDigit--;

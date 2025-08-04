@@ -22,7 +22,6 @@ public abstract class Game : IDisposable {
 	public static List<Action> AsyncActions { get; private set; } = new();
 	public static int MainThreadID { get; private set; }
 	public static long TimeMs;
-	public static Matrix4X4<float> Camera;
 
 	public IWindow WindowContext;
 
@@ -266,8 +265,6 @@ public abstract class Game : IDisposable {
 	}
 
 	public void Window_Render(double deltaTime) {
-		Camera = Matrix4X4<float>.Identity;
-
 		if (AsyncActions.Count > 0) {
 			AsyncActions[0]?.Invoke();
 			AsyncActions.Remove(AsyncActions[0]);

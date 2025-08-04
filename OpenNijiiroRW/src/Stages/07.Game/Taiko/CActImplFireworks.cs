@@ -260,8 +260,8 @@ internal class CActImplFireworks : CActivity {
 									x -= (OpenNijiiroRW.Tx.Effects_Hit_Explosion_Big.szTextureSize.Width * (f倍率 - 1.0f) / 2.0f);
 									y -= (OpenNijiiroRW.Tx.Effects_Hit_Explosion_Big.szTextureSize.Height * (f倍率 - 1.0f) / 2.0f);
 
-									OpenNijiiroRW.Tx.Effects_Hit_Explosion_Big.vcScaleRatio.X = f倍率;
-									OpenNijiiroRW.Tx.Effects_Hit_Explosion_Big.vcScaleRatio.Y = f倍率;
+									OpenNijiiroRW.Tx.Effects_Hit_Explosion_Big.Scale.X = f倍率;
+									OpenNijiiroRW.Tx.Effects_Hit_Explosion_Big.Scale.Y = f倍率;
 									OpenNijiiroRW.Tx.Effects_Hit_Explosion_Big.t2D描画(x, y);
 								}
 								break;

@@ -42,8 +42,8 @@ internal class CAct演奏AVI : CActivity {
 
 			this.rVD.GetNowFrame(ref this.tx描画用);
 
-			this.tx描画用.vcScaleRatio.X = this.ratio1;
-			this.tx描画用.vcScaleRatio.Y = this.ratio1;
+			this.tx描画用.Scale.X = this.ratio1;
+			this.tx描画用.Scale.Y = this.ratio1;
 
 			if (this.isCutScene || OpenNijiiroRW.ConfigIni.eClipDispType.HasFlag(EClipDispType.BackgroundOnly)) {
 				this.tx描画用.t2D拡大率考慮描画(CTexture.RefPnt.Center, RenderSurfaceSize.Width / 2, RenderSurfaceSize.Height / 2);
@@ -59,8 +59,8 @@ internal class CAct演奏AVI : CActivity {
 		float[] fRatio = new float[] { (RenderSurfaceSize.Width / 2) - 4.0f, (RenderSurfaceSize.Height / 2) - 4.0f }; //中央下表示
 
 		float ratio = Math.Min((float)(fRatio[0] / this.rVD.FrameSize.Width), (float)(fRatio[1] / this.rVD.FrameSize.Height));
-		this.tx描画用.vcScaleRatio.X = ratio;
-		this.tx描画用.vcScaleRatio.Y = ratio;
+		this.tx描画用.Scale.X = ratio;
+		this.tx描画用.Scale.Y = ratio;
 
 		this.tx描画用.t2D拡大率考慮描画(CTexture.RefPnt.Down, RenderSurfaceSize.Width / 2, RenderSurfaceSize.Height);
 	}

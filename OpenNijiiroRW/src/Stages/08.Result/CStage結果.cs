@@ -1122,14 +1122,14 @@ internal class CStage結果 : CStage {
 
 							if (unitsBeforeAppearance >= 90) {
 								OpenNijiiroRW.Tx.DanResult_Rank.Opacity = (int)((270 - unitsBeforeAppearance) / 180.0f * 255.0f);
-								OpenNijiiroRW.Tx.DanResult_Rank.vcScaleRatio.X = 1.0f + (float)Math.Sin((360 - unitsBeforeAppearance) / 1.5f * (Math.PI / 180)) * 1.4f;
-								OpenNijiiroRW.Tx.DanResult_Rank.vcScaleRatio.Y = 1.0f + (float)Math.Sin((360 - unitsBeforeAppearance) / 1.5f * (Math.PI / 180)) * 1.4f;
+								OpenNijiiroRW.Tx.DanResult_Rank.Scale.X = 1.0f + (float)Math.Sin((360 - unitsBeforeAppearance) / 1.5f * (Math.PI / 180)) * 1.4f;
+								OpenNijiiroRW.Tx.DanResult_Rank.Scale.Y = 1.0f + (float)Math.Sin((360 - unitsBeforeAppearance) / 1.5f * (Math.PI / 180)) * 1.4f;
 							} else if (unitsBeforeAppearance > 0) {
-								OpenNijiiroRW.Tx.Result_ScoreRankEffect.vcScaleRatio.X = 0.5f + (float)Math.Sin((float)(90 - unitsBeforeAppearance) * (Math.PI / 180)) * 0.5f;
-								OpenNijiiroRW.Tx.Result_ScoreRankEffect.vcScaleRatio.Y = 0.5f + (float)Math.Sin((float)(90 - unitsBeforeAppearance) * (Math.PI / 180)) * 0.5f;
+								OpenNijiiroRW.Tx.Result_ScoreRankEffect.Scale.X = 0.5f + (float)Math.Sin((float)(90 - unitsBeforeAppearance) * (Math.PI / 180)) * 0.5f;
+								OpenNijiiroRW.Tx.Result_ScoreRankEffect.Scale.Y = 0.5f + (float)Math.Sin((float)(90 - unitsBeforeAppearance) * (Math.PI / 180)) * 0.5f;
 							} else {
-								OpenNijiiroRW.Tx.DanResult_Rank.vcScaleRatio.X = 1f;
-								OpenNijiiroRW.Tx.DanResult_Rank.vcScaleRatio.Y = 1f;
+								OpenNijiiroRW.Tx.DanResult_Rank.Scale.X = 1f;
+								OpenNijiiroRW.Tx.DanResult_Rank.Scale.Y = 1f;
 							}
 
 							#endregion
@@ -1164,8 +1164,8 @@ internal class CStage結果 : CStage {
 								OpenNijiiroRW.Tx.DanResult_Rank.Opacity = (int)((270 - unitsBeforeAppearance) / 180.0f * 255.0f);
 							}
 
-							OpenNijiiroRW.Tx.DanResult_Rank.vcScaleRatio.X = 1f;
-							OpenNijiiroRW.Tx.DanResult_Rank.vcScaleRatio.Y = 1f;
+							OpenNijiiroRW.Tx.DanResult_Rank.Scale.X = 1f;
+							OpenNijiiroRW.Tx.DanResult_Rank.Scale.Y = 1f;
 
 							#endregion
 
@@ -1233,8 +1233,8 @@ internal class CStage結果 : CStage {
 						int scoreRankEffect_height = OpenNijiiroRW.Tx.TowerResult_ScoreRankEffect.szTextureSize.Height;
 
 						OpenNijiiroRW.Tx.TowerResult_ScoreRankEffect.Opacity = 255;
-						OpenNijiiroRW.Tx.TowerResult_ScoreRankEffect.vcScaleRatio.X = 1f;
-						OpenNijiiroRW.Tx.TowerResult_ScoreRankEffect.vcScaleRatio.Y = 1f;
+						OpenNijiiroRW.Tx.TowerResult_ScoreRankEffect.Scale.X = 1f;
+						OpenNijiiroRW.Tx.TowerResult_ScoreRankEffect.Scale.Y = 1f;
 						OpenNijiiroRW.Tx.TowerResult_ScoreRankEffect.t2D拡大率考慮中央基準描画(
 							OpenNijiiroRW.Skin.TowerResult_ScoreRankEffect[0],
 							OpenNijiiroRW.Skin.TowerResult_ScoreRankEffect[1],

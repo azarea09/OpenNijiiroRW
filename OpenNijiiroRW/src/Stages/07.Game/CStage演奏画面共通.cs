@@ -3133,8 +3133,8 @@ internal abstract class CStage演奏画面共通 : CStage {
 							dTX.listTextures.TryGetValue(pChip.strNewPath, out CTexture newTx);
 
 							newTx.Opacity = oldTx.Opacity;
-							newTx.fZ軸中心回転 = oldTx.fZ軸中心回転;
-							newTx.vcScaleRatio = oldTx.vcScaleRatio;
+							newTx.Rotation = oldTx.Rotation;
+							newTx.Scale = oldTx.Scale;
 
 							oldTx.UpdateTexture(newTx, newTx.sz画像サイズ.Width, newTx.sz画像サイズ.Height);
 						}
@@ -3149,8 +3149,8 @@ internal abstract class CStage演奏画面共通 : CStage {
 							dTX.listOriginalTextures.TryGetValue(pChip.strTargetTxName, out CTexture originalTx);
 
 							originalTx.Opacity = oldTx.Opacity;
-							originalTx.fZ軸中心回転 = oldTx.fZ軸中心回転;
-							originalTx.vcScaleRatio = oldTx.vcScaleRatio;
+							originalTx.Rotation = oldTx.Rotation;
+							originalTx.Scale = oldTx.Scale;
 
 							oldTx.UpdateTexture(originalTx, originalTx.sz画像サイズ.Width, originalTx.sz画像サイズ.Height);
 						}

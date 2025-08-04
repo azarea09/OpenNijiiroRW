@@ -208,11 +208,11 @@ class CResultCharacter {
 			float resolutionRatioX = OpenNijiiroRW.Skin.Resolution[0] / (float)OpenNijiiroRW.Skin.Characters_Resolution[_charaId][0];
 			float resolutionRatioY = OpenNijiiroRW.Skin.Resolution[1] / (float)OpenNijiiroRW.Skin.Characters_Resolution[_charaId][1];
 
-			float _x = x + (OpenNijiiroRW.Skin.Characters_Result_Offset[_charaId][0] * _tex.vcScaleRatio.X);
-			float _y = y + (OpenNijiiroRW.Skin.Characters_Result_Offset[_charaId][1] * _tex.vcScaleRatio.Y);
+			float _x = x + (OpenNijiiroRW.Skin.Characters_Result_Offset[_charaId][0] * _tex.Scale.X);
+			float _y = y + (OpenNijiiroRW.Skin.Characters_Result_Offset[_charaId][1] * _tex.Scale.Y);
 
-			_tex.vcScaleRatio.X *= resolutionRatioX;
-			_tex.vcScaleRatio.Y *= resolutionRatioY;
+			_tex.Scale.X *= resolutionRatioX;
+			_tex.Scale.Y *= resolutionRatioY;
 
 			if (pos % 2 == 0 || OpenNijiiroRW.ConfigIni.nPlayerCount > 2) {
 				_tex.t2D拡大率考慮下中心基準描画(
@@ -226,8 +226,8 @@ class CResultCharacter {
 				);
 			}
 
-			_tex.vcScaleRatio.X = 1f;
-			_tex.vcScaleRatio.Y = 1f;
+			_tex.Scale.X = 1f;
+			_tex.Scale.Y = 1f;
 			_tex.Opacity = 255;
 		}
 	}

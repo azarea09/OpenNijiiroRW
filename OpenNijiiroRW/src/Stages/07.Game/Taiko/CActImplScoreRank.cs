@@ -65,15 +65,15 @@ class CActImplScoreRank : CActivity {
 			tex.Opacity = 255;
 
 			float newSize = 1.0f + (float)Math.Sin((cct.CurrentValue - 255) * (Math.PI / 180)) * 0.2f;
-			tex.vcScaleRatio.X = newSize;
-			tex.vcScaleRatio.Y = newSize;
+			tex.Scale.X = newSize;
+			tex.Scale.Y = newSize;
 			x = 0;
 			y = 0;
 		}
 		if (cct.CurrentValue > 255 + 180 && cct.CurrentValue <= 2745) {
 			tex.Opacity = 255;
-			tex.vcScaleRatio.X = 1.0f;
-			tex.vcScaleRatio.Y = 1.0f;
+			tex.Scale.X = 1.0f;
+			tex.Scale.Y = 1.0f;
 			x = 0;
 			y = 0;
 		}

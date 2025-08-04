@@ -417,8 +417,8 @@ class CActNewHeya : CActivity {
 								}
 
 								if (OpenNijiiroRW.Tx.Characters_Heya_Preview[index] != null) {
-									OpenNijiiroRW.Tx.Characters_Heya_Preview[index].vcScaleRatio.X = charaRatioX;
-									OpenNijiiroRW.Tx.Characters_Heya_Preview[index].vcScaleRatio.Y = charaRatioY;
+									OpenNijiiroRW.Tx.Characters_Heya_Preview[index].Scale.X = charaRatioX;
+									OpenNijiiroRW.Tx.Characters_Heya_Preview[index].Scale.Y = charaRatioY;
 								}
 
 								OpenNijiiroRW.Tx.Characters_Heya_Preview[index]?.t2D拡大率考慮中央基準描画(x + OpenNijiiroRW.Skin.SongSelect_NewHeya_Box_Chara_Offset[0], y + OpenNijiiroRW.Skin.SongSelect_NewHeya_Box_Chara_Offset[1]);

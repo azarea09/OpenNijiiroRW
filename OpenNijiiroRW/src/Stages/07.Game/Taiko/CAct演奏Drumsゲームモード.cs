@@ -781,8 +781,8 @@ internal class CAct演奏Drumsゲームモード : CActivity {
 							OpenNijiiroRW.Tx.Taiko_Combo[0].Opacity = 128;
 						if (this.st叩ききりまショー.b加算アニメ中)
 							OpenNijiiroRW.Tx.Taiko_Combo[0].Opacity = 0;
-						OpenNijiiroRW.Tx.Taiko_Combo[0].vcScaleRatio.Y = 1f;
-						OpenNijiiroRW.Tx.Taiko_Combo[0].vcScaleRatio.X = 1f;
+						OpenNijiiroRW.Tx.Taiko_Combo[0].Scale.Y = 1f;
+						OpenNijiiroRW.Tx.Taiko_Combo[0].Scale.X = 1f;
 						OpenNijiiroRW.Tx.Taiko_Combo[0].t2D中心基準描画(x, y, rectangle);
 					}
 					break;
@@ -798,7 +798,7 @@ internal class CAct演奏Drumsゲームモード : CActivity {
 				if (cFont[i] == ch) {
 					Rectangle rectangle = new Rectangle(OpenNijiiroRW.Skin.Game_Score_Size[0] * i, 0, OpenNijiiroRW.Skin.Game_Score_Size[0], OpenNijiiroRW.Skin.Game_Score_Size[1]);
 					if (OpenNijiiroRW.Tx.Taiko_Score[0] != null) {
-						OpenNijiiroRW.Tx.Taiko_Score[0].vcScaleRatio.Y = 1f;
+						OpenNijiiroRW.Tx.Taiko_Score[0].Scale.Y = 1f;
 						OpenNijiiroRW.Tx.Taiko_Score[0].t2D描画(x, y, rectangle);
 					}
 				}

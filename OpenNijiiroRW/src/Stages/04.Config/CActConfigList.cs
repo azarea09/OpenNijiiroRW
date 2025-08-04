@@ -718,7 +718,7 @@ internal class CActConfigList : CActivity {
 			}
 			txSkinSample1 = OpenNijiiroRW.tテクスチャの生成(bmSrc, false);
 
-			txSkinSample1.vcScaleRatio = new Silk.NET.Maths.Vector3D<float>(_w / (float)txSkinSample1.szTextureSize.Width, _h / (float)txSkinSample1.szTextureSize.Height, 0);
+			txSkinSample1.Scale = new Silk.NET.Maths.Vector3D<float>(_w / (float)txSkinSample1.szTextureSize.Width, _h / (float)txSkinSample1.szTextureSize.Height, 0);
 
 			bmSrc.Dispose();
 			nSkinSampleIndex = nSkinIndex;

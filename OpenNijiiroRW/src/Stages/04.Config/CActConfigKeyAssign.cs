@@ -111,14 +111,14 @@ internal class CActConfigKeyAssign : CActivity {
 				//TJAPlayer3.Tx.Menu_Highlight.t2D描画( num2, num3, new Rectangle( 0, 0, 0x10, 0x20 ) );
 				float scale = 0.55f;
 				for (int j = 0; j < 14; j++) {
-					OpenNijiiroRW.Tx.Menu_Highlight.vcScaleRatio.X = scale;
-					OpenNijiiroRW.Tx.Menu_Highlight.vcScaleRatio.Y = scale;
+					OpenNijiiroRW.Tx.Menu_Highlight.Scale.X = scale;
+					OpenNijiiroRW.Tx.Menu_Highlight.Scale.Y = scale;
 
 					OpenNijiiroRW.Tx.Menu_Highlight.t2D描画(num2, num3);
 					num2 += (int)(OpenNijiiroRW.Tx.Menu_Highlight.szTextureSize.Width * scale);
 
-					OpenNijiiroRW.Tx.Menu_Highlight.vcScaleRatio.X = 1;
-					OpenNijiiroRW.Tx.Menu_Highlight.vcScaleRatio.Y = 1;
+					OpenNijiiroRW.Tx.Menu_Highlight.Scale.X = 1;
+					OpenNijiiroRW.Tx.Menu_Highlight.Scale.Y = 1;
 				}
 				//TJAPlayer3.Tx.Menu_Highlight.t2D描画( num2, num3, new Rectangle( 0x10, 0, 0x10, 0x20 ) );
 			}

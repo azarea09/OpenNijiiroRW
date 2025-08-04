@@ -69,12 +69,12 @@ internal class CStage曲読み込み : CStage {
 
 					using (var bmpSongTitle = this.pfTITLE.DrawText(タイトル, OpenNijiiroRW.Skin.SongLoading_Title_ForeColor, OpenNijiiroRW.Skin.SongLoading_Title_BackColor, null, 30)) {
 						this.txタイトル = new CTexture(bmpSongTitle);
-						txタイトル.vcScaleRatio.X = OpenNijiiroRW.GetSongNameXScaling(ref txタイトル, OpenNijiiroRW.Skin.SongLoading_Title_MaxSize);
+						txタイトル.Scale.X = OpenNijiiroRW.GetSongNameXScaling(ref txタイトル, OpenNijiiroRW.Skin.SongLoading_Title_MaxSize);
 					}
 
 					using (var bmpSongSubTitle = this.pfSUBTITLE.DrawText(サブタイトル, OpenNijiiroRW.Skin.SongLoading_SubTitle_ForeColor, OpenNijiiroRW.Skin.SongLoading_SubTitle_BackColor, null, 30)) {
 						this.txサブタイトル = new CTexture(bmpSongSubTitle);
-						txサブタイトル.vcScaleRatio.X = OpenNijiiroRW.GetSongNameXScaling(ref txサブタイトル, OpenNijiiroRW.Skin.SongLoading_SubTitle_MaxSize);
+						txサブタイトル.Scale.X = OpenNijiiroRW.GetSongNameXScaling(ref txサブタイトル, OpenNijiiroRW.Skin.SongLoading_SubTitle_MaxSize);
 					}
 				} else {
 					this.txタイトル = null;
@@ -191,9 +191,9 @@ internal class CStage曲読み込み : CStage {
 					if (OpenNijiiroRW.Skin.SongLoading_Title_ReferencePoint == CSkin.ReferencePoint.Left) {
 						this.txタイトル.t2D描画(OpenNijiiroRW.Skin.SongLoading_Title_X, OpenNijiiroRW.Skin.SongLoading_Title_Y - (this.txタイトル.sz画像サイズ.Height / 2) + nサブタイトル補正);
 					} else if (OpenNijiiroRW.Skin.SongLoading_Title_ReferencePoint == CSkin.ReferencePoint.Right) {
-						this.txタイトル.t2D描画(OpenNijiiroRW.Skin.SongLoading_Title_X - (this.txタイトル.sz画像サイズ.Width * txタイトル.vcScaleRatio.X), OpenNijiiroRW.Skin.SongLoading_Title_Y - (this.txタイトル.sz画像サイズ.Height / 2) + nサブタイトル補正);
+						this.txタイトル.t2D描画(OpenNijiiroRW.Skin.SongLoading_Title_X - (this.txタイトル.sz画像サイズ.Width * txタイトル.Scale.X), OpenNijiiroRW.Skin.SongLoading_Title_Y - (this.txタイトル.sz画像サイズ.Height / 2) + nサブタイトル補正);
 					} else {
-						this.txタイトル.t2D描画((OpenNijiiroRW.Skin.SongLoading_Title_X - ((this.txタイトル.sz画像サイズ.Width * txタイトル.vcScaleRatio.X) / 2)), OpenNijiiroRW.Skin.SongLoading_Title_Y - (this.txタイトル.sz画像サイズ.Height / 2) + nサブタイトル補正);
+						this.txタイトル.t2D描画((OpenNijiiroRW.Skin.SongLoading_Title_X - ((this.txタイトル.sz画像サイズ.Width * txタイトル.Scale.X) / 2)), OpenNijiiroRW.Skin.SongLoading_Title_Y - (this.txタイトル.sz画像サイズ.Height / 2) + nサブタイトル補正);
 					}
 				}
 				if (this.txサブタイトル != null) {
@@ -201,9 +201,9 @@ internal class CStage曲読み込み : CStage {
 					if (OpenNijiiroRW.Skin.SongLoading_SubTitle_ReferencePoint == CSkin.ReferencePoint.Left) {
 						this.txサブタイトル.t2D描画(OpenNijiiroRW.Skin.SongLoading_SubTitle_X, OpenNijiiroRW.Skin.SongLoading_SubTitle_Y - (this.txサブタイトル.sz画像サイズ.Height / 2));
 					} else if (OpenNijiiroRW.Skin.SongLoading_Title_ReferencePoint == CSkin.ReferencePoint.Right) {
-						this.txサブタイトル.t2D描画(OpenNijiiroRW.Skin.SongLoading_SubTitle_X - (this.txサブタイトル.sz画像サイズ.Width * txタイトル.vcScaleRatio.X), OpenNijiiroRW.Skin.SongLoading_SubTitle_Y - (this.txサブタイトル.sz画像サイズ.Height / 2));
+						this.txサブタイトル.t2D描画(OpenNijiiroRW.Skin.SongLoading_SubTitle_X - (this.txサブタイトル.sz画像サイズ.Width * txタイトル.Scale.X), OpenNijiiroRW.Skin.SongLoading_SubTitle_Y - (this.txサブタイトル.sz画像サイズ.Height / 2));
 					} else {
-						this.txサブタイトル.t2D描画((OpenNijiiroRW.Skin.SongLoading_SubTitle_X - ((this.txサブタイトル.sz画像サイズ.Width * txサブタイトル.vcScaleRatio.X) / 2)), OpenNijiiroRW.Skin.SongLoading_SubTitle_Y - (this.txサブタイトル.sz画像サイズ.Height / 2));
+						this.txサブタイトル.t2D描画((OpenNijiiroRW.Skin.SongLoading_SubTitle_X - ((this.txサブタイトル.sz画像サイズ.Width * txサブタイトル.Scale.X) / 2)), OpenNijiiroRW.Skin.SongLoading_SubTitle_Y - (this.txサブタイトル.sz画像サイズ.Height / 2));
 					}
 				}
 			}
@@ -231,9 +231,9 @@ internal class CStage曲読み込み : CStage {
 					if (OpenNijiiroRW.Skin.SongLoading_Title_ReferencePoint == CSkin.ReferencePoint.Left) {
 						this.txタイトル.t2D描画(OpenNijiiroRW.Skin.SongLoading_Title_X_AI, OpenNijiiroRW.Skin.SongLoading_Title_Y_AI - (this.txタイトル.sz画像サイズ.Height / 2) + nサブタイトル補正);
 					} else if (OpenNijiiroRW.Skin.SongLoading_Title_ReferencePoint == CSkin.ReferencePoint.Right) {
-						this.txタイトル.t2D描画(OpenNijiiroRW.Skin.SongLoading_Title_X_AI - (this.txタイトル.sz画像サイズ.Width * txタイトル.vcScaleRatio.X), OpenNijiiroRW.Skin.SongLoading_Title_Y_AI - (this.txタイトル.sz画像サイズ.Height / 2) + nサブタイトル補正);
+						this.txタイトル.t2D描画(OpenNijiiroRW.Skin.SongLoading_Title_X_AI - (this.txタイトル.sz画像サイズ.Width * txタイトル.Scale.X), OpenNijiiroRW.Skin.SongLoading_Title_Y_AI - (this.txタイトル.sz画像サイズ.Height / 2) + nサブタイトル補正);
 					} else {
-						this.txタイトル.t2D描画((OpenNijiiroRW.Skin.SongLoading_Title_X_AI - ((this.txタイトル.sz画像サイズ.Width * txタイトル.vcScaleRatio.X) / 2)), OpenNijiiroRW.Skin.SongLoading_Title_Y_AI - (this.txタイトル.sz画像サイズ.Height / 2) + nサブタイトル補正);
+						this.txタイトル.t2D描画((OpenNijiiroRW.Skin.SongLoading_Title_X_AI - ((this.txタイトル.sz画像サイズ.Width * txタイトル.Scale.X) / 2)), OpenNijiiroRW.Skin.SongLoading_Title_Y_AI - (this.txタイトル.sz画像サイズ.Height / 2) + nサブタイトル補正);
 					}
 				}
 				if (this.txサブタイトル != null) {
@@ -241,9 +241,9 @@ internal class CStage曲読み込み : CStage {
 					if (OpenNijiiroRW.Skin.SongLoading_SubTitle_ReferencePoint == CSkin.ReferencePoint.Left) {
 						this.txサブタイトル.t2D描画(OpenNijiiroRW.Skin.SongLoading_SubTitle_X_AI, OpenNijiiroRW.Skin.SongLoading_SubTitle_Y_AI - (this.txサブタイトル.sz画像サイズ.Height / 2));
 					} else if (OpenNijiiroRW.Skin.SongLoading_Title_ReferencePoint == CSkin.ReferencePoint.Right) {
-						this.txサブタイトル.t2D描画(OpenNijiiroRW.Skin.SongLoading_SubTitle_X_AI - (this.txサブタイトル.sz画像サイズ.Width * txタイトル.vcScaleRatio.X), OpenNijiiroRW.Skin.SongLoading_SubTitle_Y_AI - (this.txサブタイトル.sz画像サイズ.Height / 2));
+						this.txサブタイトル.t2D描画(OpenNijiiroRW.Skin.SongLoading_SubTitle_X_AI - (this.txサブタイトル.sz画像サイズ.Width * txタイトル.Scale.X), OpenNijiiroRW.Skin.SongLoading_SubTitle_Y_AI - (this.txサブタイトル.sz画像サイズ.Height / 2));
 					} else {
-						this.txサブタイトル.t2D描画((OpenNijiiroRW.Skin.SongLoading_SubTitle_X_AI - ((this.txサブタイトル.sz画像サイズ.Width * txサブタイトル.vcScaleRatio.X) / 2)), OpenNijiiroRW.Skin.SongLoading_SubTitle_Y_AI - (this.txサブタイトル.sz画像サイズ.Height / 2));
+						this.txサブタイトル.t2D描画((OpenNijiiroRW.Skin.SongLoading_SubTitle_X_AI - ((this.txサブタイトル.sz画像サイズ.Width * txサブタイトル.Scale.X) / 2)), OpenNijiiroRW.Skin.SongLoading_SubTitle_Y_AI - (this.txサブタイトル.sz画像サイズ.Height / 2));
 					}
 				}
 			}
@@ -369,14 +369,14 @@ internal class CStage曲読み込み : CStage {
 								if (!string.IsNullOrEmpty(OpenNijiiroRW.TJA.List_DanSongs[i].Title)) {
 									using (var bmpSongTitle = pfDanTitle.DrawText(OpenNijiiroRW.TJA.List_DanSongs[i].Title, titleForeColor, titleBackColor, null, 30)) {
 										OpenNijiiroRW.TJA.List_DanSongs[i].TitleTex = OpenNijiiroRW.tテクスチャの生成(bmpSongTitle, false);
-										OpenNijiiroRW.TJA.List_DanSongs[i].TitleTex.vcScaleRatio.X = OpenNijiiroRW.GetSongNameXScaling(ref OpenNijiiroRW.TJA.List_DanSongs[i].TitleTex, OpenNijiiroRW.Skin.Game_DanC_Title_MaxWidth);
+										OpenNijiiroRW.TJA.List_DanSongs[i].TitleTex.Scale.X = OpenNijiiroRW.GetSongNameXScaling(ref OpenNijiiroRW.TJA.List_DanSongs[i].TitleTex, OpenNijiiroRW.Skin.Game_DanC_Title_MaxWidth);
 									}
 								}
 
 								if (!string.IsNullOrEmpty(OpenNijiiroRW.TJA.List_DanSongs[i].SubTitle)) {
 									using (var bmpSongSubTitle = pfDanSubTitle.DrawText(OpenNijiiroRW.TJA.List_DanSongs[i].SubTitle, subtitleForeColor, subtitleBackColor, null, 30)) {
 										OpenNijiiroRW.TJA.List_DanSongs[i].SubTitleTex = OpenNijiiroRW.tテクスチャの生成(bmpSongSubTitle, false);
-										OpenNijiiroRW.TJA.List_DanSongs[i].SubTitleTex.vcScaleRatio.X = OpenNijiiroRW.GetSongNameXScaling(ref OpenNijiiroRW.TJA.List_DanSongs[i].SubTitleTex, OpenNijiiroRW.Skin.Game_DanC_SubTitle_MaxWidth);
+										OpenNijiiroRW.TJA.List_DanSongs[i].SubTitleTex.Scale.X = OpenNijiiroRW.GetSongNameXScaling(ref OpenNijiiroRW.TJA.List_DanSongs[i].SubTitleTex, OpenNijiiroRW.Skin.Game_DanC_SubTitle_MaxWidth);
 									}
 								}
 

@@ -208,8 +208,8 @@ internal class CActImplBalloon : CActivity {
 
 	private void tKusudamaNumber(int num) {
 		if (OpenNijiiroRW.Tx.Kusudama_Number == null) return;
-		OpenNijiiroRW.Tx.Kusudama_Number.vcScaleRatio.X = OpenNijiiroRW.Skin.Game_Balloon_Balloon_Number_Scale;
-		OpenNijiiroRW.Tx.Kusudama_Number.vcScaleRatio.Y = OpenNijiiroRW.Skin.Game_Balloon_Balloon_Number_Scale;
+		OpenNijiiroRW.Tx.Kusudama_Number.Scale.X = OpenNijiiroRW.Skin.Game_Balloon_Balloon_Number_Scale;
+		OpenNijiiroRW.Tx.Kusudama_Number.Scale.Y = OpenNijiiroRW.Skin.Game_Balloon_Balloon_Number_Scale;
 		int x = OpenNijiiroRW.Skin.Game_Kusudama_Number_X;
 		int y = OpenNijiiroRW.Skin.Game_Kusudama_Number_Y;
 
@@ -227,16 +227,16 @@ internal class CActImplBalloon : CActivity {
 
 	private void tFuseNumber(int x, int y, int num, int nPlayer) {
 		if (OpenNijiiroRW.Tx.Fuse_Number == null) return;
-		OpenNijiiroRW.Tx.Fuse_Number.vcScaleRatio.X = OpenNijiiroRW.Skin.Game_Balloon_Balloon_Number_Scale;
-		OpenNijiiroRW.Tx.Fuse_Number.vcScaleRatio.Y = OpenNijiiroRW.Skin.Game_Balloon_Balloon_Number_Scale + RollScale[this.ct風船アニメ[nPlayer].CurrentValue];
+		OpenNijiiroRW.Tx.Fuse_Number.Scale.X = OpenNijiiroRW.Skin.Game_Balloon_Balloon_Number_Scale;
+		OpenNijiiroRW.Tx.Fuse_Number.Scale.Y = OpenNijiiroRW.Skin.Game_Balloon_Balloon_Number_Scale + RollScale[this.ct風船アニメ[nPlayer].CurrentValue];
 
 		_nbDisplay(OpenNijiiroRW.Tx.Fuse_Number, num, x, y);
 	}
 
 	private void t文字表示(int x, int y, int num, int nPlayer) {
 		if (OpenNijiiroRW.Tx.Balloon_Number_Roll == null) return;
-		OpenNijiiroRW.Tx.Balloon_Number_Roll.vcScaleRatio.X = OpenNijiiroRW.Skin.Game_Balloon_Balloon_Number_Scale;
-		OpenNijiiroRW.Tx.Balloon_Number_Roll.vcScaleRatio.Y = OpenNijiiroRW.Skin.Game_Balloon_Balloon_Number_Scale + RollScale[this.ct風船アニメ[nPlayer].CurrentValue];
+		OpenNijiiroRW.Tx.Balloon_Number_Roll.Scale.X = OpenNijiiroRW.Skin.Game_Balloon_Balloon_Number_Scale;
+		OpenNijiiroRW.Tx.Balloon_Number_Roll.Scale.Y = OpenNijiiroRW.Skin.Game_Balloon_Balloon_Number_Scale + RollScale[this.ct風船アニメ[nPlayer].CurrentValue];
 
 		_nbDisplay(OpenNijiiroRW.Tx.Balloon_Number_Roll, num, x, y);
 	}

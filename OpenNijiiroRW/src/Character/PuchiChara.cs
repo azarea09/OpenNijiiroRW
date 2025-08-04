@@ -72,9 +72,9 @@ class PuchiChara : CActivity {
 		if (chara != null) {
 			float puchiScale = OpenNijiiroRW.Skin.Resolution[1] / 720.0f;
 
-			chara.vcScaleRatio = new Vector3D<float>((isBalloon ? OpenNijiiroRW.Skin.Game_PuchiChara_Scale[1] * puchiScale : OpenNijiiroRW.Skin.Game_PuchiChara_Scale[0] * puchiScale));
-			chara.vcScaleRatio.X *= scale;
-			chara.vcScaleRatio.Y *= scale;
+			chara.Scale = new Vector3D<float>((isBalloon ? OpenNijiiroRW.Skin.Game_PuchiChara_Scale[1] * puchiScale : OpenNijiiroRW.Skin.Game_PuchiChara_Scale[0] * puchiScale));
+			chara.Scale.X *= scale;
+			chara.Scale.Y *= scale;
 			chara.Opacity = alpha;
 
 			/* Todo :
@@ -100,9 +100,9 @@ class PuchiChara : CActivity {
 
 		CTexture puchi = OpenNijiiroRW.Tx.Puchichara[index].tx;
 
-		puchi.vcScaleRatio = new(1);
-		puchi.vcScaleRatio.X *= scale;
-		puchi.vcScaleRatio.Y *= scale;
+		puchi.Scale = new(1);
+		puchi.Scale.X *= scale;
+		puchi.Scale.Y *= scale;
 		puchi.Opacity = alpha;
 
 		sineY = (double)SineCounterIdle.CurrentValue;
@@ -112,7 +112,7 @@ class PuchiChara : CActivity {
 			new((puchi.szTextureSize.Width / OpenNijiiroRW.Skin.Game_PuchiChara[2]) * sprite, 0,
 			puchi.szTextureSize.Width / OpenNijiiroRW.Skin.Game_PuchiChara[2], puchi.szTextureSize.Height));
 
-		puchi.vcScaleRatio = new(1);
+		puchi.Scale = new(1);
 		puchi.Opacity = 255;
 	}
 

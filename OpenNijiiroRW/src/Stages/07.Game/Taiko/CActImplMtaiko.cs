@@ -279,14 +279,14 @@ internal class CActImplMtaiko : CActivity {
 
 				if (this.After[i] - this.Before[i] >= 0) {
 					//レベルアップ
-					OpenNijiiroRW.Tx.Taiko_LevelUp.vcScaleRatio.X = fScale;
-					OpenNijiiroRW.Tx.Taiko_LevelUp.vcScaleRatio.Y = fScale;
+					OpenNijiiroRW.Tx.Taiko_LevelUp.Scale.X = fScale;
+					OpenNijiiroRW.Tx.Taiko_LevelUp.Scale.Y = fScale;
 					OpenNijiiroRW.Tx.Taiko_LevelUp.Opacity = nAlpha;
 					OpenNijiiroRW.Tx.Taiko_LevelUp.t2D拡大率考慮中央基準描画(levelChange_x,
 						levelChange_y);
 				} else {
-					OpenNijiiroRW.Tx.Taiko_LevelDown.vcScaleRatio.X = fScale;
-					OpenNijiiroRW.Tx.Taiko_LevelDown.vcScaleRatio.Y = fScale;
+					OpenNijiiroRW.Tx.Taiko_LevelDown.Scale.X = fScale;
+					OpenNijiiroRW.Tx.Taiko_LevelDown.Scale.Y = fScale;
 					OpenNijiiroRW.Tx.Taiko_LevelDown.Opacity = nAlpha;
 					OpenNijiiroRW.Tx.Taiko_LevelDown.t2D拡大率考慮中央基準描画(levelChange_x,
 						levelChange_y);

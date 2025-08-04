@@ -374,19 +374,19 @@ internal class CActResultParameterPanel : CActivity {
 
 
 					if (nDrawnPlayers == 5) {
-						_frame.vcScaleRatio.X = 0.5f;
+						_frame.Scale.X = 0.5f;
 						bar_x = OpenNijiiroRW.Skin.Result_DifficultyBar_5P[0] + OpenNijiiroRW.Skin.Result_UIMove_5P_X[pos];
 						bar_y = OpenNijiiroRW.Skin.Result_DifficultyBar_5P[1] + OpenNijiiroRW.Skin.Result_UIMove_5P_Y[pos];
 						gauge_base_x = OpenNijiiroRW.Skin.Result_Gauge_Base_5P[0] + OpenNijiiroRW.Skin.Result_UIMove_5P_X[pos];
 						gauge_base_y = OpenNijiiroRW.Skin.Result_Gauge_Base_5P[1] + OpenNijiiroRW.Skin.Result_UIMove_5P_Y[pos];
 					} else if (nDrawnPlayers == 4 || nDrawnPlayers == 3) {
-						_frame.vcScaleRatio.X = 0.5f;
+						_frame.Scale.X = 0.5f;
 						bar_x = OpenNijiiroRW.Skin.Result_DifficultyBar_4P[0] + OpenNijiiroRW.Skin.Result_UIMove_4P_X[pos];
 						bar_y = OpenNijiiroRW.Skin.Result_DifficultyBar_4P[1] + OpenNijiiroRW.Skin.Result_UIMove_4P_Y[pos];
 						gauge_base_x = OpenNijiiroRW.Skin.Result_Gauge_Base_4P[0] + OpenNijiiroRW.Skin.Result_UIMove_4P_X[pos];
 						gauge_base_y = OpenNijiiroRW.Skin.Result_Gauge_Base_4P[1] + OpenNijiiroRW.Skin.Result_UIMove_4P_Y[pos];
 					} else {
-						_frame.vcScaleRatio.X = 1.0f;
+						_frame.Scale.X = 1.0f;
 						bar_x = OpenNijiiroRW.Skin.Result_DifficultyBar_X[pos] + uioffset_x;
 						bar_y = OpenNijiiroRW.Skin.Result_DifficultyBar_Y[pos];
 						gauge_base_x = OpenNijiiroRW.Skin.Result_Gauge_Base_X[pos] + uioffset_x;
@@ -397,7 +397,7 @@ internal class CActResultParameterPanel : CActivity {
 						new RectangleF(0, OpenNijiiroRW.stageSongSelect.nChoosenSongDifficulty[i] * OpenNijiiroRW.Skin.Result_DifficultyBar_Size[1], OpenNijiiroRW.Skin.Result_DifficultyBar_Size[0], OpenNijiiroRW.Skin.Result_DifficultyBar_Size[1]));
 
 					_frame.t2D描画(gauge_base_x, gauge_base_y);
-					_frame.vcScaleRatio.X = 1.0f;
+					_frame.Scale.X = 1.0f;
 				}
 
 				if (ctMainCounter.CurrentValue >= 2000) {
@@ -546,15 +546,15 @@ internal class CActResultParameterPanel : CActivity {
 								} else if (nDrawnPlayers == 3 || nDrawnPlayers == 4) {
 									numScale = OpenNijiiroRW.Skin.Result_Number_Scale_4P;
 								}
-								OpenNijiiroRW.Tx.Result_Number.vcScaleRatio.X = ctMainCounter.CurrentValue <= AnimeCount + (Interval * k) + AddCount ? 1.3f - (float)Math.Sin((ctMainCounter.CurrentValue - (AnimeCount + (Interval * k))) / (AddCount / 90) * (Math.PI / 180)) * 0.3f : 1.0f;
-								OpenNijiiroRW.Tx.Result_Number.vcScaleRatio.Y = ctMainCounter.CurrentValue <= AnimeCount + (Interval * k) + AddCount ? 1.3f - (float)Math.Sin((ctMainCounter.CurrentValue - (AnimeCount + (Interval * k))) / (AddCount / 90) * (Math.PI / 180)) * 0.3f : 1.0f;
+								OpenNijiiroRW.Tx.Result_Number.Scale.X = ctMainCounter.CurrentValue <= AnimeCount + (Interval * k) + AddCount ? 1.3f - (float)Math.Sin((ctMainCounter.CurrentValue - (AnimeCount + (Interval * k))) / (AddCount / 90) * (Math.PI / 180)) * 0.3f : 1.0f;
+								OpenNijiiroRW.Tx.Result_Number.Scale.Y = ctMainCounter.CurrentValue <= AnimeCount + (Interval * k) + AddCount ? 1.3f - (float)Math.Sin((ctMainCounter.CurrentValue - (AnimeCount + (Interval * k))) / (AddCount / 90) * (Math.PI / 180)) * 0.3f : 1.0f;
 
 								if ((k != 5 || OpenNijiiroRW.Skin.Result_ADLib_Show) && (k != 6 || OpenNijiiroRW.Skin.Result_Bomb_Show)) {
 									this.t小文字表示(num_x[k][pos] + uioffset_x, num_y[k][pos], scoresArr[k], numScale);
 								}
 
-								OpenNijiiroRW.Tx.Result_Number.vcScaleRatio.X = 1f;
-								OpenNijiiroRW.Tx.Result_Number.vcScaleRatio.Y = 1f;
+								OpenNijiiroRW.Tx.Result_Number.Scale.X = 1f;
+								OpenNijiiroRW.Tx.Result_Number.Scale.Y = 1f;
 
 								if (!this.b音声再生[1 + k]) {
 									if ((k != 5 || OpenNijiiroRW.Skin.Result_ADLib_Show) && (k != 6 || OpenNijiiroRW.Skin.Result_Bomb_Show)) {
@@ -589,9 +589,9 @@ internal class CActResultParameterPanel : CActivity {
 
 							int AnimeCount1 = AnimeCount + Interval * 4 + 840;
 
-							OpenNijiiroRW.Tx.Result_Score_Number.vcScaleRatio.X = ctMainCounter.CurrentValue <= AnimeCount1 + 270 ? 1.0f + (float)Math.Sin((ctMainCounter.CurrentValue - AnimeCount1) / 1.5f * (Math.PI / 180)) * 0.65f :
+							OpenNijiiroRW.Tx.Result_Score_Number.Scale.X = ctMainCounter.CurrentValue <= AnimeCount1 + 270 ? 1.0f + (float)Math.Sin((ctMainCounter.CurrentValue - AnimeCount1) / 1.5f * (Math.PI / 180)) * 0.65f :
 								ctMainCounter.CurrentValue <= AnimeCount1 + 360 ? 1.0f - (float)Math.Sin((ctMainCounter.CurrentValue - AnimeCount1 - 270) * (Math.PI / 180)) * 0.1f : 1.0f;
-							OpenNijiiroRW.Tx.Result_Score_Number.vcScaleRatio.Y = ctMainCounter.CurrentValue <= AnimeCount1 + 270 ? 1.0f + (float)Math.Sin((ctMainCounter.CurrentValue - AnimeCount1) / 1.5f * (Math.PI / 180)) * 0.65f :
+							OpenNijiiroRW.Tx.Result_Score_Number.Scale.Y = ctMainCounter.CurrentValue <= AnimeCount1 + 270 ? 1.0f + (float)Math.Sin((ctMainCounter.CurrentValue - AnimeCount1) / 1.5f * (Math.PI / 180)) * 0.65f :
 								ctMainCounter.CurrentValue <= AnimeCount1 + 360 ? 1.0f - (float)Math.Sin((ctMainCounter.CurrentValue - AnimeCount1 - 270) * (Math.PI / 180)) * 0.1f : 1.0f;
 
 							this.tスコア文字表示(score_x, score_y, (int)OpenNijiiroRW.stageGameScreen.actScore.Get(i), numScale);// TJAPlayer3.stage演奏ドラム画面.CChartScore[i].nScore.ToString()));
@@ -674,8 +674,8 @@ internal class CActResultParameterPanel : CActivity {
 
 					CTexture tex = OpenNijiiroRW.stageResults.bClear[0] ? OpenNijiiroRW.Tx.Result_AIBattle_WinFlag_Clear : OpenNijiiroRW.Tx.Result_AIBattle_WinFlag_Lose;
 
-					tex.vcScaleRatio.X = flagScale;
-					tex.vcScaleRatio.Y = flagScale;
+					tex.Scale.X = flagScale;
+					tex.Scale.Y = flagScale;
 
 					tex.t2D拡大率考慮中央基準描画(OpenNijiiroRW.Skin.Result_AIBattle_WinFlag[0], OpenNijiiroRW.Skin.Result_AIBattle_WinFlag[1]);
 				}
@@ -742,8 +742,8 @@ internal class CActResultParameterPanel : CActivity {
 
 					var tex = pos == 0 ? OpenNijiiroRW.Tx.Characters_Result_Clear_1P[_charaId] : OpenNijiiroRW.Tx.Characters_Result_Clear_2P[_charaId];
 					if (OpenNijiiroRW.Skin.Characters_UseResult1P[_charaId] && OpenNijiiroRW.Skin.Result_Use1PUI && tex != null) {
-						tex.vcScaleRatio.X = renderRatioX;
-						tex.vcScaleRatio.Y = renderRatioY;
+						tex.Scale.X = renderRatioX;
+						tex.Scale.Y = renderRatioY;
 						if (is2PSide) {
 							tex.t2D左右反転描画(p1chara_x, p1chara_y);
 						} else {
@@ -753,8 +753,8 @@ internal class CActResultParameterPanel : CActivity {
 				} else if (CResultCharacter.tIsCounterProcessing(p, CResultCharacter.ECharacterResult.FAILED)) {
 					CResultCharacter.tMenuDisplayCharacter(p, chara_x, chara_y, CResultCharacter.ECharacterResult.FAILED, pos);
 					if (OpenNijiiroRW.Skin.Characters_UseResult1P[_charaId] && OpenNijiiroRW.Skin.Result_Use1PUI && OpenNijiiroRW.Tx.Characters_Result_Failed_1P[_charaId] != null) {
-						OpenNijiiroRW.Tx.Characters_Result_Failed_1P[_charaId].vcScaleRatio.X = renderRatioX;
-						OpenNijiiroRW.Tx.Characters_Result_Failed_1P[_charaId].vcScaleRatio.Y = renderRatioY;
+						OpenNijiiroRW.Tx.Characters_Result_Failed_1P[_charaId].Scale.X = renderRatioX;
+						OpenNijiiroRW.Tx.Characters_Result_Failed_1P[_charaId].Scale.Y = renderRatioY;
 						if (is2PSide) {
 							OpenNijiiroRW.Tx.Characters_Result_Failed_1P[_charaId].t2D左右反転描画(p1chara_x, p1chara_y);
 						} else {
@@ -764,8 +764,8 @@ internal class CActResultParameterPanel : CActivity {
 				} else if (CResultCharacter.tIsCounterProcessing(p, CResultCharacter.ECharacterResult.FAILED_IN) && OpenNijiiroRW.Tx.Characters_Result_Failed_1P[_charaId] != null) {
 					CResultCharacter.tMenuDisplayCharacter(p, chara_x, chara_y, CResultCharacter.ECharacterResult.FAILED_IN, pos);
 					if (OpenNijiiroRW.Skin.Characters_UseResult1P[_charaId] && OpenNijiiroRW.Skin.Result_Use1PUI) {
-						OpenNijiiroRW.Tx.Characters_Result_Failed_1P[_charaId].vcScaleRatio.X = renderRatioX;
-						OpenNijiiroRW.Tx.Characters_Result_Failed_1P[_charaId].vcScaleRatio.Y = renderRatioY;
+						OpenNijiiroRW.Tx.Characters_Result_Failed_1P[_charaId].Scale.X = renderRatioX;
+						OpenNijiiroRW.Tx.Characters_Result_Failed_1P[_charaId].Scale.Y = renderRatioY;
 						if (is2PSide) {
 							OpenNijiiroRW.Tx.Characters_Result_Failed_1P[_charaId].t2D左右反転描画(p1chara_x, p1chara_y);
 						} else {
@@ -801,8 +801,8 @@ internal class CActResultParameterPanel : CActivity {
 					#region [Cherry blossom animation]
 
 					if (OpenNijiiroRW.stageResults.nクリア[p] >= 1 && nDrawnPlayers <= 2) {
-						OpenNijiiroRW.Tx.Result_Flower.vcScaleRatio.X = 0.6f * (ctMainCounter.CurrentValue <= MountainAppearValue + AddCount ? 1.3f - (float)Math.Sin((ctMainCounter.CurrentValue - MountainAppearValue) / (AddCount / 90) * (Math.PI / 180)) * 0.3f : 1.0f);
-						OpenNijiiroRW.Tx.Result_Flower.vcScaleRatio.Y = 0.6f * (ctMainCounter.CurrentValue <= MountainAppearValue + AddCount ? 1.3f - (float)Math.Sin((ctMainCounter.CurrentValue - MountainAppearValue) / (AddCount / 90) * (Math.PI / 180)) * 0.3f : 1.0f);
+						OpenNijiiroRW.Tx.Result_Flower.Scale.X = 0.6f * (ctMainCounter.CurrentValue <= MountainAppearValue + AddCount ? 1.3f - (float)Math.Sin((ctMainCounter.CurrentValue - MountainAppearValue) / (AddCount / 90) * (Math.PI / 180)) * 0.3f : 1.0f);
+						OpenNijiiroRW.Tx.Result_Flower.Scale.Y = 0.6f * (ctMainCounter.CurrentValue <= MountainAppearValue + AddCount ? 1.3f - (float)Math.Sin((ctMainCounter.CurrentValue - MountainAppearValue) / (AddCount / 90) * (Math.PI / 180)) * 0.3f : 1.0f);
 
 						int flower_width = OpenNijiiroRW.Tx.Result_Flower.szTextureSize.Width;
 						int flower_height = OpenNijiiroRW.Tx.Result_Flower.szTextureSize.Height / 2;
@@ -835,9 +835,9 @@ internal class CActResultParameterPanel : CActivity {
 								OpenNijiiroRW.Tx.Result_Flower_Rotate[i].Opacity = (255 * CurrentGradiant) / ApparitionFade;
 							}
 
-							OpenNijiiroRW.Tx.Result_Flower_Rotate[i].vcScaleRatio.X = 0.6f;
-							OpenNijiiroRW.Tx.Result_Flower_Rotate[i].vcScaleRatio.Y = 0.6f;
-							OpenNijiiroRW.Tx.Result_Flower_Rotate[i].fZ軸中心回転 = (float)(FlowerTime - ApparitionTimeStamps[i]) / (FlowerRotationSpeeds[i] * 360f);
+							OpenNijiiroRW.Tx.Result_Flower_Rotate[i].Scale.X = 0.6f;
+							OpenNijiiroRW.Tx.Result_Flower_Rotate[i].Scale.Y = 0.6f;
+							OpenNijiiroRW.Tx.Result_Flower_Rotate[i].Rotation = (float)(FlowerTime - ApparitionTimeStamps[i]) / (FlowerRotationSpeeds[i] * 360f);
 
 							OpenNijiiroRW.Tx.Result_Flower_Rotate[i].t2D中心基準描画(OpenNijiiroRW.Skin.Result_Flower_Rotate_X[pos][i], OpenNijiiroRW.Skin.Result_Flower_Rotate_Y[pos][i]);
 						}
@@ -860,8 +860,8 @@ internal class CActResultParameterPanel : CActivity {
 							else
 								OpenNijiiroRW.Tx.Result_Shine.Opacity = (255 * Math.Min(Quadrant500, 500 - Quadrant500)) / ShinePFade;
 
-							OpenNijiiroRW.Tx.Result_Shine.vcScaleRatio.X = 0.15f;
-							OpenNijiiroRW.Tx.Result_Shine.vcScaleRatio.Y = 0.15f;
+							OpenNijiiroRW.Tx.Result_Shine.Scale.X = 0.15f;
+							OpenNijiiroRW.Tx.Result_Shine.Scale.Y = 0.15f;
 
 							OpenNijiiroRW.Tx.Result_Shine.t2D中心基準描画(OpenNijiiroRW.Skin.Result_PlateShine_X[pos][i], OpenNijiiroRW.Skin.Result_PlateShine_Y[pos][i]);
 						}
@@ -901,8 +901,8 @@ internal class CActResultParameterPanel : CActivity {
 						int speechBuddle_width = OpenNijiiroRW.Tx.Result_Speech_Bubble[pos].szTextureSize.Width / 4;
 						int speechBuddle_height = OpenNijiiroRW.Tx.Result_Speech_Bubble[pos].szTextureSize.Height / 3;
 
-						OpenNijiiroRW.Tx.Result_Speech_Bubble[pos].vcScaleRatio.X = 0.9f * (ctMainCounter.CurrentValue <= MountainAppearValue + AddCount ? 1.3f - (float)Math.Sin((ctMainCounter.CurrentValue - MountainAppearValue) / (AddCount / 90) * (Math.PI / 180)) * 0.3f : 1.0f);
-						OpenNijiiroRW.Tx.Result_Speech_Bubble[pos].vcScaleRatio.Y = 0.9f * (ctMainCounter.CurrentValue <= MountainAppearValue + AddCount ? 1.3f - (float)Math.Sin((ctMainCounter.CurrentValue - MountainAppearValue) / (AddCount / 90) * (Math.PI / 180)) * 0.3f : 1.0f);
+						OpenNijiiroRW.Tx.Result_Speech_Bubble[pos].Scale.X = 0.9f * (ctMainCounter.CurrentValue <= MountainAppearValue + AddCount ? 1.3f - (float)Math.Sin((ctMainCounter.CurrentValue - MountainAppearValue) / (AddCount / 90) * (Math.PI / 180)) * 0.3f : 1.0f);
+						OpenNijiiroRW.Tx.Result_Speech_Bubble[pos].Scale.Y = 0.9f * (ctMainCounter.CurrentValue <= MountainAppearValue + AddCount ? 1.3f - (float)Math.Sin((ctMainCounter.CurrentValue - MountainAppearValue) / (AddCount / 90) * (Math.PI / 180)) * 0.3f : 1.0f);
 						OpenNijiiroRW.Tx.Result_Speech_Bubble[pos].t2D拡大率考慮中央基準描画(OpenNijiiroRW.Skin.Result_Speech_Bubble_X[pos], OpenNijiiroRW.Skin.Result_Speech_Bubble_Y[pos],
 							new Rectangle(Mood * speechBuddle_width, RandomText * speechBuddle_height, speechBuddle_width, speechBuddle_height));
 					}
@@ -932,13 +932,13 @@ internal class CActResultParameterPanel : CActivity {
 							scale = 1.0f;
 						}
 
-						OpenNijiiroRW.Tx.Result_Speech_Bubble_V2[speech_vubble_index].vcScaleRatio.X = 0.9f * scale * (ctMainCounter.CurrentValue <= MountainAppearValue + AddCount ? 1.3f - (float)Math.Sin((ctMainCounter.CurrentValue - MountainAppearValue) / (AddCount / 90) * (Math.PI / 180)) * 0.3f : 1.0f);
-						OpenNijiiroRW.Tx.Result_Speech_Bubble_V2[speech_vubble_index].vcScaleRatio.Y = 0.9f * scale * (ctMainCounter.CurrentValue <= MountainAppearValue + AddCount ? 1.3f - (float)Math.Sin((ctMainCounter.CurrentValue - MountainAppearValue) / (AddCount / 90) * (Math.PI / 180)) * 0.3f : 1.0f);
+						OpenNijiiroRW.Tx.Result_Speech_Bubble_V2[speech_vubble_index].Scale.X = 0.9f * scale * (ctMainCounter.CurrentValue <= MountainAppearValue + AddCount ? 1.3f - (float)Math.Sin((ctMainCounter.CurrentValue - MountainAppearValue) / (AddCount / 90) * (Math.PI / 180)) * 0.3f : 1.0f);
+						OpenNijiiroRW.Tx.Result_Speech_Bubble_V2[speech_vubble_index].Scale.Y = 0.9f * scale * (ctMainCounter.CurrentValue <= MountainAppearValue + AddCount ? 1.3f - (float)Math.Sin((ctMainCounter.CurrentValue - MountainAppearValue) / (AddCount / 90) * (Math.PI / 180)) * 0.3f : 1.0f);
 						OpenNijiiroRW.Tx.Result_Speech_Bubble_V2[speech_vubble_index].t2D拡大率考慮中央基準描画(speech_bubble_x, speech_bubble_y,
 							new Rectangle(0, MoodV2 * speechBuddle_height, speechBuddle_width, speechBuddle_height));
 
-						TitleTextureKey.ResolveTitleTexture(ttkSpeechText[p][MoodV2]).vcScaleRatio.X = scale;
-						TitleTextureKey.ResolveTitleTexture(ttkSpeechText[p][MoodV2]).vcScaleRatio.Y = scale;
+						TitleTextureKey.ResolveTitleTexture(ttkSpeechText[p][MoodV2]).Scale.X = scale;
+						TitleTextureKey.ResolveTitleTexture(ttkSpeechText[p][MoodV2]).Scale.Y = scale;
 						TitleTextureKey.ResolveTitleTexture(ttkSpeechText[p][MoodV2]).t2D拡大率考慮中央基準描画(
 							speech_bubble_x + (int)(OpenNijiiroRW.Skin.Result_Speech_Text_Offset[0] * scale),
 							speech_bubble_y + (int)(OpenNijiiroRW.Skin.Result_Speech_Text_Offset[1] * scale));
@@ -974,15 +974,15 @@ internal class CActResultParameterPanel : CActivity {
 
 						if (ctMainCounter.CurrentValue <= ScoreApparitionTimeStamp + 1180) {
 							OpenNijiiroRW.Tx.Result_ScoreRankEffect.Opacity = (int)((ctMainCounter.CurrentValue - (ScoreApparitionTimeStamp + 1000)) / 180.0f * 255.0f);
-							OpenNijiiroRW.Tx.Result_ScoreRankEffect.vcScaleRatio.X = 1.0f + (float)Math.Sin((float)(ctMainCounter.CurrentValue - (ScoreApparitionTimeStamp + 910)) / 1.5f * (Math.PI / 180)) * 1.4f;
-							OpenNijiiroRW.Tx.Result_ScoreRankEffect.vcScaleRatio.Y = 1.0f + (float)Math.Sin((float)(ctMainCounter.CurrentValue - (ScoreApparitionTimeStamp + 910)) / 1.5f * (Math.PI / 180)) * 1.4f;
+							OpenNijiiroRW.Tx.Result_ScoreRankEffect.Scale.X = 1.0f + (float)Math.Sin((float)(ctMainCounter.CurrentValue - (ScoreApparitionTimeStamp + 910)) / 1.5f * (Math.PI / 180)) * 1.4f;
+							OpenNijiiroRW.Tx.Result_ScoreRankEffect.Scale.Y = 1.0f + (float)Math.Sin((float)(ctMainCounter.CurrentValue - (ScoreApparitionTimeStamp + 910)) / 1.5f * (Math.PI / 180)) * 1.4f;
 						} else if (ctMainCounter.CurrentValue <= ScoreApparitionTimeStamp + 1270) {
-							OpenNijiiroRW.Tx.Result_ScoreRankEffect.vcScaleRatio.X = 0.5f + (float)Math.Sin((float)(ctMainCounter.CurrentValue - (ScoreApparitionTimeStamp + 1180)) * (Math.PI / 180)) * 0.5f;
-							OpenNijiiroRW.Tx.Result_ScoreRankEffect.vcScaleRatio.Y = 0.5f + (float)Math.Sin((float)(ctMainCounter.CurrentValue - (ScoreApparitionTimeStamp + 1180)) * (Math.PI / 180)) * 0.5f;
+							OpenNijiiroRW.Tx.Result_ScoreRankEffect.Scale.X = 0.5f + (float)Math.Sin((float)(ctMainCounter.CurrentValue - (ScoreApparitionTimeStamp + 1180)) * (Math.PI / 180)) * 0.5f;
+							OpenNijiiroRW.Tx.Result_ScoreRankEffect.Scale.Y = 0.5f + (float)Math.Sin((float)(ctMainCounter.CurrentValue - (ScoreApparitionTimeStamp + 1180)) * (Math.PI / 180)) * 0.5f;
 						} else {
 							OpenNijiiroRW.Tx.Result_ScoreRankEffect.Opacity = 255;
-							OpenNijiiroRW.Tx.Result_ScoreRankEffect.vcScaleRatio.X = 1f;
-							OpenNijiiroRW.Tx.Result_ScoreRankEffect.vcScaleRatio.Y = 1f;
+							OpenNijiiroRW.Tx.Result_ScoreRankEffect.Scale.X = 1f;
+							OpenNijiiroRW.Tx.Result_ScoreRankEffect.Scale.Y = 1f;
 						}
 
 						if (OpenNijiiroRW.stageSongSelect.nChoosenSongDifficulty[0] != (int)Difficulty.Dan && OpenNijiiroRW.stageResults.nスコアランク[p] > 0) {
@@ -1034,15 +1034,15 @@ internal class CActResultParameterPanel : CActivity {
 
 						if (ctMainCounter.CurrentValue <= ScoreApparitionTimeStamp + 2680) {
 							OpenNijiiroRW.Tx.Result_CrownEffect.Opacity = (int)((ctMainCounter.CurrentValue - (ScoreApparitionTimeStamp + 2500)) / 180.0f * 255.0f);
-							OpenNijiiroRW.Tx.Result_CrownEffect.vcScaleRatio.X = 1.0f + (float)Math.Sin((float)(ctMainCounter.CurrentValue - (ScoreApparitionTimeStamp + 2410)) / 1.5f * (Math.PI / 180)) * 1.4f;
-							OpenNijiiroRW.Tx.Result_CrownEffect.vcScaleRatio.Y = 1.0f + (float)Math.Sin((float)(ctMainCounter.CurrentValue - (ScoreApparitionTimeStamp + 2410)) / 1.5f * (Math.PI / 180)) * 1.4f;
+							OpenNijiiroRW.Tx.Result_CrownEffect.Scale.X = 1.0f + (float)Math.Sin((float)(ctMainCounter.CurrentValue - (ScoreApparitionTimeStamp + 2410)) / 1.5f * (Math.PI / 180)) * 1.4f;
+							OpenNijiiroRW.Tx.Result_CrownEffect.Scale.Y = 1.0f + (float)Math.Sin((float)(ctMainCounter.CurrentValue - (ScoreApparitionTimeStamp + 2410)) / 1.5f * (Math.PI / 180)) * 1.4f;
 						} else if (ctMainCounter.CurrentValue <= ScoreApparitionTimeStamp + 2770) {
-							OpenNijiiroRW.Tx.Result_CrownEffect.vcScaleRatio.X = 0.5f + (float)Math.Sin((float)(ctMainCounter.CurrentValue - (ScoreApparitionTimeStamp + 2680)) * (Math.PI / 180)) * 0.5f;
-							OpenNijiiroRW.Tx.Result_CrownEffect.vcScaleRatio.Y = 0.5f + (float)Math.Sin((float)(ctMainCounter.CurrentValue - (ScoreApparitionTimeStamp + 2680)) * (Math.PI / 180)) * 0.5f;
+							OpenNijiiroRW.Tx.Result_CrownEffect.Scale.X = 0.5f + (float)Math.Sin((float)(ctMainCounter.CurrentValue - (ScoreApparitionTimeStamp + 2680)) * (Math.PI / 180)) * 0.5f;
+							OpenNijiiroRW.Tx.Result_CrownEffect.Scale.Y = 0.5f + (float)Math.Sin((float)(ctMainCounter.CurrentValue - (ScoreApparitionTimeStamp + 2680)) * (Math.PI / 180)) * 0.5f;
 						} else {
 							OpenNijiiroRW.Tx.Result_CrownEffect.Opacity = 255;
-							OpenNijiiroRW.Tx.Result_CrownEffect.vcScaleRatio.X = 1f;
-							OpenNijiiroRW.Tx.Result_CrownEffect.vcScaleRatio.Y = 1f;
+							OpenNijiiroRW.Tx.Result_CrownEffect.Scale.X = 1f;
+							OpenNijiiroRW.Tx.Result_CrownEffect.Scale.Y = 1f;
 						}
 
 						int ClearType = OpenNijiiroRW.stageResults.nクリア[p] - 1;
@@ -1188,8 +1188,8 @@ internal class CActResultParameterPanel : CActivity {
 	}
 
 	public void t小文字表示(int x, int y, int num, float scale) {
-		OpenNijiiroRW.Tx.Result_Number.vcScaleRatio.X *= scale;
-		OpenNijiiroRW.Tx.Result_Number.vcScaleRatio.Y *= scale;
+		OpenNijiiroRW.Tx.Result_Number.Scale.X *= scale;
+		OpenNijiiroRW.Tx.Result_Number.Scale.Y *= scale;
 		int[] nums = CConversion.SeparateDigits(num);
 		for (int j = 0; j < nums.Length; j++) {
 			float offset = j;
@@ -1227,8 +1227,8 @@ internal class CActResultParameterPanel : CActivity {
 	}
 
 	public void tスコア文字表示(int x, int y, int num, float scale) {
-		OpenNijiiroRW.Tx.Result_Score_Number.vcScaleRatio.X *= scale;
-		OpenNijiiroRW.Tx.Result_Score_Number.vcScaleRatio.Y *= scale;
+		OpenNijiiroRW.Tx.Result_Score_Number.Scale.X *= scale;
+		OpenNijiiroRW.Tx.Result_Score_Number.Scale.Y *= scale;
 		int[] nums = CConversion.SeparateDigits(num);
 		for (int j = 0; j < nums.Length; j++) {
 			float offset = j;
