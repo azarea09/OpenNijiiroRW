@@ -453,28 +453,20 @@ class TextureLoader
 
 		#region Taiko
 
+		Score_Background = TxC(GAME + TAIKO + @$"Score_Background.dds");
+
 		Taiko_Background = new CTexture[12];
-		Taiko_Background[0] = TxC(GAME + TAIKO + @$"1P_Background.png");
-		Taiko_Background[1] = TxC(GAME + TAIKO + @$"2P_Background.png");
-		Taiko_Background[2] = TxC(GAME + TAIKO + @$"Dan_Background.png");
-		Taiko_Background[3] = TxC(GAME + TAIKO + @$"Tower_Background.png");
-		Taiko_Background[4] = TxC(GAME + TAIKO + @$"1P_Background_Right.png");
-		Taiko_Background[5] = TxC(GAME + TAIKO + @$"1P_Background_Tokkun.png");
-		Taiko_Background[6] = TxC(GAME + TAIKO + @$"2P_Background_Tokkun.png");
-		Taiko_Background[7] = TxC(GAME + TAIKO + @$"3P_Background.png");
-		Taiko_Background[8] = TxC(GAME + TAIKO + @$"4P_Background.png");
-		Taiko_Background[9] = TxC(GAME + TAIKO + @$"AI_Background.png");
-		Taiko_Background[10] = TxC(GAME + TAIKO + @$"Boss_Background.png");
-		Taiko_Background[11] = TxC(GAME + TAIKO + @$"5P_Background.png");
+		Taiko_Background[0] = TxC(GAME + TAIKO + @$"1P_Background.dds");
+		Taiko_Background[1] = TxC(GAME + TAIKO + @$"2P_Background.dds");
+		Taiko_Background[2] = TxC(GAME + TAIKO + @$"Dan_Background.dds");
+		Taiko_Background[3] = TxC(GAME + TAIKO + @$"AI_Background.dds");
 
 		Taiko_Frame = new CTexture[7];
 		Taiko_Frame[0] = TxC(GAME + TAIKO + @$"1P_Frame.png");
 		Taiko_Frame[1] = TxC(GAME + TAIKO + @$"2P_Frame.png");
-		Taiko_Frame[2] = TxC(GAME + TAIKO + @$"Tower_Frame.png");
 		Taiko_Frame[3] = TxC(GAME + TAIKO + @$"Tokkun_Frame.png");
 		Taiko_Frame[4] = TxC(GAME + TAIKO + @$"2P_None_Frame.png");
 		Taiko_Frame[5] = TxC(GAME + TAIKO + @$"AI_Frame.png");
-		Taiko_Frame[6] = TxC(GAME + TAIKO + @$"4PPlay_Frame.png");
 
 		Taiko_PlayerNumber = new CTexture[5];
 		Taiko_PlayerNumber[0] = TxC(GAME + TAIKO + @$"1P_PlayerNumber.png");
@@ -514,9 +506,6 @@ class TextureLoader
 		Taiko_Score[0] = TxC(GAME + TAIKO + @$"Score.png");
 		Taiko_Score[1] = TxC(GAME + TAIKO + @$"Score_1P.png");
 		Taiko_Score[2] = TxC(GAME + TAIKO + @$"Score_2P.png");
-		Taiko_Score[3] = TxC(GAME + TAIKO + @$"Score_3P.png");
-		Taiko_Score[4] = TxC(GAME + TAIKO + @$"Score_4P.png");
-		Taiko_Score[5] = TxC(GAME + TAIKO + @$"Score_5P.png");
 		Taiko_Combo = new CTexture[4];
 		Taiko_Combo[0] = TxC(GAME + TAIKO + @$"Combo.png");
 		Taiko_Combo[1] = TxC(GAME + TAIKO + @$"Combo_Big.png");
@@ -2659,7 +2648,8 @@ class TextureLoader
 		Taiko_LevelUp,
 		Taiko_LevelDown,
 		Taiko_Combo_Effect,
-		Taiko_Combo_Text;
+		Taiko_Combo_Text,
+		Score_Background;
 	public CTexture[] Couse_Symbol, // コースシンボル
 		Couse_Symbol_Back,
 		Couse_Symbol_Back_Flash,

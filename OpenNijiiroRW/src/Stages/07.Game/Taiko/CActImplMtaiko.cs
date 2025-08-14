@@ -86,24 +86,10 @@ internal class CActImplMtaiko : CActivity
 
 		for (int i = 0; i < OpenNijiiroRW.ConfigIni.nPlayerCount; i++)
 		{
-			int bg_x;
-			int bg_y;
-			if (OpenNijiiroRW.ConfigIni.nPlayerCount == 5)
-			{
-				bg_x = OpenNijiiroRW.Skin.Game_Taiko_Background_5P[0] + (OpenNijiiroRW.Skin.Game_UIMove_5P[0] * i);
-				bg_y = OpenNijiiroRW.Skin.Game_Taiko_Background_5P[1] + (OpenNijiiroRW.Skin.Game_UIMove_5P[1] * i);
-			}
-			else if (OpenNijiiroRW.ConfigIni.nPlayerCount == 4 || OpenNijiiroRW.ConfigIni.nPlayerCount == 3)
-			{
-				bg_x = OpenNijiiroRW.Skin.Game_Taiko_Background_4P[0] + (OpenNijiiroRW.Skin.Game_UIMove_4P[0] * i);
-				bg_y = OpenNijiiroRW.Skin.Game_Taiko_Background_4P[1] + (OpenNijiiroRW.Skin.Game_UIMove_4P[1] * i);
-			}
-			else
-			{
-				bg_x = OpenNijiiroRW.Skin.Game_Taiko_Background_X[i];
-				bg_y = OpenNijiiroRW.Skin.Game_Taiko_Background_Y[i];
-			}
-
+			//int bg_x = OpenNijiiroRW.Skin.Game_Taiko_Background_X[i];
+			//int bg_y = OpenNijiiroRW.Skin.Game_Taiko_Background_Y[i];
+			int bg_x = 0;
+			int bg_y = i == 0 ? 276 : 540;
 			CTexture tex = null;
 
 			switch (i)
@@ -114,17 +100,10 @@ internal class CActImplMtaiko : CActivity
 						{
 							tex = OpenNijiiroRW.Tx.Taiko_Background[2];
 						}
-						else if (OpenNijiiroRW.ConfigIni.bTokkunMode)
-						{
-							if (OpenNijiiroRW.P1IsBlue())
-								tex = OpenNijiiroRW.Tx.Taiko_Background[6];
-							else
-								tex = OpenNijiiroRW.Tx.Taiko_Background[5];
-						}
 						else
 						{
 							if (OpenNijiiroRW.P1IsBlue())
-								tex = OpenNijiiroRW.Tx.Taiko_Background[4];
+								tex = OpenNijiiroRW.Tx.Taiko_Background[1];
 							else
 								tex = OpenNijiiroRW.Tx.Taiko_Background[0];
 						}
@@ -134,76 +113,21 @@ internal class CActImplMtaiko : CActivity
 					{
 						if (OpenNijiiroRW.ConfigIni.bAIBattleMode)
 						{
-							tex = OpenNijiiroRW.Tx.Taiko_Background[9];
+							tex = OpenNijiiroRW.Tx.Taiko_Background[3];
 						}
 						else
 						{
-							if (OpenNijiiroRW.ConfigIni.nPlayerCount == 2)
-								tex = OpenNijiiroRW.Tx.Taiko_Background[1];
-							else
-								tex = OpenNijiiroRW.Tx.Taiko_Background[4];
+							tex = OpenNijiiroRW.Tx.Taiko_Background[1];
 						}
 					}
-					break;
-				case 2:
-					tex = OpenNijiiroRW.Tx.Taiko_Background[7];
-					break;
-				case 3:
-					tex = OpenNijiiroRW.Tx.Taiko_Background[8];
-					break;
-				case 4:
-					tex = OpenNijiiroRW.Tx.Taiko_Background[11];
 					break;
 			}
 
 			tex?.t2D描画(bg_x, bg_y);
+
+			if (!OpenNijiiroRW.ConfigIni.bTokkunMode)
+				OpenNijiiroRW.Tx.Score_Background.t2D描画(bg_x, bg_y + 12);
 		}
-		/*
-        if (TJAPlayer3.stage選曲.n確定された曲の難易度[0] == (int)Difficulty.Dan)  // Dan-i Dojo
-            TJAPlayer3.Tx.Taiko_Background[2]?.t2D描画(bg_x[0], bg_y[0]);
-        else if (TJAPlayer3.stage選曲.n確定された曲の難易度[0] == (int)Difficulty.Tower) // Taiko Towers
-            TJAPlayer3.Tx.Taiko_Background[3]?.t2D描画(bg_x[0], bg_y[0]);
-        else if (!TJAPlayer3.ConfigIni.bTokkunMode
-                || TJAPlayer3.Tx.Taiko_Background[5] == null
-                || TJAPlayer3.Tx.Taiko_Background[6] == null)
-        {
-            // Taiko Mode
-            if (TJAPlayer3.stage演奏ドラム画面.bDoublePlay)
-            {
-                if (TJAPlayer3.ConfigIni.nPlayerCount == 2)
-                {
-                    // 2P
-                    if (!TJAPlayer3.ConfigIni.bAIBattleMode || TJAPlayer3.Tx.Taiko_Background[9] == null)
-                        TJAPlayer3.Tx.Taiko_Background[1]?.t2D描画(bg_x[1], bg_y[1]);
-                    else
-                        TJAPlayer3.Tx.Taiko_Background[9]?.t2D描画(bg_x[1], bg_y[1]);
-                }
-                else
-                {
-                    if (TJAPlayer3.ConfigIni.nPlayerCount >= 2)
-                        TJAPlayer3.Tx.Taiko_Background[4]?.t2D描画(bg_x[1], bg_y[1]);
-                    if (TJAPlayer3.ConfigIni.nPlayerCount >= 3)
-                        TJAPlayer3.Tx.Taiko_Background[7]?.t2D描画(bg_x[2], bg_y[2]);
-                    if (TJAPlayer3.ConfigIni.nPlayerCount >= 4)
-                        TJAPlayer3.Tx.Taiko_Background[8]?.t2D描画(bg_x[3], bg_y[3]);
-                    if (TJAPlayer3.ConfigIni.nPlayerCount >= 5)
-                        TJAPlayer3.Tx.Taiko_Background[11]?.t2D描画(bg_x[4], bg_y[4]);
-                }
-            }
-            if (TJAPlayer3.P1IsBlue())
-                 TJAPlayer3.Tx.Taiko_Background[4]?.t2D描画(bg_x[0], bg_y[0]);
-            else
-                TJAPlayer3.Tx.Taiko_Background[0]?.t2D描画(bg_x[0], bg_y[0]);
-        }
-        else
-        {
-            // Training Mode
-            if (TJAPlayer3.P1IsBlue())
-                TJAPlayer3.Tx.Taiko_Background[6]?.t2D描画(bg_x[0], bg_y[0]);
-            else
-                TJAPlayer3.Tx.Taiko_Background[5]?.t2D描画(bg_x[0], bg_y[0]);
-        }
-        */
 
 		int getMTaikoOpacity(int brightness)
 		{

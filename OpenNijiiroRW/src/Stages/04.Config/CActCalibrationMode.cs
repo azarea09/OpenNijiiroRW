@@ -147,7 +147,7 @@ internal class CActCalibrationMode : CActivity
 		}
 
 		if (OpenNijiiroRW.P1IsBlue())
-			OpenNijiiroRW.Tx.Taiko_Background[4]?.t2D描画(OpenNijiiroRW.Skin.Game_Taiko_Background_X[0], OpenNijiiroRW.Skin.Game_Taiko_Background_Y[0]);
+			OpenNijiiroRW.Tx.Taiko_Background[1]?.t2D描画(OpenNijiiroRW.Skin.Game_Taiko_Background_X[0], OpenNijiiroRW.Skin.Game_Taiko_Background_Y[0]);
 		else
 			OpenNijiiroRW.Tx.Taiko_Background[0]?.t2D描画(OpenNijiiroRW.Skin.Game_Taiko_Background_X[0], OpenNijiiroRW.Skin.Game_Taiko_Background_Y[0]);
 
