@@ -876,25 +876,6 @@ internal class CStageSongSelect : CStage
 
 							#endregion
 						}
-						else if (this.actSongList.latestContext == eMenuContext.SearchByText)
-						{
-							#region [Trigger context box]
-
-							this.actSongList.rCurrentlySelectedSong.childrenList = CSongDict.tFetchSongsByTitle(
-								this.actSongList.rCurrentlySelectedSong,
-								(ETitleType)this.actSongList.tMenuContextGetVar(1),
-								this.actSongList.searchTextResult);
-
-							CSongSelectSongManager.disable();
-
-							OpenNijiiroRW.Skin.soundDecideSFX.tPlay();
-							this.actSongList.ctBarFlash.Start(0, 2700, 1, OpenNijiiroRW.Timer);
-							this.actSongList.ctBoxOpen.Start(200, 2700, 1.3f, OpenNijiiroRW.Timer);
-							this.actSongList.bBoxOpen = true;
-
-							CMenuCharacter.tMenuResetTimer(CMenuCharacter.ECharacterAnimation.SELECT);
-							#endregion
-						}
 						else if (this.actSongList.latestContext == eMenuContext.Random)
 						{
 							#region [Trigger context box]
@@ -1121,12 +1102,6 @@ internal class CStageSongSelect : CStage
 														OpenNijiiroRW.Skin.soundDecideSFX.tPlay();
 														goto Decided;
 														//this.act曲リスト.r現在選択中の曲.list子リスト = CSongDict.tFetchSongsByDifficulty(this.act曲リスト.r現在選択中の曲, (int)Difficulty.Oni, 8);
-													}
-													else if (this.actSongList.rCurrentlySelectedSong.songGenre == "SearchT")
-													{
-														this.actSongList.tMenuContextTrigger(eMenuContext.SearchByText);
-														OpenNijiiroRW.Skin.soundDecideSFX.tPlay();
-														goto Decided;
 													}
 
 													#endregion

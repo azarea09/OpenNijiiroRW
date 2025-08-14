@@ -21,8 +21,7 @@ class CStageHeya : CStage
 		Puchi,
 		Chara,
 		Dan,
-		Title,
-		Name
+		Title
 	}
 
 	public override void Activate()
@@ -49,16 +48,13 @@ class CStageHeya : CStage
 
 		#region [Main menu]
 
-		this.ttkMainMenuOpt = new TitleTextureKey[6];
+		this.ttkMainMenuOpt = new TitleTextureKey[5];
 
 		this.ttkMainMenuOpt[0] = new TitleTextureKey(CLangManager.LangInstance.GetString("MENU_RETURN"), this.pfHeyaFont, Color.White, Color.DarkGreen, 1000);
 		this.ttkMainMenuOpt[1] = new TitleTextureKey(CLangManager.LangInstance.GetString("HEYA_PUCHI"), this.pfHeyaFont, Color.White, Color.DarkGreen, 1000);
 		this.ttkMainMenuOpt[2] = new TitleTextureKey(CLangManager.LangInstance.GetString("HEYA_CHARA"), this.pfHeyaFont, Color.White, Color.DarkGreen, 1000);
 		this.ttkMainMenuOpt[3] = new TitleTextureKey(CLangManager.LangInstance.GetString("HEYA_DAN"), this.pfHeyaFont, Color.White, Color.DarkGreen, 1000);
 		this.ttkMainMenuOpt[4] = new TitleTextureKey(CLangManager.LangInstance.GetString("HEYA_NAMEPLATE"), this.pfHeyaFont, Color.White, Color.DarkGreen, 1000);
-		this.ttkMainMenuOpt[5] = new TitleTextureKey(CLangManager.LangInstance.GetString("HEYA_NAME"), this.pfHeyaFont, Color.White, Color.DarkGreen, 1000);
-
-		this.textInputInfo = new TitleTextureKey(CLangManager.LangInstance.GetString("HEYA_NAME_INFO"), this.pfHeyaFont, Color.White, Color.Black, 1000);
 
 		#endregion
 
@@ -156,12 +152,6 @@ class CStageHeya : CStage
 			ttkCharacterAuthors[i] = new TitleTextureKey(OpenNijiiroRW.Tx.Characters[i].metadata.tGetAuthor(), this.pfHeyaFont, Color.White, Color.Black, 1000);
 		}
 
-		#endregion
-
-		#region [Name stuff]
-		textInput = new CTextInput("", 64);
-		textInput.Text = OpenNijiiroRW.SaveFileInstances[iPlayer].data.Name;
-		textInputTitle = new TitleTextureKey("", pfHeyaFont, Color.White, Color.Black, 1000);
 		#endregion
 
 		this.tResetOpts();
@@ -493,20 +483,6 @@ class CStageHeya : CStage
 			}
 		}
 
-		if (iCurrentMenu == CurrentMenu.Name)
-		{
-			textInput.Update();
-
-			HBlackBackdrop.Draw(191);
-
-			if (textInput.DisplayText != textInputTitle.str) { textInputTitle = new TitleTextureKey(textInput.DisplayText, pfHeyaFont, Color.White, Color.Black, 1000); }
-			CTexture text_tex = TitleTextureKey.ResolveTitleTexture(textInputTitle);
-			CTexture text_info = TitleTextureKey.ResolveTitleTexture(textInputInfo);
-
-			text_info.t2D_DisplayImage_AnchorCenter(RenderSurfaceSize.Width / 2, RenderSurfaceSize.Height / 2);
-			text_tex.t2D_DisplayImage_AnchorCenter(RenderSurfaceSize.Width / 2, RenderSurfaceSize.Height / 2 + text_info.szTextureSize.Height);
-		}
-
 		#endregion
 
 		#endregion
@@ -605,7 +581,7 @@ class CStageHeya : CStage
 				OpenNijiiroRW.Skin.soundChangeSFX.tPlay();
 			}
 		}
-		else if (iCurrentMenu != CurrentMenu.Name && (OpenNijiiroRW.InputManager.Keyboard.KeyPressed((int)SlimDXKeys.Key.Return) ||
+		else if ((OpenNijiiroRW.InputManager.Keyboard.KeyPressed((int)SlimDXKeys.Key.Return) ||
 					 OpenNijiiroRW.Pad.bPressed(EInstrumentPad.Drums, EPad.Decide)))
 		{
 
@@ -629,10 +605,6 @@ class CStageHeya : CStage
 				{
 					this.tUpdateUnlockableTextChara();
 					this.tUpdateUnlockableTextPuchi();
-				}
-				else if (iCurrentMenu == CurrentMenu.Name)
-				{
-					textInput.Text = OpenNijiiroRW.SaveFileInstances[iPlayer].data.Name;
 				}
 			}
 			else if (iCurrentMenu == CurrentMenu.Puchi)
@@ -765,7 +737,7 @@ class CStageHeya : CStage
 
 			#endregion
 		}
-		else if (iCurrentMenu != CurrentMenu.Name && (OpenNijiiroRW.InputManager.Keyboard.KeyPressed((int)SlimDXKeys.Key.Escape) ||
+		else if ((OpenNijiiroRW.InputManager.Keyboard.KeyPressed((int)SlimDXKeys.Key.Escape) ||
 					 OpenNijiiroRW.Pad.bPressed(EInstrumentPad.Drums, EPad.Cancel)))
 		{
 
@@ -786,25 +758,6 @@ class CStageHeya : CStage
 			}
 
 
-			return 0;
-		}
-		else if (iCurrentMenu == CurrentMenu.Name && OpenNijiiroRW.InputManager.Keyboard.KeyPressed((int)SlimDXKeys.Key.Return))
-		{
-			OpenNijiiroRW.SaveFileInstances[iPlayer].data.Name = textInput.Text;
-			OpenNijiiroRW.SaveFileInstances[iPlayer].tApplyHeyaChanges();
-			OpenNijiiroRW.NamePlate.tNamePlateRefreshTitles(iPlayer);
-
-			iCurrentMenu = CurrentMenu.ReturnToMenu;
-			this.tResetOpts();
-			OpenNijiiroRW.Skin.soundDecideSFX.tPlay();
-			return 0;
-		}
-		else if (iCurrentMenu == CurrentMenu.Name && OpenNijiiroRW.InputManager.Keyboard.KeyPressed((int)SlimDXKeys.Key.Escape))
-		{
-			OpenNijiiroRW.Skin.soundCancelSFX.tPlay();
-			iCurrentMenu = CurrentMenu.ReturnToMenu;
-			this.ttkInfoSection = null;
-			this.tResetOpts();
 			return 0;
 		}
 
@@ -1073,11 +1026,6 @@ class CStageHeya : CStage
 
 	private int iPuchiCharaCount;
 	private int iCharacterCount;
-
-	private TitleTextureKey textInputInfo;
-	private TitleTextureKey textInputTitle;
-	private CTextInput textInput;
-	private bool isInputtingText;
 
 	private CCounter ScrollCounter;
 	private const int SideInterval_X = 10;
