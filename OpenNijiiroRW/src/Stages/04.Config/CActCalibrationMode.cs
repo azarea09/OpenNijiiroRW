@@ -126,9 +126,9 @@ internal class CActCalibrationMode : CActivity
 			OpenNijiiroRW.Skin.Config_Calibration_Highlights[buttonIndex]);
 		OpenNijiiroRW.Tx.CalibrateFG?.t2D描画(0, 0);
 
-		OpenNijiiroRW.Tx.Lane_Background_Main?.t2D描画(OpenNijiiroRW.Skin.Game_Lane_X[0], OpenNijiiroRW.Skin.Game_Lane_Y[0]);
-		OpenNijiiroRW.Tx.Lane_Background_Sub?.t2D描画(OpenNijiiroRW.Skin.Game_Lane_Sub_X[0], OpenNijiiroRW.Skin.Game_Lane_Sub_Y[0]);
-		OpenNijiiroRW.Tx.Taiko_Frame[2]?.t2D描画(OpenNijiiroRW.Skin.Game_Taiko_Frame_X[0], OpenNijiiroRW.Skin.Game_Taiko_Frame_Y[0]);
+		//OpenNijiiroRW.Tx.Lane_Background_Main?.t2D描画(OpenNijiiroRW.Skin.Game_Lane_X[0], OpenNijiiroRW.Skin.Game_Lane_Y[0]);
+		//OpenNijiiroRW.Tx.Lane_Background_Sub?.t2D描画(OpenNijiiroRW.Skin.Game_Lane_Sub_X[0], OpenNijiiroRW.Skin.Game_Lane_Sub_Y[0]);
+		//OpenNijiiroRW.Tx.Taiko_Frame[2]?.t2D描画(OpenNijiiroRW.Skin.Game_Taiko_Frame_X[0], OpenNijiiroRW.Skin.Game_Taiko_Frame_Y[0]);
 
 		OpenNijiiroRW.Tx.Notes[0]?.t2D描画(OpenNijiiroRW.Skin.nScrollFieldX[0], OpenNijiiroRW.Skin.nScrollFieldY[0], new RectangleF(0, 0, OpenNijiiroRW.Skin.Game_Notes_Size[0], OpenNijiiroRW.Skin.Game_Notes_Size[1]));
 

@@ -1,4 +1,5 @@
 ﻿using System.Runtime.InteropServices;
+using DiscordRPC;
 using FDK;
 using Rectangle = System.Drawing.Rectangle;
 
@@ -94,14 +95,6 @@ internal class CActImplLaneTaiko : CActivity
 				x[i] = OpenNijiiroRW.Skin.Game_Lane_X[i];
 				y[i] = OpenNijiiroRW.Skin.Game_Lane_Y[i];
 			}
-		}
-
-		for (int i = 0; i < OpenNijiiroRW.ConfigIni.nPlayerCount; i++)
-		{
-			if (i == 1 && OpenNijiiroRW.ConfigIni.bAIBattleMode && OpenNijiiroRW.Tx.Lane_Background_AI != null)
-				OpenNijiiroRW.Tx.Lane_Background_AI?.t2D描画(x[i], y[i]);
-			else
-				OpenNijiiroRW.Tx.Lane_Background_Main?.t2D描画(x[i], y[i]);
 		}
 
 		#endregion
@@ -604,122 +597,27 @@ internal class CActImplLaneTaiko : CActivity
 		}
 
 
-		if (OpenNijiiroRW.ConfigIni.nPlayerCount <= 2)
-		{
-			if (OpenNijiiroRW.Tx.Lane_Background_Sub != null)
-			{
-				OpenNijiiroRW.Tx.Lane_Background_Sub.t2D描画(OpenNijiiroRW.Skin.Game_Lane_Sub_X[0], OpenNijiiroRW.Skin.Game_Lane_Sub_Y[0]);
-				if (OpenNijiiroRW.stageGameScreen.isMultiPlay)
-				{
-					OpenNijiiroRW.Tx.Lane_Background_Sub.t2D描画(OpenNijiiroRW.Skin.Game_Lane_Sub_X[1], OpenNijiiroRW.Skin.Game_Lane_Sub_Y[1]);
-				}
-			}
-		}
-
-
 		OpenNijiiroRW.stageGameScreen.actTaikoLaneFlash.Draw();
 
 
 
 		if (OpenNijiiroRW.Tx.Taiko_Frame[0] != null)
 		{
-			// Tower frame (without tamashii jauge) if playing a tower chart
 			for (int i = 0; i < OpenNijiiroRW.ConfigIni.nPlayerCount; i++)
 			{
-				int frame_x;
-				int frame_y;
-				if (OpenNijiiroRW.ConfigIni.nPlayerCount == 5)
+				int frame_x = 498;
+				int frame_y = i == 0 ? 276 : 540;
+
+				if (OpenNijiiroRW.ConfigIni.bAIBattleMode)
 				{
-					frame_x = OpenNijiiroRW.Skin.Game_Taiko_Frame_5P[0] + (OpenNijiiroRW.Skin.Game_UIMove_5P[0] * i);
-					frame_y = OpenNijiiroRW.Skin.Game_Taiko_Frame_5P[1] + (OpenNijiiroRW.Skin.Game_UIMove_5P[1] * i);
-				}
-				else if (OpenNijiiroRW.ConfigIni.nPlayerCount == 4 || OpenNijiiroRW.ConfigIni.nPlayerCount == 3)
-				{
-					frame_x = OpenNijiiroRW.Skin.Game_Taiko_Frame_4P[0] + (OpenNijiiroRW.Skin.Game_UIMove_4P[0] * i);
-					frame_y = OpenNijiiroRW.Skin.Game_Taiko_Frame_4P[1] + (OpenNijiiroRW.Skin.Game_UIMove_4P[1] * i);
+					OpenNijiiroRW.Tx.Taiko_Frame[1]?.t2D拡大率考慮描画(CTexture.RefPnt.UpLeft, frame_x, frame_y);
 				}
 				else
 				{
-					frame_x = OpenNijiiroRW.Skin.Game_Taiko_Frame_X[i];
-					frame_y = OpenNijiiroRW.Skin.Game_Taiko_Frame_Y[i];
+					OpenNijiiroRW.Tx.Taiko_Frame[0].Scale.X = 177.75f;
+					OpenNijiiroRW.Tx.Taiko_Frame[0]?.t2D拡大率考慮描画(CTexture.RefPnt.UpLeft, frame_x, frame_y);
 				}
-
-				CTexture tex = null;
-
-				switch (i)
-				{
-					case 0:
-						{
-							if (OpenNijiiroRW.ConfigIni.bTokkunMode)
-							{
-								tex = OpenNijiiroRW.Tx.Taiko_Frame[3];
-							}
-							else if (OpenNijiiroRW.ConfigIni.bAIBattleMode)
-							{
-								tex = OpenNijiiroRW.Tx.Taiko_Frame[5];
-							}
-							else if (OpenNijiiroRW.stageSongSelect.nChoosenSongDifficulty[0] == (int)Difficulty.Tower)
-							{
-								tex = OpenNijiiroRW.Tx.Taiko_Frame[2];
-							}
-							else if (OpenNijiiroRW.ConfigIni.nPlayerCount > 2)
-							{
-								tex = OpenNijiiroRW.Tx.Taiko_Frame[6];
-							}
-							else
-							{
-								tex = OpenNijiiroRW.Tx.Taiko_Frame[0];
-							}
-						}
-						break;
-					case 1:
-						{
-							if (OpenNijiiroRW.ConfigIni.bAIBattleMode)
-							{
-								tex = OpenNijiiroRW.Tx.Taiko_Frame[4];
-							}
-							else if (OpenNijiiroRW.ConfigIni.nPlayerCount > 2)
-							{
-								tex = OpenNijiiroRW.Tx.Taiko_Frame[6];
-							}
-							else
-							{
-								tex = OpenNijiiroRW.Tx.Taiko_Frame[1];
-							}
-						}
-						break;
-					case 2:
-						tex = OpenNijiiroRW.Tx.Taiko_Frame[6];
-						break;
-					case 3:
-						tex = OpenNijiiroRW.Tx.Taiko_Frame[6];
-						break;
-					case 4:
-						tex = OpenNijiiroRW.Tx.Taiko_Frame[6];
-						break;
-				}
-
-				tex?.t2D描画(frame_x, frame_y);
 			}
-
-			/*
-            if (TJAPlayer3.ConfigIni.bTokkunMode == true && TJAPlayer3.Tx.Taiko_Frame[3] != null)
-                TJAPlayer3.Tx.Taiko_Frame[3]?.t2D描画(TJAPlayer3.Skin.Game_Taiko_Frame_X[0], TJAPlayer3.Skin.Game_Taiko_Frame_Y[0]);
-            else if (TJAPlayer3.stage選曲.n確定された曲の難易度[0] == (int)Difficulty.Tower && TJAPlayer3.Tx.Taiko_Frame[2] != null)
-                TJAPlayer3.Tx.Taiko_Frame[2]?.t2D描画(TJAPlayer3.Skin.Game_Taiko_Frame_X[0], TJAPlayer3.Skin.Game_Taiko_Frame_Y[0]);
-            else if (TJAPlayer3.ConfigIni.bAIBattleMode && TJAPlayer3.Tx.Taiko_Frame[5] != null)
-                TJAPlayer3.Tx.Taiko_Frame[5]?.t2D描画(TJAPlayer3.Skin.Game_Taiko_Frame_X[0], TJAPlayer3.Skin.Game_Taiko_Frame_Y[0]);
-            else
-                TJAPlayer3.Tx.Taiko_Frame[0]?.t2D描画(TJAPlayer3.Skin.Game_Taiko_Frame_X[0], TJAPlayer3.Skin.Game_Taiko_Frame_Y[0]);
-
-            if (TJAPlayer3.stage演奏ドラム画面.bDoublePlay)
-            {
-                if (TJAPlayer3.ConfigIni.bAIBattleMode)
-                    TJAPlayer3.Tx.Taiko_Frame[4]?.t2D描画(TJAPlayer3.Skin.Game_Taiko_Frame_X[1], TJAPlayer3.Skin.Game_Taiko_Frame_Y[1]);
-                else
-                    TJAPlayer3.Tx.Taiko_Frame[1]?.t2D描画(TJAPlayer3.Skin.Game_Taiko_Frame_X[1], TJAPlayer3.Skin.Game_Taiko_Frame_Y[1]);
-            }
-            */
 		}
 
 		for (int i = 0; i < OpenNijiiroRW.ConfigIni.nPlayerCount; i++)
@@ -752,16 +650,10 @@ internal class CActImplLaneTaiko : CActivity
 
 		if (OpenNijiiroRW.ConfigIni.bEnableAVI && OpenNijiiroRW.TJA.listVD.Count > 0 && OpenNijiiroRW.stageGameScreen.ShowVideo)
 		{
-			if (OpenNijiiroRW.Tx.Lane_Background_Main != null) OpenNijiiroRW.Tx.Lane_Background_Main.Opacity = OpenNijiiroRW.ConfigIni.nBGAlpha;
-			if (OpenNijiiroRW.Tx.Lane_Background_AI != null) OpenNijiiroRW.Tx.Lane_Background_AI.Opacity = OpenNijiiroRW.ConfigIni.nBGAlpha;
-			if (OpenNijiiroRW.Tx.Lane_Background_Sub != null) OpenNijiiroRW.Tx.Lane_Background_Sub.Opacity = OpenNijiiroRW.ConfigIni.nBGAlpha;
 			if (OpenNijiiroRW.Tx.Lane_Background_GoGo != null) OpenNijiiroRW.Tx.Lane_Background_GoGo.Opacity = OpenNijiiroRW.ConfigIni.nBGAlpha;
 		}
 		else
 		{
-			if (OpenNijiiroRW.Tx.Lane_Background_Main != null) OpenNijiiroRW.Tx.Lane_Background_Main.Opacity = 255;
-			if (OpenNijiiroRW.Tx.Lane_Background_AI != null) OpenNijiiroRW.Tx.Lane_Background_AI.Opacity = 255;
-			if (OpenNijiiroRW.Tx.Lane_Background_Sub != null) OpenNijiiroRW.Tx.Lane_Background_Sub.Opacity = 255;
 			if (OpenNijiiroRW.Tx.Lane_Background_GoGo != null) OpenNijiiroRW.Tx.Lane_Background_GoGo.Opacity = 255;
 		}
 
@@ -782,11 +674,13 @@ internal class CActImplLaneTaiko : CActivity
 		if (OpenNijiiroRW.Tx.Judge_Frame != null)
 		{
 			OpenNijiiroRW.Tx.Judge_Frame.b加算合成 = OpenNijiiroRW.Skin.Game_JudgeFrame_AddBlend;
+
 			for (int i = 0; i < OpenNijiiroRW.ConfigIni.nPlayerCount; i++)
 			{
-				OpenNijiiroRW.Tx.Judge_Frame.t2D描画(
-					OpenNijiiroRW.stageGameScreen.NoteOriginX[i],
-					OpenNijiiroRW.stageGameScreen.NoteOriginY[i], new Rectangle(0, 0, OpenNijiiroRW.Skin.Game_Notes_Size[0], OpenNijiiroRW.Skin.Game_Notes_Size[1]));
+				//Assets.Sprite.Enso_Lane[2].BlendMode = BlendMode.Add;
+				//Assets.Sprite.Enso_Lane[2].Draw(510.0, 278.0);
+				OpenNijiiroRW.Tx.Judge_Frame.Opacity = 150;
+				OpenNijiiroRW.Tx.Judge_Frame.t2D描画(OpenNijiiroRW.stageGameScreen.NoteOriginX[i] - 13, OpenNijiiroRW.stageGameScreen.NoteOriginY[i] - 10);
 			}
 		}
 

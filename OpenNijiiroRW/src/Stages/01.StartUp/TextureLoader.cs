@@ -426,8 +426,6 @@ class TextureLoader
 		Note_FuseRoll = TxC(GAME + @$"FuseRoll.png");
 		Note_Adlib = TxC(GAME + @$"Adlib.png");
 
-		Judge_Frame = TxC(GAME + @$"Notes.png");
-
 		SENotes = new CTexture[2];
 		SENotes[0] = TxC(GAME + @$"SENotes.png");
 		SENotes[1] = TxC(GAME + @$"SENotes_Konga.png");
@@ -453,20 +451,19 @@ class TextureLoader
 
 		#region Taiko
 
-		Score_Background = TxC(GAME + TAIKO + @$"Score_Background.dds");
+		Score_Background = TxC(GAME + TAIKO + @$"Score_Background.png");
 
-		Taiko_Background = new CTexture[12];
-		Taiko_Background[0] = TxC(GAME + TAIKO + @$"1P_Background.dds");
-		Taiko_Background[1] = TxC(GAME + TAIKO + @$"2P_Background.dds");
-		Taiko_Background[2] = TxC(GAME + TAIKO + @$"Dan_Background.dds");
-		Taiko_Background[3] = TxC(GAME + TAIKO + @$"AI_Background.dds");
+		Judge_Frame = TxC(GAME + TAIKO + @$"Judge_Frame.png");
 
-		Taiko_Frame = new CTexture[7];
-		Taiko_Frame[0] = TxC(GAME + TAIKO + @$"1P_Frame.png");
-		Taiko_Frame[1] = TxC(GAME + TAIKO + @$"2P_Frame.png");
-		Taiko_Frame[3] = TxC(GAME + TAIKO + @$"Tokkun_Frame.png");
-		Taiko_Frame[4] = TxC(GAME + TAIKO + @$"2P_None_Frame.png");
-		Taiko_Frame[5] = TxC(GAME + TAIKO + @$"AI_Frame.png");
+		Taiko_Background = new CTexture[4];
+		Taiko_Background[0] = TxC(GAME + TAIKO + @$"1P_Background.png");
+		Taiko_Background[1] = TxC(GAME + TAIKO + @$"2P_Background.png");
+		Taiko_Background[2] = TxC(GAME + TAIKO + @$"Dan_Background.png");
+		Taiko_Background[3] = TxC(GAME + TAIKO + @$"AI_Background.png");
+
+		Taiko_Frame = new CTexture[2];
+		Taiko_Frame[0] = TxC(GAME + TAIKO + @$"Frame.png");
+		Taiko_Frame[1] = TxC(GAME + TAIKO + @$"AI_Frame.png");
 
 		Taiko_PlayerNumber = new CTexture[5];
 		Taiko_PlayerNumber[0] = TxC(GAME + TAIKO + @$"1P_PlayerNumber.png");
@@ -710,9 +707,6 @@ class TextureLoader
 
 
 		Lane_Yellow = TxC(GAME + LANE + @$"Yellow.png");
-		Lane_Background_Main = TxC(GAME + LANE + @$"Background_Main.png");
-		Lane_Background_AI = TxC(GAME + LANE + @$"Background_AI.png");
-		Lane_Background_Sub = TxC(GAME + LANE + @$"Background_Sub.png");
 		Lane_Background_GoGo = TxC(GAME + LANE + @$"Background_GoGo.png");
 
 		#endregion
