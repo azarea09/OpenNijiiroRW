@@ -1,5 +1,4 @@
 ﻿using System.Runtime.InteropServices;
-using DiscordRPC;
 using FDK;
 using Rectangle = System.Drawing.Rectangle;
 
@@ -601,7 +600,7 @@ internal class CActImplLaneTaiko : CActivity
 
 
 
-		if (OpenNijiiroRW.Tx.Taiko_Frame[0] != null)
+		if (OpenNijiiroRW.Tx.Lane[0] != null)
 		{
 			for (int i = 0; i < OpenNijiiroRW.ConfigIni.nPlayerCount; i++)
 			{
@@ -610,12 +609,12 @@ internal class CActImplLaneTaiko : CActivity
 
 				if (OpenNijiiroRW.ConfigIni.bAIBattleMode)
 				{
-					OpenNijiiroRW.Tx.Taiko_Frame[1]?.t2D拡大率考慮描画(CTexture.RefPnt.UpLeft, frame_x, frame_y);
+					OpenNijiiroRW.Tx.Lane[1]?.t2D拡大率考慮描画(CTexture.RefPnt.UpLeft, frame_x, frame_y);
 				}
 				else
 				{
-					OpenNijiiroRW.Tx.Taiko_Frame[0].Scale.X = 177.75f;
-					OpenNijiiroRW.Tx.Taiko_Frame[0]?.t2D拡大率考慮描画(CTexture.RefPnt.UpLeft, frame_x, frame_y);
+					OpenNijiiroRW.Tx.Lane[0].Scale.X = 177.75f;
+					OpenNijiiroRW.Tx.Lane[0]?.t2D拡大率考慮描画(CTexture.RefPnt.UpLeft, frame_x, frame_y);
 				}
 			}
 		}

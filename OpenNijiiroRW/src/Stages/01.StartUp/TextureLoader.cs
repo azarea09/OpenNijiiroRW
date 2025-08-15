@@ -416,6 +416,8 @@ class TextureLoader
 
 		#region General
 
+		Judge_Frame = TxC(GAME + @$"Judge_Frame.png");
+
 		Notes = new CTexture[2];
 		Notes[0] = TxC(GAME + @$"Notes.png");
 		Notes[1] = TxC(GAME + @$"Notes_Konga.png");
@@ -452,18 +454,11 @@ class TextureLoader
 		#region Taiko
 
 		Score_Background = TxC(GAME + TAIKO + @$"Score_Background.png");
-
-		Judge_Frame = TxC(GAME + TAIKO + @$"Judge_Frame.png");
-
 		Taiko_Background = new CTexture[4];
 		Taiko_Background[0] = TxC(GAME + TAIKO + @$"1P_Background.png");
 		Taiko_Background[1] = TxC(GAME + TAIKO + @$"2P_Background.png");
 		Taiko_Background[2] = TxC(GAME + TAIKO + @$"Dan_Background.png");
 		Taiko_Background[3] = TxC(GAME + TAIKO + @$"AI_Background.png");
-
-		Taiko_Frame = new CTexture[2];
-		Taiko_Frame[0] = TxC(GAME + TAIKO + @$"Frame.png");
-		Taiko_Frame[1] = TxC(GAME + TAIKO + @$"AI_Frame.png");
 
 		Taiko_PlayerNumber = new CTexture[5];
 		Taiko_PlayerNumber[0] = TxC(GAME + TAIKO + @$"1P_PlayerNumber.png");
@@ -682,6 +677,10 @@ class TextureLoader
 		#endregion
 
 		#region Lane
+
+		Lane = new CTexture[2];
+		Lane[0] = TxC(GAME + LANE + @$"Lane.png");
+		Lane[1] = TxC(GAME + LANE + @$"AI_Lane.png");
 
 		Lane_Base = new CTexture[3];
 		Lane_Text = new CTexture[3];
@@ -2630,7 +2629,7 @@ class TextureLoader
 	#endregion
 	#region 太鼓
 	public CTexture[] Taiko_Base,
-		Taiko_Frame, // MTaiko下敷き
+		Lane, // MTaiko下敷き
 		Taiko_Background;
 	public CTexture Taiko_Don_Left,
 		Taiko_Don_Right,
