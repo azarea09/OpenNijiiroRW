@@ -63,7 +63,7 @@ class NotesManager
 		int pxPer4Beats = OpenNijiiroRW.Skin.Game_Notes_Interval;
 		double screenScale = OpenNijiiroRW.Skin.Resolution[0] / 1280.0;
 		double n4Beats = getN4Beats(msDTime, th16DBeat, bpm, eScrollMode);
-		return (int)(n4Beats * pxPer4Beats * scroll * screenScale);
+		return (int)(n4Beats * pxPer4Beats * scroll * screenScale * 0.988);
 	}
 
 	public static int GetNoteY(double msDTime, double th16DBeat, double bpm, double scroll, EScrollMode eScrollMode)
@@ -323,7 +323,7 @@ class NotesManager
 	}
 
 	// Regular display
-	public static void DisplayNote(int player, int x, int y, CChip chip, int frame, int length = -1)
+	public static void DisplayNote(int player, int x, int y, CChip chip, int frameState, int length = -1)
 	{
 		if (OpenNijiiroRW.ConfigIni.eSTEALTH[OpenNijiiroRW.GetActualPlayer(player)] != EStealthMode.Off || !chip.bShow)
 			return;
@@ -335,11 +335,11 @@ class NotesManager
 
 		EGameType _gt = OpenNijiiroRW.ConfigIni.nGameType[OpenNijiiroRW.GetActualPlayer(player)];
 
-		int noteType = 1;
-		if (IsSmallNote(chip, true)) noteType = 2;
-		else if (IsBigDonTaiko(chip, _gt) || IsKongaPink(chip, _gt)) noteType = 3;
-		else if (IsBigKaTaiko(chip, _gt) || IsClapKonga(chip, _gt)) noteType = 4;
-		else if (IsBalloon(chip)) noteType = 11;
+		int noteType = 0;
+		if (IsSmallNote(chip, true)) noteType = 1;
+		else if (IsBigDonTaiko(chip, _gt) || IsKongaPink(chip, _gt)) noteType = 2;
+		else if (IsBigKaTaiko(chip, _gt) || IsClapKonga(chip, _gt)) noteType = 3;
+		else if (IsBalloon(chip)) noteType = 0;
 
 		else if (IsMine(chip))
 		{
@@ -348,12 +348,12 @@ class NotesManager
 		}
 		else if (IsPurpleNote(chip))
 		{
-			OpenNijiiroRW.Tx.Note_Swap?.t2D描画(x, y, new Rectangle(0, frame, OpenNijiiroRW.Skin.Game_Notes_Size[0], OpenNijiiroRW.Skin.Game_Notes_Size[1]));
+			OpenNijiiroRW.Tx.Note_Swap?.t2D描画(x, y, new Rectangle(0, frameState, OpenNijiiroRW.Skin.Game_Notes_Size[0], OpenNijiiroRW.Skin.Game_Notes_Size[1]));
 			return;
 		}
 		else if (IsKusudama(chip))
 		{
-			OpenNijiiroRW.Tx.Note_Kusu?.t2D描画(x, y, new Rectangle(0, frame, length, OpenNijiiroRW.Skin.Game_Notes_Size[1]));
+			OpenNijiiroRW.Tx.Note_Kusu?.t2D描画(x, y, new Rectangle(0, frameState, length, OpenNijiiroRW.Skin.Game_Notes_Size[1]));
 			return;
 		}
 		else if (IsADLIB(chip))
@@ -362,12 +362,27 @@ class NotesManager
 			if (puchichara.effect.ShowAdlib)
 			{
 				OpenNijiiroRW.Tx.Note_Adlib?.tUpdateOpacity(50);
-				OpenNijiiroRW.Tx.Note_Adlib?.t2D描画(x, y, new Rectangle(0, frame, length, OpenNijiiroRW.Skin.Game_Notes_Size[1]));
+				OpenNijiiroRW.Tx.Note_Adlib?.t2D描画(x, y, new Rectangle(0, frameState, length, OpenNijiiroRW.Skin.Game_Notes_Size[1]));
 			}
 			return;
 		}
 
-		OpenNijiiroRW.Tx.Notes[(int)_gt]?.t2D描画(x, y, new Rectangle(noteType * OpenNijiiroRW.Skin.Game_Notes_Size[0], frame, length, OpenNijiiroRW.Skin.Game_Notes_Size[1]));
+		int noteFaceAtlasY = 0;
+
+		if (OpenNijiiroRW.stageGameScreen.actCombo.nCurrentCombo[player] >= 100 && OpenNijiiroRW.stageGameScreen.ctChipFaceAnime.CurrentValue == 1 && !IsBigDonTaiko(chip, _gt) && !IsBigKaTaiko(chip, _gt))
+		{
+			noteFaceAtlasY = 192 * 2;
+		}
+		else if (OpenNijiiroRW.stageGameScreen.actCombo.nCurrentCombo[player] >= 100 && OpenNijiiroRW.stageGameScreen.ctChipFaceAnime.CurrentValue == 1 && (IsBigDonTaiko(chip, _gt) || IsBigKaTaiko(chip, _gt)))
+		{
+			noteFaceAtlasY = 192;
+		}
+		else if (OpenNijiiroRW.stageGameScreen.actCombo.nCurrentCombo[player] >= 10 && OpenNijiiroRW.stageGameScreen.ctChipFaceAnime.CurrentValue == 1)
+		{
+			noteFaceAtlasY = 192;
+		}
+
+		OpenNijiiroRW.Tx.Nomal_Notes?.t2D描画(x, y + 2, new Rectangle(noteType * 192, noteFaceAtlasY, 192, 192));
 	}
 
 	// Roll display

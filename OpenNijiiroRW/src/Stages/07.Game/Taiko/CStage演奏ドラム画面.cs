@@ -1731,7 +1731,7 @@ internal class CStage演奏ドラム画面 : CStage演奏画面共通
 							case 0x1C:
 							case 0x101:
 								{
-									NotesManager.DisplayNote(nPlayer, x, y, pChip, num9);
+									NotesManager.DisplayNote(nPlayer, x, y, pChip, ctChipFaceAnime.CurrentValue);
 									NotesManager.DisplaySENotes(nPlayer, x + nSenotesX, y + nSenotesY, pChip);
 
 									//TJAPlayer3.Tx.SENotes[(int)_gt]?.t2D描画(device, x - 2, y + nSenotesY, new Rectangle(0, 30 * pChip.nSenote, 136, 30));
@@ -1765,7 +1765,7 @@ internal class CStage演奏ドラム画面 : CStage演奏画面共通
 												x + OpenNijiiroRW.Skin.Game_Notes_Arm_Offset_Right_X[1] - moveX,
 												y + OpenNijiiroRW.Skin.Game_Notes_Arm_Offset_Right_Y[1] - moveY);
 										}
-										NotesManager.DisplayNote(nPlayer, x, y, pChip, num9);
+										NotesManager.DisplayNote(nPlayer, x, y, pChip, ctChipFaceAnime.CurrentValue);
 										NotesManager.DisplaySENotes(nPlayer, x + nSenotesX, y + nSenotesY, pChip);
 									}
 									break;
@@ -1773,7 +1773,7 @@ internal class CStage演奏ドラム画面 : CStage演奏画面共通
 
 							case 0x1F:
 								{
-									NotesManager.DisplayNote(nPlayer, x, y, pChip, num9);
+									NotesManager.DisplayNote(nPlayer, x, y, pChip, ctChipFaceAnime.CurrentValue);
 								}
 								break;
 							default:

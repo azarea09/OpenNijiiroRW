@@ -418,6 +418,7 @@ class TextureLoader
 
 		Judge_Frame = TxC(GAME + @$"Judge_Frame.png");
 
+		Nomal_Notes = TxC(GAME + @$"Nomal_Notes.png");
 		Notes = new CTexture[2];
 		Notes[0] = TxC(GAME + @$"Notes.png");
 		Notes[1] = TxC(GAME + @$"Notes_Konga.png");
@@ -2612,6 +2613,7 @@ class TextureLoader
 		Note_Kusu,
 		Note_FuseRoll,
 		Note_Adlib,
+		Nomal_Notes,
 		SENotesExtension,
 		Notes_Arm,
 		ChipEffect,

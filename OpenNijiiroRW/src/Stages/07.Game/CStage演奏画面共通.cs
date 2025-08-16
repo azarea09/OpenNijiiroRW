@@ -704,6 +704,7 @@ internal abstract class CStage演奏画面共通 : CStage
 	protected STDGBVALUE<CCounter> ctチップ模様アニメ;
 	public CCounter[] ctChipAnime;
 	public CCounter[] ctChipAnimeLag;
+	public CCounter ctChipFaceAnime;
 	private int bgmlength = 1;
 
 	protected EGameplayScreenReturnValue eフェードアウト完了時の戻り値;
@@ -900,6 +901,10 @@ internal abstract class CStage演奏画面共通 : CStage
 		{
 			ctChipAnime[i] = new CCounter(0, 3, CTja.TjaDurationToGameDuration(60.0 / OpenNijiiroRW.stageGameScreen.actPlayInfo.dbBPM[i] * 1 / 4), SoundManager.PlayTimer);
 		}
+
+		double changeLagFrame = 900 / OpenNijiiroRW.stageGameScreen.actPlayInfo.dbBPM[0];
+		double changeLagSec = changeLagFrame * 0.0166667;
+		ctChipFaceAnime = new CCounter(0, 1, changeLagSec, SoundManager.PlayTimer);
 
 		OpenNijiiroRW.stageGameScreen.PuchiChara.ChangeBPM(CTja.TjaDurationToGameDuration(60.0 / OpenNijiiroRW.stageGameScreen.actPlayInfo.dbBPM[nPlayer]));
 	}
@@ -5138,6 +5143,8 @@ internal abstract class CStage演奏画面共通 : CStage
 			ctChipAnime[i].TickLoopDB();
 			ctChipAnimeLag[i].Tick();
 		}
+
+		ctChipFaceAnime.TickLoopDB();
 	}
 
 	protected bool t進行描画_フェードイン_アウト()
